@@ -28,15 +28,17 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'dry-configurable',         '~> 0.8'
   spec.add_dependency 'dry-container',            '~> 0.7'
   spec.add_dependency 'dry-monads',               '~> 1.2'
   spec.add_dependency 'dry-validation',           '~> 1.0'
   spec.add_dependency 'dry-inflector',            '~> 0.1'
-  spec.add_dependency 'dry-configurable',         '~> 0.8'
 
   spec.add_development_dependency "bundler",      "~> 2.0"
   spec.add_development_dependency 'rake',         '~> 12.0'
   spec.add_development_dependency 'rspec',        '~> 3.0'
   spec.add_development_dependency 'rspec-rails',  '~> 3.0'
   spec.add_development_dependency 'pry-byebug',   '~> 3.0'
+  spec.add_development_dependency 'mongoid',      '~> 7.0'
+
 end
