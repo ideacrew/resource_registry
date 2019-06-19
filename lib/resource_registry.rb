@@ -5,7 +5,7 @@ require 'resource_registry/version'
 require 'resource_registry/factory_mixin'
 require 'resource_registry/service_mixin'
 require 'resource_registry/repository'
-require 'resource_registry/app_conf'
+require 'resource_registry/configure'
 
 require 'resource_registry/subscriptions/feature'
 require 'resource_registry/subscriptions/subscription'

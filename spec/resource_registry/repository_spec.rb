@@ -55,18 +55,18 @@ RSpec.describe ResourceRegistry::Repository do
       let(:aca_shop_market)   { "aca_shop" }
       let(:fehb_market)       { "fehb" }
       let(:benefit_catalogs)  { "benefit_catalogs" }
-      let(:period_2018)       { "period_2018" }
-      let(:period_2019)       { "period_2019" }
+      let(:benefit_catalog_2018)       { "benefit_catalog_2018" }
+      let(:benefit_catalog_2019)       { "benefit_catalog_2019" }
 
       let(:shop_market)                       { [tenant, benefit_markets, aca_shop_market] }
       let(:shop_market_benefit_catalogs)      { [tenant, benefit_markets, aca_shop_market, benefit_catalogs] }
-      let(:shop_market_benefit_catalogs_2018) { [tenant, benefit_markets, aca_shop_market, benefit_catalogs, period_2018] }
-      let(:shop_market_benefit_catalogs_2019) { [tenant, benefit_markets, aca_shop_market, benefit_catalogs, period_2019] }
+      let(:shop_market_benefit_catalogs_2018) { [tenant, benefit_markets, aca_shop_market, benefit_catalogs, benefit_catalog_2018] }
+      let(:shop_market_benefit_catalogs_2019) { [tenant, benefit_markets, aca_shop_market, benefit_catalogs, benefit_catalog_2019] }
 
       let(:fehb_market)                       { [tenant, benefit_markets, fehb_market] }
       let(:fehb_market_benefit_catalogs)      { [tenant, benefit_markets, fehb_market, benefit_catalogs] }
-      let(:fehb_market_benefit_catalogs_2018) { [tenant, benefit_markets, fehb_market, benefit_catalogs, period_2018] }
-      let(:fehb_market_benefit_catalogs_2019) { [tenant, benefit_markets, fehb_market, benefit_catalogs, period_2019] }
+      let(:fehb_market_benefit_catalogs_2018) { [tenant, benefit_markets, fehb_market, benefit_catalogs, benefit_catalog_2018] }
+      let(:fehb_market_benefit_catalogs_2019) { [tenant, benefit_markets, fehb_market, benefit_catalogs, benefit_catalog_2019] }
 
       let(:shop_market_namespaces)            { [shop_market, shop_market_benefit_catalogs, shop_market_benefit_catalogs_2018, shop_market_benefit_catalogs_2019] }
       let(:fehb_market_namespaces)            { [fehb_market, fehb_market_benefit_catalogs, fehb_market_benefit_catalogs_2018, fehb_market_benefit_catalogs_2019] }
