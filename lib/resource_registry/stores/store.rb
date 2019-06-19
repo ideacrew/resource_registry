@@ -2,40 +2,48 @@ module ResourceRegistry
   module Stores
     class Store
 
-      store_dir           = './lib/resource_registry/stores'
+      attr_accessor :tenant, :configuration_set_name, :configuration_set
 
-      def initialize
+      def persist!
+        raise NotImplementedError
       end
 
-      class << self
-        def store_set
-          @store_set ||= StoreSet.new
+
+      class_methods do
+        def find(id)
+          raise NotImplementedError
         end
 
+        def find_by_tenant(tenant:)
+          raise NotImplementedError
+        end
+
+        def find_by_collection_name(tenant:, collection_name:)
+          raise NotImplementedError
+        end
       end
 
+      private
     end
 
     class StoreSet
+      attr_reader :stores
+
       def initialize
         @stores = Set.new
         add_store(store_files)
       end
 
       def store_files
-        # namespace = ResourceRegistry.module_parent_for(self)
-        # dir_base = ResourceRegistry.gem_file_path_for(namespace)
-
+        namespace = ResourceRegistry.module_parent_for(self.class)
+        store_dir = ResourceRegistry.gem_file_path_for(namespace)
         store_file_pattern  = '*_store.rb'
 
-        namespace = ResourceRegistry.module_parent_for(self.class)
-        dir_base  = ResourceRegistry.gem_file_path_for(namespace)
-
-        ResourceRegistry.file_kinds_for(file_pattern: store_file_pattern, dir_base: dir_base)
+        ResourceRegistry.file_kinds_for(file_pattern: store_file_pattern, dir_base: store_dir)
       end
 
       def add_store(stores)
-        @stores += stores 
+        @stores += stores
       end
     end
   end

@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Stores
-    module Serializes
+    module Serializers
       class Serialzer
 
         DIR_BASE      = './lib/resource_registry/stores/serializers'

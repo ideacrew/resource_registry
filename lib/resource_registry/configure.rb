@@ -7,7 +7,7 @@ module ResourceRegistry
 
     setting :tenants, [:dchbx, :cca]
 
-    setting :dchbx do
+    setting :dchbx_tenant do
       setting :tenant_key, :dchbx
       setting :long_name
       setting :short_name
@@ -17,65 +17,64 @@ module ResourceRegistry
       setting :help_url
       setting :faqs_url
       setting :logo
-      setting(:copyright_period_start,  { type: String,
+      setting(:copyright_period_start,  { type: :string,
                                           default:  ->{ ::TimeKeeper.date_of_record.year },
-      value:    ->{ ::TimeKeeper.date_of_record.year }}) \
-        { |vals| Hash(metadata: vals) }
+                                          value:    ->{ ::TimeKeeper.date_of_record.year }}) \
+                                        { |vals| Hash(metadata: vals) }
 
 
       setting :site do
         setting :subscriptions, []
         setting :benefit_markets, [:aca_shop_market, :aca_individual_market, :fehb_market]
-
       end
 
 
 
       setting :aca_shop_market do
-        setting(:binder_payment_due_day_of_month,                   { type: Integer, default: 24, value: 24 }) { |vals| Hash(metadata: vals)}
-        setting(:earliest_enroll_prior_effective_on_days,           { type: Integer, default: -30, value: -30 }) { |vals| Hash(metadata: vals)}
-        setting(:latest_enroll_after_effective_on_days,             { type: Integer, default: 30, value: 30 }) { |vals| Hash(metadata: vals)}
-        setting(:latest_enroll_after_ee_roster_correction_on_days,  { type: Integer, default: 30, value: 30 }) { |vals| Hash(metadata: vals)}
+        setting(:binder_payment_due_day_of_month,                   { type: :integer, default: 24, value: 24 }) { |vals| vals }
+        setting(:earliest_enroll_prior_effective_on_days,           { type: :integer, default: -30, value: -30 }) { |vals| Hash(metadata: vals)}
+        setting(:latest_enroll_after_effective_on_days,             { type: :integer, default: 30, value: 30 }) { |vals| Hash(metadata: vals)}
+        setting(:latest_enroll_after_ee_roster_correction_on_days,  { type: :integer, default: 30, value: 30 }) { |vals| Hash(metadata: vals)}
 
-        setting(:retroactive_coverage_termination_max_days,         { type: Integer, default: -60, value: -60 }) { |vals| Hash(metadata: vals)}
+        setting(:retroactive_coverage_termination_max_days,         { type: :integer, default: -60, value: -60 }) { |vals| Hash(metadata: vals)}
 
         setting :open_enrollment do
-          setting(:start_on_monthly,              { type: Integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
-          setting(:end_on_monthly,                { type: Integer, default: 20, value: 20 }) { |vals| Hash(metadata: vals)}
-          setting(:days_min,                      { type: Integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
-          setting(:grace_period_length_days_min,  { type: Integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
-          setting(:adv_days_min,                  { type: Integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
-          setting(:months_max,                    { type: Integer, default: 2, value: 2 }) { |vals| Hash(metadata: vals)}
+          setting(:start_on_monthly,              { type: :integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
+          setting(:end_on_monthly,                { type: :integer, default: 20, value: 20 }) { |vals| Hash(metadata: vals)}
+          setting(:days_min,                      { type: :integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
+          setting(:grace_period_length_days_min,  { type: :integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
+          setting(:adv_days_min,                  { type: :integer, default: 5, value: 5 }) { |vals| Hash(metadata: vals)}
+          setting(:months_max,                    { type: :integer, default: 2, value: 2 }) { |vals| Hash(metadata: vals)}
         end
 
-        setting(:cobra_enrollment_period_month,             { type: Integer, default: 6, value: 6 }) { |vals| Hash(metadata: vals)}
+        setting(:cobra_enrollment_period_month,             { type: :integer, default: 6, value: 6 }) { |vals| Hash(metadata: vals)}
 
         setting :group do
-          setting(:enforce_employer_attestation,            { type: Bool, default: true, value: true }) { |vals| Hash(metadata: vals)}
+          setting(:enforce_employer_attestation,            { type: :boolean, default: true, value: true }) { |vals| Hash(metadata: vals)}
 
           # Dups?
-          setting(:gf_update_trans_dow,                     { type: Bool, default: false, value: false }) { |vals| Hash(metadata: vals)}
-          setting(:group_file_update_transmit_day_of_week,  { type: String,  default: "friday", value: "friday" }) { |vals| Hash(metadata: vals)}
-          setting(:employer_transmission_day_of_month,      { type: Integer, default: 16, value: 16 }) { |vals| Hash(metadata: vals)}
-          setting(:group_file_new_enrollment_transmit_on,   { type: Integer, default: 16, value: 16 }) { |vals| Hash(metadata: vals)}
+          setting(:gf_update_trans_dow,                     { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
+          setting(:group_file_update_transmit_day_of_week,  { type: :string,  default: "friday", value: "friday" }) { |vals| Hash(metadata: vals)}
+          setting(:employer_transmission_day_of_month,      { type: :integer, default: 16, value: 16 }) { |vals| Hash(metadata: vals)}
+          setting(:group_file_new_enrollment_transmit_on,   { type: :integer, default: 16, value: 16 }) { |vals| Hash(metadata: vals)}
 
-          setting(:employer_contribution_pct_min,           { type: Integer, default: 75, value: 75 }) { |vals| Hash(metadata: vals)}
+          setting(:employer_contribution_pct_min,           { type: :integer, default: 75, value: 75 }) { |vals| Hash(metadata: vals)}
 
-          setting(:employee_count_max,                      { type: Integer, default: 50, value: 50 }    ) { |vals| Hash(metadata: vals)}
-          setting(:employee_participation_ratio_min,        { type: Float,   default: 0.75, value: 0.75 }) { |vals| Hash(metadata: vals)}
-          setting(:employee_non_owner_count_min,            { type: Integer, default: 1, value: 1 }      ) { |vals| Hash(metadata: vals)}
+          setting(:employee_count_max,                      { type: :integer, default: 50, value: 50 }    ) { |vals| Hash(metadata: vals)}
+          setting(:employee_participation_ratio_min,        { type: :float,   default: 0.75, value: 0.75 }) { |vals| Hash(metadata: vals)}
+          setting(:employee_non_owner_count_min,            { type: :integer, default: 1, value: 1 }      ) { |vals| Hash(metadata: vals)}
         end
 
-        setting(:use_simple_employer_calculation_model,     { type: Bool, default: false, value: false }) { |vals| Hash(metadata: vals)}
+        setting(:use_simple_employer_calculation_model,     { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
 
 
         setting :rename_or_deprecate do
-          setting(:standard_industrial_classification,      { type: Bool, default: false, value: false }) { |vals| Hash(metadata: vals)}
-          setting(:benefit_period_min_year,                 { type: Integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
-          setting(:benefit_period_max_year,                 { type: Integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
-          setting(:transmit_employers_immediately,          { type: Bool, default: false, value: false }) { |vals| Hash(metadata: vals)}
-          setting(:transmit_scheduled_employers,            { type: Bool, default: true, value: true }) { |vals| Hash(metadata: vals)}
-          setting(:carrier_filters_enabled,                 { type: Bool, default: false, value: false }) { |vals| Hash(metadata: vals)}
+          setting(:standard_industrial_classification,      { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
+          setting(:benefit_period_min_year,                 { type: :integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
+          setting(:benefit_period_max_year,                 { type: :integer, default: 1, value: 1 }) { |vals| Hash(metadata: vals)}
+          setting(:transmit_employers_immediately,          { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
+          setting(:transmit_scheduled_employers,            { type: :boolean, default: true, value: true }) { |vals| Hash(metadata: vals)}
+          setting(:carrier_filters_enabled,                 { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
         end
 
 
@@ -83,7 +82,7 @@ module ResourceRegistry
           setting :catalog_2018 do
             setting :application_interval, :monthly
             setting(:open_enrollment_minimum_days,  { type: :integer, default: 5, value: 5 }) { |value| Hash(metadata: value) }
-            setting(:employer_attestation_required, { type: :Bool, default: false, value: false }) { |value| Hash(metadata: value) }
+            setting(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
             setting(:application_period,  { type:     :date_range,
                                             default:  Date.new(2018,1,1)..Date.new(2018,12,31),
             value:    Date.new(2018,1,1)..Date.new(2018,12,31) }) \
@@ -105,7 +104,7 @@ module ResourceRegistry
             end
 
             setting :contribution_models, [:aa, :bb]
-            setting :xx_contribution_model do
+            setting :aa_contribution_model do
               setting :title
               setting :key
               setting :sponsor_contribution_kind
@@ -115,7 +114,7 @@ module ResourceRegistry
               setting :contribution_units
               setting :member_relationships
             end
-            setting :yy_contribution_model do
+            setting :bb_contribution_model do
               setting :title
               setting :key
               setting :sponsor_contribution_kind
@@ -189,7 +188,7 @@ module ResourceRegistry
             setting :application_interval, :monthly
             setting :employer_attestation_required, false
             setting(:open_enrollment_minimum_days,  { type: :integer, default: 5, value: 5 }) { |value| Hash(metadata: value) }
-            setting(:employer_attestation_required, { type: :Bool, default: false, value: false }) { |value| Hash(metadata: value) }
+            setting(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
             setting(:application_period,  { type:     :date_range,
                                             default:  Date.new(2019,1,1)..Date.new(2019,12,31),
             value:    Date.new(2019,1,1)..Date.new(2019,12,31) } ) \
