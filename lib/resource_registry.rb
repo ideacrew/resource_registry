@@ -2,20 +2,14 @@ require "dry/inflector"
 require 'dry/monads'
 require "mongoid"
 
-require 'resource_registry/version'
 require 'resource_registry/application'
-
-require 'resource_registry/service_mixin'
-require 'resource_registry/repository'
 require 'resource_registry/configure'
+require 'resource_registry/error'
+require 'resource_registry/feature_check'
+require 'resource_registry/repository'
+require 'resource_registry/version'
 
-require 'resource_registry/subscriptions/feature'
-require 'resource_registry/subscriptions/subscription'
-require 'resource_registry/subscriptions/tenant'
-
-# require 'resource_registry/store'
-
-# require 'resource_registry/validation'
+# require 'resource_registry/stores/store'
 
 module ResourceRegistry
 
@@ -48,6 +42,4 @@ module ResourceRegistry
     end
   end
 
-
-  Error = Class.new(StandardError)
 end

@@ -1,4 +1,4 @@
 module ResourceRegistry
-  class ServiceMixin
+  class FeatureCheck
   end
 end

@@ -5,7 +5,10 @@ require "pry-byebug"
 
 # Set up the local context
 # Dir['./spec/resource_registry/subscriptions/*.rb'].sort.each { |file| require file }
-
+begin
+  require 'pry-byebug'
+  rescue LoadError
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

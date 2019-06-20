@@ -48,7 +48,7 @@ module ResourceRegistry
     end
 
     def extend_namespace(namespace)
-      namespace = self.namespace_join(namespace) if namespace is_a? Array
+      # namespace = self.namespace_join(namespace) if namespace is_a? Array
       namespace_klass = build_namespace(namespace)
       import namespace_klass
     end

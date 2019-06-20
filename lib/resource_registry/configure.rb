@@ -85,8 +85,8 @@ module ResourceRegistry
             setting(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
             setting(:application_period,  { type:     :date_range,
                                             default:  Date.new(2018,1,1)..Date.new(2018,12,31),
-            value:    Date.new(2018,1,1)..Date.new(2018,12,31) }) \
-              { |vals| Hash(metadata: vals) }
+                                            value:    Date.new(2018,1,1)..Date.new(2018,12,31) }) \
+                                          { |vals| Hash(metadata: vals) }
 
 
             setting :product_packages, [:cc, :dd]
@@ -191,24 +191,24 @@ module ResourceRegistry
             setting(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
             setting(:application_period,  { type:     :date_range,
                                             default:  Date.new(2019,1,1)..Date.new(2019,12,31),
-            value:    Date.new(2019,1,1)..Date.new(2019,12,31) } ) \
-              { |vals| Hash(metadata: vals) }
+                                            value:    Date.new(2019,1,1)..Date.new(2019,12,31) } ) \
+                                          { |vals| Hash(metadata: vals) }
 
 
             setting(:application_interval_kinds,  { type:     :array,
                                                     default:  [:monthly, :annual, :annual_with_midyear_initial],
-            value:    [:monthly, :annual, :annual_with_midyear_initial], }) \
-              { |vals| Hash(metadata: vals) }
+                                                    value:    [:monthly, :annual, :annual_with_midyear_initial], }) \
+                                                  { |vals| Hash(metadata: vals) }
 
             setting(:probation_period_kinds,  { type:     :array,
                                                 default:  [:first_of_month_before_15th, :date_of_hire, :first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days],
-            value:    [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
-              { |vals| Hash(metadata: vals) }
+                                                value:    [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
+                                              { |vals| Hash(metadata: vals) }
 
             setting(:contact_methods_kinds,   { type:     :array,
                                                 default:  [:paper_and_electronic, :paper_only, :electronic_only],
-            value:    [:paper_and_electronic, :paper_only, :electronic_only], }) \
-              { |vals| Hash(metadata: vals) }
+                                                value:    [:paper_and_electronic, :paper_only, :electronic_only], }) \
+                                              { |vals| Hash(metadata: vals) }
           end
         end
       end
