@@ -4,8 +4,11 @@ module ResourceRegistry
 
       attr_accessor :tenant, :configuration_set_name, :configuration_set
 
-      def persist!
+      def load
         raise NotImplementedError
+      end
+
+      def persist
       end
 
 

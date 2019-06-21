@@ -5,9 +5,9 @@ module ResourceRegistry
 
       store_in collection: ResourceRegistry::Settings.config.stores.mongodb.collection_name
 
-      field :tenant,                  type: Symbol
-      field :configuration_set_name,  type: String
-      field :configuration_set,       type: Hash
+      field :tenant,                type: Symbol
+      field :collection_set_name,   type: String
+      field :collection_set,        type: Hash
 
       validate_presence_of :tenant, :configuration_set
 
@@ -20,7 +20,10 @@ module ResourceRegistry
         new_set.to_h
       end
 
-      def persist!
+      def load
+      end
+
+      def persist
         save
       end
 

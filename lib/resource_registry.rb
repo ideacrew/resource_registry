@@ -1,9 +1,7 @@
-require "dry/inflector"
-require 'dry/monads'
 require "mongoid"
+require "dry/inflector"
 
 require 'resource_registry/application'
-require 'resource_registry/configure'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/repository'
@@ -12,6 +10,7 @@ require 'resource_registry/version'
 # require 'resource_registry/stores/store'
 
 module ResourceRegistry
+  include Dry::Core::Constants
 
   Inflector = Dry::Inflector.new
 

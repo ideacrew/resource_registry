@@ -5,24 +5,6 @@ module ResourceRegistry
   class Repository
     include Dry::Container::Mixin
 
-    attr_reader :namespace_root
-
-    def initialize(tenant_key = nil)
-
-      # Top level namespace under which all items are stored
-      @namespace_root ||= set_tenant(tenant_key)
-
-      # @stores       = ResourceRegistry::Stores::Store.store_set
-      # Use Consul here to access site configuration settings
-
-      yield self if block_given?
-      self
-    end
-
-    def self.build
-      new
-    end
-
     def self.namespace_join(namespace_list)
       if namespace_list.length > 1
         namespace_list.join('.')
@@ -31,48 +13,78 @@ module ResourceRegistry
       end
     end
 
-    # Establish the namespace_root based on the tenant_key.
-    # The tenant_key value is stored as a string (to enable dot
-    # notation).  If tenant_key is nil, its value is stored as an
-    # empty string.  
-    def set_tenant(tenant_key)
-      tenant_key_str = tenant_key.to_s
-      register(:tenant_key) { tenant_key_str } 
-
-      extend_namespace(tenant_key_str) if tenant_key != nil
-      tenant_key_str
+    def load_namespaces(namespace_names)
+      namespace_names.each { |name| load_namespace(name) }
     end
 
-    def tenant_key
-      resolve(:tenant_key)
-    end
-
-    def extend_namespace(namespace)
-      # namespace = self.namespace_join(namespace) if namespace is_a? Array
-      namespace_klass = build_namespace(namespace)
-      import namespace_klass
-    end
-
-    # Build a Namespace object, creating macros that perform the following:
-    # _all_keys: list of all keys in the namespace, including macros that start with and underscore ('_') character
-    # _keys: list of all non-macro keys in the namespace
-    # _pairs: list of key/value pairs in the namespace
-    def build_namespace(namespace)
-      Dry::Container::Namespace.new(namespace) do
-        register('_all_keys') { ns_exp = /\A#{Regexp.quote(namespace)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
-        register('_keys')     { ns_exp = /\A#{Regexp.quote(namespace)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
-        register('_pairs')    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
-      end
-    end
-
-    private
-
-    def resolve_namespace(namespace)
-      if @namespace_root != nil && @namespace_root != "" && (@namespace_root != namespace)
-        namespace = [@namespace_root, namespace].join('.')
-      end
+    def load_namespace(name)
+      namespace = Dry::Container::Namespace.new(name) { register_namespace_procs(name) }
+      self.import namespace
       namespace
     end
+
+    # [level1a, [leve2a, level2b, [level3a]], level1b]
+
+    # {  }
+
+    # def load_ns(names)
+    #   names.each do |name|
+    #     self[name].is_a? Dry::Container::Namespace
+    #     else
+    #     end
+    #   end
+    # end
+
+    # Create namespace-level procs that perform the following:
+    # _all_keys: list of all keys in the namespace, including procs that start with and underscore ('_') character
+    # _keys: list of all non-proc keys in the namespace
+    # _pairs: list of key/value pairs in the namespace
+    def register_namespace_procs(namespace_name)
+      register('_all_keys') { ns_exp = /\A#{Regexp.quote(namespace_name)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
+      register('_keys')     { ns_exp = /\A#{Regexp.quote(namespace_name)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
+      register('_pairs')    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
+    end
+
+    # Recursively update values from a hash
+    #
+    # @param [Hash] values to set
+    # @return [Config]
+    def update(values)
+      values.each do |key, value|
+        if self[key].is_a?(Repository)
+          self[key].update(value)
+        else
+          self[key] = value
+        end
+      end
+      self
+    end
+
+    def dup
+      if self.defined?
+        self.class.new.define!(to_h)
+      else
+        self.class.new
+      end
+    end
+
+    # Serialize config to a Hash
+    #
+    # @return [Hash]
+    def to_h
+      self.each_with_object({}) do |(key, value), hash|
+        case value
+        when Repository
+          hash[key] = value.to_h
+        else
+          hash[key] = value
+        end
+      end
+    end
+
+    alias to_hash to_h
+
+    private
 
     def build_cache(name)
       @data_store = ThreadSafe::Cache.new.tap do |ds|

@@ -1,3 +1,3 @@
 require 'resource_registry'
 
-ResourceRegistry::Application.config.default_store = :mongodb
+ResourceRegistry::Application.default_store = :mongodb
