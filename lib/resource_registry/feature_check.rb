@@ -1,3 +1,5 @@
+require "dry-auto_inject"
+
 ## Wrong Way!!
 # if census_employee_ssn_required
 # else

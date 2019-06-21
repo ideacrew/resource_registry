@@ -5,6 +5,10 @@ module ResourceRegistry
   class Repository
     include Dry::Container::Mixin
 
+    def initialize
+      yield self if block_given?
+    end
+
     def self.namespace_join(namespace_list)
       if namespace_list.length > 1
         namespace_list.join('.')

@@ -1,10 +1,10 @@
 require "mongoid"
 require "dry/inflector"
 
-require 'resource_registry/application'
+require 'resource_registry/repository'
+# require 'resource_registry/application'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
-require 'resource_registry/repository'
 require 'resource_registry/version'
 
 # require 'resource_registry/stores/store'
