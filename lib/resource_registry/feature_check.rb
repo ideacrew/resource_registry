@@ -17,14 +17,19 @@ require "dry-auto_inject"
 
 
 module ResourceRegistry
-  class FeatureCheck < Repository
-    Import = Dry::AutoInject(self)
+  Import = Dry::AutoInject(self)
 
-    register "users_repository" do
+  class FeatureCheck
+    Repo = Repository.new
+  
+    def initialize
+    end
+
+    Repo.register "users_repository" do
       UsersRepository.new
     end
 
-    register "operations.create_user" do
+    Repo.register "operations.create_user" do
       CreateUser.new
     end
   end

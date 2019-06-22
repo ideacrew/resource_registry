@@ -1,19 +1,29 @@
 require 'dry-container'
 # require "dry-auto_inject"
 
+# # How to access namespaces: reference the block variable assigned to that namespace
+# container.namespace('three') do |c|
+#   c.register('four', c.resolve('one.two', namespaced: false))
+# end
+
 module ResourceRegistry
   class Repository
     include Dry::Container::Mixin
 
-    def initialize
+    attr_reader :namespace_root
+
+    def initialize(root_name: nil)
+      @namespace_root = build_namespace_root(root_name)
+
       yield self if block_given?
     end
 
-    def self.namespace_join(namespace_list)
-      if namespace_list.length > 1
-        namespace_list.join('.')
+    def build_namespace_root(namespace_name)
+      if namespace_name == nil || namespace_name == ''
+        nil
       else
-        namespace_list.to_s
+        ns = load_namespace(namespace_name)
+        ns.name 
       end
     end
 
@@ -25,6 +35,14 @@ module ResourceRegistry
       namespace = Dry::Container::Namespace.new(name) { register_namespace_procs(name) }
       self.import namespace
       namespace
+    end
+
+    def self.namespace_join(namespaces)
+      if namespaces.length > 1
+        namespaces.join('.').to_s
+      else
+        namespaces.size == 1 ? namespaces.first.to_s : ''
+      end
     end
 
     # [level1a, [leve2a, level2b, [level3a]], level1b]

@@ -1,4 +1,4 @@
-require 'dry-configurable'
+# require 'dry-container'
 
 module ResourceRegistry
   class Application < Repository
