@@ -11,49 +11,68 @@ RSpec.describe ResourceRegistry::Repository do
       expect(subject.namespace_root).to be_nil
     end
 
-    context "with a root namespace" do
-      let(:root_name)        { :dchbx }
+    context "class method #namespace_join" do
+      context "is passed an empty array" do
+        let(:empty_array) { [] }
+        let(:joined_namespaces)   { nil }
 
-      subject { described_class.new(root_name: root_name) }
-
-      it { expect(subject.namespace_root).to eq root_name }
-    
-      context "class method #namespace_join" do
-        context "is passed an empty array" do
-          let(:empty_array) { [] }
-          let(:joined_namespaces)   { '' }
-
-          it { expect(subject.class.namespace_join(empty_array)).to eq joined_namespaces}
-        end
-
-        context "is passed an array with one value" do
-          let(:single_value_array)  { [:level_one] }
-          let(:joined_namespaces)   { 'level_one' }
-
-          it { expect(subject.class.namespace_join(single_value_array)).to eq joined_namespaces}
-        end
-
-        context "is passed an array with > 1 value" do
-          let(:multi_value_array)   { [:level_one, :level_two] }
-          let(:joined_namespaces)   { 'level_one.level_two' }
-
-          it { expect(subject.class.namespace_join(multi_value_array)).to eq joined_namespaces}
-        end
+        it { expect(subject.class.namespace_join(empty_array)).to eq joined_namespaces}
       end
 
+      context "is passed an array with one value" do
+        let(:single_value_array)  { [:level_one] }
+        let(:joined_namespaces)   { 'level_one' }
 
-      context "and an item is registered to the root namespace of the repository" do
-        let(:logfile_name)  { Hash(logfile_name: "logfile.log") }
-        let(:market_kinds)  { [:aca_shop, :aca_individual, :fehb, :medicaid, :medicare] }
+        it { expect(subject.class.namespace_join(single_value_array)).to eq joined_namespaces}
+      end
 
-        before { subject.register(logfile_name.keys[0]) { logfile_name.values[0] } }
+      context "is passed an array with > 1 value" do
+        let(:multi_value_array)   { [:level_one, :level_two] }
+        let(:joined_namespaces)   { 'level_one.level_two' }
 
-        it "the item should be present" do
-          expect(subject.resolve(logfile_name.keys[0])).to eq logfile_name.values[0]
-        end
+        it { expect(subject.class.namespace_join(multi_value_array)).to eq joined_namespaces}
       end
     end
 
+    context "instance method #add_namespace" do
+      let(:new_namespace)     { :new_namespace }
+      let(:new_namespace_str) { new_namespace.to_s }
+
+      it { expect(subject.add_namespace(new_namespace)).to be_a(Dry::Container::Namespace)   }
+      it { expect(subject.add_namespace(new_namespace).name).to eq new_namespace_str }
+    end
+
+    context "with a root namespace" do
+      let(:root_name)     { :dchbx }
+      let(:root_name_str) { root_name.to_s }
+
+      subject { described_class.new(root_name: root_name) }
+      it { expect(subject.namespace_root).to eq root_name_str }
+    
+      context "and an item is registered in the repository" do
+        let(:logfile_key)   { :logfile_name}
+        let(:logfile_value) { "logfile.log" }
+        let(:qualified_logfile_key)  { root_name.to_s + '.' + logfile_key.to_s }
+
+        before do
+          namespace_str = subject.class.namespace_join([root_name, logfile_key])
+          subject.register(namespace_str) { logfile_value }
+        end
+
+        it "the item should be found in the namespace prepended by the namespace root" do
+          expect(subject.resolve(qualified_logfile_key)).to eq logfile_value
+        end
+      end
+
+      context "instance method #add_namespace" do
+        let(:new_namespace)   { :new_namespace }
+        let(:full_namespace)  { root_name.to_s + '.' + new_namespace.to_s }
+
+        it { expect(subject.add_namespace(new_namespace)).to be_a(Dry::Container::Namespace)   }
+        it { expect(subject.add_namespace(new_namespace).name).to eq full_namespace }
+      end
+
+    end
 
     context "and namespaces and values are added" do
 

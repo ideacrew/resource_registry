@@ -18,37 +18,33 @@ module ResourceRegistry
       yield self if block_given?
     end
 
-    def build_namespace_root(namespace_name)
-      if namespace_name == nil || namespace_name == ''
-        nil
-      else
-        ns = load_namespace(namespace_name)
-        ns.name 
-      end
+    def build_namespace_root(name)
+      name = self.class.namespace_join([name])
+      return nil if name == nil
+
+      ns = add_namespace(name)
+      ns.name 
     end
 
-    def load_namespaces(namespace_names)
-      namespace_names.each { |name| load_namespace(name) }
-    end
-
-    def load_namespace(name)
+    # Add a namespace to this container, prepending namespace_root if present
+    def add_namespace(name)
+      name = self.class.namespace_join([@namespace_root] << name)
       namespace = Dry::Container::Namespace.new(name) { register_namespace_procs(name) }
       self.import namespace
       namespace
     end
 
+    # Build a composite namespace string from an array list of component names 
     def self.namespace_join(namespaces)
+      namespaces = namespaces.compact
       if namespaces.length > 1
         namespaces.join('.').to_s
       else
-        namespaces.size == 1 ? namespaces.first.to_s : ''
+        namespaces.size == 1 ? namespaces.first.to_s : nil
       end
     end
 
     # [level1a, [leve2a, level2b, [level3a]], level1b]
-
-    # {  }
-
     # def load_ns(names)
     #   names.each do |name|
     #     self[name].is_a? Dry::Container::Namespace
@@ -62,9 +58,9 @@ module ResourceRegistry
     # _keys: list of all non-proc keys in the namespace
     # _pairs: list of key/value pairs in the namespace
     def register_namespace_procs(namespace_name)
-      register('_all_keys') { ns_exp = /\A#{Regexp.quote(namespace_name)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
-      register('_keys')     { ns_exp = /\A#{Regexp.quote(namespace_name)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
-      register('_pairs')    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
+      register("#{namespace_name}._all_keys") { ns_exp = /\A#{Regexp.quote(namespace_name)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
+      register("#{namespace_name}._keys")     { ns_exp = /\A#{Regexp.quote(namespace_name)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
+      register("#{namespace_name}._pairs")    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
     end
 
     # Recursively update values from a hash
