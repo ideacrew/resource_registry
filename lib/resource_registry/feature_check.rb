@@ -38,7 +38,7 @@ module ResourceRegistry
     include Import["users_repository"]
 
     def call(user_attrs)
-      users_repository.create(user_attrs)
+      users_repository.profile_create(user_attrs)
     end
   end
 
