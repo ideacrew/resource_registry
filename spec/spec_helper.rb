@@ -8,7 +8,7 @@ require "pry-byebug"
 
 shared_resource_dirs = ["features", "models/organizations", "services/organizations"]
 shared_resource_dirs.each do |dir|
-  glob_pattern = File.join('./spec/support/benefit_sponsors/app/', dir, '*.rb')
+  glob_pattern = File.join('.', 'spec', 'support', 'benefit_sponsors', 'app', dir, '*.rb')
   Dir.glob(glob_pattern).each { |file| require file }
 end
 
