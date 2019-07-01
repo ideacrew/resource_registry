@@ -2,6 +2,9 @@ require "mongoid"
 require "dry/inflector"
 
 require 'resource_registry/repository'
+require 'resource_registry/types'
+require 'resource_registry/setting'
+
 # require 'resource_registry/application'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
