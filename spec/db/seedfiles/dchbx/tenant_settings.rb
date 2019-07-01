@@ -13,10 +13,10 @@ end
 repo = ResourceRegistry::Repository.new
 
 tenant = "dchbx"
-namespace_root = repo.load_namespace("#{tenant}_tenant")
-namespace_root_name = namespace_root.name
+top_namespace = repo.load_namespace("#{tenant}_tenant")
+top_namespace_name = top_namespace.name
 
 site_repo = ResourceRegistry::Repository.new
 require './spec/db/seedfiles/site_settings.rb'
-repo.merge(site_repo, namespace: namespace_root_name)
+repo.merge(site_repo, namespace: top_namespace_name)
 

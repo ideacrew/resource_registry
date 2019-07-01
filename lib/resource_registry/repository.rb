@@ -10,15 +10,15 @@ module ResourceRegistry
   class Repository
     include Dry::Container::Mixin
 
-    attr_reader :namespace_root
+    attr_reader :top_namespace
 
-    def initialize(root_name: nil)
-      @namespace_root = build_namespace_root(root_name)
+    def initialize(top_namespace: nil)
+      @top_namespace = build_top_namespace(top_namespace)
 
       yield self if block_given?
     end
 
-    def build_namespace_root(name)
+    def build_top_namespace(name)
       name = self.class.namespace_join([name])
       return nil if name == nil
 
@@ -26,9 +26,9 @@ module ResourceRegistry
       ns.name 
     end
 
-    # Add a namespace to this container, prepending namespace_root if present
+    # Add a namespace to this container, prepending top_namespace if present
     def add_namespace(name)
-      name = self.class.namespace_join([@namespace_root] << name)
+      name = self.class.namespace_join([@top_namespace] << name)
       namespace = Dry::Container::Namespace.new(name) { register_namespace_procs(name) }
       self.import namespace
       namespace

@@ -7,8 +7,8 @@ RSpec.describe ResourceRegistry::Repository do
     subject { described_class.new  }
 
     it { expect(subject.config.registry).to be_a(Dry::Container::Registry) }
-    it "namespace_root should be nil" do
-      expect(subject.namespace_root).to be_nil
+    it "top_namespace should be nil" do
+      expect(subject.top_namespace).to be_nil
     end
 
     context "class method #namespace_join" do
@@ -42,20 +42,20 @@ RSpec.describe ResourceRegistry::Repository do
       it { expect(subject.add_namespace(new_namespace).name).to eq new_namespace_str }
     end
 
-    context "with a root namespace" do
-      let(:root_name)     { :dchbx }
-      let(:root_name_str) { root_name.to_s }
+    context "with a top namespace" do
+      let(:top_namespace)     { :dchbx }
+      let(:top_namespace_str) { top_namespace.to_s }
 
-      subject { described_class.new(root_name: root_name) }
-      it { expect(subject.namespace_root).to eq root_name_str }
+      subject { described_class.new(top_namespace: top_namespace) }
+      it { expect(subject.top_namespace).to eq top_namespace_str }
     
       context "and an item is registered in the repository" do
         let(:logfile_key)   { :logfile_name}
         let(:logfile_value) { "logfile.log" }
-        let(:qualified_logfile_key)  { root_name.to_s + '.' + logfile_key.to_s }
+        let(:qualified_logfile_key)  { top_namespace.to_s + '.' + logfile_key.to_s }
 
         before do
-          namespace_str = subject.class.namespace_join([root_name, logfile_key])
+          namespace_str = subject.class.namespace_join([top_namespace, logfile_key])
           subject.register(namespace_str) { logfile_value }
         end
 
@@ -66,7 +66,7 @@ RSpec.describe ResourceRegistry::Repository do
 
       context "instance method #add_namespace" do
         let(:new_namespace)   { :new_namespace }
-        let(:full_namespace)  { root_name.to_s + '.' + new_namespace.to_s }
+        let(:full_namespace)  { top_namespace.to_s + '.' + new_namespace.to_s }
 
         it { expect(subject.add_namespace(new_namespace)).to be_a(Dry::Container::Namespace)   }
         it { expect(subject.add_namespace(new_namespace).name).to eq full_namespace }
