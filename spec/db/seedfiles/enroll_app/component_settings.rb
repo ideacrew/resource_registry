@@ -1,9 +1,24 @@
 # nested configuration settings file called from load_settings.rb
 
-Repo.namespace(:components) do
+
+# {
+#   site: { 
+#     key: :ea_in_the_cloud,
+#     applications: [
+#       ea_application: {},
+#     ],
+#     tenants: [
+#       cca: {}, 
+#       dchbx: {},
+#     ],
+#     components:
+# }
+# }
+
+Repo.namespace(:applications) do
   # Entry Point: Enterprise
 
-  register(:enterprise_admin_portal_component,  { 
+  register(:enterprise_admin_portal_application,  { 
                                                   type: :symbol,
                                                   default: :enterprise_admin_portal, 
                                                   value: :enterprise_admin_portal, 
@@ -12,56 +27,56 @@ Repo.namespace(:components) do
                                                 })
 
   # Entry Point: Enterprise
-  register(:ea_component,                   { 
+  register(:ea_application,                   { 
                                               type: :symbol,
-                                              default: :ea_component, 
-                                              value: :ea_component, 
-                                              title: "Enroll Application Component", 
+                                              default: :ea_application, 
+                                              value: :ea_application, 
+                                              title: "Enroll Application application", 
                                               description: "" 
                                             })
 
   # Entry Point: Enterprise
-  register(:edi_db_classic_component,       { 
+  register(:edi_db_classic_application,       { 
                                               type: :symbol,
-                                              default: :edi_db_classic_component, 
-                                              value: :edi_db_classic_component, 
-                                              title: "EDI Database Component (classic)", 
+                                              default: :edi_db_classic_application, 
+                                              value: :edi_db_classic_application, 
+                                              title: "EDI Database application (classic)", 
                                               description: "" 
                                             })
 
   # Entry Point: Enterprise
-  register(:edi_db_component,               { 
+  register(:edi_db_application,               { 
                                               type: :symbol,
-                                              default: :edi_db_component, 
-                                              value: :edi_db_component, 
-                                              title: "EDI Database Component", 
+                                              default: :edi_db_application, 
+                                              value: :edi_db_application, 
+                                              title: "EDI Database application", 
                                               description: "" 
                                             })
 
   # Entry Point: Enterprise
-  register(:ledger_component,               { 
+  register(:ledger_application,               { 
                                               type: :symbol,
-                                              default: :ledger_component, 
-                                              value: :ledger_component, 
-                                              title: "Ledger Component", 
+                                              default: :ledger_application, 
+                                              value: :ledger_application, 
+                                              title: "Ledger application", 
                                               description: "Web portal for accounts, billing and payment" 
                                             })
 
   # Entry Point: Enterprise
-  register(:notice_component,               { 
+  register(:notice_application,               { 
                                               type: :symbol,
-                                              default: :notice_component, 
-                                              value: :notice_component, 
-                                              title: "Notice Component", 
+                                              default: :notice_application, 
+                                              value: :notice_application, 
+                                              title: "Notice application", 
                                               description: "" 
                                             })
 
   # Entry Point: Enterprise
-  register(:trans_gw_component,             { 
+  register(:trans_gw_application,             { 
                                               type: :symbol,
-                                              default: :trans_gw_component, 
-                                              value: :trans_gw_component, 
-                                              title: "Transport Gateway Component", 
+                                              default: :trans_gw_application, 
+                                              value: :trans_gw_application, 
+                                              title: "Transport Gateway application", 
                                               description: "" 
                                             })
 end

@@ -49,17 +49,19 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
       register(:new_groups_transmit_dom,            { title: "", description: "", type: :integer, default: 16, value: 16 })  #{ |vals| Hash(metadata: vals)}
 
 
-      # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
-      register(:enrollment_transmit_period, { title: "", description: "", type: :range, 
-                                              default: Date.new(2019, 1, 26)..Date.new(2019, 1, 31),
-                                              value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31), })
     end
 
     namespace :benefit_market_catalogs do
       namespace :catalog_2019 do
-        register(:application_period,               { title: "", description: "", type: :range,
+         register(:application_period,               { title: "", description: "", type: :range,
                                                       default:  Date.new(2019,1,1)..Date.new(2019,12,31),
                                                       value:    Date.new(2019,1,1)..Date.new(2019,12,31) }) #{ |vals| Hash(metadata: vals) }
+
+         # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
+        register(:enrollment_transmit_period, { title: "", description: "", type: :range, 
+                                                default: Date.new(2019, 1, 26)..Date.new(2019, 1, 31),
+                                                value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31), })
+
 
         register(:application_interval_kind,        { title: "", description: "", type: :enumerated_hash, 
                                                       default:  { monthly: "Monthly" }, 

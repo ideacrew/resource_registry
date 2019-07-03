@@ -11,7 +11,7 @@ TopNamespaceName = "#{tenant}_tenant"
 # Repository container that manages configuration settings
 Repo = ResourceRegistry::Repository.new(top_namespace: TopNamespaceName)
 
-binding.pry
+# binding.pry
 
 boot_keys.each do |key|
   glob_pattern = File.join('.', 'spec', 'db', 'seedfiles', 'enroll_app', "#{key.to_s}_settings.rb")
