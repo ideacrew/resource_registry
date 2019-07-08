@@ -1,5 +1,4 @@
-require 'dry-container'
-# require "dry-auto_inject"
+require "dry-auto_inject"
 
 # # How to access namespaces: reference the block variable assigned to that namespace
 # container.namespace('three') do |c|

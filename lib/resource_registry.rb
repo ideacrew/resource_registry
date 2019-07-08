@@ -1,11 +1,11 @@
 require "mongoid"
 require "dry/inflector"
+require 'dry-container'
 
 require 'resource_registry/repository'
-require 'resource_registry/types'
-require 'resource_registry/setting'
+require 'resource_registry/configuration'
+require 'resource_registry/options'
 
-# require 'resource_registry/application'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/version'
@@ -16,6 +16,21 @@ module ResourceRegistry
   include Dry::Core::Constants
 
   Inflector = Dry::Inflector.new
+
+  # Enable configuration in host Rails application using initializers:
+  # config/initializers/resource_registry.rb
+  #   ResourceRegistry.configure do |config|
+  #     config.api_key = 'your_key_here'
+  #   end
+  class << self
+    attr_accessor :configuration
+  end
+
+  def self.configure
+    self.configuration ||= Configuration.new
+    yield(configuration)
+  end
+
 
   # Determines the namespace parent for the passed module or class constant
   # If the passed constant is top of the namespace, returns that constant

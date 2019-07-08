@@ -5,7 +5,7 @@
 Repo.namespace("#{TopNamespaceName}.ea_component") do
   namespace :aca_shop_market do
 
-    register(:enroll_prior_effective_on_max,          { title: "", description: "", type: :duration, default: { days: -30 }, value: { days: -30 }})  #{ |vals| Hash(metadata: vals)}
+    register(:enroll_prior_to_effective_on_max,       { title: "", description: "", type: :duration, default: { days: -30 }, value: { days: -30 }})  #{ |vals| Hash(metadata: vals)}
     register(:enroll_after_effective_on_max,          { title: "", description: "", type: :duration, default: { days: 30 }, value: { days: 30 }})  #{ |vals| Hash(metadata: vals)}
     register(:enroll_after_ee_roster_correction_max,  { title: "", description: "", type: :duration, default: { days: 30 }, value: { days: 30 }})  #{ |vals| Hash(metadata: vals)}
     register(:retroactive_coverage_termination_max,   { title: "", description: "", type: :duration, default: { days: -60 }, value: { days: -60 }})  #{ |vals| Hash(metadata: vals)}
