@@ -3,7 +3,7 @@ module ResourceRegistry
     class Portal < Dry::Struct 
       transform_keys(&:to_sym)
 
-      attribute :key,       Types::Hash
+      attribute :key,       Types::Symbol
 
 
       def call(params)
