@@ -10,9 +10,16 @@ module ResourceRegistry
 
       attribute :namespaces do
         attribute :name?,    Types::String
-        attribute :options, Types::Array.of(Options::Option)
+        attribute :options,  Types::Array.of(Options::Option)
       end
 
+      def to_container
+        Dry::Container::Namespace.new(key) do |ns|
+          namespaces.options.each do |option|
+            ns.register(option.key, option.default)
+          end
+        end
+      end
     end
   end
 end
