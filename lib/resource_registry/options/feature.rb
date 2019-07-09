@@ -8,19 +8,19 @@ module ResourceRegistry
       attribute :description?,        Types::Strict::String
       attribute :portal?,             Options::Portal
       attribute :namespaces?,         Types::Array.of(Options::OptionNamespace)
+      attribute :options?,            Types::Array.of(Options::Option)
 
-      attribute :namespaces do
-        attribute :name?,    Types::String
-        attribute :options,  Types::Array.of(Options::Option)
-      end
-
-      def to_container
-        Dry::Container::Namespace.new(key) do |ns|
-          namespaces.options.each do |option|
-            ns.register(option.key, option.default)
+      def load!(ns)
+        if options.present?
+          ns.namespace(key) do |ns|
+            options.each do |option|
+              option.load!(ns)
+            end
           end
         end
       end
     end
   end
 end
+
+

@@ -9,10 +9,10 @@ module ResourceRegistry
       attribute :key?,           Types::Symbol
       attribute :type?,          Types::Symbol
       attribute :default?,       Types::String
-      attribute :value?,        Types::String
-      attribute :title?,        Types::String
-      attribute :description?,  Types::String
-
+      attribute :value?,         Types::String
+      attribute :title?,         Types::String
+      attribute :description?,   Types::String
+      attribute :options?,       Types::Array.of(Options::Option)
 
       def initialize(params)
         # Set nil value attribute to default 
@@ -23,31 +23,17 @@ module ResourceRegistry
         super
       end
 
-
-# module DeepStruct
-
-#   def to_ostruct
-
-#     case self
-#     when Hash
-#       root = OpenStruct.new(self)
-#       self.each_with_object(root) do |(k,v), o|
-#         o.send("#{k}=", v.to_ostruct)
-#       end
-#       root
-#     when Array
-#       self.map do |v|
-#         v.to_ostruct
-#       end
-#     else
-#       self
-#     end
-
-#   end
-
-# end
-
-
+      def load!(ns)
+        if options.present?
+          ns.namespace(key) do |option_ns|
+            options.each do |option|
+              option.load!(option_ns)
+            end
+          end
+        else
+          ns.register(key, default)
+        end
+      end
     end
   end
 end
