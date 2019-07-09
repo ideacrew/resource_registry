@@ -13,12 +13,10 @@ module ResourceRegistry
       def load!(ns)
         if options.present?
           ns.namespace(key) do |ns|
-            options.each do |option|
-              option.load!(ns)
-            end
+            options.each {|option| option.load!(ns) }
           end
         end
-      end
+      end 
     end
   end
 end

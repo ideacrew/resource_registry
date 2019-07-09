@@ -26,9 +26,7 @@ module ResourceRegistry
       def load!(ns)
         if options.present?
           ns.namespace(key) do |option_ns|
-            options.each do |option|
-              option.load!(option_ns)
-            end
+            options.each {|option| option.load!(option_ns) }
           end
         else
           ns.register(key, default)
