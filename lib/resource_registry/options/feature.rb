@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Options
-    class Feature  < Dry::Struct # FEHB, SHOP, IVL, GA
+    class Feature < Dry::Struct # FEHB, SHOP, IVL, GA
       transform_keys(&:to_sym)
 
       attribute :key,                 Types::Symbol
@@ -8,8 +8,7 @@ module ResourceRegistry
       attribute :description?,        Types::Strict::String
       attribute :portal?,             Options::Portal
 
-      attribute :namespaces,          Types::Array.of(Options::OptionNamespaces)
-
+      attribute :namespaces?,         Types::Array.of(Options::OptionNamespace)
     end
   end
 end
