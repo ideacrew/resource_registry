@@ -8,10 +8,7 @@ module ResourceRegistry
       attribute :description?,        Types::Strict::String
       attribute :portal?,             Options::Portal
 
-      attribute :namespaces do
-        attribute :name?,    Types::String
-        attribute :options, Types::Array.of(Options::Option)
-      end
+      attribute :namespaces,          Types::Array.of(Options::OptionNamespaces)
 
     end
   end
