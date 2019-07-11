@@ -1,6 +1,10 @@
 # Instantiate a container 
+require "dry-auto_inject"
+
 module ResourceRegistry
   module Services
+    Import = Dry::AutoInject(self)
+    
     class CreateRepository
       attr_reader :repository
 
@@ -8,9 +12,12 @@ module ResourceRegistry
         @repository_name  = args[:repository_name] || 'Repo'
         @repository = create_repository
 
+
         register_repository_kinds
         @repository
       end
+
+      def self.
 
       def create_repository
         Object.const_set(@repository_name.classify, ResourceRegistry::Repository.new)
@@ -18,10 +25,9 @@ module ResourceRegistry
 
       # Repository is like a human stem cell, it includes instructions that enable it to specialize to serve any purpose
       def register_repository_kinds
-        @repository.register "initialize_application_repository", -> { ResourceRegistry::Services::InitializeApplicationRepository.new }
+        @repository.register "initialize_application_repository",   -> { ResourceRegistry::Services::InitializeApplicationRepository.new }
         @repository.register "load_application_boot_configuration", -> { ResourceRegistry::Services::LoadApplicationBootConfiguration.new }
-        @repository.register "load_application_configuration", -> { ResourceRegistry::Services::LoadApplicationConfiguration.new }
-
+        @repository.register "load_application_configuration",      -> { ResourceRegistry::Services::LoadApplicationConfiguration.new }
 
         @repository.register "initialize_feature_check_repository", -> { ResourceRegistry::Services::InitializeFeatureCheckRepository.new }
       end

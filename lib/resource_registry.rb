@@ -5,6 +5,7 @@ require 'dry-container'
 require 'resource_registry/repository'
 require 'resource_registry/configuration'
 require 'resource_registry/options'
+require 'resource_registry/services'
 
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
