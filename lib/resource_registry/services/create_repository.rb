@@ -3,23 +3,21 @@ require "dry-auto_inject"
 
 module ResourceRegistry
   module Services
-    Import = Dry::AutoInject(self)
-    
     class CreateRepository
+      Import = Dry::AutoInject(self)
+
       attr_reader :repository
 
       def initialize(args)
         @repository_name  = args[:repository_name] || 'Repo'
-        @repository = create_repository
+        @repository = build_repository
 
 
         register_repository_kinds
         @repository
       end
 
-      def self.
-
-      def create_repository
+      def build_repository
         Object.const_set(@repository_name.classify, ResourceRegistry::Repository.new)
       end
 

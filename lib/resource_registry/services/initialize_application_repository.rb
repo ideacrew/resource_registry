@@ -2,7 +2,7 @@ module ResourceRegistry
   module Services
     class InitializeApplicationRepository
       # AutoInject makes `load_boot_configuration` and `load_application_configuration` available to use
-      include Services::Import["load_boot_configuration", "load_application_configuration"]
+      include ResourceRegistry::Services::CreateRepository::Import["load_boot_configuration", "load_application_configuration"]
 
       def call(params)
         # Path patterns to auto-import
