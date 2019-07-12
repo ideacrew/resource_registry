@@ -1,0 +1,95 @@
+applications:
+  enroll:
+    features:
+      individual_market:
+        options:
+          monthly_enrollment_due_on: 15
+          verification_outstanding_window:
+            days: 0
+          verification_due:
+            days: 95
+
+          open_enrollment:
+            start_on: <%= Date.new(2018,11,1) %>
+            end_on: <%= Date.new(2019,01,31) %>
+          dc_resident_application: true
+          transition_family_members_link: true
+            # dc_resident_application: true
+            # transition_family_members_link: true
+          upcoming_open_enrollment:
+            start_on: <%= Date.new(2019,11,1) %>
+            end_on: <%= Date.new(2020,01,31) %>
+      shop_market:
+        options:
+          valid_employer_attestation_documents_url: 'https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist'
+          small_market_employee_count_maximum: 50
+          employer_contribution_percent_minimum: 50
+          employer_dental_contribution_percent_minimum: 0
+          employer_family_contribution_percent_minimum: 0
+          employee_participation_ratio_minimum: <%= 2 / 3.0 %>
+          non_owner_participation_count_minimum: 1
+          binder_payment_due_on: 12
+          small_market_active_employee_limit: 200
+          new_employee_paper_application: true
+          census_employees_template_file: 'DCHL Employee Census'
+          coverage_start_period: "2 months"
+
+          binder_payment_dates: [
+            {"2019-01-01": '2018,12,12'},
+            {"2019-02-01": '2019,1,14'},
+            {"2019-03-01": '2019,2,12'},
+            {"2019-04-01": '2019,3,12'},
+            {"2019-05-01": '2019,4,12'},
+            {"2019-06-01": '2019,5,14'},
+            {"2019-07-01": '2019,6,12'},
+            {"2019-08-01": '2019,7,12'},
+            {"2019-09-01": '2019,8,13'},
+            {"2019-10-01": '2019,9,12'},
+          ]
+
+          earliest_enroll_prior_to_effective_on:
+            days: -30
+          latest_enroll_after_effective_on:
+            days: 30
+          latest_enroll_after_employee_roster_correction_on:
+            days: 30
+          retroactive_coverage_termination_maximum:
+            days: -60
+
+          initial_application:
+            publish_due_day_of_month: 5
+            advertised_deadline_of_month: 1
+            earliest_start_prior_to_effective_on:
+              months: -3
+              day_of_month: 0
+            appeal_period_after_application_denial:
+              days: 30
+            # After submitting an ineligible plan year application, time period an Employer must wait
+            ineligible_period_after_application_denial:
+              days: 90
+            quiet_period:
+              month_offset: 0
+              mday: 28
+
+          renewal_application:
+            earliest_start_prior_to_effective_on:
+              months: -3
+              day_of_month: 0
+            monthly_open_enrollment_end_on: 13
+            publish_due_day_of_month: 10
+            application_submission_soft_deadline: 5
+            force_publish_day_of_month: 11
+            open_enrollment:
+              minimum_length:
+                days: 3
+            quiet_period:
+              month_offset: -1
+            mday: 15
+      options:
+        state_name: "District of Columbia"
+        state_abbreviation: "DC"
+        hbx_abbreviation: "DC Health Benefit Exchange"
+        nationwide_markets: true
+
+
+

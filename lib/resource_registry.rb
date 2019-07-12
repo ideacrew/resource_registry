@@ -10,6 +10,8 @@ require 'resource_registry/services'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/version'
+require 'resource_registry/stores/serializers/yaml_serializer'
+
 
 # require 'resource_registry/stores/store'
 
@@ -32,6 +34,9 @@ module ResourceRegistry
     yield(configuration)
   end
 
+  def self.root
+    File.dirname __dir__
+  end
 
   # Determines the namespace parent for the passed module or class constant
   # If the passed constant is top of the namespace, returns that constant
