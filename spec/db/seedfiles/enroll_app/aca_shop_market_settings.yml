@@ -1,24 +1,6 @@
 applications:
   enroll:
     features:
-      individual_market:
-        options:
-          monthly_enrollment_due_on: 15
-          verification_outstanding_window:
-            days: 0
-          verification_due:
-            days: 95
-
-          open_enrollment:
-            start_on: <%= Date.new(2018,11,1) %>
-            end_on: <%= Date.new(2019,01,31) %>
-          dc_resident_application: true
-          transition_family_members_link: true
-            # dc_resident_application: true
-            # transition_family_members_link: true
-          upcoming_open_enrollment:
-            start_on: <%= Date.new(2019,11,1) %>
-            end_on: <%= Date.new(2020,01,31) %>
       shop_market:
         options:
           valid_employer_attestation_documents_url: 'https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist'
@@ -85,11 +67,5 @@ applications:
             quiet_period:
               month_offset: -1
             mday: 15
-      options:
-        state_name: "District of Columbia"
-        state_abbreviation: "DC"
-        hbx_abbreviation: "DC Health Benefit Exchange"
-        nationwide_markets: true
-
 
 
