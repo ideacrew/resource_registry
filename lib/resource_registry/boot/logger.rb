@@ -2,7 +2,7 @@ module ResourceRegistry
   module Boot
     class Logger
 
-      def call(params)
+      def call(**params)
       end
 
     end

@@ -1,11 +1,11 @@
 module ResourceRegistry
   module Services
     class LoadApplicationBootConfiguration
-
       attr_reader :repository
 
-      def call(params)
-        @repository       = params[:repository]
+      def call(**params)
+        @load_paths = params[:load_paths] || []
+        @repository = params[:repository]
         # @message_services = params[:message_services] || []
 
         configure_logger
@@ -13,11 +13,7 @@ module ResourceRegistry
         configure_authenticator
         # configure_message_service
 
-        register_applications
-      end
-
-      def register_applications
-        @repository.register
+        @repository
       end
 
       def configure_logger
@@ -25,7 +21,7 @@ module ResourceRegistry
       end
 
       def configure_error_handler
-          @repository.register(:error_handler) do |repo|
+        @repository.register(:error_handler) do |repo|
           handler = ResourceRegistry::Boot::ErrorHandler.new
           handler.logger = repo.logger
           handler
