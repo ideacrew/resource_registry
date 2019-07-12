@@ -6,7 +6,7 @@ module ResourceRegistry
         struct.extend(ClassMethods)
 
         struct.schema.each do |attribute, type|
-          SettersOverride.define_setter_for(struct: struct, attribute: attribute, type: type)
+          DryStructSetters.define_setter_for(struct: struct, attribute: attribute, type: type)
         end
       end
 
@@ -14,7 +14,7 @@ module ResourceRegistry
         def attributes(new_schema)
           super.tap do
             new_schema.each do |attribute, type|
-              SettersOverride.define_setter_for(struct: self, attribute: attribute, type: type)
+              DryStructSetters.define_setter_for(struct: self, attribute: attribute, type: type)
             end
           end
         end
