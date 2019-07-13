@@ -13,7 +13,6 @@ module ResourceRegistry
       attribute :value?,         Types::String
       attribute :title?,         Types::String
       attribute :description?,   Types::String
-      attribute :options?,       Types::Array.of(Options::Option)
 
       def initialize(params)
         # Set nil value attribute to default 

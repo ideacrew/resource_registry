@@ -9,8 +9,8 @@ module ResourceRegistry
       attribute :title?,            Types::Strict::String
       attribute :description?,      Types::Strict::String
       attribute :dependency_keys?,  Types::Array
-      # attribute :feature_keys?,     Types::Array
       attribute :features?,         Types::Array.of(Options::Feature)
+      attribute :namespaces?,       Types::Array.of(Options::OptionNamespace)
       attribute :options?,          Types::Array.of(Options::Option)
 
       # attribute :container_key,   Types::Symbol

@@ -4,7 +4,7 @@ module ResourceRegistry
       class YamlSerializer
 
         BOOT_KEYS = [:aca_shop_market, :aca_individual_market]
-        COLLECTIONS = %W(applications features options)
+        COLLECTIONS = %W(applications features namespace)
 
         class << self
 
@@ -41,31 +41,35 @@ module ResourceRegistry
                 __convert__(result: value, parent_ele: parent_ele, collection_name: key)
                 next
               end
-
               option_class = node_class_for(collection_name)
-              
-              if value.is_a?(Hash)
-                if parent_ele.present?
-                  option = option_class.new(key: key.to_sym)
-                  set_assoc(parent_ele, collection_name, option)
-                else
-                  option = option_class.new(key: key.to_sym)
-                end
-
-                __convert__(result: value, parent_ele: option, collection_name: collection_name)
-              else
-                option = option_class.new(key: key.to_sym, default: value.to_s)
+              if collection_name.blank?
+                attrs = {key: key.to_sym}
+                attrs.merge!(value.is_a?(Hash) ? value : {default: value.to_s})
+                option = option_class.new(attrs)
+                collection_name = 'options' if option.is_a?(ResourceRegistry::Options::Option)
                 set_assoc(parent_ele, collection_name, option)
+                collection_name = nil
+              else
+                option = option_class.new(key: key.to_sym)
+                set_assoc(parent_ele, collection_name, option)
+                __convert__(result: value, parent_ele: option, collection_name: nil)
               end
             end
             parent_ele
           end
 
-          def node_class_for(namespace)
-            "ResourceRegistry::Options::#{namespace.classify}".constantize
+          def node_class_for(namespace = nil)
+            return ResourceRegistry::Options::Option if namespace.blank?
+
+            if namespace == 'namespace'
+              ResourceRegistry::Options::OptionNamespace
+            else
+              "ResourceRegistry::Options::#{namespace.classify}".constantize
+            end
           end
 
           def set_assoc(parent_ele, collection_name, option)
+            collection_name = collection_name.pluralize
             records = [option]
             if parent_ele.send(collection_name).present?
               records = parent_ele.send(collection_name) + records
