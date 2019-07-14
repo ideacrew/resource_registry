@@ -3,12 +3,51 @@ applications:
     features:
       aca_shop_market:
         namespace:
+          earliest_enroll_prior_to_effective_on:
+            days: -30
           benefit_market_catalogs:
             namespace:
               catalog_2019:
                 application_period:
                   type: :range
                   default: <%= Date.new(2019,1,1)..Date.new(2019,12,31) %>
+          latest_enroll_after_effective_on:
+            days: 30
+          latest_enroll_after_employee_roster_correction_on:
+            days: 30
+          retroactive_coverage_termination_maximum:
+            days: -60
+          initial_application:
+            publish_due_day_of_month: 5
+            advertised_deadline_of_month: 1
+            namespace:
+              earliest_start_prior_to_effective_on:
+                months: -3
+                day_of_month: 0
+              appeal_period_after_application_denial:
+                days: 30
+              ineligible_period_after_application_denial:
+                days: 90
+              quiet_period:
+                month_offset: 0
+                mday: 28
+          renewal_application:
+            namespace:
+              earliest_start_prior_to_effective_on:
+                months: -3
+                day_of_month: 0
+              open_enrollment:
+                namespace:
+                  minimum_length:
+                    days: 3
+              quiet_period:
+                month_offset: -1
+                mday: 15
+            monthly_open_enrollment_end_on: 13
+            publish_due_day_of_month: 10
+            application_submission_soft_deadline: 5
+            force_publish_day_of_month: 11
+
         valid_employer_attestation_documents_url: 'https://www.mahealthconnector.org/business/business-resource-center/employer-verification-checklist'
         small_market_employee_count_maximum: 
           type: :integer
@@ -24,7 +63,6 @@ applications:
         new_employee_paper_application: true
         census_employees_template_file: 'DCHL Employee Census'
         coverage_start_period: "2 months"
-
         binder_payment_dates: [
           {"2019-01-01": '2018,12,12'},
           {"2019-02-01": '2019,1,14'},
@@ -37,54 +75,5 @@ applications:
           {"2019-09-01": '2019,8,13'},
           {"2019-10-01": '2019,9,12'},
         ]
-        namespace:
-          earliest_enroll_prior_to_effective_on:
-            days: -30
-        namespace:
-          latest_enroll_after_effective_on:
-            days: 30
-        namespace:
-          latest_enroll_after_employee_roster_correction_on:
-            days: 30
-        namespace:
-          retroactive_coverage_termination_maximum:
-            days: -60
-        namespace:
-          initial_application:
-            publish_due_day_of_month: 5
-            advertised_deadline_of_month: 1
-            namespace:
-              earliest_start_prior_to_effective_on:
-                months: -3
-                day_of_month: 0
-            namespace:
-              appeal_period_after_application_denial:
-                days: 30
-            namespace:
-              ineligible_period_after_application_denial:
-                days: 90
-            namespace:
-              quiet_period:
-                month_offset: 0
-                mday: 28
-        namespace:
-          renewal_application:
-            namespace:
-              earliest_start_prior_to_effective_on:
-                months: -3
-                day_of_month: 0
-            monthly_open_enrollment_end_on: 13
-            publish_due_day_of_month: 10
-            application_submission_soft_deadline: 5
-            force_publish_day_of_month: 11
-            namespace:
-              open_enrollment:
-                namespace:
-                  minimum_length:
-                    days: 3
-            namespace:
-              quiet_period:
-                month_offset: -1
-            mday: 15
 
 

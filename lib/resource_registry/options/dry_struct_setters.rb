@@ -33,6 +33,11 @@ module ResourceRegistry
           end
         end
       end
+
+      def load_collection(collection, namespace)
+        return if collection.blank?
+        collection.each {|item| item.load!(namespace) }
+      end
     end
   end
 end
