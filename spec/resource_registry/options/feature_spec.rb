@@ -83,13 +83,14 @@ RSpec.describe ResourceRegistry::Options::Feature do
     ]
   }
 
+  context "A feature is instantiated" do
+    subject { described_class.new(key: key, options: options) }
 
-  subject { described_class.new(key: key, options: options) }
-
-  it 'should build container' do 
-    container = Dry::Container.new
-    container.namespace(:aca_shop) do |shop_ns|
-      subject.load!(shop_ns)
+    it 'should build container' do 
+      container = Dry::Container.new
+      container.namespace(:aca_shop) do |shop_ns|
+        subject.load!(shop_ns)
+      end
     end
   end
 

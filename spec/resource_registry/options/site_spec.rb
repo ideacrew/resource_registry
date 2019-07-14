@@ -6,25 +6,25 @@ RSpec.describe ResourceRegistry::Options::Site do
                                 key: :dchbx, title: "DC HealthLink", 
                                 application_subscription_keys: application_keys 
                                 ) }
-  let(:cca_tenant)          { Options::Tenant.new(
+  let(:cca_tenant)          { ResourceRegistry::Options::Tenant.new(
                                 key: :cca, 
                                 title: "Massachusettes Health Connector", 
                                 application_subscription_keys: application_keys 
                                 ) }
 
-  let(:ea_app)              { Options::Application.new(
+  let(:ea_app)              { ResourceRegistry::Options::Application.new(
                                 key: :ea_application,  
                                 title: "Enroll Application application", 
                                 description: "A benefits registration, eligibility and shopping system",
                                 ) }
 
-  let(:edi_db_classic_app)  { Options::Application.new(
+  let(:edi_db_classic_app)  { ResourceRegistry::Options::Application.new(
                                 key: :edi_db_classic_application, 
                                 title: "EDI Database application (classic)", 
                                 description: "The classic system for conducting and managing EDI transactions with trading partners",
                                 ) }
 
-  let(:edi_db_app)          { Options::Application.new(
+  let(:edi_db_app)          { ResourceRegistry::Options::Application.new(
                                 key: :edi_db_application, 
                                 title: "EDI Database application", 
                                 description: "A system for conducting and managing EDI transactions with trading partners",
@@ -52,15 +52,15 @@ RSpec.describe ResourceRegistry::Options::Site do
   end
 
   context "Instantiating the class" do
-    subject { described_class.new  }
+    subject { described_class }
 
-    it { binding.pry; expect(subject(params)).to be_a(Options::Site) }
+    it { expect(subject.new(params)).to be_a(ResourceRegistry::Options::Site) }
   end
 
-ResourceRegistry::Options::Site.new(
-  key: :shared_host, 
-  applications: [ResourceRegistry::Options::Application.new(key: :ea)], 
-  tenants: [ResourceRegistry::Options::Tenant.new(ResourceRegistry::Options::Tenant.new(key: :dchbx, title: "DC HealthLink", application_subscription_keys: [1, 2]))]
-  )
+# ResourceRegistry::Options::Site.new(
+#   key: :shared_host, 
+#   applications: [ResourceRegistry::Options::Application.new(key: :ea)], 
+#   tenants: [ResourceRegistry::Options::Tenant.new(ResourceRegistry::Options::Tenant.new(key: :dchbx, title: "DC HealthLink", application_subscription_keys: [1, 2]))]
+#   )
 
 end

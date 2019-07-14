@@ -10,7 +10,7 @@ module ResourceRegistry
       attribute :description?,      Types::Strict::String
       attribute :dependency_keys?,  Types::Array
       # attribute :feature_keys?,     Types::Array
-      attribute :features,          Types::Array.of(Options::Feature)
+      attribute :features?,          Types::Array.of(Options::Feature)
 
       # attribute :container_key,   Types::Symbol
       # attribute :tenant_application_subscription_keys, Types::Array

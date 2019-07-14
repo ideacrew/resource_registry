@@ -3,7 +3,6 @@ require "dry/inflector"
 require 'dry-container'
 
 require 'resource_registry/repository'
-require 'resource_registry/configuration'
 require 'resource_registry/options'
 require 'resource_registry/services'
 
@@ -52,12 +51,21 @@ module ResourceRegistry
   end
 
   def self.file_kinds_for(file_pattern:, dir_base:)
-    file_names = Dir.glob(file_pattern, base: dir_base)
-    upper_bound = file_pattern.length
-
-    file_names.reduce([]) do |list, file_name|
+    list = []
+    Dir.glob(file_pattern, base: dir_base) do |file_name|
+      upper_bound = file_name.length - file_pattern.length
       list << file_name[0..upper_bound].to_sym
     end
+    list
   end
+
+  # def self.file_kinds_for(file_pattern:, dir_base:)
+  #   file_names = Dir.glob(file_pattern, base: dir_base)
+  #   upper_bound = file_pattern.length
+
+  #   file_names.reduce([]) do |list, file_name|
+  #     list << file_name[0..upper_bound].to_sym
+  #   end
+  # end
 
 end
