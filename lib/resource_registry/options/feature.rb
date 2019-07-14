@@ -1,6 +1,7 @@
 module ResourceRegistry
   module Options
     class Feature < Dry::Struct # FEHB, SHOP, IVL, GA
+      include DryStructSetters
       transform_keys(&:to_sym)
 
       attribute :key,                 Types::Symbol
@@ -11,12 +12,11 @@ module ResourceRegistry
       attribute :options?,            Types::Array.of(Options::Option)
 
       def load!(ns)
-        if options.present?
-          ns.namespace(key) do |ns|
-            options.each {|option| option.load!(ns) }
-          end
+        ns.namespace(key) do |namespace|
+          load_collection namespaces, namespace
+          load_collection options, namespace
         end
-      end 
+      end
     end
   end
 end

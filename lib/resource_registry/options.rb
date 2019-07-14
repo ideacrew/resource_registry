@@ -1,5 +1,6 @@
 require 'dry-struct'
 require 'resource_registry/types'
+require 'resource_registry/options/dry_struct_setters'
 require 'resource_registry/options/option'
 require 'resource_registry/options/option_namespace'
 require 'resource_registry/options/portal'
