@@ -3,7 +3,7 @@ require 'json'
 module ResourceRegistry
   module Options
     class Option < Dry::Struct 
-      include DryStructSetters
+      # include DryStructSetters
       transform_keys(&:to_sym)
 
       # A key with no correspnding option is a namespace

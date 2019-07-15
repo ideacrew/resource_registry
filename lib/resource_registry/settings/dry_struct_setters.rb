@@ -34,9 +34,9 @@ module ResourceRegistry
         end
       end
 
-      def load_collection(collection, namespace)
+      def load_container_for(collection, namespace)
         return if collection.blank?
-        collection.each {|item| item.load!(namespace) }
+        collection.each {|item| item.to_container(namespace) }
       end
     end
   end

@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Options
     class Feature < Dry::Struct # FEHB, SHOP, IVL, GA
-      include DryStructSetters
+      # include DryStructSetters
       transform_keys(&:to_sym)
 
       attribute :key,                 Types::Symbol

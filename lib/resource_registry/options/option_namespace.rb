@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Options
     class OptionNamespace < Dry::Struct 
-      include DryStructSetters
+      # include DryStructSetters
       transform_keys(&:to_sym)
 
       # attribute :parent_namespace?, Types::Symbol

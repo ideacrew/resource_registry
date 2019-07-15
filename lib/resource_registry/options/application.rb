@@ -2,7 +2,7 @@ module ResourceRegistry
   module Options
     # An Application is all code operating under a single process
     class Application < Dry::Struct # EA, EDI DB, Ledger
-      include DryStructSetters
+      # include DryStructSetters
       transform_keys(&:to_sym)
 
       attribute :key,               Types::Symbol

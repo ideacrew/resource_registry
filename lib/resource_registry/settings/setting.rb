@@ -2,7 +2,7 @@ require 'dry-struct' unless defined?(Dry::Struct)
 
 module ResourceRegistry
   module Settings
-    class Setting  < Dry::Struct
+    class Setting < Dry::Struct
       include DryStructSetters
       transform_keys(&:to_sym)
 
@@ -12,6 +12,11 @@ module ResourceRegistry
       attribute :type?,          Types::Symbol
       attribute :default?,       Types::String
       attribute :value?,         Types::String
+
+
+      def to_container(ns)
+        ns.register(key, default)
+      end
     end
   end
 end

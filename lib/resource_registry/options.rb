@@ -1,18 +1,18 @@
 require 'dry-struct'
 require 'resource_registry/types'
-require 'resource_registry/settings/setting'
 require 'resource_registry/settings/dry_struct_setters'
+require 'resource_registry/settings/setting'
 
 module ResourceRegistry
   class Options  < Dry::Struct
-    include DryStructSetters
+    include ResourceRegistry::Settings::DryStructSetters
     include Enumerable
 
     transform_keys(&:to_sym)
 
     # attribute :parent_namespace?, Types::Symbol
-    attribute :namespace,   Types::Symbol
-    attribute :key,         Types::Symbol
+    attribute :namespace?,   Types::Symbol
+    attribute :key,          Types::Symbol
 
     # TODO: Make settings attribute dynamically typed
     attribute :settings?,   Types::Array.of(Settings::Setting)
@@ -24,7 +24,13 @@ module ResourceRegistry
     def persist
     end
 
-    def to_repository
+    def to_container(namespace = nil)
+      container = namespace || Dry::Container::new
+      container.namespace(key) do |namespace|
+        load_container_for namespaces, namespace
+        load_container_for settings, namespace
+      end
+      container
     end
 
     def to_yaml
