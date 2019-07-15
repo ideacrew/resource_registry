@@ -16,6 +16,13 @@ module ResourceRegistry
       yield self if block_given?
     end
 
+    def persist
+    end
+
+    def validate
+    end
+
+
     def build_top_namespace(name)
       name = self.class.namespace_join([name])
       return nil if name == nil

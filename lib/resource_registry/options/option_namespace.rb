@@ -15,6 +15,12 @@ module ResourceRegistry
           load_collection options, namespace
         end
       end
+
+
+
+
+
+
     end
   end
 end

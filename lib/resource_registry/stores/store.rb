@@ -11,6 +11,13 @@ module ResourceRegistry
       def persist
       end
 
+      def self.options_files(config_root, env)
+        [
+          File.join(config_root, 'options.yml').to_s,
+          File.join(config_root, 'options', "#{env}.yml").to_s,
+          File.join(config_root, 'environments', "#{env}.yml").to_s
+        ].freeze
+      end
 
       class << self
         def find(id)

@@ -33,6 +33,31 @@ module ResourceRegistry
     yield(configuration)
   end
 
+  def self.setup
+    yield self unless @_ran_once
+    @_ran_once = true
+  end
+
+  def self.load_options
+    option_repository = ResourceRegistry::Services::CreateOptionRepository
+
+    ResourceRegistry::Services::FileLoad.call(repository: option_repository)
+    option_repository
+  end
+
+  def self.load_feature_select
+    feature_repository = ResourceRegistry::Services::CreateFeatureSelectRepository
+
+    ResourceRegistry::Services::FileLoad.call(repository: feature_repository)
+    feature_repository
+  end
+
+  def self.reload!
+    Object.const_get(ResourceRegistry.const_name).reload!
+  end
+
+
+
   def self.root
     File.dirname __dir__
   end

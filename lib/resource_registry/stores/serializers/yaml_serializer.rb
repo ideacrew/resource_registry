@@ -10,7 +10,7 @@ module ResourceRegistry
 
         class << self
 
-          def serialize
+          def generate(object)
           end
 
           def parse
@@ -78,6 +78,9 @@ module ResourceRegistry
             end
             parent_ele.send("#{collection_name}=", records)
           end
+
+
+
         end
       end
     end
