@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Stores
-    class FileStore
+    class FileStore < Store
 
       
     end

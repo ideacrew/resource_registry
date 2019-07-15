@@ -12,7 +12,7 @@ module ResourceRegistry
       end
 
 
-      class_methods do
+      class << self
         def find(id)
           raise NotImplementedError
         end
@@ -26,7 +26,6 @@ module ResourceRegistry
         end
       end
 
-      private
     end
 
     class StoreSet

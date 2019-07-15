@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Stores
     module Serializers
-      class Serialzer
+      class Serializer
 
         DIR_BASE      = './lib/resource_registry/stores/serializers'
         FILE_PATTERN  = '*_serializer.rb'

@@ -5,11 +5,11 @@ require 'dry-container'
 require 'resource_registry/repository'
 require 'resource_registry/options'
 require 'resource_registry/services'
+require 'resource_registry/stores'
 
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/version'
-require 'resource_registry/stores/serializers/yaml_serializer'
 
 
 # require 'resource_registry/stores/store'

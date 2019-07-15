@@ -1,0 +1,56 @@
+namespace_level_one:
+  :option_level_1_1:
+    title: "this is title"
+    description: "description_1"
+    type: :integer
+    value: 100
+    default: 1
+  :option_level_1_2:
+    title: "this is title"
+    description: "description_2"
+    type: :array
+    value:
+      - :item_1
+      - :item_2
+      - :item_3
+      - :item_4
+    default: 
+      - :item_0
+      - :item_1
+      - :item_2
+      - :item_3
+      - :item_4
+      - :item_5
+  namespace_level_two_first:
+    namespace_level_three:
+      :option_level_3_1:
+        title: "this is title"
+        description: ~
+        type: :boolean
+        value: true
+        default: true
+      :option_level_3_2:
+        title: "this is title"
+        description: ~
+        type: :duration
+        value:
+          unit: month
+          count: 2
+        default: 
+          unit: month
+          count: 3
+      :option_level_3_3:
+        title: "this is title"
+        description: ~
+        type: :float
+        value: "{{ 3 / 4 }}"
+        default: "{{ 3 / 4 }}"
+    namespace_level_two_last:
+      :option_level_2_1:
+        title: "this is title"
+        description: ~
+        type: :string
+        value: "value"
+        default: "default_6"
+
+

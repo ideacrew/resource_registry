@@ -1,3 +1,5 @@
+require 'yaml'
+
 module ResourceRegistry
   module Stores
     module Serializers
