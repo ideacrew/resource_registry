@@ -11,7 +11,7 @@ module ResourceRegistry
 
           def parse
             configurations = {}
-            glob_pattern = File.join(ResourceRegistry.root, 'spec', 'db', 'seedfiles', 'dc', "*.yml")
+            glob_pattern = File.join(ResourceRegistry.root, 'spec', 'db', 'seedfiles', 'dc', "aca_shop_market.yml")
             
             Dir.glob(glob_pattern).each { |path|
               setting_hash = YAML.load(ERB.new(IO.read(path)).result)
@@ -38,7 +38,12 @@ module ResourceRegistry
                 result[attrs].each {|element| __convert__(result: element, parent_ele: options) } if result[attrs].present?
               end
             else
-              setting  = ResourceRegistry::Settings::Setting.new(key: result[:key].to_sym, default: result[:default].to_s)
+              result.tap do |attrs|
+                attrs[:key] = attrs[:key].to_sym
+                attrs[:default] = attrs[:default].to_s
+                attrs[:value] = attrs[:value].to_s if attrs[:value].present?
+              end
+              setting  = ResourceRegistry::Settings::Setting.new(result)
               parent_ele.settings = parent_ele.settings.to_a + [setting]
             end
             root
