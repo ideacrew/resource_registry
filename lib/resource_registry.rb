@@ -1,16 +1,14 @@
 require "mongoid"
 require "dry/inflector"
 require 'dry-container'
-
 require 'resource_registry/repository'
 require 'resource_registry/options'
-require 'resource_registry/services'
+require 'resource_registry/service'
+require 'resource_registry/configuration'
 require 'resource_registry/stores'
-
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/version'
-
 
 # require 'resource_registry/stores/store'
 
@@ -19,83 +17,81 @@ module ResourceRegistry
 
   Inflector = Dry::Inflector.new
 
-  # Enable configuration in host Rails application using initializers:
-  # config/initializers/resource_registry.rb
-  #   ResourceRegistry.configure do |config|
-  #     config.api_key = 'your_key_here'
-  #   end
   class << self
-    attr_accessor :configuration
-  end
 
-  def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
-  end
+    def configure
+      configuration = ResourceRegistry::Configuration.config
+      yield(configuration)
+      configuration.to_h.each {|key, value| container.register key.to_sym, value }
+      container.freeze
+    end
 
-  def self.setup
-    yield self unless @_ran_once
-    @_ran_once = true
-  end
+    def setup
+      yield self unless @_ran_once
+      @_ran_once = true
+    end
 
-  def self.load_options
-    option_repository = ResourceRegistry::Services::CreateOptionRepository
+    def load_options
+      option_repository = ResourceRegistry::Services::CreateOptionRepository.call
 
-    ResourceRegistry::Services::FileLoad.call(repository: option_repository)
-    option_repository
-  end
+      # ResourceRegistry::Services::FileLoad.call(repository: option_repository)
+      # option_repository
+    end
 
-  def self.load_feature_select
-    feature_repository = ResourceRegistry::Services::CreateFeatureSelectRepository
+    def load_feature_select
+      feature_repository = ResourceRegistry::Services::CreateFeatureSelectRepository
 
-    ResourceRegistry::Services::FileLoad.call(repository: feature_repository)
-    feature_repository
-  end
+      ResourceRegistry::Services::FileLoad.call(repository: feature_repository)
+      feature_repository
+    end
 
-  def self.reload!
-    Object.const_get(ResourceRegistry.const_name).reload!
-  end
+    def reload!
+      Object.const_get(ResourceRegistry.const_name).reload!
+    end
 
+    # Determines the namespace parent for the passed module or class constant
+    # If the passed constant is top of the namespace, returns that constant
+    def module_parent_for(child_module)
+      list = child_module.to_s.split('::')
+      if list.size > 1
+        parents = list.slice(0, list.size - 1)
 
+        const_get(parents.join('::'))
+      else
+        list.size == 1 ? child_module : nil
+      end
+    end
 
-  def self.root
-    File.dirname __dir__
-  end
+    def gem_file_path_for(namespace)
+      namespace_str = Inflector.underscore(namespace)
+      './lib/' + namespace_str
+    end
 
-  # Determines the namespace parent for the passed module or class constant
-  # If the passed constant is top of the namespace, returns that constant
-  def self.module_parent_for(child_module)
-    list = child_module.to_s.split('::')
-    if list.size > 1
-      parents = list.slice(0, list.size - 1)
+    def file_kinds_for(file_pattern:, dir_base:)
+      list = []
+      Dir.glob(file_pattern, base: dir_base) do |file_name|
+        upper_bound = file_name.length - file_pattern.length
+        list << file_name[0..upper_bound].to_sym
+      end
+      list
+    end
 
-      const_get(parents.join('::'))
-    else
-      list.size == 1 ? child_module : nil
+    def container
+      @@container
+    end
+
+    def root
+      File.dirname __dir__
+    end
+
+    def services_path
+      root + "/lib/resource_registry/services/"
     end
   end
 
-  def self.gem_file_path_for(namespace)
-    namespace_str = Inflector.underscore(namespace)
-    './lib/' + namespace_str
-  end
+  private
 
-  def self.file_kinds_for(file_pattern:, dir_base:)
-    list = []
-    Dir.glob(file_pattern, base: dir_base) do |file_name|
-      upper_bound = file_name.length - file_pattern.length
-      list << file_name[0..upper_bound].to_sym
-    end
-    list
-  end
-
-  # def self.file_kinds_for(file_pattern:, dir_base:)
-  #   file_names = Dir.glob(file_pattern, base: dir_base)
-  #   upper_bound = file_pattern.length
-
-  #   file_names.reduce([]) do |list, file_name|
-  #     list << file_name[0..upper_bound].to_sym
-  #   end
-  # end
-
+  @@container = Dry::Container.new
+  Config = Dry::AutoInject(@@container)
+  Dir.glob(ResourceRegistry.services_path + '*', &method(:require))
 end

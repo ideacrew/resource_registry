@@ -5,6 +5,21 @@ module ResourceRegistry
     module Serializers
       class YamlSerializer
 
+        def initialize(path)
+          @path = path.to_s
+        end
+
+        def load
+          result = YAML.load(ERB.new(IO.read(@path)).result) if @path and File.exist?(@path)
+          result || {}
+        rescue Psych::SyntaxError => e
+          raise "YAML syntax error occurred while parsing #{@path}. " \
+          "Please note that YAML must be consistently indented using spaces. Tabs are not allowed. " \
+          "Error: #{e.message}"
+        end
+
+        alias :load! :load
+
         class << self
           def generate(object)
           end
@@ -20,14 +35,14 @@ module ResourceRegistry
               end
               DeepMerge.deep_merge!(setting_hash, configurations)
             }
-            __convert__(result: configurations['namespace'])
+            __convert(result: configurations['namespace'])
           rescue Psych::SyntaxError => e
             # raise "YAML syntax error occurred while parsing #{@path}. " \
             # "Please note that YAML must be consistently indented using spaces. Tabs are not allowed. " \
             # "Error: #{e.message}"
           end
 
-          def __convert__(result: nil, parent_ele: nil)
+          def __convert(result: nil, parent_ele: nil)
             result.symbolize_keys!
 
             if result.keys.include?(:namespaces) || result.keys.include?(:settings)
@@ -35,7 +50,7 @@ module ResourceRegistry
               root = options if parent_ele.blank?
               parent_ele.namespaces = parent_ele.namespaces.to_a + [options] if parent_ele.present?
               [:namespaces, :settings].each do |attrs|
-                result[attrs].each {|element| __convert__(result: element, parent_ele: options) } if result[attrs].present?
+                result[attrs].each {|element| __convert(result: element, parent_ele: options) } if result[attrs].present?
               end
             else
               result.tap do |attrs|

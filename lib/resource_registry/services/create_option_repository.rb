@@ -1,26 +1,26 @@
-require "dry-auto_inject"
-# require 'resource_registry/services/create_repository'
-
 module ResourceRegistry
   module Services
     class CreateOptionRepository
-      include Service
+      include ResourceRegistry::Service
 
       # Provide helpers for registering and accessing repository-based dependency injection
       OPTION_AUTO_INJECT = Dry::AutoInject(@repository)
 
       attr_reader :repository
-
+      
       def call(**params)
+        create_options = self
+        create_options.load
+        create_options.repository
+      end
 
-        load_application_boot_configuration
+      def load
+        # load_application_boot_configuration 
         load_option_configuration
-
-        repository
       end
       
       def repository
-        @repository ||= CreateRepository.new.call(top_namespace: :option_repository)
+        @repository ||= CreateRepository.call
       end
 
       private
@@ -30,9 +30,8 @@ module ResourceRegistry
       end
 
       def load_option_configuration
-        LoadOptionConfiguration.new.call(repository: repository)
+        LoadOptionConfiguration.call(repository: repository)
       end
-
     end
   end
 end

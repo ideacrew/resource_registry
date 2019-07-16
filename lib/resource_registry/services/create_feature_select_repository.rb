@@ -3,7 +3,7 @@ require "dry-auto_inject"
 module ResourceRegistry
   module Services
     class CreateFeatureSelectRepository
-      include Service
+      include ResourceRegistry::Service
 
       # Provide helpers for registering and accessing repository-based dependency injection
       FEATURE_SELECT_AUTO_INJECT = Dry::AutoInject(@repository)
