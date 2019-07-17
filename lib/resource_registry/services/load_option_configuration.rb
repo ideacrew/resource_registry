@@ -12,50 +12,32 @@ module ResourceRegistry
       end
 
       def register_applications
-        settings_hash = load_option_files
-        options = convert_to_options(settings_hash)
-        options.to_container(@repository)
+        load_option_sources
+        build_options_models
+        create_options_containers
       end
 
-      def convert_to_options(settings_hash)
-        serializer.__convert(result: settings_hash['namespace'])
-      end
+      def load_option_sources
+        options_sources ||= []
 
-      def load_option_files
-        @options_sources ||= []
         Dir.glob(File.join(Rails.root.to_s + "/#{auto_load_path}/*")).each do|path|
-          add_source!(path.to_s)
+           options_sources << serializer.new(path)
         end
-        load!
+
+        @options_hash = options_sources.collect(&:load!)
       end
 
-      def add_source!(source)
-        @options_sources << serializer.new(source)
-      end
-
-      def reload!
-        conf = {}
-        @options_sources.each do |source|
-          source_conf = source.load!
-
-          if conf.empty?
-            conf = source_conf
-          else
-            DeepMerge.deep_merge!(
-              source_conf,
-              conf,
-              preserve_unmergeables: false,
-              knockout_prefix:       nil,
-              overwrite_arrays:      true,
-              merge_nil_values:      true
-              )
-          end
+      def build_options_models
+        @options_models = @options_hash.collect do |hash|
+          serializer.__convert(result: hash['namespace'])
         end
-        conf
       end
 
-      alias :load! :reload!
-
+      def create_options_containers
+        containers = @options_models.collect(&:to_container)
+        containers.each(&@repository.method(:merge))
+      end
+      
       private
 
       def serializer

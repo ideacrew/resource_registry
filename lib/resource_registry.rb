@@ -32,8 +32,7 @@ module ResourceRegistry
     end
 
     def load_options
-      option_repository = ResourceRegistry::Services::CreateOptionRepository.call
-
+      repository = ResourceRegistry::Services::CreateOptionRepository.call
       # ResourceRegistry::Services::FileLoad.call(repository: option_repository)
       # option_repository
     end
