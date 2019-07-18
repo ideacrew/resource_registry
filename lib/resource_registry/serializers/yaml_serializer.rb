@@ -17,6 +17,7 @@ module ResourceRegistry
       end
 
       def generate
+        @content.to_yaml
       end
     end
   end
