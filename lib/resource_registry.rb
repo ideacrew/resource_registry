@@ -1,22 +1,27 @@
 require "mongoid"
 require "dry/inflector"
 require 'dry-container'
+require "dry-auto_inject"
 require 'resource_registry/repository'
 require 'resource_registry/options'
 require 'resource_registry/service'
+require 'resource_registry/services'
+require 'resource_registry/serializers'
 require 'resource_registry/configuration'
 require 'resource_registry/stores'
 require 'resource_registry/error'
 require 'resource_registry/feature_check'
 require 'resource_registry/version'
 
-# require 'resource_registry/stores/store'
-
 module ResourceRegistry
   include Dry::Core::Constants
 
   CONFIG_PATH = '/config/initializers/resource_registry.rb'
-  Inflector = Dry::Inflector.new
+
+  INFLECTOR = Dry::Inflector.new
+  self.const_set(:OPTIONS_REPOSITORY, Services::CreateOptionRepository.call)
+  self.const_set(:OPTIONS_AUTO_INJECT, Dry::AutoInject(OPTIONS_REPOSITORY))
+
 
   class << self
 
@@ -33,7 +38,7 @@ module ResourceRegistry
     end
 
     def load_options
-      repository = ResourceRegistry::Services::CreateOptionRepository.call
+      # repository = ResourceRegistry::Services::CreateOptiosRepository.call
       # ResourceRegistry::Services::FileLoad.call(repository: option_repository)
       # option_repository
     end
@@ -63,7 +68,7 @@ module ResourceRegistry
     end
 
     def gem_file_path_for(namespace)
-      namespace_str = Inflector.underscore(namespace)
+      namespace_str = INFLECTOR.underscore(namespace)
       './lib/' + namespace_str
     end
 

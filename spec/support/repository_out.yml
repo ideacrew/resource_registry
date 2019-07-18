@@ -1,7 +1,7 @@
 ---
 :namespace:
-- :key: :namespace_level_one_first
-  :options:
+  :key: :namespace_level_one_first
+  :settings:
   - :key: :option_level_1_1
     :title: this is title
     :description: description_1
@@ -26,7 +26,7 @@
     - :item_5
   :namespaces:
   - :key: :namespace_level_two
-    :options:
+    :settings:
     - :key: :option_level_2_1
       :title: this is title
       :description: 
@@ -41,7 +41,7 @@
       :default: 3.14
     :namespaces:
     - :key: :namespace_level_three
-      :options:
+      :settings:
       - :key: :option_level_3_1
         :title: this is title
         :description: 

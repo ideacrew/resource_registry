@@ -1,5 +1,3 @@
-require "dry-auto_inject"
-
 module ResourceRegistry
   module Services
     class CreateFeatureSelectRepository

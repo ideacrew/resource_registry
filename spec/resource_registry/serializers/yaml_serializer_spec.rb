@@ -1,7 +1,7 @@
 require "spec_helper"
 require 'dry/container/stub'
 
-RSpec.describe ResourceRegistry::Stores::Serializers::YamlSerializer do
+RSpec.describe ResourceRegistry::Serializers::YamlSerializer do
 
   let(:base_dir)  { "./spec/support" }
   let(:input_file_name) { File.join(base_dir ,"repository.yml") }
