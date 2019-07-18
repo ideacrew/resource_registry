@@ -5,31 +5,20 @@ module ResourceRegistry
       attr_accessor :tenant, :configuration_set_name, :configuration_set
 
       def load
-        raise NotImplementedError
       end
 
       def persist
       end
 
-      def self.options_files(config_root, env)
-        [
-          File.join(config_root, 'options.yml').to_s,
-          File.join(config_root, 'options', "#{env}.yml").to_s,
-          File.join(config_root, 'environments', "#{env}.yml").to_s
-        ].freeze
-      end
 
       class << self
         def find(id)
-          raise NotImplementedError
         end
 
         def find_by_tenant(tenant:)
-          raise NotImplementedError
         end
 
         def find_by_collection_name(tenant:, collection_name:)
-          raise NotImplementedError
         end
       end
 

@@ -4,12 +4,15 @@ module ResourceRegistry
       include ResourceRegistry::Service
 
       # Provide helpers for registering and accessing repository-based dependency injection
-      OPTION_AUTO_INJECT = Dry::AutoInject(@repository)
-
-      attr_reader :repository
+      # class << self
+      #   attr_accessor :repository
+      # end
       
       def call(**params)
         create_options = self
+        # register_stores
+        # register_serializers
+        # self.class.repository = Dry::AutoInject(repository)
         create_options.load
         create_options.repository
       end
@@ -31,6 +34,15 @@ module ResourceRegistry
 
       def load_option_configuration
         LoadOptionConfiguration.call(repository: repository)
+      end
+
+      def register_stores
+        repository.register :file_store, ResourceRegistry::Stores::FileStore.new
+      end
+
+      def register_serializers
+        repository.register :serializer, ResourceRegistry::Serializers::YamlSerializer.new
+        repository.register :options_serializer, ResourceRegistry::Serializers::OptionsSerializer.new
       end
     end
   end

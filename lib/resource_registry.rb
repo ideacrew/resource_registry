@@ -15,6 +15,7 @@ require 'resource_registry/version'
 module ResourceRegistry
   include Dry::Core::Constants
 
+  CONFIG_PATH = '/config/initializers/resource_registry.rb'
   Inflector = Dry::Inflector.new
 
   class << self
@@ -36,7 +37,7 @@ module ResourceRegistry
       # ResourceRegistry::Services::FileLoad.call(repository: option_repository)
       # option_repository
     end
-
+    
     def load_feature_select
       feature_repository = ResourceRegistry::Services::CreateFeatureSelectRepository
 
@@ -85,6 +86,12 @@ module ResourceRegistry
 
     def services_path
       root + "/lib/resource_registry/services/"
+    end
+
+    def engines
+      [Rails] + Rails::Engine.subclasses.select do |engine|
+        File.exists?(engine.root.to_s + CONFIG_PATH)
+      end
     end
   end
 

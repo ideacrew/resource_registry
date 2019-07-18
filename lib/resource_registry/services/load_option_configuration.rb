@@ -1,54 +1,37 @@
 module ResourceRegistry
   module Services
-    class LoadOptionConfiguration
-      attr_reader :repository
+    class LoadOptionConfiguration      
       include ResourceRegistry::Service
-      include ResourceRegistry::Config['store', 'parser', 'auto_load_path'] if defined? ResourceRegistry::Config
+      include ResourceRegistry::Config['auto_load_path'] if defined? ResourceRegistry::Config
+      # include ResourceRegistry::Services::CreateOptionRepository.repository['file_store', 'serializer', 'options_serializer'] if defined? ResourceRegistry::Services::CreateOptionRepository.repository
 
       def call(**params)
         @repository = params[:repository]
-        register_applications
+        load_options
         @repository
       end
 
-      def register_applications
-        load_option_sources
-        build_options_models
-        create_options_containers
-      end
-
-      def load_option_sources
-        options_sources ||= []
-
-        Dir.glob(File.join(Rails.root.to_s + "/#{auto_load_path}/*")).each do|path|
-           options_sources << serializer.new(path)
-        end
-
-        @options_hash = options_sources.collect(&:load!)
-      end
-
-      def build_options_models
-        @options_models = @options_hash.collect do |hash|
-          serializer.__convert(result: hash['namespace'])
+      def load_options
+        Dir.glob(File.join(Rails.root.to_s + "/#{auto_load_path}/*")).collect do |file_path|
+          content = file_store.call(content: file_path, action: :load)
+          options_hash = serializer.call(content: content, action: :parse)
+          options_struct = options_serializer.call(content: options_hash, action: :generate)
+          @repository.persist(options_struct.to_container)
         end
       end
 
-      def create_options_containers
-        containers = @options_models.collect(&:to_container)
-        containers.each(&@repository.method(:merge))
-      end
-      
       private
 
+      def file_store
+        ResourceRegistry::Stores::FileStore
+      end
+
       def serializer
-        @serializer ||= case parser
-        when :yaml
-          ResourceRegistry::Stores::Serializers::YamlSerializer
-        when :xml
-          ResourceRegistry::Stores::Serializers::XmlSerializer
-        when :hash
-          ResourceRegistry::Stores::Serializers::HashSerializer
-        end
+        ResourceRegistry::Serializers::YamlSerializer
+      end
+
+      def options_serializer
+        ResourceRegistry::Serializers::OptionsSerializer
       end
     end
   end
