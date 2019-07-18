@@ -6,7 +6,6 @@ RSpec.describe ResourceRegistry::Services::CreateRepository do
   subject { described_class }
 
   describe "Instantiating a repository" do
-
     let(:default_top_namespace) { "resource_repository" }
 
     it "should return a repository instance" do

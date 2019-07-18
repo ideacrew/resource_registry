@@ -38,7 +38,7 @@ module ResourceRegistry
       end
 
       def load_application_boot_configuration
-        LoadApplicationBootConfiguration.new.call(repository: @repository)
+        LoadApplicationBootConfiguration.call(repository: @repository)
       end
 
       def load_options_configuration
