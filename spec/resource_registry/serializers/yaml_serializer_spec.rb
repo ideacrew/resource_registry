@@ -3,9 +3,9 @@ require 'dry/container/stub'
 
 RSpec.describe ResourceRegistry::Serializers::YamlSerializer do
 
-  let(:base_dir)  { "./spec/support" }
-  let(:input_file_name) { File.join(base_dir ,"repository.yml") }
-  let(:output_file_name) { File.join(base_dir ,"repository_out.yml") }
+  let(:base_dir)          { "./spec/support" }
+  let(:input_file_name)   { File.join(base_dir ,"repository.yml") }
+  let(:output_file_name)  { File.join(base_dir ,"repository_out.yml") }
 
   context "parse yaml content into model structure" do
 

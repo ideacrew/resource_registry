@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Services
-    class CreateOptionRepository
+    class CreateOptionsRepository
       include ResourceRegistry::Service
       
       attr_reader :repository
@@ -18,7 +18,7 @@ module ResourceRegistry
         register_serializers
 
         # load_application_boot_configuration        
-        load_option_configuration
+        load_options_configuration
       end
 
       private
@@ -41,8 +41,8 @@ module ResourceRegistry
         LoadApplicationBootConfiguration.new.call(repository: @repository)
       end
 
-      def load_option_configuration
-        LoadOptionConfiguration.call(repository: @repository)
+      def load_options_configuration
+        LoadOptionsConfiguration.call(repository: @repository)
       end
     end
   end

@@ -19,7 +19,7 @@ module ResourceRegistry
   CONFIG_PATH = '/config/initializers/resource_registry.rb'
 
   INFLECTOR = Dry::Inflector.new
-  self.const_set(:OPTIONS_REPOSITORY, Services::CreateOptionRepository.call)
+  self.const_set(:OPTIONS_REPOSITORY, Services::CreateOptionsRepository.call)
   self.const_set(:OPTIONS_AUTO_INJECT, Dry::AutoInject(OPTIONS_REPOSITORY))
 
 

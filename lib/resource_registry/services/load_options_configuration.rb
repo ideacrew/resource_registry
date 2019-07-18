@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Services
-    class LoadOptionConfiguration      
+    class LoadOptionsConfiguration      
       include ResourceRegistry::Service
       include ResourceRegistry::Config['auto_load_path'] if defined? ResourceRegistry::Config
       include OPTIONS_AUTO_INJECT.repository['file_store', 'yaml_serializer', 'options_serializer'] if defined? ResourceRegistry::Services::CreateOptionRepository.repository
