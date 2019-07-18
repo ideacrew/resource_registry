@@ -7,6 +7,8 @@ module ResourceRegistry
 
       def call(**params)
         @repository = create_repository
+        # @repository_constant_name = params[:repository_constant_name] || 'OPTIONS_REPOSITORY'
+        # @injection_constant_name  = params[:injection_constant_name]  || 'OPTIONS_AUTO_INJECT'
 
         execute
 
@@ -14,6 +16,7 @@ module ResourceRegistry
       end
 
       def execute
+        define_repository_constants
         register_stores
         register_serializers
 
@@ -23,8 +26,14 @@ module ResourceRegistry
 
       private
 
+      # Initialize the repo container and set constants to access and enable dependency injection
       def create_repository
         CreateRepository.call(top_namespace: :options_repository)
+      end
+
+      def define_repository_constants
+        ResourceRegistry.const_set(:OPTIONS_REPOSITORY, @repository) unless defined? ResourceRegistry::OPTIONS_REPOSITORY
+        ResourceRegistry.const_set(:OPTIONS_AUTO_INJECT, Dry::AutoInject(@repository)) unless defined? ResourceRegistry::OPTIONS_AUTO_INJECT
       end
 
       def register_stores
