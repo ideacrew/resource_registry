@@ -1,17 +1,40 @@
 module ResourceRegistry
   module Stores
     class FileStore < Store
+      include ResourceRegistry::Service
 
-      attr_accessor :content
+      def call(**params)
+        @content = params[:content]
+        @action  = params[:action]
 
-      def load(file_name)
-        @content = File.read(source_file_name)
+        send(@action)
+      end
+      
+      def load
+        IO.read(File.open(@content))
       end
 
       def persist(file_name)
         File.open(file_name, "w") { |file| file.write(@content) }
       end
-      
+
+      def self.options_files(config_root, env)
+        [
+          File.join(config_root, 'options.yml').to_s,
+          File.join(config_root, 'options', "#{env}.yml").to_s,
+          File.join(config_root, 'environments', "#{env}.yml").to_s
+        ].freeze
+      end
+
+      def load_option_sources
+        options_serializers ||= []
+
+        Dir.glob(File.join(Rails.root.to_s + "/#{seed_file_path}/*")).each do|path|
+           options_serializers << serializer.new(path)
+        end
+
+        @options_hash = options_serializers.collect(&:parse)
+      end
     end
   end
 end

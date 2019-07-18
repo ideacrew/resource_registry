@@ -16,12 +16,12 @@ module ResourceRegistry
       yield self if block_given?
     end
 
-    def persist
+    def persist(container)
+      self.merge(container)
     end
 
     def validate
     end
-
 
     def build_top_namespace(name)
       name = self.class.namespace_join([name])
