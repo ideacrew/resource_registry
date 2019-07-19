@@ -6,7 +6,7 @@ module ResourceRegistry
       attr_reader :repository
 
       def call(**params)
-        @repository = create_repository
+        @repository = create_repository #ResourceRegistry::OPTIONS_REPOSITORY || create_repository
         # @repository_constant_name = params[:repository_constant_name] || 'OPTIONS_REPOSITORY'
         # @injection_constant_name  = params[:injection_constant_name]  || 'OPTIONS_AUTO_INJECT'
 
@@ -15,10 +15,17 @@ module ResourceRegistry
         @repository
       end
 
-      def execute
-        define_repository_constants
+      def setup
+        @repository = create_repository
         register_stores
         register_serializers
+        define_repository_constants
+      end
+
+      def execute
+        # define_repository_constants
+        # register_stores
+        # register_serializers
 
         # load_application_boot_configuration        
         load_options_configuration

@@ -4,7 +4,6 @@ require 'dry-container'
 require "dry-auto_inject"
 require 'resource_registry/repository'
 require 'resource_registry/options'
-require 'resource_registry/service'
 require 'resource_registry/services'
 require 'resource_registry/serializers'
 require 'resource_registry/configuration'
@@ -21,7 +20,6 @@ module ResourceRegistry
   INFLECTOR = Dry::Inflector.new
 
   # Initialize the Repository that contains the system configuration settings
-  Services::CreateOptionsRepository.call
 
 
   class << self
@@ -105,5 +103,6 @@ module ResourceRegistry
 
   @@container = Dry::Container.new
   Config = Dry::AutoInject(@@container)
-  Dir.glob(ResourceRegistry.services_path + '*', &method(:require))
+  Services::CreateOptionsRepository.new.setup
+  Dir.glob(ResourceRegistry.services_path + '*', &method(:load))
 end
