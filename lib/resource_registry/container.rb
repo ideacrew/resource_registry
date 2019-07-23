@@ -1,12 +1,10 @@
-require 'dry/system/container'
-
 module ResourceRegistry
-  class Container < Dry::Container
-    root = Pathname(__FILE__).realpath.dirname
-    require root.join("system/application/container")
+  class Container < Dry::System::Container
+    # root = Pathname(__FILE__).realpath.dirname
+    # require root.join("system/application/container")
 
-
-    Application::Inject Application::Container
+    import core: Application::Container
+    # import Application::Container
 
     configure do |config|
       config.root = Pathname(__FILE__).realpath.dirname.freeze

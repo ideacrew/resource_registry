@@ -11,8 +11,8 @@
 # require 'resource_registry/feature_check'
 
 ## Deprecated
-require 'dry-container'
-require 'resource_registry/repository'
+# require 'dry-container'
+# require 'resource_registry/repository'
 ## 
 
 require 'resource_registry/system/boot'

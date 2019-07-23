@@ -1,15 +1,15 @@
 module BenefitSponsors
   module Features
-    class DynamicSetting
+    # class DynamicSetting
 
-      def initialize(tenant:, service_key:)
-        @tenant = tenant
-      end
+    #   def initialize(tenant:, service_key:)
+    #     @tenant = tenant
+    #   end
 
-      FeatureRepository.register "benefit_sponsors.features_repository" do
-        BenefitSponsors::Features::FeatureRepository
-        # BenefitSponsors::Features::FeatureRepository.new
-      end
+    #   FeatureRepository.register "benefit_sponsors.features_repository" do
+    #     BenefitSponsors::Features::FeatureRepository
+    #     # BenefitSponsors::Features::FeatureRepository.new
+    #   end
 
 # Inline in code, the call will look soemthing like:
 # new_profile = DynamicSetting(tenant: Current.tenant, service: :create_profile)
@@ -19,9 +19,9 @@ module BenefitSponsors
 # configuration settings to set the proper dependency injection to invoke
 # (see commented example below)
 
-      FeatureRepository.register "benefit_sponsors.services.create_profile" do
-        Organizations::CreateProfile.new
-      end
+      # FeatureRepository.register "benefit_sponsors.services.create_profile" do
+      #   Organizations::CreateProfile.new
+      # end
 
 # Example
       # FeatureRepository.register "benefit_sponsors.services.create_profile" do
@@ -32,6 +32,6 @@ module BenefitSponsors
       #   end
       # end
 
-    end
+    # end
   end
 end

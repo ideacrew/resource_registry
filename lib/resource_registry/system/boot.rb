@@ -1,10 +1,7 @@
 require_relative "application/container"
+require_relative "application/inject"
 
-Application::Container.finalize! 
-# do |container|
-#   # Boot the app config before everything else
-#   container.boot :config
-# end
+Application::Container.finalize!
 
 require_relative "application/inject"
 # require_relative "../system/boot"

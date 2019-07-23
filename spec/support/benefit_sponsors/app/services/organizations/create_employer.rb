@@ -3,7 +3,7 @@ module BenefitSponsors
     class CreateEmployer
       attr_reader :validate_employer, :persist_employer
 
-      include Features::Import["benefit_sponsors.features_repository"]
+      # include Features::Import["benefit_sponsors.features_repository"]
 
 
       def initialize(validate_employer, persist_employer)

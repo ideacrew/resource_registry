@@ -1,11 +1,12 @@
 require "spec_helper"
-require 'dry/container/stub'
 
 RSpec.describe ResourceRegistry::Container do
 
-  subject { binding.pry; described_class.new  }
+  subject { described_class }
 
-  it { expect(subject.config.registry).to be_a(Dry::Container::Registry) }
+  before { binding.pry }
+
+  it { expect(subject).to be_a(Dry::System::Container) }
 
 
 end

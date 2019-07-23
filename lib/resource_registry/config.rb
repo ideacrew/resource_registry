@@ -1,4 +1,4 @@
-require "types"
+require "resource_registry/types"
 require "yaml"
 
 module ResourceRegistry

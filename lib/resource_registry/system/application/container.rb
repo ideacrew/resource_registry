@@ -5,10 +5,10 @@ module Application
 
     configure do |config|
       config.name = :core
-      # config.root = Rails.root
-      # config.auto_register = %w[lib/authentication]
+      config.root = Pathname(__FILE__).join("../..").realpath.dirname
+      config.auto_register = %w[resource_registry/serializers resource_registry/stores]
     end
 
-    # load_paths! "lib", "system"
+    load_paths! "system"
   end
 end

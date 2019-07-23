@@ -1,7 +1,7 @@
 module BenefitSponsors
   module Organizations
     class CreateExemptProfile
-      include Features::Import["benefit_sponsors.features_repository"]
+      # include Features::Import["benefit_sponsors.features_repository"]
 
       # def call(attrs)
       #   features_repository.create(attrs)
