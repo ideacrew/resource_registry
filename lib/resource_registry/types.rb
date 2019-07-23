@@ -12,6 +12,7 @@ module ResourceRegistry
       end
     end.with_type_transform { |type| type.required(false) }.schema(length: Integer)
 
-    Email = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+    Email         = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+
   end
 end

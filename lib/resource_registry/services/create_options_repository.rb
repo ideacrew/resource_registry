@@ -1,8 +1,8 @@
 module ResourceRegistry
   module Services
     class CreateOptionsRepository
-      include ResourceRegistry::Service
-      
+
+
       attr_reader :repository
 
       def call(**params)
@@ -28,7 +28,7 @@ module ResourceRegistry
 
       # Initialize the repo container and set constants to access and enable dependency injection
       def create_repository
-        CreateRepository.call(top_namespace: :options_repository)
+        ResourceRegistry::Repository.new
       end
 
       def define_repository_constants

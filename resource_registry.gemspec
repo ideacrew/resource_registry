@@ -31,6 +31,9 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.5.0'
 
   spec.add_dependency 'dry-monads',               '~> 1.2'
+  spec.add_dependency 'dry-system',               '~> 0.12'
+  spec.add_dependency 'dry-equalizer',            '~> 0.2'
+  spec.add_dependency 'dry-matcher',              '~> 0.7'
   spec.add_dependency 'dry-validation',           '~> 1.0'
   spec.add_dependency 'dry-core',                 '~> 0.4'
   spec.add_dependency 'dry-struct',               '~> 1.0'
@@ -39,7 +42,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-container',            '~> 0.7'
   spec.add_dependency 'dry-auto_inject',          '~> 0.6'
   spec.add_dependency 'dry-configurable',         '~> 0.8'
+
+  spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
+  spec.add_dependency 'mime-types'
 
 
   spec.add_development_dependency "bundler",      "~> 2.0"
@@ -48,5 +54,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-rails',  '~> 3.0'
   spec.add_development_dependency 'pry-byebug',   '~> 3.0'
   spec.add_development_dependency 'mongoid',      '~> 7.0'
+
+  spec.add_development_dependency "codeclimate-test-reporter",  '~> 1.0'
+  spec.add_development_dependency "database_cleaner",           '~> 1.7'
+  spec.add_development_dependency "timecop",                    '~> 0.9'
 
 end

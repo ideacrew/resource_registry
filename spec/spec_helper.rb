@@ -2,6 +2,7 @@ require "bundler/setup"
 require "resource_registry"
 require "pry-byebug"
 
+
 # Set up the local context
 # Dir['./spec/shared/app/models/organizations/*.rb'].sort.each { |file| require file }
 # glob_pattern = File.join('./spec/shared/app', File.dirname(__FILE__), "features", "models", "services")
