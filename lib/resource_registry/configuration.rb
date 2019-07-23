@@ -4,8 +4,10 @@ module ResourceRegistry
 
     setting :store
     setting :parser
-    setting :auto_load_path
+    setting :seed_files_path
     setting :top_namespace
+
+    
 
     # attr_accessor :configuration
 
