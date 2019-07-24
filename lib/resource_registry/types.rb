@@ -1,8 +1,11 @@
+require 'dry-types'
 Dry::Types.load_extensions(:maybe)
 
 module ResourceRegistry
   module Types
     include Dry::Types()
+
+    RequiredString = Types::Strict::String.constrained(min_size: 1)
 
     # Expects input formatted as: { days: 60 }, { months: 6 }
     Duration = Hash.with_type_transform do |key| 

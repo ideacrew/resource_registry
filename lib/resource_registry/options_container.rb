@@ -1,20 +1,15 @@
 module ResourceRegistry
-  class Container < Dry::System::Container
-    # root = Pathname(__FILE__).realpath.dirname
-    # require root.join("system/application/container")
-
-    import core: Application::Container
+  class OptionsContainer < Dry::System::Container
     # import Application::Container
 
     configure do |config|
+      config.name = :options
+      config.default_namespace = :options
       config.root = Pathname(__FILE__).realpath.dirname.freeze
-
-      config.default_namespace = "options"
-
       config.auto_register = %w[
-        resource_registry/serializers
-        resource_registry/stores
-        resource_registry/services       
+        serializers
+        stores
+        services       
       ]
 
         # lib/main/operations
@@ -24,6 +19,9 @@ module ResourceRegistry
     end
 
     # load_paths! "lib", "system"
+
+    require 'resource_registry/system/core'
+    container.import core: ResourceRegistry::CoreContainer
   end
 end
       

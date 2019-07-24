@@ -2,7 +2,7 @@ require "resource_registry/types"
 require "yaml"
 
 module ResourceRegistry
-  class Config < Dry::Types::Struct
+  class Config < Dry::Struct
     RequiredString = Types::Strict::String.constrained(min_size: 1)
 
     attribute :tenent_key, RequiredString
@@ -18,18 +18,16 @@ module ResourceRegistry
 
     def self.load(root, name, env)
       path = root.join("config").join("#{name}.yml")
+
       yaml = File.exist?(path) ? YAML.load_file(path) : {}
-
-      config = schema.keys.each_with_object({}) { |key, memo|
-        value = ENV.fetch(
-          key.to_s.upcase,
-          yaml.fetch(env.to_s, {})[key.to_s]
-        )
-
-        memo[key] = value
+      dict = schema.keys.each_with_object({}) { |key, memo|
+        puts "key value: #{key.inspect} - #{key.class.name}"
+        value = yaml.dig(env.to_s, key.name.to_s) 
+        memo[key.name.to_sym] = value
       }
 
-      new(config)
+      new(dict)
     end
+
   end
 end

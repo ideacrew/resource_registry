@@ -15,7 +15,7 @@ SPEC_ROOT = Pathname(__FILE__).dirname
 Dir[SPEC_ROOT.join("support/*.rb").to_s].each(&method(:require))
 Dir[SPEC_ROOT.join("shared_examples/*.rb").to_s].each(&method(:require))
 
-Application::Container.boot!(:i18n)
+# Application::Container.boot(:i18n)
 
 # Set up the local context
 # Dir['./spec/shared/app/models/organizations/*.rb'].sort.each { |file| require file }

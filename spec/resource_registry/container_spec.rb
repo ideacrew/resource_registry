@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe ResourceRegistry::Container do
+RSpec.describe ResourceRegistry::CoreContainer do
 
   subject { described_class }
 

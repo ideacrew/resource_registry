@@ -1,7 +1,7 @@
-Application::Container.namespace(:i18n) do |container|
+ResourceRegistry::Container.namespace(:i18n) do |container|
   load_paths = Dir["#{container.root}/config/locales/**/*.yml"]
 
-  container.finalize(:i18n) do
+  container.boot(:i18n) do
     require "i18n"
     require "dry-validation"
 

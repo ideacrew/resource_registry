@@ -15,9 +15,8 @@
 # require 'resource_registry/repository'
 ## 
 
+require 'resource_registry/types'
 require 'resource_registry/system/boot'
-
-require 'resource_registry/container'
 require 'resource_registry/error'
 require 'resource_registry/version'
 
