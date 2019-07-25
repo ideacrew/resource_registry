@@ -3,7 +3,7 @@ require 'ox'
 module ResourceRegistry
   module Serializers
     class XmlSerializer
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
 
       def call(**params)
         @content = params[:content]

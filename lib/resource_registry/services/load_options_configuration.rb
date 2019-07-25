@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Services
     class LoadOptionsConfiguration      
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
       include ResourceRegistry::Config['seed_files_path'] if defined? ResourceRegistry::Config
       include ResourceRegistry::OPTIONS_AUTO_INJECT['file_store', 'yaml_serializer', 'options_serializer'] if defined? ResourceRegistry::OPTIONS_AUTO_INJECT
 

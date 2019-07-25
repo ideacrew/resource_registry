@@ -2,7 +2,7 @@ module ResourceRegistry
   module Stores
     class PersistOptions
 
-      include AutoInject["options_validate", "options_persist"]
+      include ResourceRegistry::AutoInject["options_validate", "options_persist"]
 
       attr_reader :params
 

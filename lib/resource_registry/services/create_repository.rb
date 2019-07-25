@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Services
     class CreateRepository
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
       # include ResourceRegistry::Config['top_namespace'] if defined? ResourceRegistry::Config
 
       def call(**params)

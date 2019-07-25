@@ -1,13 +1,5 @@
 # require "mongoid"
-# require "dry/inflector"
-# require "dry-auto_inject"
-# require 'resource_registry/compactor'
-# require 'resource_registry/options'
-# require 'resource_registry/service'
-# require 'resource_registry/services'
-# require 'resource_registry/serializers'
 # require 'resource_registry/configuration'
-# require 'resource_registry/stores'
 # require 'resource_registry/feature_check'
 
 ## Deprecated
@@ -16,7 +8,12 @@
 ## 
 
 require 'resource_registry/types'
+require 'resource_registry/services'
+require 'resource_registry/stores'
 require 'resource_registry/system/boot'
+require 'resource_registry/compactor'
+require 'resource_registry/options'
+require 'resource_registry/serializers'
 require 'resource_registry/error'
 require 'resource_registry/version'
 

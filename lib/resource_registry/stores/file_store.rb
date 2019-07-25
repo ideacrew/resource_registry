@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Stores
     class FileStore < Store
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
 
       def call(**params)
         @content = params[:content]

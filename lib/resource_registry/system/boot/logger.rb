@@ -1,7 +1,7 @@
-ResourceRegistry::Container.namespace :logger do |container|
+ResourceRegistry::CoreContainer.namespace :logger do |container|
   container.boot(:logger) do
 
-    
+
   end
 
   # require "logger"

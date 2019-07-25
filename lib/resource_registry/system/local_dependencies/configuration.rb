@@ -19,14 +19,14 @@ module ResourceRegistry
       # TODO - change this to our serialization/store model
 
       path = root.join("config").join("#{name}.yml").realpath
-      yaml = File.exist?(path) ? YAML.load_file(path) : {}
+        yaml = File.exist?(path) ? YAML.load_file(path) : {}
 
       dict = schema.keys.each_with_object({}) { |key, memo|
         value = yaml.dig(key.name.to_s) 
         memo[key.name.to_sym] = value
       }
 
-      new(dict)
+      send(:new, dict)
     end
 
   end

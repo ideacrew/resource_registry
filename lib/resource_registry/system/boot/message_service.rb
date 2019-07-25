@@ -1,4 +1,4 @@
-ResourceRegistry::Container.namespace :message_service do |container|
+ResourceRegistry::CoreContainer.namespace :message_service do |container|
   container.boot :message_service do
 
     # require "que"

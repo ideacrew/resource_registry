@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Services
     class CreateFeatureSelectRepository
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
 
       # Provide helpers for registering and accessing repository-based dependency injection
       FEATURE_SELECT_AUTO_INJECT = Dry::AutoInject(@repository)

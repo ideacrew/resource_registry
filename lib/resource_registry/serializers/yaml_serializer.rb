@@ -3,7 +3,7 @@ require 'yaml'
 module ResourceRegistry
   module Serializers
     class YamlSerializer
-      include ResourceRegistry::Service
+      include ResourceRegistry::Services::Service
 
       def call(**params)
         @content = params[:content]

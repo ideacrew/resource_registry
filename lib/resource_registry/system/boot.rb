@@ -8,31 +8,25 @@ module ResourceRegistry
     configure do |config|
       config.name = :core
       config.default_namespace = :core
-      config.root = Pathname(__FILE__).join("..").realpath.dirname.freeze
-      # config.system_dir = "system"
+      config.root = Pathname.pwd.join('lib').realpath.freeze
+      config.system_dir = "resource_registry/system"
+      # config.root = Pathname.pwd.join('lib').join('resource_registry').realpath.freeze
 
-      # Dir relative to root where bootable components are defined
-      # config.system_dir = "system"
-
-      config.auto_register = %w[serializers stores]
+      config.auto_register = %w[resource_registry/serializers resource_registry/stores]
     end
 
-  # load_paths! "system/local_dependencies"
+    load_paths!('resource_registry')
   end
 
-  require_relative "local_dependencies/configuration"
-  CoreContainer.namespace(:config) do |container|
-    path = container.config.root.join(container.config.system_dir)
-    container.register :config, Configuration.load_attr(path, "config")
-  end
-
-
+  require_relative "local_dependencies/auto_inject"
   require_relative "local_dependencies/persistence"
 
-  ## TODO -- this is where we incorporate local application config settings
-  # system_paths = Pathname(__FILE__).dirname.join("../../resource_registry").realpath
-  # Dir[system_paths].each do |f|
-  #   require "#{f}/system/boot"
-  # end
+  require_relative "local_dependencies/configuration"
+  CoreContainer.namespace(:options) do |container|
+    path = container.config.root.join(container.config.system_dir)
+    obj = Configuration.load_attr(path, "config")
+    obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
+  end
 
+  CoreContainer.finalize!(freeze: true)
 end

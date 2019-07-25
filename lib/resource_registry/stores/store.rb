@@ -10,18 +10,6 @@ module ResourceRegistry
       def persist
       end
 
-
-      class << self
-        def find(id)
-        end
-
-        def find_by_tenant(tenant:)
-        end
-
-        def find_by_collection_name(tenant:, collection_name:)
-        end
-      end
-
     end
 
     class StoreSet
