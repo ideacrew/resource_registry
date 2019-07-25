@@ -10,7 +10,8 @@
 require 'resource_registry/types'
 require 'resource_registry/services'
 require 'resource_registry/stores'
-require 'resource_registry/system/boot'
+require 'system/boot'
+
 require 'resource_registry/compactor'
 require 'resource_registry/options'
 require 'resource_registry/serializers'

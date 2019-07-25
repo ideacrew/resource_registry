@@ -1,5 +1,6 @@
 require "spec_helper"
 require 'dry/system/stubs'
+require 'resource_registry' unless defined?(ResourceRegistry::CoreContainer)
 
 RSpec.describe ResourceRegistry::CoreContainer do
 
@@ -10,10 +11,10 @@ RSpec.describe ResourceRegistry::CoreContainer do
     subject.finalize!
   end
 
-  let(:config_name)     { :core }
-  let(:option_key)      { 'options.store' }
-  let(:stores_key)      { 'stores.file_store' }
-  let(:serializer_key)  { 'serializers.yaml_serializer' }
+  let(:config_name)       { :core }
+  let(:option_key)        { 'options.store' }
+  let(:stores_key)        { 'stores.file_store' }
+  let(:serializer_key)    { 'serializers.yaml_serializer' }
   let(:injector_constant) { ResourceRegistry::CoreInject }
 
   it { expect(subject).to respond_to(:boot, :config) }

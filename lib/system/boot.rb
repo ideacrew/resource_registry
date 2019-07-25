@@ -9,13 +9,12 @@ module ResourceRegistry
       config.name = :core
       config.default_namespace = :core
       config.root = Pathname.pwd.join('lib').realpath.freeze
-      config.system_dir = "resource_registry/system"
-      # config.root = Pathname.pwd.join('lib').join('resource_registry').realpath.freeze
+      config.system_dir = "system"
 
       config.auto_register = %w[resource_registry/serializers resource_registry/stores]
     end
 
-    load_paths!('resource_registry')
+    load_paths!('system', 'resource_registry')
   end
 
   require_relative "local/core_options"
