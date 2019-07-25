@@ -18,7 +18,7 @@ module ResourceRegistry
     load_paths!('resource_registry')
   end
 
-  require_relative "local_dependencies/core_options"
+  require_relative "local/core_options"
   CoreContainer.namespace(:options) do |container|
     path  = container.config.root.join(container.config.system_dir)
     obj   = CoreOptions.load_attr(path, "core_options")
@@ -26,8 +26,8 @@ module ResourceRegistry
     obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
   end
 
-  require_relative "local_dependencies/core_inject"
-  require_relative "local_dependencies/persistence"
+  require_relative "local/core_inject"
+  require_relative "local/persistence"
 
   # CoreContainer.finalize!(freeze: true) # if defined? Rails && Rail.env == 'production'
 end
