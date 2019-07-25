@@ -1,7 +1,7 @@
 module ResourceRegistry
-  module Settings
+  module Entities
     # An Application is all code operating under a single process
-    class QleSetting < Setting # EA, EDI DB, Ledger
+    class QualifyingLifeEvent < Setting # EA, EDI DB, Ledger
 
       attribute :key,                     Types::Symbol
       attribute :tool_tip,                Types::Strict::String

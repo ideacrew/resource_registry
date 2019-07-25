@@ -1,7 +1,5 @@
-require 'dry-struct' unless defined?(Dry::Struct)
-
 module ResourceRegistry
-  module Settings
+  module Entities
     class Setting < Dry::Struct
       include DryStructSetters
       transform_keys(&:to_sym)

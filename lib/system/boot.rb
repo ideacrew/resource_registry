@@ -17,10 +17,10 @@ module ResourceRegistry
     load_paths!('system', 'resource_registry')
   end
 
-  require_relative "local/core_options"
+  require "resource_registry/entities/core_options"
   CoreContainer.namespace(:options) do |container|
     path  = container.config.root.join(container.config.system_dir)
-    obj   = CoreOptions.load_attr(path, "core_options")
+    obj   = ResourceRegistry::Entities::CoreOptions.load_attr(path, "core_options")
 
     obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
   end

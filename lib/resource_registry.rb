@@ -8,12 +8,12 @@
 ## 
 
 require 'resource_registry/types'
+require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
 require 'system/boot'
 
 require 'resource_registry/compactor'
-require 'resource_registry/options'
 require 'resource_registry/serializers'
 require 'resource_registry/error'
 require 'resource_registry/version'
@@ -73,19 +73,19 @@ module ResourceRegistry
   #     end
   #   end
 
-  #   def gem_file_path_for(namespace)
-  #     namespace_str = INFLECTOR.underscore(namespace)
-  #     './lib/' + namespace_str
-  #   end
+    # def self.file_kinds_for(file_pattern:, dir_base:)
+    #   list = []
+    #   Dir.glob(file_pattern, base: dir_base) do |file_name|
+    #     upper_bound = file_name.length - file_pattern.length
+    #     list << file_name[0..upper_bound].to_sym
+    #   end
+    #   list
+    # end
 
-  #   def file_kinds_for(file_pattern:, dir_base:)
-  #     list = []
-  #     Dir.glob(file_pattern, base: dir_base) do |file_name|
-  #       upper_bound = file_name.length - file_pattern.length
-  #       list << file_name[0..upper_bound].to_sym
-  #     end
-  #     list
-  #   end
+    # def self.gem_file_path_for(namespace)
+    #   namespace_str = INFLECTOR.underscore(namespace)
+    #   './lib/' + namespace_str
+    # end
 
   #   def container
   #     @@container

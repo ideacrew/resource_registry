@@ -1,15 +1,11 @@
 # Boot file to configure system 
-
-tenant = "dchbx"
+require 'resource_registry/container'
 
 # Ordereed list of core files to configure system
 boot_keys = [:features, :components, :site, :ui, :subscriptions, :component_provision, :aca_shop_market]
 
-# Enable multiple tenants in same report by setting root namespace
-TopNamespaceName = "#{tenant}_tenant"
-
 # Repository container that manages configuration settings
-Repo = ResourceRegistry::Repository.new(top_namespace: TopNamespaceName)
+Repo = ResourceRegistry::Container
 
 # binding.pry
 

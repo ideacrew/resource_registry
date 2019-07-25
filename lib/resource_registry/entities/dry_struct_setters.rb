@@ -1,5 +1,5 @@
 module ResourceRegistry
-  module Settings
+  module Entities
     module DryStructSetters
 
       def self.included(struct)
