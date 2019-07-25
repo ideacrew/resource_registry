@@ -20,8 +20,6 @@ require 'resource_registry/version'
 module ResourceRegistry
   include Dry::Core::Constants
 
-
-
   # CONFIG_PATH = '/config/initializers/resource_registry.rb'
 
   # INFLECTOR = Dry::Inflector.new

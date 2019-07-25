@@ -1,0 +1,13 @@
+---
+store: "file_store"
+serializer: "yaml_serializer"
+seed_files_path: "config"
+
+aws_access_key_id: "ENV['AWS_ACCESS_KEY_ID']"
+aws_secret_access_key: "ENV['AWS_SECRET_ACCESS_KEY']"
+aws_region: 'us-east-1'
+
+# database_url: "postgres://localhost/resource_registry_development"
+# app_mailer_from_email:    "hello@ideacrew.dev"
+# admin_mailer_from_email:  "admin@ideacrew.dev"
+

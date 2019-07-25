@@ -1,8 +1,8 @@
 # Initialize container with core system settings
-
 require 'dry/system/container'
 
 module ResourceRegistry
+
   class CoreContainer < Dry::System::Container
 
     configure do |config|
@@ -18,15 +18,16 @@ module ResourceRegistry
     load_paths!('resource_registry')
   end
 
-  require_relative "local_dependencies/auto_inject"
-  require_relative "local_dependencies/persistence"
-
-  require_relative "local_dependencies/configuration"
+  require_relative "local_dependencies/core_options"
   CoreContainer.namespace(:options) do |container|
-    path = container.config.root.join(container.config.system_dir)
-    obj = Configuration.load_attr(path, "config")
+    path  = container.config.root.join(container.config.system_dir)
+    obj   = CoreOptions.load_attr(path, "core_options")
+
     obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
   end
 
-  CoreContainer.finalize!(freeze: true)
+  require_relative "local_dependencies/core_inject"
+  require_relative "local_dependencies/persistence"
+
+  # CoreContainer.finalize!(freeze: true) # if defined? Rails && Rail.env == 'production'
 end

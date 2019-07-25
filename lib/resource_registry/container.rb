@@ -1,5 +1,5 @@
 module ResourceRegistry
-  class OptionsContainer < Dry::System::Container
+  class Container < Dry::System::Container
     # import Application::Container
 
     configure do |config|
@@ -20,8 +20,8 @@ module ResourceRegistry
 
     # load_paths! "lib", "system"
 
-    require 'resource_registry/system/core'
-    container.import core: ResourceRegistry::CoreContainer
+    # require 'resource_registry/system/core'
+    # container.import core: ResourceRegistry::CoreContainer
   end
 end
       
