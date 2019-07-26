@@ -9,7 +9,6 @@ RSpec.describe ResourceRegistry::CoreContainer do
   before do
     subject.enable_stubs!
     subject.finalize!
-    binding.pry
   end
 
   let(:config_name)       { :core }
