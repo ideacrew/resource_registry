@@ -45,6 +45,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
+  spec.add_dependency 'bootsnap',                 '~> 1.0'
   spec.add_dependency 'mime-types'
 
 

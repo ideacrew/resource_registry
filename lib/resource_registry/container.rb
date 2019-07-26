@@ -4,6 +4,9 @@ module ResourceRegistry
   class Container < Dry::System::Container
     # import Application::Container
 
+    use :bootsnap
+    use :env, inferrer: -> { ENV.fetch("RAILS_ENV", :development).to_sym }
+
     defined?(Rails) ? top_dir = '' : top_dir = 'lib'
 
     configure do |config|

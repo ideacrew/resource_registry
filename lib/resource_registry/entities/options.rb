@@ -13,12 +13,6 @@ module ResourceRegistry
       attribute :settings?,   Types::Array.of(Setting)
       attribute :namespaces?, Types::Array.of(Options)
 
-      def validate
-      end
-
-      def persist
-      end
-
       def to_container(namespace = nil)
         container = namespace || Dry::Container::new
         container.namespace(key) do |namespace|
@@ -26,12 +20,6 @@ module ResourceRegistry
           load_container_for settings, namespace
         end
         container
-      end
-
-      def to_yaml
-      end
-
-      def to_json
       end
 
       protected
