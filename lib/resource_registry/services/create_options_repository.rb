@@ -1,7 +1,9 @@
+require 'resource_registry/services'
+
 module ResourceRegistry
   module Services
     class CreateOptionsRepository
-
+      include ResourceRegistry::Services::Service
 
       attr_reader :repository
 

@@ -1,3 +1,5 @@
+require 'resource_registry/services/service'
+
 require 'resource_registry/serializers/xml_serializer'
 require 'resource_registry/serializers/yaml_serializer'
 require 'resource_registry/serializers/json_serializer'

@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'resource_registry/services'
 # require 'dry/container/stub'
 
 RSpec.describe ResourceRegistry::Services::CreateOptionsRepository do

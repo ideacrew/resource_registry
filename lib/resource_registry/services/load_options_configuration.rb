@@ -14,6 +14,8 @@ module ResourceRegistry
       end
 
       def execute
+        raise StandardError, "Rails not defined" unless defined? Rails
+
         Dir.glob(File.join(Rails.root.to_s, seed_files_path, "*")).each do |file_path|
           content         = file_store.call(content: file_path, action: :load)
           options_hash    = yaml_serializer.call(content: content, action: :parse)

@@ -1,5 +1,6 @@
 require "spec_helper"
 require 'dry/container/stub'
+require 'resource_registry/repository'
 
 RSpec.describe ResourceRegistry::Repository do
 

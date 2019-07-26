@@ -1,3 +1,4 @@
+require 'dry-container'
 
 # # How to access namespaces: reference the block variable assigned to that namespace
 # container.namespace('three') do |c|
