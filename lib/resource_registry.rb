@@ -12,8 +12,9 @@ require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
 require 'system/boot'
-
 require 'resource_registry/compactor'
+# require 'resource_registry/container'
+# require 'resource_registry/options'
 require 'resource_registry/serializers'
 require 'resource_registry/error'
 require 'resource_registry/version'
@@ -28,15 +29,16 @@ module ResourceRegistry
   # # Initialize the Repository that contains the system configuration settings
   # Services::CreateOptionsRepository.call
 
+    def self.configure
+      ResourceRegistry::Container.namespace(:ram) do |container|
+        path  = container.config.root.join(container.config.system_dir)
+        obj   = CoreOptions.load_attr(path, "core_options")
+        options = obj.to_hash.merge(yield)
+        options.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
+      end
+    end
 
   # class << self
-
-  #   def configure
-  #     configuration = ResourceRegistry::Configuration.config
-  #     yield(configuration)
-  #     configuration.to_h.each {|key, value| container.register key.to_sym, value }
-  #     container.freeze
-  #   end
 
   #   def setup
   #     yield self unless @_ran_once

@@ -7,7 +7,7 @@ module ResourceRegistry
 
       attribute :store,                 Types::RequiredString
       attribute :serializer,            Types::RequiredString
-      attribute :seed_files_path,       Types::String
+      attribute :container,             Types::String
 
       attribute :aws_access_key_id,     Types::String
       attribute :aws_secret_access_key, Types::String
