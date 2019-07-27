@@ -9,12 +9,12 @@ module ResourceRegistry
 
   raise "Invalid Params" unless registry_validation.success?
 
-  PrivateRegistry = ResourceRegistry::Registries::Registry.new(registry_validation)
-
+  PrivateRegistry = ResourceRegistry::Registries::Registry.call(registry_validation)
   require_relative "local/inject"
-  require_relative "local/persistence"
+  
+  # require_relative "local/persistence"
 
-  PrivateRegistry.finalize!(freeze: true) # if defined? Rails && Rail.env == 'production'
+  # PrivateRegistry.finalize!(freeze: true) # if defined? Rails && Rail.env == 'production'
 
   # path = root.join("config").join("#{name}.yml").realpath
   # yaml = File.exist?(path) ? YAML.load_file(path) : {}
