@@ -21,7 +21,7 @@ module ResourceRegistry
         @container  = container
       end
 
-      def load
+      def call
         set_config
         # set_load_paths 
         set_persistence
@@ -58,12 +58,12 @@ module ResourceRegistry
 
       def container
         return @container if defined? @container
-        @container = Dry::System::Container
+        @container = Class.new(Dry::System::Container)
       end
 
       def self.call(validation)
         registry = self.new(validation)
-        registry.load
+        registry.call
         registry.container
       end
     end

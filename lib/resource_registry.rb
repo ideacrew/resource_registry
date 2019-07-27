@@ -33,23 +33,24 @@ module ResourceRegistry
   class << self
 
     def configure
-      # validator = RegistrySchema.new
-      # read in public_options and merge with yield options
-      # validate
-      # validator.validate(public_options)
+      path = Pathname.new(__dir__).join('system', 'config', 'public_options.yml')
+      params = YAML.load_file(path)
 
-      # PublicRegistry = Registry.new(public_params)
+      registry_validator  = ResourceRegistry::Registries::Validation::RegistrySchema.new
+      registry_validation = registry_validator.call(params.merge(yield))
 
-      # ResourceRegistry::CoreContainer.namespace(:options) do |container|
-      #   path    = container.config.root.join(container.config.system_dir)
-      #   obj     = Entities::CoreOptions.load_attr(path, "core_options")
-      #   yield(obj)
-      #   obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
-      # end
+      raise "Invalid Params" unless registry_validation.success?
+
+      container = ResourceRegistry::Registries::Registry.call(registry_validation)
+      ResourceRegistry.const_set(:PublicRegistry, container) unless defined? ResourceRegistry::PublicRegistry
     end
 
     def root
       File.dirname __dir__
+    end
+
+    def services_path
+      Pathname.new(__dir__).join('resource_registry', 'services')
     end
   end
 

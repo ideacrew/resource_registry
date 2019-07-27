@@ -2,6 +2,7 @@ module ResourceRegistry
   module Entities
     class Options  < Dry::Struct
       include Enumerable
+      include DryStructSetters
 
       transform_keys(&:to_sym)
 
