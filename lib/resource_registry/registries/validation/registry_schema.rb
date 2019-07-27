@@ -1,27 +1,33 @@
 module ResourceRegistry
-  module Validation
-    class RegistrySchema < AppSchema
+  module Registries
+    module Validation
+      class RegistrySchema < AppSchema
 
-      required(:registry_name).filled(:string)
-      required(:root).filled(:string)
-      required(:name).filled(:string)
-      required(:default_namespace).filled(:string)
-      required(:app_name).filled(:string)
-      required(:env).filled(:string)
-      required(:system_dir).filled(:string)
-      required(:load_paths).maybe.array(:str?)
-      required(:auto_register).maybe.array(:str?)
-      required(:timestamp).maybe(:string)
+        define do
+          required(:config).hash do
+            optional(:registry_name).filled(:string)
+            optional(:root).filled(:string)
+            required(:name).filled(:string)
+            optional(:default_namespace).filled(:string)
+            optional(:env).filled(:string)
+            required(:system_dir).filled(:string)
+            optional(:auto_register).array(:str?)
+          end
+          
+          optional(:app_name).filled(:string)
+          optional(:load_paths).array(:str?)
+          optional(:timestamp).filled(:string)
 
-      required(:persistence).hash do
-        required(:store).filled(:string)
-        required(:serilizer).filled(:string)
-        required(:container).filled(:string)
+          required(:persistence).hash do
+            required(:store).filled(:string)
+            required(:serializer).filled(:string)
+            required(:container).filled(:string)
+          end
+
+          # required(:options).array do
+          # end
+        end
       end
-
-      required(:options).array do
-      end
-
     end
   end
 end

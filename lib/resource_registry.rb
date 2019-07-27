@@ -11,6 +11,7 @@ require 'resource_registry/types'
 require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
+require 'resource_registry/registries'
 require 'system/boot'
 require 'resource_registry/compactor'
 # require 'resource_registry/container'
@@ -29,14 +30,29 @@ module ResourceRegistry
   # # Initialize the Repository that contains the system configuration settings
   # Services::CreateOptionsRepository.call
 
-    def self.configure
-      ResourceRegistry::Container.namespace(:ram) do |container|
-        path  = container.config.root.join(container.config.system_dir)
-        obj   = CoreOptions.load_attr(path, "core_options")
-        options = obj.to_hash.merge(yield)
-        options.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
-      end
+  class << self
+
+    def configure
+      # validator = RegistrySchema.new
+      # read in public_options and merge with yield options
+      # validate
+      # validator.validate(public_options)
+
+      # PublicRegistry = Registry.new(public_params)
+
+      # ResourceRegistry::CoreContainer.namespace(:options) do |container|
+      #   path    = container.config.root.join(container.config.system_dir)
+      #   obj     = Entities::CoreOptions.load_attr(path, "core_options")
+      #   yield(obj)
+      #   obj.to_hash.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
+      # end
     end
+
+    def root
+      File.dirname __dir__
+    end
+  end
+
 
   # class << self
 

@@ -3,6 +3,8 @@ require "yaml"
 module ResourceRegistry
   module Entities
     class CoreOptions < Dry::Struct
+
+      include DryStructSetters
       # transform_keys(&:to_sym)
 
       attribute :store,                 Types::RequiredString
