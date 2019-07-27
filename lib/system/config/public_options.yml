@@ -1,0 +1,13 @@
+config:
+  name: public
+  default_namespace: core
+  root: nil
+  # relative_root: nil
+  system_dir: system
+  auto_register: []
+load_paths:
+  - system
+persistence:
+  store: file_store
+  serializer: yaml_serializer 
+  container: config

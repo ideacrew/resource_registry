@@ -24,7 +24,7 @@ module ResourceRegistry
         result.symbolize_keys!
 
         if result.keys.include?(:namespaces) || result.keys.include?(:settings)
-          options = ResourceRegistry::Options.new(key: result[:key].to_sym)
+          options = ResourceRegistry::Entities::Options.new(key: result[:key].to_sym)
           root = options if parent_node.blank?
           parent_node.namespaces = parent_node.namespaces.to_a + [options] if parent_node.present?
           [:namespaces, :settings].each do |attrs|
@@ -36,7 +36,7 @@ module ResourceRegistry
             attrs[:default] = attrs[:default].to_s
             attrs[:value] = attrs[:value].to_s if attrs[:value].present?
           end
-          setting  = ResourceRegistry::Settings::Setting.new(result)
+          setting  = ResourceRegistry::Entities::Setting.new(result)
           parent_node.settings = parent_node.settings.to_a + [setting]
         end
 
@@ -45,7 +45,7 @@ module ResourceRegistry
 
       def descend_array(array) #:nodoc:
         array.map do |value|
-          if value.instance_of? ResourceRegistry::Options
+          if value.instance_of? ResourceRegistry::Entities::Options
             value.to_hash
           elsif value.instance_of? Array
             descend_array(value)

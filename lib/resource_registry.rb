@@ -11,6 +11,7 @@ require 'resource_registry/types'
 require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
+require 'resource_registry/registries'
 require 'system/boot'
 require 'resource_registry/compactor'
 # require 'resource_registry/container'
@@ -29,14 +30,30 @@ module ResourceRegistry
   # # Initialize the Repository that contains the system configuration settings
   # Services::CreateOptionsRepository.call
 
-    def self.configure
-      ResourceRegistry::Container.namespace(:ram) do |container|
-        path  = container.config.root.join(container.config.system_dir)
-        obj   = CoreOptions.load_attr(path, "core_options")
-        options = obj.to_hash.merge(yield)
-        options.each_pair { |key, value| container.register("#{key}".to_sym, "#{value}") }
-      end
+  class << self
+
+    def configure
+      path = Pathname.new(__dir__).join('system', 'config', 'public_options.yml')
+      params = YAML.load_file(path)
+
+      registry_validator  = ResourceRegistry::Registries::Validation::RegistrySchema.new
+      registry_validation = registry_validator.call(params.merge(yield))
+
+      raise "Invalid Params" unless registry_validation.success?
+
+      container = ResourceRegistry::Registries::Registry.call(registry_validation)
+      ResourceRegistry.const_set(:PublicRegistry, container) unless defined? ResourceRegistry::PublicRegistry
     end
+
+    def root
+      File.dirname __dir__
+    end
+
+    def services_path
+      Pathname.new(__dir__).join('resource_registry', 'services')
+    end
+  end
+
 
   # class << self
 
