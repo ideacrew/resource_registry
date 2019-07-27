@@ -5,6 +5,9 @@ module ResourceRegistry
   module Types
     include Dry::Types()
 
+    Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
+    Stores          = Types::String.default('file_store'.freeze).enum('file_store')
+
     RequiredString  = Types::Strict::String.constrained(min_size: 1)
     Email           = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
 
