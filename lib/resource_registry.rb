@@ -16,8 +16,6 @@ require 'resource_registry/validations'
 require 'resource_registry/registries'
 require 'system/boot'
 require 'resource_registry/compactor'
-# require 'resource_registry/container'
-# require 'resource_registry/options'
 require 'resource_registry/serializers'
 require 'resource_registry/version'
 
