@@ -1,7 +1,10 @@
+require 'dry/validation'
+require 'resource_registry/registries/validation/registry_contract'
+
 module ResourceRegistry
-  module Registries
+  module Options
     module Validation
-      class OptionsSchema < AppSchema
+      class OptionContract < ResourceRegistry::Validation::ApplicationContract
 
         required(:namespace).filled(:string)
         required(:key).filled(:string)
