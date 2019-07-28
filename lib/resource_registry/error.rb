@@ -3,5 +3,6 @@ module ResourceRegistry
     # @api public
     Error = Class.new(StandardError)
     InvalidOptionHash = Class.new(Error)
+    InvalidContractParams = Class.new(Error)
   end
 end

@@ -4,15 +4,6 @@ module ResourceRegistry
   module Validation
     class ApplicationSchema < Dry::Schema::Params
 
-      configure do |config|
-        # config.messages_file = '/my/app/config/locales/en.yml'
-        # config.messages = :i18n 
-      end
-
-      # def email?(value)
-      #   true
-      # end
-
       # define common rules, if any
       define do
 
@@ -24,7 +15,7 @@ module ResourceRegistry
           value =~ /^[A-Z]*/ # check that the first character in our string is uppercase
         end
       end
-      
+
     end
   end
 end

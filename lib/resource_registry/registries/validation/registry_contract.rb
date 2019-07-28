@@ -1,4 +1,6 @@
 require 'dry/validation'
+# require 'resource_registry/validation/application_contract'
+require 'resource_registry/registries/validation/registry_contract'
 
 module ResourceRegistry
   module Registries

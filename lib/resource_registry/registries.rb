@@ -1,6 +1,5 @@
 require 'resource_registry/registries/registry'
-require 'resource_registry/registries/validation/app_schema'
-require 'resource_registry/registries/validation/registry_schema'
+require 'resource_registry/registries/validation/registry_contract'
 
 module ResourceRegistry
   module Registries

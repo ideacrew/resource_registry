@@ -1,3 +1,6 @@
+require 'resource_registry/validation/application_schema'
+require 'resource_registry/entities/options'
+
 module ResourceRegistry
   module Registries
     module Validation
@@ -29,7 +32,7 @@ module ResourceRegistry
             required(:container).filled(:string)
           end
 
-          optional(:options).filled(type?: ResourceRegistry::Entities::Option)
+          optional(:options).filled(type?: ResourceRegistry::Entities::Options)
         end
 
       end

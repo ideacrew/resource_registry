@@ -7,17 +7,18 @@
 # require 'resource_registry/repository'
 ## 
 
+require 'resource_registry/error'
 require 'resource_registry/types'
 require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
+require 'resource_registry/validations'
 require 'resource_registry/registries'
 require 'system/boot'
 require 'resource_registry/compactor'
 # require 'resource_registry/container'
 # require 'resource_registry/options'
 require 'resource_registry/serializers'
-require 'resource_registry/error'
 require 'resource_registry/version'
 
 module ResourceRegistry

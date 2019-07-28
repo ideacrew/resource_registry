@@ -4,13 +4,15 @@ module ResourceRegistry
   path = Pathname.new(__dir__).join('config', 'private_options.yml')
   params = YAML.load_file(path)
 
-  registry_validator  = ResourceRegistry::Registries::Validation::RegistrySchema.new
-  registry_validation = registry_validator.call(params)
+  registry_contract = ResourceRegistry::Registries::Validation::RegistryContract.new
+  result = registry_contract.call(params)
 
-  raise "Invalid Params" unless registry_validation.success?
-
-  PrivateRegistry = ResourceRegistry::Registries::Registry.call(registry_validation)
-  require_relative "local/inject"
+  if result.success?
+    PrivateRegistry = ResourceRegistry::Registries::Registry.call(result)
+    require_relative "local/inject"
+  else
+    raise Error::InvalidContractParams, "PrivateRegistry error(s): #{result.errors(full: true).to_h}"
+  end
   
   # require_relative "local/persistence"
 

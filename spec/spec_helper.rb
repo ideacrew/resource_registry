@@ -1,9 +1,11 @@
 require "bundler/setup"
 
+# Custom matcher for dry-validation schema specs
+require "support/matchers/match_schema"
+
 require 'simplecov'
 SimpleCov.start if ENV["COVERAGE"]
 
-# require "resource_registry"
 require "pry-byebug"
 require 'dry/container/stub'
 require "timecop"

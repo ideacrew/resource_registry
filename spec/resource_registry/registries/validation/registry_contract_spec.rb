@@ -3,10 +3,8 @@ require 'dry/container/stub'
 
 require 'resource_registry/types'
 require 'resource_registry/entities'
-# require 'resource_registry/registries/registry'
-# require 'resource_registry/stores'
-require 'resource_registry/validation/application_contract'
-require 'resource_registry/registries/validation/registry_contract'
+require 'resource_registry/validations'
+require 'resource_registry/registries'
 
 RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
@@ -43,26 +41,31 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
   }
 
 
-  context "with a valid pathname" do
-    let(:valid_parms)     { top_parms.merge(config_parms.merge(persistence_parms)) }
+  context "with valid params" do
+    let(:valid_parms)       { top_parms.merge(config_parms.merge(persistence_parms)) }
 
     it "validation should pass" do
       expect(subject.call(valid_parms).errors.to_h).to eq Hash.new
     end
-  end
 
-  context "with a bad pathname" do
-    let(:bad_pathname)    { { config: { root: Pathname('sillypathname') } } }
-    let(:pathname_error)  { ["pathname must exist"] }
-
-    it "validation should fail" do
-      expect(subject.call(bad_pathname).errors.to_h[:config][:root]).to eq pathname_error
+    it "returns data in specified format" do
+      expect(valid_parms).to match_schema(subject)
     end
   end
 
+  context "with an invalid pathname" do
+    let(:invalid_pathname)  { { config: { root: Pathname('sillypathname') } } }
+    let(:pathname_error)    { ["pathname must exist"] }
 
+    it "validation should fail" do
+      expect(subject.call(invalid_pathname).errors.to_h[:config][:root]).to eq pathname_error
+    end
 
-
+    it "returns data in specified format" do
+      expect(invalid_pathname).not_to match_schema(subject)
+      # expect((invalid_pathname).errors).to_not match_schema(subject)
+    end
+  end
 
 
 end
