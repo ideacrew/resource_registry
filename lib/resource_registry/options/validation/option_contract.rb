@@ -6,10 +6,13 @@ module ResourceRegistry
     module Validation
       class OptionContract < ResourceRegistry::Validation::ApplicationContract
 
-        required(:namespace).filled(:string)
-        required(:key).filled(:string)
-        required(:settings).maybe(:array)
-        required(:namespaces).maybe(:hash)
+        params do
+          required(:namespace) do
+            required(:key).filled(:string)
+            optional(:settings).array(type?: SettingSchema)
+            optional(:namespaces).array(type?: OptionSchema)
+          end
+        end
 
       end
     end
