@@ -8,6 +8,7 @@
 ## 
 require 'dry/transaction'
 require 'dry/transaction/operation'
+require 'system/boot'
 require 'resource_registry/error'
 require 'resource_registry/types'
 require 'resource_registry/entities'
@@ -32,7 +33,19 @@ module ResourceRegistry
   class << self
 
     def configure
-      ResourceRegistry::Services::CreateRegistry.call(preferences: yield)
+
+      path = system_path.join("config", "public_options.yml")
+
+      registry_service = ResourceRegistry::Services::CreateRegistry.new
+      result = registry_service.with_step_args(
+        create_registry: [preferences: yield],
+        create_resource_registry: [preferences: yield]
+      )
+      .call(path)
+
+      ResourceRegistry.const_set('Registry', result.value!) if result.success?
+
+      # ResourceRegistry::Services::CreateRegistry.call(preferences: yield)
     end
 
     def root
@@ -125,5 +138,4 @@ module ResourceRegistry
   # Config = Dry::AutoInject(@@container)
   # Dir.glob(ResourceRegistry.services_path + '*', &method(:require))
 end
-require 'system/boot'
 

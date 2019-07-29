@@ -1,52 +1,42 @@
 module ResourceRegistry
   module Services
 
-    class Container
-      extend Dry::Container::Mixin
-
-      namespace :transactions do
-        register :registry do
-          ResourceRegistry::Registries::Registry.new
-        end
-
-        register :create do
-          Users::Create.new
-        end
-      end
- 
-      namespace :operations do
-        register :load_file do
-          ResourceRegistry::Stores::LoadFile.new
-        end
-
-        register :parse_yaml do
-          ResourceRegistry::Serializers::ParseYaml.new
-        end
-
-        register :validate_registry do
-          ResourceRegistry::Registries::Validation::RegistryContract.new
-          # ResourceRegistry::Registries::RegistryValidator.new
-        end
-      end
-    end
-
     class CreateRegistry
-      include Dry::Transaction(container: Container)
+      include Dry::Transaction(container: ResourceRegistry::Registry)
 
-      step :read,  with: 'operations.load_file'
-      step :parse, with: 'operations.parse_yaml'
-      step :create_registry, with: 'transactions.registry'
-      step :create_gem_config
+      step :load_source,  with: 'resource_registry.operations.load'
+      step :parse, with: 'resource_registry.operations.parse'
+      step :create_registry, with: 'resource_registry.transactions.registry'
+      step :create_resource_registry
       step :create_persistence
 
       private
 
-      def create_gem_config(input)
+      def create_registry(input, preferences: {})
+        super input.merge(stringify_all_keys(preferences))
+      end
+
+      def create_resource_registry(input, preferences: {})
+        preferences[:resource_registry][:config].each_pair do |key, value|
+          input.register("resource_registry.config.#{key}", value)
+        end
+
+        input.register("resource_registry.load_paths", preferences[:resource_registry][:load_paths])
+
         return Success(input)
       end
 
       def create_persistence(input)
+
         return Success(input)
+      end
+
+      def stringify_all_keys(hash)
+        stringified_hash = {}
+        hash.each do |k, v|
+          stringified_hash[k.to_s] = v.is_a?(Hash) ? stringify_all_keys(v) : v
+        end
+        stringified_hash
       end
 
 

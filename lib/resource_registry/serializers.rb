@@ -6,7 +6,9 @@ require 'resource_registry/serializers/yaml_serializer'
 require 'resource_registry/serializers/json_serializer'
 require 'resource_registry/serializers/options_serializer'
 require 'resource_registry/serializers/container_serializer'
-require 'resource_registry/serializers/parse_yaml'
+# require 'resource_registry/serializers/parse_yaml'
+require 'resource_registry/serializers/operations/parse_yaml'
+
 
 module ResourceRegistry
   module Serializers

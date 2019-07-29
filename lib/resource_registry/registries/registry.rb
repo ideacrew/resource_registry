@@ -4,9 +4,9 @@ module ResourceRegistry
   module Registries
     class Registry
 
-      include Dry::Transaction(container: ResourceRegistry::Services::Container)
+      include Dry::Transaction(container: ResourceRegistry::Registry)
 
-      step :validate, with: 'operations.validate_registry'
+      step :validate, with: 'resource_registry.operations.validate_registry'#, catch: StandardError
       step :build_container
       step :load_config
       step :set_load_paths
@@ -14,8 +14,14 @@ module ResourceRegistry
       private
 
       def validate(input)
-        input = transform_root_to_path(input['registry'])
-        super(input)
+        input = transform_root_to_path(input['application'])
+        result = super(input)
+
+        if result.success?
+          return Success(result)
+        else
+          return Failure(result)
+        end
       end
 
       def build_container(input)
@@ -39,7 +45,7 @@ module ResourceRegistry
 
       def init_container
         return @container if defined? @container
-        @container = Class.new(Dry::System::Container)
+        @container = Dry::System::Container
       end
 
       def transform_root_to_path(params)
