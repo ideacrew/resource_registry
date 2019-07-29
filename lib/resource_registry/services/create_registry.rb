@@ -6,20 +6,12 @@ module ResourceRegistry
       def call(**params)
         @type = params[:type]
         @preferences = params[:preferences] || {}
+        @preferences.deep_stringify_keys!
         execute
       end
 
-      private
-
       def execute
-        file_path = ResourceRegistry.system_path.join("config", "#{@type}_options.yml")
-        content   = ResourceRegistry::Stores::FileStore.call(content: file_path, action: :load)
-        params    = ResourceRegistry::Serializers::YamlSerializer.call(content: content, action: :parse)
-
-        @preferences.deep_stringify_keys!
-        config_params = get_config_params(params.merge(@preferences))
-        registry_contract = ResourceRegistry::Registries::Validation::RegistryContract.new
-        result = registry_contract.call(config_params)
+        result = validate(get_config_params)
 
         if result.success?
           container = ResourceRegistry::Registries::Registry.call(result: result)
@@ -29,8 +21,31 @@ module ResourceRegistry
         end
       end
 
-      def get_config_params(params)
-        config_params = params['registry']
+      private
+
+      def validate(config_params)
+        registry_contract = ResourceRegistry::Registries::Validation::RegistryContract.new
+        registry_contract.call(config_params)
+      end
+
+      def file_path
+        ResourceRegistry.system_path.join("config", "#{@type}_options.yml")
+      end
+
+      def content
+        ResourceRegistry::Stores::FileStore.call(content: file_path, action: :load)
+      end
+
+      def params
+        ResourceRegistry::Serializers::YamlSerializer.call(content: content, action: :parse)
+      end
+
+      def params_with_preferences
+        params.merge!(@preferences)
+      end
+
+      def get_config_params
+        config_params = params_with_preferences['registry']
         config_params['config']['root'] = Pathname.new(config_params['config']['root']) if config_params['config'].keys.include?('root')
         config_params
       end
