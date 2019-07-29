@@ -2,7 +2,7 @@ module ResourceRegistry
   module Services
     class LoadRegistry
       include ResourceRegistry::Services::Service
-      include ResourceRegistry::RegistryInjector["persistence.store", "persistence.serializer"] if defined? ResourceRegistry::RegistryInjector
+      include ResourceRegistry::PublicInjector["persistence.store", "persistence.serializer"] if defined? ResourceRegistry::PublicInjector
 
       def call(**params)
         Dir.glob(File.join(params[:path], "*")).each do |file_path|

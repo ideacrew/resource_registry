@@ -1,19 +1,14 @@
 module ResourceRegistry
   module Options
-    class Setting < Dry::Struct
-      include DryStructSetters
-      transform_keys(&:to_sym)
+    module Validation
+      class SettingSchema < ResourceRegistry::Validation::ApplicationSchema
 
-      attribute :key,            Types::Symbol
-      attribute :title?,         Types::String
-      attribute :description?,   Types::String
-      attribute :type?,          Types::Symbol
-      attribute :default?,       Types::String
-      attribute :value?,         Types::String
-
-
-      def to_container(ns)
-        ns.register(key, default)
+        required(:key).filled(:symbol)
+        required(:default).filled(:string)
+        optional(:title).filled(:string)
+        optional(:description).filled(:string)
+        optional(:type).filled(:string)
+        optional(:value).filled(:string)
       end
     end
   end

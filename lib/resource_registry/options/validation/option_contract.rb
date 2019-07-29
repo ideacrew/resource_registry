@@ -7,13 +7,10 @@ module ResourceRegistry
       class OptionContract < ResourceRegistry::Validation::ApplicationContract
 
         params do
-          required(:namespace) do
-            required(:key).filled(:string)
-            optional(:settings).array(type?: SettingSchema)
-            optional(:namespaces).array(type?: OptionSchema)
-          end
+          required(:key).filled(:string)
+          optional(:settings).array(type?: SettingSchema)
+          optional(:namespaces).array(type?: OptionSchema)
         end
-
       end
     end
   end

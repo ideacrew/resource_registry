@@ -25,14 +25,14 @@ module ResourceRegistry
 
           # required(:app_name).filled(:string)
           optional(:timestamp).filled(:str?)
+          optional(:load_paths).array(:str?)
+          # required(:persistence).hash do
+          #   required(:store).filled(Stores)
+          #   optional(:serializer).filled(Serializers)
+          #   required(:container).filled(:string)
+          # end
 
-          required(:persistence).hash do
-            required(:store).filled(Stores)
-            optional(:serializer).filled(Serializers)
-            required(:container).filled(:string)
-          end
-
-          optional(:options).filled(type?: ResourceRegistry::Entities::Options)
+          optional(:options).filled(type?: ResourceRegistry::Entities::Option)
         end
 
         # Path name must exist

@@ -1,4 +1,4 @@
 module ResourceRegistry
   
-  Inject = PrivateRegistry.injector
+  PrivateInject = PrivateRegistry.injector
 end
