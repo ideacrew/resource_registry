@@ -30,7 +30,6 @@ module ResourceRegistry
       def set_config
         @container.configure do |config|
           @params[:config].each_pair do |key, value|
-            next if key == :env
             config.send "#{key}=", value
           end
         end

@@ -2,6 +2,27 @@ module ResourceRegistry
   module Services
     class CreateRegistry
       include ResourceRegistry::Services::Service
+      include ResourceRegistry::PrivateTransaction
+
+      step :load,       with: "options.load"
+      try  :parse,      with: "options.load"
+      try  :transform,  with: "options.load"
+      step :persist,    with: "options.load"
+
+      private
+
+      # def load(input)
+      # end
+
+      # def parse(input)
+      # end
+
+      # def transform(input)
+      # end
+
+      # def persist(input)
+      # end
+
 
       def call(**params)
         @type = params[:type]
@@ -34,7 +55,7 @@ module ResourceRegistry
       end
 
       def content
-        ResourceRegistry::Stores::FileStore.call(content: file_path, action: :load)
+        ResourceRegistry::persists::Filepersist.call(content: file_path, action: :load)
       end
 
       def params
