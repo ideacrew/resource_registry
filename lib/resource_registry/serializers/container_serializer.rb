@@ -31,10 +31,12 @@ module ResourceRegistry
       private
 
       def register_settings(settings, namespace)
+        return if settings.blank?
         settings.each{|setting| namespace.register(setting.key, setting.default) }
       end
 
       def register_namespace_elements(namespaces, namespace)
+        return if namespaces.blank?
         namespaces.each {|namespace_ele| construct_container(element: namespace_ele, namespace: namespace) }
       end
     end
