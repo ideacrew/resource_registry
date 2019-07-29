@@ -1,17 +1,17 @@
 ---
-config:
-  name: private
-  default_namespace: core
-  root: lib
-  # relative_root: lib
-  system_dir: system
-  auto_register: 
-    - resource_registry/serializers
-    - resource_registry/stores
-load_paths:
-  - system
-  - resource_registry
-persistence:
-  store: file_store
-  serializer: yaml_serializer
-  container: config/private_options.yml
+registry:
+  config:
+    name: private
+    default_namespace: core
+    root: lib
+    system_dir: system
+    env: development
+    auto_register:
+      - resource_registry/serializers
+      - resource_registry/stores
+      - resource_registry/entities
+      - resource_registry/validation
+      - resource_registry/registries
+  load_paths:
+    - system
+    - resource_registry

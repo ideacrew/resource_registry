@@ -29,7 +29,7 @@ module ResourceRegistry
       end
 
       # Override or additional attributes
-      attribute :options,     ResourceRegistry::Entities::Options
+      attribute :options,     ResourceRegistry::Entities::Option
 
     end
   end

@@ -12,59 +12,37 @@ require 'dry/system/container'
 module ResourceRegistry
   module Registries
     class Registry
+      include ResourceRegistry::Services::Service
 
       # use :bootsnap
       # use :env, inferrer: -> { ENV.fetch("RAILS_ENV", :development).to_sym }
 
-      def initialize(validation)
-        @validation = validation
-        @container  = container
-      end
+      def call(**params)
+        @params     = params[:result]
+        @container  = create_container
 
-      def call
         set_config
-        # set_load_paths 
-        set_persistence
-        # set_environment
+        # set_load_paths # FIX ME
+
+        @container
       end
 
       def set_config
-        configure do |container|
-          @validation.output[:config].each_pair do |key, value|
-            container.configure do |config|
-              config.send "#{key}=", value
-            end
+        @container.configure do |config|
+          @params[:config].each_pair do |key, value|
+            next if key == :env
+            config.send "#{key}=", value
           end
         end
       end
 
-      def configure
-        yield(@container)
-      end
-
       def set_load_paths
-        @container.send :load_paths!, @validation.output[:load_paths]
+        @container.send :load_paths!, @params[:load_paths]
       end
 
-      def set_environment
-        @container.send(:configure, {key: ENV.fetch("RAILS_ENV", :development).to_sym})
-      end
-
-      def set_persistence
-        @validation.output[:persistence].each_pair do |key, value|
-          @container.register("persistence.#{key}", value)
-        end
-      end
-
-      def container
+      def create_container
         return @container if defined? @container
         @container = Class.new(Dry::System::Container)
-      end
-
-      def self.call(validation)
-        registry = self.new(validation)
-        registry.call
-        registry.container
       end
     end
   end

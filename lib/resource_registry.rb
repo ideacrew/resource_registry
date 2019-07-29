@@ -14,7 +14,6 @@ require 'resource_registry/services'
 require 'resource_registry/stores'
 require 'resource_registry/validations'
 require 'resource_registry/registries'
-require 'system/boot'
 require 'resource_registry/compactor'
 require 'resource_registry/serializers'
 require 'resource_registry/version'
@@ -32,20 +31,15 @@ module ResourceRegistry
   class << self
 
     def configure
-      path = Pathname.new(__dir__).join('system', 'config', 'public_options.yml')
-      params = YAML.load_file(path)
-
-      registry_validator  = ResourceRegistry::Registries::Validation::RegistrySchema.new
-      registry_validation = registry_validator.call(params.merge(yield))
-
-      raise "Invalid Params" unless registry_validation.success?
-
-      container = ResourceRegistry::Registries::Registry.call(registry_validation)
-      ResourceRegistry.const_set(:PublicRegistry, container) unless defined? ResourceRegistry::PublicRegistry
+      ResourceRegistry::Services::CreateRegistry.call(type: :public, preferences: yield)
     end
 
     def root
       File.dirname __dir__
+    end
+
+    def system_path
+      Pathname.new(__dir__).join('system')
     end
 
     def services_path
@@ -130,3 +124,5 @@ module ResourceRegistry
   # Config = Dry::AutoInject(@@container)
   # Dir.glob(ResourceRegistry.services_path + '*', &method(:require))
 end
+require 'system/boot'
+

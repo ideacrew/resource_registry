@@ -1,6 +1,6 @@
 module ResourceRegistry
   module Entities
-    class Options  < Dry::Struct
+    class Option  < Dry::Struct
       include Enumerable
       include DryStructSetters
 
