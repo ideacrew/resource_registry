@@ -8,8 +8,8 @@ module ResourceRegistry
       attribute :title?,         Types::String
       attribute :description?,   Types::String
       attribute :type?,          Types::Symbol
-      attribute :default?,       Types::String
-      attribute :value?,         Types::String
+      attribute :default?,       Types::Any
+      attribute :value?,         Types::Any
     
     end
   end

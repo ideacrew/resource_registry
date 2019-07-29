@@ -10,6 +10,7 @@ module ResourceRegistry
 
     RequiredString  = Types::Strict::String.constrained(min_size: 1)
     Email           = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+    NilOrString     = Types::Nil | Types::String
 
     # Expects input formatted as: { days: 60 }, { months: 6 }
     Duration = Hash.with_type_transform do |key| 

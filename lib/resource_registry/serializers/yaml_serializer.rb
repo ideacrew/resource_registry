@@ -4,6 +4,7 @@ module ResourceRegistry
   module Serializers
     class YamlSerializer
       include ResourceRegistry::Services::Service
+      include ResourceRegistry::PrivateInject["options_validate", "options_persist"]
 
       def call(**params)
         @content = params[:content]

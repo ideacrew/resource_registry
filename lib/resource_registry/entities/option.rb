@@ -11,8 +11,8 @@ module ResourceRegistry
       attribute :key,          Types::Symbol
 
       # TODO: Make settings attribute dynamically typed
-      attribute :settings?,   Types::Array.of(Setting)
-      attribute :namespaces?, Types::Array.of(Option)
+      attribute :settings?,   Types::Array.of(ResourceRegistry::Entities::Setting)
+      attribute :namespaces?, Types::Array.of(ResourceRegistry::Entities::Option)
 
     end
   end

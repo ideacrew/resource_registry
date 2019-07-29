@@ -1,9 +1,6 @@
 module ResourceRegistry
   module Entities
-    class Registry < Dry::Types::Struct
-
-      undefined     = Types::Undefined
-      nil_or_string = Types::Nil | Types::String
+    class Registry < Dry::Struct
 
       # Configuration values
       attribute :config do
@@ -11,12 +8,12 @@ module ResourceRegistry
         attribute :root,              Types::Strict::String
         attribute :env,               Types::Strict::String
 
-        attribute :default_namespace, nil_or_string | undefined
-        attribute :system_dir,        nil_or_string | undefined
-        attribute :load_path,         nil_or_string | undefined
+        attribute :default_namespace, Types::NilOrString #| Types::Undefined
+        attribute :system_dir,        Types::NilOrString #| Types::Undefined
+        attribute :load_path,         Types::NilOrString #| Types::Undefined
 
         # Dir, plus optional custom auto_register block
-        attribute :auto_register,     Types::Array.of(nil_or_string) | undefined
+        attribute :auto_register,     Types::Array.of(Types::NilOrString) #| Types::Undefined
       end
 
       attribute :timestamp,           Types::DateTime.default { DateTime.now }
