@@ -1,48 +1,50 @@
 require 'dry/system/container'
 
-# Sample params
-# configure do |config|
-#   config.name = :options
-#   config.default_namespace = :options
-#   config.root = Pathname.pwd.join(top_dir).realpath.dirname.freeze
-#   config.auto_register = %w[ ]
-# end
-# load_paths! "lib", "system"
-
 module ResourceRegistry
   module Registries
     class Registry
-      include ResourceRegistry::Services::Service
 
-      # use :bootsnap
-      # use :env, inferrer: -> { ENV.fetch("RAILS_ENV", :development).to_sym }
+      include Dry::Transaction(container: ResourceRegistry::Services::Container)
 
-      def call(**params)
-        @params     = params[:result]
-        @container  = create_container
+      step :validate, with: 'operations.validate_registry'
+      step :build_container
+      step :load_config
+      step :set_load_paths
 
-        set_config
-        # set_load_paths # FIX ME
+      private
 
-        @container
+      def validate(input)
+        input = transform_root_to_path(input['registry'])
+        super(input)
       end
 
-      def set_config
+      def build_container(input)
+        init_container
+        return Success(input)
+      end
+
+      def load_config(input)
         @container.configure do |config|
-          @params[:config].each_pair do |key, value|
-            next if key == :env
+          input[:config].each_pair do |key, value|
             config.send "#{key}=", value
           end
         end
+        return Success(input)
       end
 
-      def set_load_paths
-        @container.send :load_paths!, @params[:load_paths]
+      def set_load_paths(input)
+        # @container.send :load_paths!, @params[:load_paths]
+        return Success(@container)
       end
 
-      def create_container
+      def init_container
         return @container if defined? @container
         @container = Class.new(Dry::System::Container)
+      end
+
+      def transform_root_to_path(params)
+        params['config']['root'] = Pathname.new(params['config']['root']) if params['config'].keys.include?('root')
+        params
       end
     end
   end

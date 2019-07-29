@@ -6,7 +6,8 @@
 # require 'dry-container'
 # require 'resource_registry/repository'
 ## 
-
+require 'dry/transaction'
+require 'dry/transaction/operation'
 require 'resource_registry/error'
 require 'resource_registry/types'
 require 'resource_registry/entities'
@@ -31,7 +32,7 @@ module ResourceRegistry
   class << self
 
     def configure
-      ResourceRegistry::Services::CreateRegistry.call(type: :public, preferences: yield)
+      ResourceRegistry::Services::CreateRegistry.call(preferences: yield)
     end
 
     def root

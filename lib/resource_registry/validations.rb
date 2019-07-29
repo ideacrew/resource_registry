@@ -1,1 +1,2 @@
 require 'resource_registry/validation/application_contract'
+require 'resource_registry/registries/registry_validator'

@@ -15,7 +15,7 @@ module ResourceRegistry
             # registry_name
             required(:name).filled(:string)
             required(:root).filled(type?: Pathname)
-            required(:env).filled(Environments)
+            # required(:env).filled(Environments)
 
             optional(:default_namespace).filled(:string)
             optional(:system_dir).filled(:string)

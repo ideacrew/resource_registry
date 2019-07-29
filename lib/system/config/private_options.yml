@@ -5,7 +5,6 @@ registry:
     default_namespace: core
     root: lib
     system_dir: system
-    env: development
     auto_register:
       - resource_registry/serializers
       - resource_registry/stores
