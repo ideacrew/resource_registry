@@ -16,6 +16,7 @@ module ResourceRegistry
         if result.success?
           container = ResourceRegistry::Registries::Registry.call(result: result)
           ResourceRegistry.const_set("#{@type.to_s.capitalize}Registry", container)
+          create_persistence
         else
           raise Error::InvalidContractParams, "#{@type.to_s.capitalize}Registry error(s): #{result.errors(full: true).to_h}"
         end
@@ -48,6 +49,14 @@ module ResourceRegistry
         config_params = params_with_preferences['registry']
         config_params['config']['root'] = Pathname.new(config_params['config']['root']) if config_params['config'].keys.include?('root')
         config_params
+      end
+
+      def create_persistence
+        if persistence_options = @preferences['options']
+          options_struct = ResourceRegistry::Serializers::OptionsSerializer.call(content: persistence_options, action: :generate)
+          container = ResourceRegistry::Serializers::ContainerSerializer.call(content: options_struct, action: :generate)
+          ResourceRegistry.const_get("#{@type.to_s.capitalize}Registry").merge(container)
+        end
       end
     end
   end

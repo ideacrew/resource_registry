@@ -14,8 +14,7 @@ module ResourceRegistry
       end
 
       def generate
-        raise InvalidOptionHash if @content['namespace'].blank?
-        convert(result: @content['namespace'])
+        convert(result: @content)
       end
 
       private
