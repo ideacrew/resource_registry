@@ -3,6 +3,7 @@ require 'yaml'
 module ResourceRegistry
   module Serializers
     class ParseYaml
+      
       include Dry::Transaction::Operation
 
       def call(input)

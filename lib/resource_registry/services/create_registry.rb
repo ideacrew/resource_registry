@@ -49,11 +49,6 @@ module ResourceRegistry
         return Success(input)
       end
 
-      # def call(**params)
-      #   @app_params = params || {}
-      #   @app_params.deep_stringify_keys!
-      #   execute
-      # end
 
       # def execute
       #   result = validate(get_config_params)
