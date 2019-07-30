@@ -4,8 +4,8 @@ module ResourceRegistry
     class CreateRegistry
       include Dry::Transaction(container: ResourceRegistry::Registry)
 
-      step :load_source,  with: 'resource_registry.operations.load'
-      step :parse, with: 'resource_registry.operations.parse'
+      step :load_source,     with: 'resource_registry.operations.load'
+      step :parse,           with: 'resource_registry.operations.parse'
       step :create_registry, with: 'resource_registry.transactions.registry'
       step :create_resource_registry
       step :create_persistence
@@ -13,7 +13,8 @@ module ResourceRegistry
       private
 
       def create_registry(input, preferences: {})
-        super input.merge(stringify_all_keys(preferences))
+        preferences.deep_stringify_keys!
+        super input.merge(preferences)
       end
 
       def create_resource_registry(input, preferences: {})
@@ -22,21 +23,11 @@ module ResourceRegistry
         end
 
         input.register("resource_registry.load_paths", preferences[:resource_registry][:load_paths])
-
         return Success(input)
       end
 
       def create_persistence(input)
-
         return Success(input)
-      end
-
-      def stringify_all_keys(hash)
-        stringified_hash = {}
-        hash.each do |k, v|
-          stringified_hash[k.to_s] = v.is_a?(Hash) ? stringify_all_keys(v) : v
-        end
-        stringified_hash
       end
 
 
