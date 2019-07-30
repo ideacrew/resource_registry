@@ -37,7 +37,7 @@ ResourceRegistry::Registry.namespace "resource_registry.operations" do |containe
   end
 
   container.register 'validate_option' do
-    ResourceRegistry::Options::Validation::OptionSchema.new
+    ResourceRegistry::Options::Validation::OptionContract.new
     # ResourceRegistry::Registries::Validation::RegistryContract.new
   end
 end

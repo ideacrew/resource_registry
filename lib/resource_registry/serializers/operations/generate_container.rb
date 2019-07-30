@@ -25,7 +25,7 @@ module ResourceRegistry
 
         def register_settings(settings, namespace)
           return if settings.blank?
-          settings.each{|setting| namespace.register(setting.key, setting.default) }
+          settings.each{|setting| namespace.register(setting.key, setting.value || setting.default) }
         end
 
         def register_namespace_elements(namespaces, namespace)

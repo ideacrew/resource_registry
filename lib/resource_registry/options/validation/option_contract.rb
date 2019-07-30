@@ -8,8 +8,8 @@ module ResourceRegistry
 
         params do
           required(:key).filled(:string)
-          optional(:settings).array(type?: SettingSchema)
-          optional(:namespaces).array(type?: OptionSchema)
+          optional(:settings).array(type?: SettingContract)
+          optional(:namespaces).array(type?: OptionContract)
         end
       end
     end
