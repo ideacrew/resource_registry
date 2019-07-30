@@ -24,8 +24,8 @@ ResourceRegistry::Registry.namespace "resource_registry.operations" do |containe
     ResourceRegistry::Serializers::Operations::ParseYaml.new
   end
  
-  container.register 'create_option' do 
-    ResourceRegistry::Serializers::Operations::CreateOption.new
+  container.register 'generate_option' do 
+    ResourceRegistry::Serializers::Operations::GenerateOption.new
   end
 
   container.register 'generate_container' do 

@@ -8,7 +8,7 @@ ResourceRegistry::Registry.namespace "resource_registry.transactions" do
     ResourceRegistry::Registries::Registry.new
   end
 
-  register 'generate_option' do
-    ResourceRegistry::Serializers::Transactions::GenerateOption.new
+  register 'transform_option' do
+    ResourceRegistry::Serializers::Transactions::TransformOption.new
   end
 end

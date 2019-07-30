@@ -9,7 +9,7 @@ module ResourceRegistry
           container = construct_container(element: input)
           return Success(container)
         end
-        
+
         private
 
         def construct_container(element: nil, namespace: nil)
@@ -22,7 +22,6 @@ module ResourceRegistry
 
           container
         end
-
 
         def register_settings(settings, namespace)
           return if settings.blank?
