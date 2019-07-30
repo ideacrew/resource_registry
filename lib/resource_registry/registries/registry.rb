@@ -1,47 +1,56 @@
 require 'dry/system/container'
 
-# Sample params
-# configure do |config|
-#   config.name = :options
-#   config.default_namespace = :options
-#   config.root = Pathname.pwd.join(top_dir).realpath.dirname.freeze
-#   config.auto_register = %w[ ]
-# end
-# load_paths! "lib", "system"
-
 module ResourceRegistry
   module Registries
     class Registry
-      include ResourceRegistry::Services::Service
 
-      # use :bootsnap
-      # use :env, inferrer: -> { ENV.fetch("RAILS_ENV", :development).to_sym }
+      include Dry::Transaction(container: ResourceRegistry::Registry)
 
-      def call(**params)
-        @params     = params[:result]
-        @container  = create_container
+      step :validate, with: 'resource_registry.operations.validate_registry'#, catch: StandardError
+      step :build_container
+      step :load_config
+      step :set_load_paths
 
-        set_config
-        # set_load_paths # FIX ME
+      private
 
-        @container
-      end
+      def validate(input)
+        input = transform_root_to_path(input['application'])
+        result = super(input)
 
-      def set_config
-        @container.configure do |config|
-          @params[:config].each_pair do |key, value|
-            config.send "#{key}=", value
-          end
+        if result.success?
+          return Success(result)
+        else
+          return Failure(result)
         end
       end
 
-      def set_load_paths
-        @container.send :load_paths!, @params[:load_paths]
+      def build_container(input)
+        init_container
+        return Success(input)
       end
 
-      def create_container
+      def load_config(input)
+        @container.configure do |config|
+          input[:config].each_pair do |key, value|
+            config.send "#{key}=", value
+          end
+        end
+        return Success(input)
+      end
+
+      def set_load_paths(input)
+        # @container.send :load_paths!, @params[:load_paths]
+        return Success(@container)
+      end
+
+      def init_container
         return @container if defined? @container
-        @container = Class.new(Dry::System::Container)
+        @container = ResourceRegistry::Registry
+      end
+
+      def transform_root_to_path(params)
+        params['config']['root'] = Pathname.new(params['config']['root']) if params['config'].keys.include?('root')
+        params
       end
     end
   end

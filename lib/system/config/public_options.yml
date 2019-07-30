@@ -1,4 +1,5 @@
-registry:
+---
+application:
   config:
     name: public
     default_namespace: core

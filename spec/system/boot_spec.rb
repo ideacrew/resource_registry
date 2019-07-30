@@ -2,7 +2,7 @@ require "spec_helper"
 require 'dry/system/stubs'
 require 'resource_registry' unless defined?(ResourceRegistry::CoreContainer)
 
-RSpec.describe ResourceRegistry::CoreContainer do
+RSpec.describe ResourceRegistry::Registry do
 
   subject { described_class }
 

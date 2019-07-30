@@ -1,10 +1,14 @@
 module ResourceRegistry
   module Options
-    class OptionSchema < ResourceRegistry::Validation::ApplicationSchema
+    module Validation
+      class OptionSchema < ResourceRegistry::Validation::ApplicationSchema
 
-      required(:key).filled(:string)
-      optional(:settings).array(type?: SettingSchema)
-      optional(:namespaces).array(type?: OptionSchema)
+        define do
+          required(:key).filled(:symbol)
+          optional(:settings).array(type?: SettingSchema)
+          optional(:namespaces).array(type?: OptionSchema)
+        end
+      end
     end
   end
 end

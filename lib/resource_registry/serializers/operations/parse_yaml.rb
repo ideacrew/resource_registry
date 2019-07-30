@@ -2,14 +2,14 @@ require 'yaml'
 
 module ResourceRegistry
   module Serializers
-    class Operattions
+    module Operations
       class ParseYaml
+        
         include Dry::Transaction::Operation
 
         def call(input)
-          YAML.load(content)
+          return Success(YAML.load(input))
         end
-
       end
     end
   end

@@ -1,10 +1,11 @@
-# Initialize container with core system settings
+require 'dry/system/container'
+
 module ResourceRegistry
 
-  ResourceRegistry::Services::CreateRegistry.call(type: :private)
+  ResourceRegistry.const_set('Registry', Dry::System::Container)
 
-  require_relative "local/persistence"
-  require_relative "local/inject"
+  require_relative 'local/transactions'
+  require_relative 'local/operations'
   
   # CoreContainer.finalize!(freeze: true) # if defined? Rails && Rail.env == 'production'
 end
