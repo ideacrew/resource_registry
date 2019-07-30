@@ -33,19 +33,13 @@ module ResourceRegistry
   class << self
 
     def configure
-
       path = system_path.join("config", "public_options.yml")
-
       registry_service = ResourceRegistry::Services::CreateRegistry.new
-      result = registry_service.with_step_args(
+      registry_service.with_step_args(
         create_registry: [preferences: yield],
         create_resource_registry: [preferences: yield]
       )
       .call(path)
-
-      ResourceRegistry.const_set('Registry', result.value!) if result.success?
-
-      # ResourceRegistry::Services::CreateRegistry.call(preferences: yield)
     end
 
     def root

@@ -45,7 +45,7 @@ module ResourceRegistry
 
       def init_container
         return @container if defined? @container
-        @container = Dry::System::Container
+        @container = ResourceRegistry::Registry
       end
 
       def transform_root_to_path(params)
