@@ -1,8 +1,8 @@
 module ResourceRegistry
   module Services
-    class LoadRegistry
+    class LoadRegistryOptions
 
-      include Dry::Transaction(container: ResourceRegistry::Registry)
+      include Dry::Transaction(container: Registry)
 
       step :load_source,         with: 'resource_registry.operations.load'
       step :parse,               with: 'resource_registry.operations.parse'

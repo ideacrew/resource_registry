@@ -1,4 +1,4 @@
-ResourceRegistry::Registry.namespace "resource_registry.transactions" do
+ResourceRegistry::Container.namespace "resource_registry.transactions" do
 
   register 'transform' do
     ResourceRegistry::Serialzers::GenerateOptions.new

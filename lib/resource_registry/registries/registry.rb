@@ -4,48 +4,69 @@ module ResourceRegistry
   module Registries
     class Registry
 
-      include Dry::Transaction(container: ResourceRegistry::Registry)
+      include Dry::Transaction(container: ::Registry)
 
-      step :validate, with: 'resource_registry.operations.validate_registry'#, catch: StandardError
-      step :build_container
-      step :load_config
-      step :set_load_paths
+      step :validate_application_config, with: 'resource_registry.operations.validate_registry'
+      step :load_application_config
+      # step :set_application_load_paths
+      step :validate_resource_registry_config, with: 'resource_registry.operations.validate_registry'
+      step :load_resource_registry_config
+      step :set_resource_registry_load_paths
 
       private
 
-      def validate(input)
-        input = transform_root_to_path(input['application'])
-        result = super(input)
+      def validate_application_config(input)
+        application_attrs  = transform_root_to_path(input['application'])
+        result = super(application_attrs)
 
         if result.success?
-          return Success(result)
+          return Success(input)
         else
           return Failure(result)
         end
       end
 
-      def build_container(input)
-        init_container
-        return Success(input)
-      end
-
-      def load_config(input)
-        @container.configure do |config|
-          input[:config].each_pair do |key, value|
+      def load_application_config(input)
+        container.configure do |config|
+          input['application']['config'].each_pair do |key, value|
             config.send "#{key}=", value
           end
         end
+
         return Success(input)
       end
 
-      def set_load_paths(input)
-        # @container.send :load_paths!, @params[:load_paths]
-        return Success(@container)
+      def set_application_load_paths(input)
+        return Success(input)
       end
 
-      def init_container
-        return @container if defined? @container
-        @container = ResourceRegistry::Registry
+      def validate_resource_registry_config(input)
+        registry_attrs  = transform_root_to_path(input['resource_registry'])
+        result = super(registry_attrs)
+
+        if result.success?
+          return Success(input)
+        else
+          return Failure(result)
+        end
+      end
+
+      def load_resource_registry_config(input)
+        input['resource_registry']['config'].each_pair do |key, value|
+          container.register("resource_registry.config.#{key}", value)
+        end
+
+        return Success(input)
+      end
+
+      def set_resource_registry_load_paths(input)
+        container.register("resource_registry.load_paths", input['resource_registry']['load_paths'])
+
+        return Success(input)
+      end
+
+      def container
+        ::Registry
       end
 
       def transform_root_to_path(params)

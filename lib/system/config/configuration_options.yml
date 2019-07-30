@@ -1,8 +1,17 @@
 ---
-registry:
+application:
   config:
-    name: private
-    default_namespace: core
+    name: main
+    default_namespace: options
+    root: '.'
+    system_dir: system
+    auto_register: []
+  load_paths:
+    - system
+resource_registry:
+  config:
+    name: resource_registry
+    default_namespace: options
     root: lib
     system_dir: system
     auto_register:

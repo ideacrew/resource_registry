@@ -3,7 +3,7 @@ module ResourceRegistry
     module Transactions
       class TransformOption
         
-        include Dry::Transaction(container: ResourceRegistry::Registry)
+        include Dry::Transaction(container: Registry)
 
         step :validate, with: 'resource_registry.operations.validate_option'
         step :generate_option, with: 'resource_registry.operations.generate_option'

@@ -1,4 +1,4 @@
-ResourceRegistry::Registry.namespace "resource_registry.operations" do |container|
+ResourceRegistry::Container.namespace "resource_registry.operations" do |container|
 
   container.register 'load' do
     container.resolve('load_file')

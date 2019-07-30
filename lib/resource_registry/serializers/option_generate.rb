@@ -11,7 +11,6 @@ module ResourceRegistry
       def execute(option_hash)
 
         parse_hash(option_hash)
-binding.pry
         result = option_hash.validate
 
         if result.success?

@@ -6,7 +6,7 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
-          ResourceRegistry::Registry.merge(input)
+          ResourceRegistry::Container.merge(input)
           return Success(input)
         end
       end
