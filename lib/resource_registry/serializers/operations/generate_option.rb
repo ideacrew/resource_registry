@@ -25,8 +25,8 @@ module ResourceRegistry
           else
             result.tap do |attrs|
               attrs[:key] = attrs[:key].to_sym
-              attrs[:default] = attrs[:default].to_s
-              attrs[:value] = attrs[:value].to_s if attrs[:value].present?
+              attrs[:default] = attrs[:default]
+              attrs[:value] = attrs[:value] if attrs[:value].present?
             end
             setting  = ResourceRegistry::Entities::Setting.new(result)
             parent_node.settings = parent_node.settings.to_a + [setting]
