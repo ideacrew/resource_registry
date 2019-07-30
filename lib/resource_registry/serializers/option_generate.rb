@@ -10,7 +10,7 @@ module ResourceRegistry
 
       def execute(option_hash)
 
-        parse_hash(option_hash: option_hash)
+        parse_hash(option_hash)
 binding.pry
         result = option_hash.validate
 
@@ -24,46 +24,6 @@ binding.pry
 
 
       private
-
-      def parse_hash(hash_obj, ns_stack = [], namespaces = [], settings = [])
-
-        hash_obj.each_pair do |key, value|
-          case key
-          when :namespace
-            ns_stack = []
-            ns_stack.push value.delete(:key).to_s
-
-            parse_hash(value, ns_stack, namespaces, settings)
-            option_obj = ResourceRegistry::Entities::Option.new(key: ns_stack, namespaces: namespaces, settings: settings)
-
-          when :namespaces
-            namespaces = hash_obj.map do |ns|
-              ns_stack.push ns.delete(:key).to_s
-binding.pry
-              parse_hash(ns, ns_stack, namespaces, settings)
-            end
-
-            full_namespace = ns_stack.join('.')
-            namespaces << ResourceRegistry::Entities::Option.new(key: full_namespace, namespaces: namespaces, settings: settings)
-            ns_stack.pop
-            namespaces = []
-
-          when :settings
-binding.pry
-            settings = hash_obj.reduce([]) do | list, setting_hash| 
-              list << ResourceRegistry::Entities::Setting.new(setting_hash)
-            end
-
-            hash_obj.delete(:settings)
-            parse_hash(hash_obj, ns_stack, namespaces, Hash.new(settings))
-
-          end
-        end
-        
-        option_obj
-
-      end
-
 
       def convert(result: nil, parent_node: nil)
         result.symbolize_keys!
@@ -87,6 +47,50 @@ binding.pry
 
         root
       end
+
+      def parse_hash(hash_tree, ns_stack = [], namespaces = [], settings = [])
+        option_list = []
+
+        hash_tree.each_pair do |key, nodes|
+          case key
+          when :namespace
+            ns_stack = []
+            ns_stack.push key.to_s
+            nodes.delete(:key)
+
+          when :namespaces
+            option_list << nodes.reduce([]) do |list, node|
+              ns_stack.push key.to_s
+              node.delete(:key)
+              node.reduce([]) do |list, child_node|
+                parse_hash(child_node, ns_stack, namespaces, settings)
+                hash_tree.delete(key)
+              end
+binding.pry
+              full_namespace = ns_stack.join('.')
+              list << ResourceRegistry::Entities::Option.new(key: full_namespace, namespaces: namespaces, settings: settings)
+binding.pry
+              nodes.delete(:key)
+              settings    = []
+              namespaces  = []
+            end
+
+binding.pry
+          when :settings
+            nodes.reduce([]) do | list, setting_hash | 
+              list << ResourceRegistry::Entities::Setting.new(setting_hash)
+            end
+
+            # hash_tree.delete(:settings)
+            # parse_hash(hash_tree, ns_stack, namespaces, settings)
+          end
+
+          option_list
+
+        end
+      end
+
+
 
     end
   end
