@@ -26,6 +26,9 @@ module RegistryDataSeed
 
   def reset_registry
     Kernel.send(:remove_const, 'Registry')
+    ResourceRegistry.send(:remove_const, 'RegistryInject')
+    ResourceRegistry.send(:remove_const, 'Container')
+    
     load Pathname.pwd.join('lib', 'system', 'boot.rb')
     load Pathname.pwd.join('lib', 'system', 'local', 'transactions.rb')
     load Pathname.pwd.join('lib', 'system', 'local', 'operations.rb')
