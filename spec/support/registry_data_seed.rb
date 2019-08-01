@@ -23,4 +23,11 @@ module RegistryDataSeed
   def option_files_dir
     Pathname.pwd.join('spec', 'db', 'seedfiles', 'client')
   end
+
+  def reset_registry
+    Kernel.send(:remove_const, 'Registry')
+    load Pathname.pwd.join('lib', 'system', 'boot.rb')
+    load Pathname.pwd.join('lib', 'system', 'local', 'transactions.rb')
+    load Pathname.pwd.join('lib', 'system', 'local', 'operations.rb')
+  end
 end

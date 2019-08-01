@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resource_registry (0.1.0)
+    resource_registry (0.2.0)
       bootsnap (~> 1.0)
       dry-auto_inject (~> 0.6)
       dry-configurable (~> 0.8)
@@ -75,7 +75,8 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
-    dry-matcher (0.7.0)
+    dry-matcher (0.8.0)
+      dry-core (>= 0.4.7)
     dry-monads (1.2.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.4, >= 0.4.4)
@@ -201,6 +202,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (~> 5.2.3)
   bundler (~> 2.0)
   byebug (~> 11.0)
   database_cleaner (~> 1.7)

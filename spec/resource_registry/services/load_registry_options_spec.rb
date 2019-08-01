@@ -5,9 +5,11 @@ RSpec.describe ResourceRegistry::Services::LoadRegistryOptions do
 
   subject { described_class.new.call(input) }
 
+  before(:all) do
+    reset_registry
+  end
+  
   context 'When valid option passed' do  
-
-
 
     let(:step_dependencies) {
       [

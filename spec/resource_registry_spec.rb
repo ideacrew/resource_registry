@@ -3,6 +3,10 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry do
   include RegistryDataSeed
 
+  before(:all) do
+    reset_registry
+  end
+
   it 'should have Registry container' do
     expect(Registry).to be_present
   end

@@ -3,6 +3,10 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Services::ConfigureRegistry do
   include RegistryDataSeed
 
+  before(:all) do
+    reset_registry
+  end
+
   subject { described_class.new.call(input) }
 
   it 'should have Registry container' do
