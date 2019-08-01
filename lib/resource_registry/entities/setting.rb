@@ -4,13 +4,14 @@ module ResourceRegistry
       include DryStructSetters
       transform_keys(&:to_sym)
 
-      attribute :key,            Types::Symbol
-      attribute :title?,         Types::String
-      attribute :description?,   Types::String
-      attribute :type?,          Types::Symbol
-      attribute :default?,       Types::Any
-      attribute :value?,         Types::Any
-    
+      attribute :key,         Types::RequiredSymbol
+      attribute :title,       Types::String.optional
+      attribute :description, Types::String.optional
+
+      attribute :type,        Types::Symbol.optional
+      attribute :default,     Types::Any
+      attribute :value,       Types::Any.optional
+
     end
   end
 end

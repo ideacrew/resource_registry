@@ -1,4 +1,4 @@
-require 'dry/validation'
+require 'resource_registry/options/validation/option_contract'
 
 module ResourceRegistry
   module Registries
@@ -14,24 +14,25 @@ module ResourceRegistry
             # registry_name
             required(:name).filled(:string)
             required(:root).filled(type?: Pathname)
-            # required(:env).filled(Environments)
 
             optional(:default_namespace).filled(:string)
             optional(:system_dir).filled(:string)
             optional(:load_path).filled(:string)
-            optional(:auto_register).array(:str?)
+            optional(:auto_register).array(:string)
           end
 
           # required(:app_name).filled(:string)
-          optional(:timestamp).filled(:str?)
-          optional(:load_paths).array(:str?)
+          optional(:load_paths).array(:string)
+          optional(:timestamp).filled(:string)
+          optional(:env).filled(Environments)
+
           # required(:persistence).hash do
           #   required(:store).filled(Stores)
           #   optional(:serializer).filled(Serializers)
           #   required(:container).filled(:string)
           # end
 
-          optional(:options).filled(type?: ResourceRegistry::Entities::Option)
+          optional(:options).filled(:OptionContract)
         end
 
         # Path name must exist
