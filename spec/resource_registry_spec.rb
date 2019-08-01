@@ -71,19 +71,22 @@ RSpec.describe ResourceRegistry do
   context ".load_options" do
 
     before(:all) do
-      ResourceRegistry.load_options!(option_files_dir)
+      @result = ResourceRegistry.load_options!(option_files_dir)
+    end
+
+    it "loads successfully" do
+      expect(@result.success?).to be_truthy
     end
 
     it 'should load site options' do
       expect(Registry.keys.include?("tenants.dchbx.applications.enroll.features")).to be_truthy
-      expect(Registry.keys.include?("tenants.dchbx.applications.edi.features")).to be_truthy
-    end
-
-    it 'should load shop market options' do
-      expect(Registry.keys.any?{|key| key.scan(/tenants.dchbx.applications.enroll.features.individual_market/).present?}).to be_truthy
     end
 
     it 'should load individual market options' do
+      expect(Registry.keys.any?{|key| key.scan(/tenants.dchbx.applications.enroll.features.individual_market/).present?}).to be_truthy
+    end
+
+    it 'should load shop market options' do
       expect(Registry.keys.any?{|key| key.scan("tenants.dchbx.applications.enroll.features.aca_shop_market").present?}).to be_truthy
     end
   end

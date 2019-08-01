@@ -1,12 +1,13 @@
 require 'dry/transaction'
 require 'dry/transaction/operation'
+require 'dry/monads/result'
 require 'system/boot'
 require 'resource_registry/error'
 require 'resource_registry/types'
 require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
-require 'resource_registry/validations'
+require File.expand_path(File.join(File.dirname(__FILE__), 'resource_registry/validations'))
 require 'resource_registry/registries'
 require 'resource_registry/serializers'
 require 'resource_registry/version'
@@ -26,8 +27,11 @@ module ResourceRegistry
     end
 
     def load_options(dir)
-      Dir.glob(File.join(dir, "*")).each do |file_path|
-        ResourceRegistry::Services::LoadRegistryOptions.new.call(file_path)
+      files_to_load = Dir.glob(File.join(dir, "*")).to_a
+      files_to_load.inject(Dry::Monads::Success(:ok)) do |result, file_path|
+        result.bind do |_ignore|
+          ResourceRegistry::Services::LoadRegistryOptions.new.call(file_path)
+        end
       end
     end
 

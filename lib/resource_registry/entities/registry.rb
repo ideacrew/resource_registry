@@ -1,8 +1,14 @@
+require 'resource_registry/entities/option'
+
 module ResourceRegistry
   module Entities
     class Registry < Dry::Struct
 
       # Configuration values
+      # Only let this be defined once, dry autoloading will
+      # try to continue loading this file and give us conflict
+      # issues.
+      unless defined?(Config)
       attribute :config do
         attribute :name,              Types::Strict::String
         attribute :root,              Types::Strict::String
@@ -15,7 +21,7 @@ module ResourceRegistry
         # Dir, plus optional custom auto_register block
         attribute :auto_register,     Types::Array.of(Types::NilOrString) #| Types::Undefined
       end
-
+      
       attribute :timestamp,           Types::DateTime.default { DateTime.now }
 
       # Persistence values
@@ -26,8 +32,8 @@ module ResourceRegistry
       end
 
       # Override or additional attributes
-      attribute :options,     ResourceRegistry::Entities::Option
-
+      attribute :options,     Types::Constructor(ResourceRegistry::Entities::Option)
+      end
     end
   end
 end
