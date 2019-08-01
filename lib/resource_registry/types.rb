@@ -7,6 +7,7 @@ module ResourceRegistry
   module Types
     include Dry::Types()
 
+    Environments    = Types::String.default('development'.freeze).enum('development', 'test', 'production')
     Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
     Stores          = Types::String.default('file_store'.freeze).enum('file_store')
 

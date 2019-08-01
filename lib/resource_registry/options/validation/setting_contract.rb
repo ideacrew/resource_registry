@@ -7,12 +7,12 @@ module ResourceRegistry
       class SettingContract < ResourceRegistry::Validation::ApplicationContract
 
         params do
-          required(:key).filled(:symbol)
-          required(:default).filled(:string)
-          optional(:title).filled(:string)
-          optional(:description).filled(:string)
-          optional(:type).filled(:string)
-          optional(:value).filled(:string)
+          required(:key).filled(type?: Symbol)
+          required(:default).filled(:str?)
+          optional(:title).maybe(:str?)
+          optional(:description).maybe(:str?)
+          optional(:type).maybe(:str?)
+          optional(:value).maybe(:str?)
         end
 
       end

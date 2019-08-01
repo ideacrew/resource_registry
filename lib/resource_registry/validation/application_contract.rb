@@ -4,7 +4,7 @@ module ResourceRegistry
   module Validation
     class ApplicationContract < Dry::Validation::Contract
       config.messages.default_locale = :en
-      config.messages.backend = :i18n
+      # config.messages.backend = :i18n
 
 # config.messages.default_locale - default I18n-compatible locale identifier
 # config.messages.backend - the localization backend to use. Supported values are: :yaml and :i18n
