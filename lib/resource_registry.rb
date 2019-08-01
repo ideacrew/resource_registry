@@ -24,6 +24,14 @@ module ResourceRegistry
       )
       .call(path)
     end
+
+    def load_options(dir)
+      Dir.glob(File.join(dir, "*")).each do |file_path|
+        ResourceRegistry::Services::LoadRegistryOptions.new.call(file_path)
+      end
+    end
+
+    alias_method :load_options!, :load_options
   end
 end
 

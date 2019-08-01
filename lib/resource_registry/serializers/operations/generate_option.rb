@@ -12,9 +12,14 @@ module ResourceRegistry
 
         private
 
+        # def convert(input: nil)
+        #   input.symbolize_keys!
+
+        #   ResourceRegistry::Entities::Option.new(input)
+        # end
+
         def convert(result: nil, parent_node: nil)
           result.symbolize_keys!
-
           if result.keys.include?(:namespaces) || result.keys.include?(:settings)
             options = ResourceRegistry::Entities::Option.new(key: result[:key].to_sym)
             root = options if parent_node.blank?
@@ -31,7 +36,6 @@ module ResourceRegistry
             setting  = ResourceRegistry::Entities::Setting.new(result)
             parent_node.settings = parent_node.settings.to_a + [setting]
           end
-
           root
         end
       end

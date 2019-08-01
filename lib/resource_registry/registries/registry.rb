@@ -20,9 +20,9 @@ module ResourceRegistry
         result = super(application_attrs)
 
         if result.success?
-          return Success(input)
+          Success(input)
         else
-          return Failure(result)
+          Failure(result)
         end
       end
 
@@ -33,11 +33,11 @@ module ResourceRegistry
           end
         end
 
-        return Success(input)
+        Success(input)
       end
 
       def set_application_load_paths(input)
-        return Success(input)
+        Success(input)
       end
 
       def validate_resource_registry_config(input)
@@ -45,9 +45,9 @@ module ResourceRegistry
         result = super(registry_attrs)
 
         if result.success?
-          return Success(input)
+          Success(input)
         else
-          return Failure(result)
+          Failure(result)
         end
       end
 
@@ -56,13 +56,13 @@ module ResourceRegistry
           container.register("resource_registry.config.#{key}", value)
         end
 
-        return Success(input)
+        Success(input)
       end
 
       def set_resource_registry_load_paths(input)
         container.register("resource_registry.load_paths", input['resource_registry']['load_paths'])
 
-        return Success(input)
+        Success(input)
       end
 
       def container

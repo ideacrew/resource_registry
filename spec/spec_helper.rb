@@ -10,6 +10,15 @@ require "pry-byebug"
 require 'dry/container/stub'
 require "timecop"
 
+require "dry/validation"
+require "dry/container"
+require "dry/transaction"
+require "dry/transaction/operation"
+require "active_support/all"
+
+require 'support/dry_types'
+require 'support/registry_data_seed'
+require 'resource_registry.rb'
 # ENV["RAILS_ENV"] = "test"
 
 SPEC_ROOT = Pathname(__FILE__).dirname
