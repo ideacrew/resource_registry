@@ -7,8 +7,8 @@ require 'resource_registry/entities'
 require 'resource_registry/services'
 require 'resource_registry/stores'
 require 'resource_registry/validations'
-require 'resource_registry/registries'
 require 'resource_registry/serializers'
+require 'resource_registry/registries/registry'
 require 'resource_registry/version'
 
 module ResourceRegistry
