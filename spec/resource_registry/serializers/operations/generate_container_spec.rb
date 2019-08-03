@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
   context 'When valid option passed' do  
 
     let(:input) {
-       ResourceRegistry::Entities::Option.new(options_hash)
+       ResourceRegistry::Serializers::OptionGenerate.new.execute(options_hash)
     }
 
     let(:expected_keys) {
