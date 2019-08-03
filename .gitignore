@@ -15,3 +15,17 @@ coverage
 
 # byebug history
 /.byebug_history
+
+# VIM and other editors
+*.swp
+
+# Ignore files
+# add w/ git add --force if actually needed
+*.csv
+*.txt
+*.xml
+*.xls
+*.xlst
+*.xlsx
+*.doc
+*.docx
