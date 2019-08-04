@@ -5,9 +5,9 @@ module ResourceRegistry
     module Validation
       class RegistryContract < ResourceRegistry::Validation::ApplicationContract
 
-        Environments  = Types::String.default('development'.freeze).enum('development', 'test', 'production')
-        Serializers   = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
-        Stores        = Types::String.default('file_store'.freeze).enum('file_store')
+        # Environments  = Types::String.default('development'.freeze).enum('development', 'test', 'production')
+        # Serializers   = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
+        # Stores        = Types::String.default('file_store'.freeze).enum('file_store')
 
         params do
           required(:config).hash do
@@ -24,7 +24,7 @@ module ResourceRegistry
           # required(:app_name).filled(:string)
           optional(:load_paths).array(:string)
           optional(:timestamp).filled(:string)
-          optional(:env).filled(Environments)
+          optional(:env).filled(Types::Environments)
 
           # required(:persistence).hash do
           #   required(:store).filled(Stores)
@@ -32,7 +32,8 @@ module ResourceRegistry
           #   required(:container).filled(:string)
           # end
 
-          optional(:options).filled(:OptionContract)
+          optional(:options).filled(type?: ResourceRegistry::Options::Validation::OptionContract)
+          # optional(:options).filled(:OptionContract) # use this form for Registry resolver
         end
 
         # Path name must exist

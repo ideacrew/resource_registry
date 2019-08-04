@@ -13,6 +13,8 @@ module ResourceRegistry
 
     RequiredSymbol  = Types::Strict::Symbol.constrained(min_size: 2)
     RequiredString  = Types::Strict::String.constrained(min_size: 1)
+    
+    SymbolOrString  = Types::Symbol | Types::String
     NilOrString     = Types::Nil | Types::String
     
     Email           = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)

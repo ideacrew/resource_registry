@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resource_registry (0.2.0)
+    resource_registry (0.3.0)
       bootsnap (~> 1.0)
       dry-auto_inject (~> 0.6)
       dry-configurable (~> 0.8)

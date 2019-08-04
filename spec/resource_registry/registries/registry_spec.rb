@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'resource_registry/registries/registry'
+require 'resource_registry/registries/validation/registry_contract'
 
 RSpec.describe ResourceRegistry::Registries::Registry do
   include RegistryDataSeed
