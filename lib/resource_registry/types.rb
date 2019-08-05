@@ -5,7 +5,7 @@ Dry::Types.load_extensions(:maybe)
 
 module ResourceRegistry
   module Types
-    include Dry::Types()
+    include Dry::Types(default: :nominal)
 
     Environments    = Types::String.default('development'.freeze).enum('development', 'test', 'production')
     Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')

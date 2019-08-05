@@ -2,18 +2,22 @@ module ResourceRegistry
   module Options
     module Validation
 
+
+      SettingSchema = Dry::Schema.Params do
+        required(:key).filled(:symbol)
+        required(:default).filled(:string)
+        optional(:title).maybe(:string)
+        optional(:description).maybe(:string)
+        optional(:type).maybe(:string)
+        optional(:value).maybe(:string)
+      end
+
+
       OptionContract = ResourceRegistry::Validation::ApplicationContract.build do
         params do
           required(:key).value(Types::SymbolOrString)
-          optional(:settings).array(:hash) do
-            required(:key).filled(:symbol)
-            required(:default).filled(:str?)
-            optional(:title).maybe(:str?)
-            optional(:description).maybe(:str?)
-            optional(:type).maybe(:str?)
-            optional(:value).maybe(:str?)
-          end
-
+          # optional(:settings).array(SettingContract)
+          optional(:settings).array(SettingSchema)
           optional(:namespaces).array(:hash)
         end
 
