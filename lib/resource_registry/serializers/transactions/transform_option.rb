@@ -12,7 +12,14 @@ module ResourceRegistry
 
         # FIX ME: Unable to validate against the Option Schema
         def validate(input)
-          return Success(input)
+          input.deep_symbolize_keys!
+          result = super(input)
+          
+          if result.success?
+            Success(result.to_h)
+          else
+            Failure(result)
+          end
         end
       end
     end

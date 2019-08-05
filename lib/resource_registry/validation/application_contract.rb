@@ -20,6 +20,8 @@ module ResourceRegistry
         end
       end
 
+      StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
+
     end
   end
 end

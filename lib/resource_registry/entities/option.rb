@@ -1,29 +1,32 @@
 module ResourceRegistry
   module Entities
-    class Option < Dry::Struct
-      transform_keys(&:to_sym)
+    OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) rescue nil }
 
-      include Enumerable
-      include DryStructSetters
+    class Option
+      extend Dry::Initializer
 
-      attribute :namespace?,   Types::Coercible::Symbol
-      attribute :key,          Types::Coercible::Symbol
-      attribute :alt_key,      Types::Coercible::Symbol.meta(omittable: true)
-
-      # TODO: Make settings attribute dynamically typed
-      attribute :settings,      Types::Array.meta(omittable: true) do 
-        attribute :key,         Types::RequiredSymbol
-        attribute :alt_key,     Types::Coercible::Symbol.meta(omittable: true)
-        attribute :title,       Types::String.optional
-        attribute :description, Types::String.optional
-
-        attribute :type,        Types::Symbol.optional
-        attribute :default,     Types::Any
-        attribute :value,       Types::Any.optional
+      option :namespace,    type: Dry::Types["coercible.symbol"], optional: true
+      option :key,          type: Dry::Types["coercible.symbol"]     
+      option :namespaces, Dry::Types['coercible.array'].of(OptionConstructor), optional: true, default: -> { [] }
+      
+      option :settings, [], optional: true do
+        option :key,         type: Dry::Types["coercible.symbol"]
+        option :title,       type: Dry::Types["coercible.string"], optional: true
+        option :description, type: Dry::Types["coercible.string"], optional: true
+        option :type,        type: Dry::Types["coercible.string"], optional: true
+        option :default,     type: Dry::Types["any"]
+        option :value,       type: Dry::Types["any"], optional: true
       end
 
-      attribute :namespaces?, Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true)
+      def each
+        settings.each do |s|
+          yield s
+        end
 
+       namespaces.each do |ns|
+          yield ns
+        end
+      end
     end
   end
 end

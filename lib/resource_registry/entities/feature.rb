@@ -11,16 +11,12 @@ module ResourceRegistry
       attribute :environments do
         attribute :key,         Types::Environments
         attribute :enabled,     Types::Bool.default(false)
-        attribute :registry,    ResourceRegistry::Entities::Registry.optional
-        attribute :options,     ResourceRegistry::Entities::Option.optional
+        # attribute :registry,    ResourceRegistry::Entities::Registry.optional
+        # attribute :options,     ResourceRegistry::Entities::Option.optional
       end
-
     end
   end
 end
-
-
-
 
   # FEATURES = {
   #   aca_shop_market:        { title: "ACA SHOP Market", description: "ACA Small Business Health Options (SHOP) State Based Exchange" },
