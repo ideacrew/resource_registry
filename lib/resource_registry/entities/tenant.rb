@@ -1,30 +1,32 @@
 module ResourceRegistry
   module Entities
-    class Tenant < Dry::Struct
-      transform_keys(&:to_sym)
+    class Tenant
+      extend Dry::Initializer
+      
+        option :key
+        option :owner_organization_name,  optional: true
+        option :owner_account_name,       optional: true
 
-      attribute :key,                 Types::RequiredSymbol # tenant_key
-      attribute :owner_organization_name,   ResourceRegistry::Entities::Setting
-      attribute :owner_account_name,  ResourceRegistry::Entities::Setting
+        option :subscriptions, [], optional: true do
+          option :feature_key
+          option :id,               optional: true
+          option :validator_id,     optional: true
 
-      attribute :sites, Types::Array.meta(omittable: true) do
-        attribute :key,         Types::RequiredSymbol
-        attribute :uri,         Types::String
-        attribute :title,       Types::String.optional
-        attribute :description, Types::String.optional
+          option :subscribed_at
+          option :unsubscribed_at,  optional: true
+        end
+
+        option :sites, [], optional: true do 
+          option :key
+          option :url,          optional: true
+          option :title,        optional: true
+          option :description,  optional: true
+
+          option :features, [], optional: true do
+            option :feature, optional: true
+          end
+        end
       end
 
-      attribute :subscriptions, Types::Array.meta(omittable: true) do
-        attribute :key,             Types::RequiredSymbol
-        attribute :id,              Types::String.optional
-        attribute :validator_id,    Types::String.optional
-
-        attribute :subscribed_at,   Types::DateTime.optional
-        attribute :unsubscribed_at, Types::DateTime.optional
-      end
-
-      # attribute :subscriptions, Types::Array.of(ResourceRegistry::Entities::Subscription).meta(omittable: true)
-      attribute :features, Types::Array.of(ResourceRegistry::Entities::Feature).meta(omittable: true)
-    end
   end
 end

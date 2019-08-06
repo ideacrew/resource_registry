@@ -5,13 +5,8 @@ module ResourceRegistry
     module Validation
       class RegistryContract < ResourceRegistry::Validation::ApplicationContract
 
-        # Environments  = Types::String.default('development'.freeze).enum('development', 'test', 'production')
-        # Serializers   = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
-        # Stores        = Types::String.default('file_store'.freeze).enum('file_store')
-
         params do
           required(:config).hash do
-            # registry_name
             required(:name).filled(:string)
             required(:root).filled(type?: Pathname)
 
@@ -23,14 +18,8 @@ module ResourceRegistry
 
           # required(:app_name).filled(:string)
           optional(:load_paths).array(:string)
-          optional(:timestamp).filled(:string)
-          optional(:env).filled(Types::Environments)
-
-          # required(:persistence).hash do
-          #   required(:store).filled(Stores)
-          #   optional(:serializer).filled(Serializers)
-          #   required(:container).filled(:string)
-          # end
+          optional(:timestamp).value(:string)
+          optional(:env).value(Types::Environments)
 
           optional(:options).filled(type?: ResourceRegistry::Options::Validation::OptionContract)
           # optional(:options).filled(:OptionContract) # use this form for Registry resolver
@@ -38,7 +27,7 @@ module ResourceRegistry
 
         # Path name must exist
         rule([:config, :root]) do
-          Pathname(value).realpath rescue key.failure('pathname must exist')
+          Pathname(value).realpath rescue key.failure("pathname not found: #{value}")
         end
 
       end

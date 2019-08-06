@@ -1,5 +1,6 @@
 require 'dry/transaction'
 require 'dry/transaction/operation'
+require 'dry/initializer'
 require 'dry/monads/result'
 require 'system/boot'
 require 'resource_registry/error'

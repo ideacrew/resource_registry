@@ -1,0 +1,333 @@
+---
+key: :features
+  key: :enroll_app
+  is_required: false
+  alt_key: :ea
+  title: Enroll Application
+  description: 
+  parent: nil
+
+---
+key: features
+namespaces:
+  - key: :enroll_app
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened reference for this feature to be used in building Registry keys
+        default: :ea
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: Enroll Application
+      - key: :description
+        description: Help text for this feature that will appear in the UI
+        default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
+    namespaces:
+      - key: :environments
+        namespaces:
+          - key: :production
+          - key: :development
+          - key: :test 
+      - key: :features
+        namespaces:
+          - key: :app
+            settings:
+              - key: :title
+                default: General settings
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: true
+              - key: :parent
+                description: Next highest feature in the hierarchy
+                default: :enroll_app
+            namespaces:
+            - key: :environments
+            - key: :features
+              namespaces:
+              - key: :member_portal
+                settings:
+                  - key: :title
+                    default: Member Portal
+                  - key: :description
+                    default: Web portal for members to register, shop and enroll for benefits offered by their sponsor(s)
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: true
+                  - key: :parent
+                    description: Next highest feature in the hierarchy
+                    default: :app
+                namespaces:
+                  - key: :environments
+                    namespaces:
+                      - key: :production
+                        settings:
+                          - key: :feature_enabled
+                            default: true
+                      - key: :test
+                        settings:
+                          - key: :feature_enabled
+                            default: true
+                  - key: :features
+                    namespaces:
+                      - key: :custom_feature_1_instance
+              - key: :benefit_sponsor_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Benefit Sponsor Portal
+                  - key: :description
+                    default: Web portal for organizations to design and sponsor benefit plans for their members
+                namespaces:
+                  - key: :environment
+              - key: :broker_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Broker Agency Portal
+                  - key: :description
+                    default: Web portal for Broker Agencies to manage benefit sponsors, members and their benefits
+              - key: :general_agent_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: General Agency Portal
+                  - key: :description
+                    default: Web portal for General Agencies to support Broker Agencies
+              - key: :ea_ops_portal_feature
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Business Operations Portal
+                  - key: :description
+                    default: Web portal for site business staff to manage site products, customers, stakeholders and operations
+              - key: :ea_ops_classic_portal_feature
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Business Operations Portal (classic)
+                  - key: :description
+                    default: Web portal for site business staff to manage site products, customers, stakeholders and operations
+                namespaces:
+                - key: :features
+                - key: :environments
+                  namespaces:
+                    - key: :production
+                    - key: :development
+                    - key: :test           
+          - key: :aca_shop_market
+            settings: 
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: false
+              - key: :alt_key
+                description: Shortened reference for this feature to be used in building Registry keys
+                default: :shop
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: ACA SHOP Market
+              - key: :description
+                default: ACA Small Business Health Options (SHOP) Portal
+            namespaces:
+            - key: :environments
+          - key: :aca_individual_market
+            settings:
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: false
+              - key: :alt_key
+                description: Shortened reference for this feature to be used in building Registry keys
+                default: :ivl
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: ACA Individual Market
+              - key: :description
+                default: ACA Individual Market Portal
+            namespaces:
+              key: :environments
+          - key: :fehb_market
+            settings: 
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: Congress and Federal Employee Market
+              - key: :description
+                default: Federal Employee Health Benefits Portal
+            namespaces:
+            - key: :environments
+  - key: :edi_database_classic
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened key reference to be used in Registry
+        default: :edi_classic
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: EDI Database Application (classic)
+      - key: :description
+        default: A system for conducting and tracking Electronic Data Interchange (EDI) with trading partners
+    namespaces:
+      - key: :environments
+      - key: :features
+        namespaces:
+          - key: :features
+            namespaces:
+            - key: :codec
+          - key: :environments
+  - key: :edi_database
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened key reference to be used in Registry
+        default: :edi_db
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: EDI Database Application
+      - key: :description
+        default: A system for conducting and tracking Electronic Data Interchange (EDI) with trading partners
+    namespaces:
+      - key: :environments
+      - key: :features
+        namespaces:
+          - key: :features
+            namespaces:
+            - key: :codec
+          - key: :environments
+  - key: :ledger
+
+
+---
+key: :tenants
+namespaces:
+  - key: :dchbx
+    settings:
+      - key: :organization_name
+        default: DC Health Benefit Exchange Authority
+      - key: :owner_account_name
+        default: admin@hbx_org.com
+      - key: :owner_account_password
+        default: ChangeMe123!
+      - key: :subscriptions
+        description: Enterprise applications accessed by this tenant
+        default: 
+          - :enroll_app
+          - :edi_db
+    namespaces:
+      - key: :sites
+        settings:
+          - key: :shop_site
+            settings:
+            - key: :uri
+              type: URI
+              default: https://shop.openhbx.org
+          - key: :individual_site
+            settings:
+              - key: :uri
+                type: URI
+                default: https://individual.openhbx.org
+---
+tenants:
+- key: :dchbx 
+  settings:
+  - key: :owner_organization_name
+    default: DC Health Benefit Exchange Authority
+  - key: :owner_account_name
+    default: admiin@hbx_org.com
+  namespaces:
+    - key: :subscriptions
+      namespaces:
+      - key: :enroll_app
+        settings:
+        - key: validator_id
+          default: abc12345
+          value: abc12345
+        - key: validator_id
+          default: abc12345
+          value: abc12345
+        - key: subscribed_at
+          default: Date.today
+      - key: :edi_database
+        settings:
+        - key: validator_id
+          default: abc12345
+          value: abc12345
+        - key: validator_id
+          default: abc12345
+          value: abc12345
+        - key: subscribed_at
+          default: Date.today
+    - key: :features
+      settings:
+        - key: :subscribed_application_list
+          description: Enterprise applications accessed by this tenant
+          default: 
+            - :enroll_app
+            - :edi_db
+    - key: :sites
+      settings: 
+        namespaces:
+        - key: :shop_site
+          settings:
+          - key: title
+            description: Customer-designated name for this Site
+            default: SHOP Site
+          - key: :url
+            description: URL address for this site
+            default: https://shop.openhbx.org
+            type: URL
+          - key: :description
+            description: Customer-designated explanation for this site
+            default: Public site for ACA SHOP customers
+        - key: :shop_site_2020
+          settings:
+          - key: title
+            description: Customer-designated name for this Site
+            default: SHOP Site 2020
+          - key: :url
+            description: URL address for this site
+            default: https://shop_2020.openhbx.org
+            type: URL
+          - key: :description
+            description: Customer-designated explanation for this site
+            default: Site for testing 2020 SHOP plans and enrollments
+- key: :cca
+
+
+
+  features:
+    - feature
+      key: :enroll_app
+      title: Enroll Application
+      environments:
+        key: :production
+          enabled: true
+          config:
+            name: resource_registry
+            default_namespace: options
+            root: lib
+            system_dir: system
+            auto_register:
+              - resource_registry/serializers
+              - resource_registry/stores
+              - resource_registry/entities
+              - resource_registry/validation
+              - resource_registry/registries
+          load_paths:
+            - system
+            - resource_registry
+          options:
+        key: :development

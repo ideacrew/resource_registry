@@ -1,0 +1,74 @@
+---
+# Overview
+# 'enterprise' is top level namespace in container
+# 
+# 'enterprise'
+# 'enterprise.tenants.tenant_keys' => [:dchbx, :cca)
+# 'enterprise.tenants.<tenant_key>.owner_organization_name'
+# 'enterprise.tenants.<tenant_key>.owner_account_name'
+
+# # Potential 'enterprise' namespace future use:
+# # 'enterprise.owner_organization_name'
+# # 'enterprise.owner_account_name'
+# # 'enterprise.features' # => e.g. [:app, :aca_shop_market, :aca_individual_market, :fehb_market]
+# # 'enterprise.features.<feature_key>'
+
+# # 'enterprise.tenants.<tenant_key>.subscriptions' => [:feature_1, :feature_2]
+# # 'enterprise.tenants.<tenant_key>.subscriptions.<feature_key>' 
+# # 'enterprise.tenants.<tenant_key>.subscriptions.<feature_key>.<id>' 
+# # 'enterprise.tenants.<tenant_key>.subscriptions.<feature_key>.<validator_id>' 
+# # 'enterprise.tenants.<tenant_key>.subscriptions.<feature_key>.<subscribed_at>' 
+# # 'enterprise.tenants.<tenant_key>.subscriptions.<feature_key>.<unsubscribed_at>' 
+
+# System will automatically default single site to :primary
+# 'enterprise.tenants.<tenant_key>.sites' => [:primary, :other...]
+# 'enterprise.tenants.<tenant_key>.sites.<site_key>.<url>'
+# 'enterprise.tenants.<tenant_key>.sites.<site_key>.<title>'
+# 'enterprise.tenants.<tenant_key>.sites.<site_key>.<description>'
+
+# Tenant namespace uses following format for feature and option settings:
+# '<tenant_key>.<site_key>.<environment_key>.<feature_key>.options.<option_key>'
+
+# Note: 'feature' namespace includes optional :alt_key with shortened key values to 
+# reduce inline code key size.  For example: 
+#
+#   'enroll_application.settings.alt_key' => :ea
+#
+# enables :ea substitution for :enroll_application key value:
+#
+#   'dchbx.primary.prod.ea.options.opt_a'
+
+# Features are enabled/disabled.  Any feature or setting that falls below a disabled 
+# feature should not be accessed.
+#
+# 'dchbx.primary.prod.ea.is_enabled' => true || false 
+
+# Configuration loadpaths may be used to create namespace category prefixes based on 
+# the directory name with each registered class registered as an instance.
+# For example: 
+#
+# <feature_key>.registry.config.load_paths = [services, entities]
+#
+# will register each file in the directory as follows:
+#
+# 'dchbx.primary.prod.ea.services.<service_key>'
+# 'dchbx.primary.prod.ea.entities.<entity_key>'
+
+# # Features may nest inside one another.  In this scenario, the feature keys are chained together 
+# # '<tenant_key>.<site_key>.<environment_key>.<feature_key>....<feature_key>.<option_key>'
+# 'dchbx.primary.prod.ea.bqt.options.opt_b', => 
+# 'dchbx.primary.prod.ea.bqt.options.opt_c', => 
+
+namespace: 
+  key: :enterprise
+  settings:
+    - key: :owner_organization_name
+      default: nil
+    - key: :owner_account_name
+      default: nil
+    - key: :tenant_keys
+      default: []
+  namespaces:
+    - key: :tenants
+    - key: :features
+

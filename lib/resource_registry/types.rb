@@ -11,15 +11,17 @@ module ResourceRegistry
     Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
     Stores          = Types::String.default('file_store'.freeze).enum('file_store')
 
+    CallableDateTime = Types::DateTime.default { DateTime.now.utc }
+
     RequiredSymbol  = Types::Strict::Symbol.constrained(min_size: 2)
     RequiredString  = Types::Strict::String.constrained(min_size: 1)
-    
-    SymbolOrString  = Types::Symbol | Types::String
-    NilOrString     = Types::Nil | Types::String
-    
-    Email           = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
 
     StrippedString  = String.constructor(->(val){ String(val).strip })
+    Email           = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+
+    EmailOrString   = Types::Email | Types::String
+    SymbolOrString  = Types::Symbol | Types::String
+    NilOrString     = Types::Nil | Types::String
 
     Callable   = Types.Interface(:call)
     Duration   = Types.Constructor(:build, ->(val){ ActiveSupport::Duration.build(val) })
