@@ -4,6 +4,13 @@ module ResourceRegistry
 
       Falsey = Types::Bool.default(false)
 
+      EnvironmentHash = Dry::Schema.Params do
+        required(:is_enabled).value(Falsey)
+        optional(:registry).value(type?: ResourceRegistry::Registries::Validation::RegistryContract)
+        optional(:options).value(type?: ResourceRegistry::Options::Validation::OptionContract)
+        optional(:features).array(:hash)
+      end
+
       FeatureContract = ResourceRegistry::Validation::ApplicationContract.build do
         params do
           required(:key).value(:symbol)
@@ -14,11 +21,9 @@ module ResourceRegistry
           optional(:parent).value(:symbol)
 
           optional(:environments).array(:hash) do
-            required(:key).value(ResourceRegistry::Types::Environments)
-            required(:is_enabled).value(Falsey)
-            optional(:registry).value(type?: ResourceRegistry::Registries::Validation::RegistryContract)
-            optional(:options).value(type?: ResourceRegistry::Options::Validation::OptionContract)
-            optional(:features).array(:hash)
+            optional(:production).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
+            optional(:test).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
+            optional(:development).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
           end
         end
 
