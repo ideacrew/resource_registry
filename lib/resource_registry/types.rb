@@ -11,7 +11,7 @@ module ResourceRegistry
     Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
     Stores          = Types::String.default('file_store'.freeze).enum('file_store')
 
-    CallableDateTime = Types::DateTime.default { DateTime.now.utc }
+    CallableDate    = Types::Date.default { Date.today }
 
     RequiredSymbol  = Types::Strict::Symbol.constrained(min_size: 2)
     RequiredString  = Types::Strict::String.constrained(min_size: 1)

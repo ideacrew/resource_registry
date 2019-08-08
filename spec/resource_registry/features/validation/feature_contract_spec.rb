@@ -87,7 +87,7 @@ RSpec.describe ResourceRegistry::Features::Validation::FeatureContract do
             let(:wrapped_env_and_registry_required_params)  { { environments: [ environment_key => [ env_and_registry_required_params ]] } }
             let(:core_and_env_and_registry_required_params) { all_params.merge(wrapped_env_and_registry_required_params) } 
 
-            it {binding.pry;expect(subject.call(core_and_env_and_registry_required_params).success?).to be_truthy }
+            it {expect(subject.call(core_and_env_and_registry_required_params).success?).to be_truthy }
             it {expect(subject.call(core_and_env_and_registry_required_params).errors.to_h).to be_nil }
             it {expect(subject.call(core_and_env_and_registry_required_params).to_h).to eq core_and_env_and_registry_required_params }
           end

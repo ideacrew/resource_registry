@@ -15,18 +15,18 @@ module ResourceRegistry
             optional(:id).maybe(:string)
             optional(:validator_id).maybe(:string)
 
-            optional(:subscribed_at).maybe(Types::CallableDateTime)
-            optional(:unsubscribed_at).maybe(type?: DateTime)
+            optional(:subscribed_on).maybe(ResourceRegistry::Types::CallableDate)
+            optional(:unsubscribed_on).maybe(type?: Date)
           end
 
           optional(:sites).array(:hash) do
-            optional(:key).value(PrimarySiteType)
-            optional(:url).maybe(type?: URI)
+            required(:key).value(PrimarySiteType)
+            optional(:url).maybe(:string)
             optional(:title).maybe(:string)
             optional(:description).maybe(:string)
 
             optional(:features).array(:hash) do
-              optional(:feature).filled(type?: ResourceRegistry::Features::Validation::FeatureContract)
+              # optional(:feature).value(ResourceRegistry::Features::Validation::FeatureContract)
             end          
           end
         end
