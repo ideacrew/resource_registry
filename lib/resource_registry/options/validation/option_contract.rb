@@ -3,23 +3,13 @@ require 'dry-validation'
 module ResourceRegistry
   module Options
     module Validation
-      # class OptionContract < ResourceRegistry::Validation::ApplicationContract
-
-      # SettingSchema = Dry::Schema.Params do
-      #   required(:key).value(:symbol)
-      #   required(:default).filled(:any)
-      #   optional(:title).maybe(:string)
-      #   optional(:description).maybe(:string)
-      #   optional(:type).maybe(:symbol)
-      #   optional(:value).maybe(:string)
-      # end
 
       OptionContract = ResourceRegistry::Validation::ApplicationContract.build do
 
         params do
           required(:key).value(:symbol)
           
-          optional(:settings).array(:hash) do
+          optional(:settings).array(hash) do
             required(:key).value(:symbol)
             required(:default).filled(:any)
             optional(:title).maybe(:string)
@@ -31,15 +21,17 @@ module ResourceRegistry
           optional(:namespaces).array(:hash)
         end
 
-        # Use dry-types hash schema transformation to enable recursion
-        # on the :namespaces key
+        rule(:namespaces).each do
+          validation_errors = []
+            result = ResourceRegistry::Options::Validation::OptionContract.call(value)
 
-        Types::Hash.with_type_transform do |type, name|
-          if name.to_s.eql?('namespaces')
-            type.constructor { |val| OptionContract.call(val) }
-          else
-            type
-          end
+            if result && result.failure?
+              validation_errors << result.errors.messages.reduce([]) do |list, message|
+                list << [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }]
+              end
+            end          
+
+          key.failure("validation failed: #{validation_errors.flatten}") if validation_errors.size > 0
         end
       end
     end
