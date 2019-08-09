@@ -87,7 +87,7 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
 
       it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_falsey }
       it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.path).to include(:namespaces) }
-      it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.text).to start_with "validation failed: [{:path=>[:namespaces, 0]}" }
+      it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.text).to start_with "validation failed: [{:\"namespaces.0\"=>[{:path=>\"[:namespaces, 0]\"}" }
     end
 
     context "with OptionContract key, all valid Setting and Namespaces params, plus an undefined param" do

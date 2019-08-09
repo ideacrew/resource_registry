@@ -46,7 +46,7 @@ RSpec.describe ResourceRegistry::Enterprises::Validation::EnterpriseContract do
 
         it { expect(subject.call(all_params_and_nested_invalid_tenants).success?).to be_falsey }
         it { expect(subject.call(all_params_and_nested_invalid_tenants).errors.first.path).to include(:tenants) }
-        it { expect(subject.call(all_params_and_nested_invalid_tenants).errors.first.text).to start_with "validation failed: [{:path=>[:key]}" }
+        it { expect(subject.call(all_params_and_nested_invalid_tenants).errors.first.text).to start_with "validation failed: [{:key=>[{:path=>\"[:key]\"}" }
       end
     end
   end
