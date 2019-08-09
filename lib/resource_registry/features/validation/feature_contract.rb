@@ -2,10 +2,8 @@ module ResourceRegistry
   module Features
     module Validation
 
-      Falsey = Types::Bool.default(false)
-
       EnvironmentHash = Dry::Schema.Params do
-        required(:is_enabled).value(Falsey)
+        required(:is_enabled).value(:bool)
         optional(:registry).value(:hash)
         optional(:options).value(:hash)
         optional(:features).array(:hash)
@@ -14,7 +12,7 @@ module ResourceRegistry
       FeatureContract = ResourceRegistry::Validation::ApplicationContract.build do
         params do
           required(:key).value(:symbol)
-          required(:is_required).value(Falsey)
+          required(:is_required).value(:bool)
           optional(:alt_key).value(:symbol)
           optional(:title).maybe(:string)
           optional(:description).maybe(:string)
