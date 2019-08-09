@@ -1,5 +1,3 @@
-require 'dry-validation'
-
 module ResourceRegistry
   module Options
     module Validation
@@ -9,7 +7,7 @@ module ResourceRegistry
         params do
           required(:key).value(:symbol)
           
-          optional(:settings).array(hash) do
+          optional(:settings).array(:hash) do
             required(:key).value(:symbol)
             required(:default).filled(:any)
             optional(:title).maybe(:string)
