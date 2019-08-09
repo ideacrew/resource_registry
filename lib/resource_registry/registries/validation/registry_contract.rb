@@ -3,8 +3,8 @@ require 'resource_registry/options/validation/option_contract'
 module ResourceRegistry
   module Registries
     module Validation
-      class RegistryContract < ResourceRegistry::Validation::ApplicationContract
 
+      RegistryContract = ResourceRegistry::Validation::ApplicationContract.build do
         params do
           required(:config).hash do
             required(:name).filled(:string)

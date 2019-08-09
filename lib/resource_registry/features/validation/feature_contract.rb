@@ -6,8 +6,8 @@ module ResourceRegistry
 
       EnvironmentHash = Dry::Schema.Params do
         required(:is_enabled).value(Falsey)
-        optional(:registry).value(type?: ResourceRegistry::Registries::Validation::RegistryContract)
-        optional(:options).value(type?: ResourceRegistry::Options::Validation::OptionContract)
+        optional(:registry).value(:hash)
+        optional(:options).value(:hash)
         optional(:features).array(:hash)
       end
 
@@ -21,24 +21,35 @@ module ResourceRegistry
           optional(:parent).value(:symbol)
 
           optional(:environments).array(:hash) do
-            optional(:production).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
-            optional(:test).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
-            optional(:development).value(ResourceRegistry::Types::Environments).array(EnvironmentHash)
+            optional(:production).hash(EnvironmentHash)
+            optional(:test).hash(EnvironmentHash)
+            optional(:development).hash(EnvironmentHash)
           end
         end
 
-        # Use dry-types hash schema transformation to enable recursion
-        # on the :features key
-        Types::Hash.with_type_transform do |type, name|
-          if name.to_s.eql?('features')
-            type.constructor { |val| FeatureContract.call(val) }
-          else
-            type
-          end
-        end
+        rule(:environments).each do
+          validation_errors = []
 
+          value[:production].each do |hash_key, val|
+            result = case hash_key
+            when :registry
+              ResourceRegistry::Registries::Validation::RegistryContract.call(val)
+            when :options
+              ResourceRegistry::Options::Validation::OptionContract.call(val)
+            when :features
+              ResourceRegistry::Features::Validation::FeatureContract.call(val)
+            end
+
+            if result && result.failure?
+              validation_errors << result.errors.messages.reduce([]) do |list, message|
+                list << { hash_key => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
+              end
+            end
+          end
+
+          key.failure("validation failed: #{validation_errors.flatten}") if validation_errors.size > 0
+        end
       end
-
     end
   end
 end
