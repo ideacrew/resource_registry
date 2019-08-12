@@ -61,7 +61,7 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
       it { expect(subject.call({key: option_contract_key, namespaces: all_namespaces}).success?).to be_truthy }
     end
 
-    context "with OptionContract key, all Settings params and nested Namespaces params" do
+    context "with OptionContract key, all Settings params and valid nested Namespaces params" do
      let(:nested_namespaces)                  { [
                                                   { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1 }] },
                                                   { key: :namespace_key_2, namespaces: [{ key: :namespace_key_2_1 }] }
@@ -73,6 +73,21 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
 
       it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_truthy }
       it { expect(subject.call(nested_namespaces_and_all_settings).to_h).to eq nested_namespaces_and_all_settings }
+    end
+
+    context "with OptionContract key, all Settings params and invalid nested Namespaces params" do
+     let(:nested_invalid_namespaces)          { [
+                                                  { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1, settings: [{key: :first_setting}] }] },
+                                                  { key: :namespace_key_2, settings: [{key: :second_setting}], namespaces: [{ key: :namespace_key_2_1 }] }
+                                              ] }
+
+     let(:nested_namespaces_and_all_settings) { { key: option_contract_key, 
+                                                  settings: all_settings, 
+                                                  namespaces: nested_invalid_namespaces } }
+
+      it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_falsey }
+      it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.path).to include(:namespaces) }
+      it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.text).to start_with "validation failed: [{:\"namespaces.0\"=>[{:path=>\"[:namespaces, 0]\"}" }
     end
 
     context "with OptionContract key, all valid Setting and Namespaces params, plus an undefined param" do

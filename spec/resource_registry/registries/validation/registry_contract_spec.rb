@@ -8,8 +8,6 @@ require 'resource_registry/registries'
 
 RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
-  subject { described_class.new }
-
   let(:top_parms) {
     {
       app_name: 'app_name_value',  
@@ -55,7 +53,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
   context "with an invalid pathname" do
     let(:invalid_pathname)  { { config: { root: Pathname('sillypathname') } } }
-    let(:pathname_error)    { ["pathname must exist"] }
+    let(:pathname_error)    { ["pathname not found: sillypathname"] }
 
     it "validation should fail" do
       expect(subject.call(invalid_pathname).errors.to_h[:config][:root]).to eq pathname_error

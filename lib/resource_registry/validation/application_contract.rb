@@ -22,6 +22,44 @@ module ResourceRegistry
 
       StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
 
+      def validate_nested_contract(contract_constant, params)
+        result = contract_constant.call(params)
+        unpack_result(result)
+      end
+
+      def parse_message_path(path = [])
+        if path.length == 1
+          path.first.to_sym
+        else
+          path.reduce([]) { |list, val| list << val.to_s }.join('.').to_sym
+        end
+      end
+
+      def unpack_result(result)
+        if result && result.failure?
+          message_list = result.errors.messages.reduce([]) do |list, message|
+            message_key = parse_message_path(message.path)
+            list << { message_key => [{path: message.path.to_s}, {input: message.input.to_s }, { text: message.text.to_s }] }
+          end
+        end
+        message_list ||= []
+      end
+
+      rule(:features).each do
+        errors = validate_nested_contract(ResourceRegistry::Features::Validation::FeatureContract, value)
+        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
+      end
+
+      rule(:namespaces).each do
+        errors = validate_nested_contract(ResourceRegistry::Options::Validation::OptionContract, value)
+        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
+      end
+
+      rule(:tenants).each do
+        errors = validate_nested_contract(ResourceRegistry::Tenants::Validation::TenantContract, value)
+        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
+      end
+
     end
   end
 end

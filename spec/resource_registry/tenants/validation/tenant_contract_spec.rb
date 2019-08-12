@@ -1,9 +1,5 @@
 require 'spec_helper'
 require 'resource_registry/tenants/validation/tenant_contract'
-# require 'resource_registry/registries/validate/registry_contract'
-# require 'resource_registry/options/validate/option_contract'
-# require 'resource_registry/tenants/validate/tenant_contract'
-# require 'resource_registry/entities'
 
 RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
 
@@ -94,6 +90,49 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
               end
             end
           end
+
+          describe "Feature parameters" do
+            context "with required, valid Feature params" do
+              let(:feature_key)                       { :shiney_feature }
+              let(:is_required)                       { true }
+              let(:feature_required_params)           { { key: feature_key, is_required: is_required } }
+              let(:wrapped_feature_params)            { { features: [feature_required_params] } }
+              let(:wrapped_site_and_feature_params)   { { sites: [all_sites_params.merge(wrapped_feature_params)] } }
+              let(:core_and_sites_and_feature_params) { all_core_params.merge(wrapped_site_and_feature_params) }
+
+              it {expect(subject.call(core_and_sites_and_feature_params).success?).to be_truthy }
+              it {expect(subject.call(core_and_sites_and_feature_params).errors.messages).to eq [] }
+              it {expect(subject.call(core_and_sites_and_feature_params).to_h).to eq core_and_sites_and_feature_params }
+            end
+
+            context "with required Feature params, but a bad value" do
+              let(:feature_key) { :shiney_feature }
+              let(:is_required_bad_value) { "bad_value" }
+
+              let(:feature_bad_value_params)                    { { key: feature_key, is_required: is_required_bad_value } }
+              let(:wrapped_feature_bad_value_params)            { { features: [feature_bad_value_params] } }
+              let(:wrapped_site_and_feature_bad_value_params)   { { sites: [all_sites_params.merge(wrapped_feature_bad_value_params)] } }
+              let(:core_and_sites_and_feature_bad_value_params) { all_core_params.merge(wrapped_site_and_feature_bad_value_params) }
+
+              it {expect(subject.call(core_and_sites_and_feature_bad_value_params).success?).to be_falsey }
+              it {expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.path).to include(:sites) }
+              it {expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.text).to start_with "validation failed: [{:path=>[:is_required]}" }
+            end
+
+            context "with required Feature param missing" do
+              let(:is_required)             { true }
+              let(:feature_missing_params)  { { is_required: is_required  } }
+
+              let(:wrapped_feature_missing_params)            { { features: [feature_missing_params] } }
+              let(:wrapped_site_and_feature_missing_params)   { { sites: [all_sites_params.merge(wrapped_feature_missing_params)] } }
+              let(:core_and_sites_and_feature_missing_params) { all_core_params.merge(wrapped_site_and_feature_missing_params) }
+
+              it {expect(subject.call(core_and_sites_and_feature_missing_params).success?).to be_falsey }
+              it {expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.path).to include(:sites) }
+              it {expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.text).to start_with "validation failed: [{:path=>[:key]}" }
+            end
+          end
+
         end
       end
     end
