@@ -6,38 +6,42 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
-          binding.pry
-
-          container = construct_container(element: input)
+          container = construct_container(input)
           return Success(container)
         end
 
         private
 
-        def construct_container(element: nil, namespace: nil)
+        def construct_container(entity, namespace = nil)
           container = namespace || Dry::Container::new
+          attributes = entity.class.dry_initializer.public_attributes(entity)
 
-          container.namespace(element.key) do |namespace|
-            register_namespace_elements element.namespaces, namespace
-            register_settings element.settings, namespace
+          if entity.is_a?(ResourceRegistry::Entities::Option::Settings)
+            container.register(entity.key, entity.default || entity.value)
+            return
+          end
+
+          if entity.is_a?(ResourceRegistry::Entities::Option) && entity.key == :settings
+            entity.settings.each{|setting| construct_container(setting, container) }
+            return
+          end
+
+          container.namespace(attributes.delete(:key) || :enterprise) do |namespace|  
+            attributes.each do |key, value|
+              
+              if value.is_a?(Array) && is_an_entity?(value[0])
+                value.each{|val| construct_container(val, namespace) }
+              else
+                # namespace.register(key, value)
+              end
+            end
           end
 
           container
         end
 
-        def register_settings(settings, namespace)
-          return if settings.blank?
-          settings.each{|setting| namespace.register(setting.key, setting.value || setting.default) }
-        end
-
-        def register_namespace_elements(namespaces, namespace)
-          return if namespaces.blank?
-          namespaces.each {|namespace_ele| construct_container(element: namespace_ele, namespace: namespace) }
-        end
-
-
-        def entities
-          [:enterprise, :tenants, :sites, :features]
+        def is_an_entity?(element)
+          element.class.to_s.scan(/ResourceRegistry::Entities/).present?
         end
       end
     end

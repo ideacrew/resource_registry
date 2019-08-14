@@ -12,14 +12,9 @@ module ResourceRegistry
       option :title,          optional: true
       option :description,    optional: true
       option :parent,         optional: true
-
-      option :environments, [], optional: true do
-        option :key
-        option :is_enabled
-        option :registry,   optional: true #,   type: Dry::Types::Array.of(RegistryConstructor), optional: true
-        option :options,    optional: true #,   type: Dry::Types::Array.of(OptionConstructor), optional: true
-        option :features, type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
-      end
+      
+      option :options,     type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
+      option :features,    type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
 
       def each
         environments.each { |environment| yield environment }

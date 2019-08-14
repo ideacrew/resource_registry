@@ -13,7 +13,7 @@ module ResourceRegistry
         # FIX ME: Unable to validate against the Option Schema
         def validate(input)
           input.deep_symbolize_keys!
-          result = super(input[:enterprise])
+          result = super(input[:enterprise])          
           
           if result.success?
             Success(result)

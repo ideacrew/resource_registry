@@ -8,7 +8,7 @@ module ResourceRegistry
         step :load_source,        with: 'resource_registry.stores.load_file'
         step :parse,              with: 'resource_registry.serializers.parse_yaml'
         step :configure_registry, with: 'resource_registry.registries.configure'
-        step :load_application_options_namespace
+        # step :load_application_options_namespace
 
         private
 
