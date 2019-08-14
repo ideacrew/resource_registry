@@ -28,19 +28,23 @@ module ResourceRegistry
         rule(:environments).each do
           validation_errors = []
 
-          value[:production].each do |hash_key, val|
-            result = case hash_key
-            when :registry
-              ResourceRegistry::Registries::Validation::RegistryContract.call(val)
-            when :options
-              ResourceRegistry::Options::Validation::OptionContract.call(val)
-            when :features
-              ResourceRegistry::Features::Validation::FeatureContract.call(val)
-            end
+          [:production, :development, :test].each do |env|
+            next if value[env].blank?
+            
+            value[env].each do |hash_key, val|
+              result = case hash_key
+              when :registry
+                ResourceRegistry::Registries::Validation::RegistryContract.call(val)
+              when :options
+                ResourceRegistry::Options::Validation::OptionContract.call(val)
+              when :features
+                ResourceRegistry::Features::Validation::FeatureContract.call(val)
+              end
 
-            if result && result.failure?
-              validation_errors << result.errors.messages.reduce([]) do |list, message|
-                list << { hash_key => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
+              if result && result.failure?
+                validation_errors << result.errors.messages.reduce([]) do |list, message|
+                  list << { hash_key => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
+                end
               end
             end
           end

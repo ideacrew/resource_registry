@@ -1,8 +1,6 @@
 module ResourceRegistry
   module Entities
     
-    TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) rescue nil }
-
     class Enterprise
       extend Dry::Initializer
 

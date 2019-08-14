@@ -13,7 +13,7 @@ module RegistryDataSeed
   end
 
   def options_file_path
-    Pathname.pwd.join('spec', 'db', 'seedfiles', 'client', 'aca_site.yml')
+    Pathname.pwd.join('spec', 'db', 'seedfiles', 'client', 'enterprise.yml')
   end
 
   def configuration_file_path
@@ -30,7 +30,9 @@ module RegistryDataSeed
     ResourceRegistry.send(:remove_const, 'Container')
     
     load Pathname.pwd.join('lib', 'system', 'boot.rb')
-    load Pathname.pwd.join('lib', 'system', 'local', 'transactions.rb')
-    load Pathname.pwd.join('lib', 'system', 'local', 'operations.rb')
+
+    Dir.glob(Pathname.pwd.join('lib', 'system', 'dependencies', '*')).each do |file_path|
+      load file_path
+    end
   end
 end

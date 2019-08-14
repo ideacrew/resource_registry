@@ -1,7 +1,7 @@
 module ResourceRegistry
   module Entities
-
-    FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) rescue nil }
+    
+    TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) rescue nil }
 
     class Tenant
       extend Dry::Initializer
@@ -24,8 +24,11 @@ module ResourceRegistry
         option :url,          optional: true
         option :title,        optional: true
         option :description,  optional: true
-      
-        option :features, type: Dry::Types['coercible.array'].of(FeatureConstructor), optional: true, default: -> { [] }
+        option :features, type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
+      end
+
+      def each
+        sites.each { |site| yield site }
       end
     end
   end

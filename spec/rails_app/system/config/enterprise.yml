@@ -1,0 +1,109 @@
+key: :enterprise
+# settings:
+#   - key: :owner_organization_name
+#     default: nil
+#   - key: :owner_account_name
+#     default: nil
+#   - key: :tenant_keys
+#     default: []
+namespaces:
+  - key: :tenants
+    namespaces:
+      - key: :dchbx
+        settings:
+          - key: :organization_name
+            default: DC Health Benefit Exchange Authority
+          - key: :owner_account_name
+            default: admin@hbx_org.com
+          - key: :owner_account_password
+            default: ChangeMe123!
+          # - key: :subscriptions
+          #   description: Enterprise applications accessed by this tenant
+          #   default: 
+          #     - :enroll_app
+          #     - :edi_db
+        namespaces:
+          - key: :sites
+            namespaces:
+              - key: :shop_site
+                settings:
+                - key: :url
+                  type: URL
+                  default: https://shop.openhbx.org
+                - key: :title
+                  type: string
+                  default: ACA SHOP market
+                - key: :description
+                  type: string
+                  default: shop market                 
+                namespaces:
+                  - key: :features
+                    namespaces:
+                      - key: :enroll_app
+                        settings:
+                          - key: is_required
+                            description: Feature must be enabled if true
+                            default: false
+                          - key: alt_key
+                            description: Shortened Key reference to be used in Registry
+                            default: ea
+                          - key: :title
+                            description: Name for this setting that will appear in the UI
+                            default: Enroll Application Component
+                          - key: :parent
+                            description: Next highest feature in the hierarchy
+                            default: :nil
+                          - key: :description
+                            description: Help text that will appear in the UI
+                            default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
+                        namespaces:
+                          - key: :environments
+                            namespaces:
+                              - key: :development
+                                settings:
+                                  - key: :is_enabled
+                                namespaces:
+                                  # - key: :registry
+                                  # - key: :options
+                                  - key: :features
+                                    namespaces:
+                                      - key: :aca_shop_market
+                                        settings:
+                                          - key: is_required
+                                            description: Feature must be enabled if true
+                                            default: false
+                                          - key: alt_key
+                                            description: Shortened Key reference to be used in Registry
+                                            default: shop
+                                          - key: :title
+                                            description: Name for this setting that will appear in the UI
+                                            default: ACA SHOP Market
+                                          - key: :parent
+                                            description: Next highest feature in the hierarchy
+                                            default: :enroll_app
+                                          - key: :description
+                                            description: Help text that will appear in the UI
+                                            default: ACA Small Business Health Options (SHOP) Portal
+                                        namespaces:
+                                          - key: :registry
+                                          - key: :options
+                                          - key: :features                                          
+                                      - key: :aca_individual_market
+                                        settings:
+                                          - key: is_required
+                                            description: Feature must be enabled if true
+                                            default: false
+                                          - key: alt_key
+                                            description: Shortened Key reference to be used in Registry
+                                            default: ivl
+                                          - key: :title
+                                            description: Name for this setting that will appear in the UI
+                                            default: ACA Individual Market
+                                          - key: :parent
+                                            description: Next highest feature in the hierarchy
+                                            default: :enroll_app
+              - key: :individual_site
+                settings:
+                  - key: :url
+                    type: URI
+                    default: https://individual.openhbx.org

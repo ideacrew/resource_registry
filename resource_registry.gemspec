@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-system',               '~> 0.12'
   spec.add_dependency 'dry-equalizer',            '~> 0.2'
   spec.add_dependency 'dry-matcher',              '~> 0.7'
-  spec.add_dependency 'dry-validation',           '~> 1.0'
+  spec.add_dependency 'dry-validation',           '~> 1.2'
   spec.add_dependency 'dry-core',                 '~> 0.4'
   spec.add_dependency 'dry-struct',               '~> 1.0'
   spec.add_dependency 'dry-types',                '~> 1.0'

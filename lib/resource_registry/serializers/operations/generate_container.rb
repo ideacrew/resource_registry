@@ -6,6 +6,8 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
+          binding.pry
+
           container = construct_container(element: input)
           return Success(container)
         end
@@ -31,6 +33,11 @@ module ResourceRegistry
         def register_namespace_elements(namespaces, namespace)
           return if namespaces.blank?
           namespaces.each {|namespace_ele| construct_container(element: namespace_ele, namespace: namespace) }
+        end
+
+
+        def entities
+          [:enterprise, :tenants, :sites, :features]
         end
       end
     end
