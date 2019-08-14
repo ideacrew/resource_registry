@@ -1,5 +1,3 @@
-require 'dry/validation'
-
 module ResourceRegistry
   module Validation
     class ApplicationContract < Dry::Validation::Contract

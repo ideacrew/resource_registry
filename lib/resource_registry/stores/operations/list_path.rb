@@ -1,14 +1,13 @@
 module ResourceRegistry
   module Stores
     module Operations
-      class PersistContainer
+      class ListPath
 
         include Dry::Transaction::Operation
 
-        def call(input)
-          Registry.merge(input)
-          
-          return Success(input)
+        def call(dir)
+          paths = Dir.glob(File.join(dir, "*"))
+          return Success(paths)
         end
       end
     end

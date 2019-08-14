@@ -1,12 +1,13 @@
 module ResourceRegistry
   module Entities
+    OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) rescue nil }
+
     class Option
       extend Dry::Initializer
 
       option :namespace,      type: Dry::Types["coercible.symbol"], optional: true
       option :key,            type: Dry::Types["coercible.symbol"]     
-      option :namespaces, optional: true
-      # option :namespaces,     type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
+      option :namespaces,     type: Dry::Types['coercible.array'].of(OptionConstructor), optional: true, default: -> { [] }
       
       option :settings, [], optional: true do
         option :key,          type: Dry::Types["coercible.symbol"]
@@ -21,7 +22,6 @@ module ResourceRegistry
         settings.each   { |setting|   yield setting }
         namespaces.each { |namespace| yield namespace }
       end
-
     end
   end
 end

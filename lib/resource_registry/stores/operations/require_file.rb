@@ -1,14 +1,13 @@
 module ResourceRegistry
   module Stores
     module Operations
-      class PersistContainer
+      class RequireFile
 
         include Dry::Transaction::Operation
 
-        def call(input)
-          Registry.merge(input)
-          
-          return Success(input)
+        def call(path)
+          Kernel.send(:require, path)
+          return Success(path)
         end
       end
     end
