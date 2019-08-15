@@ -19,7 +19,7 @@ module ResourceRegistry
           # required(:app_name).filled(:string)
           optional(:load_paths).array(:string)
           optional(:timestamp).value(:string)
-          optional(:env).value(Types::Environments)
+          optional(:env).value(Types::Environment)
 
           optional(:options).filled(type?: ResourceRegistry::Options::Validation::OptionContract)
           # optional(:options).filled(:OptionContract) # use this form for Registry resolver
