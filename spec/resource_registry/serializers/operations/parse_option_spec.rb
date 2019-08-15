@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Serializers::Operations::GenerateEntity do
+RSpec.describe ResourceRegistry::Serializers::Operations::ParseOption do
   include RegistryDataSeed
 
   subject { described_class.new }

@@ -1,23 +1,19 @@
 require 'spec_helper'
+require 'support/registry_configure'
+require 'resource_registry/registries/transactions/load_dependency'
 
-RSpec.describe ResourceRegistry::Services::LoadRegistryOptions do
+RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
   include RegistryDataSeed
 
-  subject { described_class.new.call(input) }
-
-  before(:all) do
-    reset_registry
-  end
-  
   context 'When valid option passed' do  
 
     let(:step_dependencies) {
       [
-        'resource_registry.operations.load',
-        'resource_registry.operations.parse',
-        'resource_registry.transactions.transform_option',
-        'resource_registry.operations.generate_container',
-        'resource_registry.operations.persist'
+        'resource_registry.options.load',
+        'resource_registry.serializers.parse_option',
+        'resource_registry.enterprises.generate',
+        'resource_registry.serializers.generate_container',
+        'resource_registry.stores.persist_container'
       ]
     }
 
@@ -32,12 +28,10 @@ RSpec.describe ResourceRegistry::Services::LoadRegistryOptions do
     end
 
     context "when valid configuration options passed" do
-
-      before(:all) do
-        ResourceRegistry::Services::LoadRegistryOptions.new.call(options_file_path)
-      end
+      subject { described_class.new.call(options_file_path) }
 
       it 'should load options' do
+        subject
         expect(Registry.keys.include?("tenants.dchbx.applications.enroll.features")).to be_truthy
         expect(Registry.keys.include?("tenants.dchbx.applications.edi.features")).to be_truthy
       end
