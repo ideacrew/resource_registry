@@ -41,7 +41,7 @@ module ResourceRegistry
     end
 
     def assign_registry_constant(container)
-      ResourceRegistry.remove_const(RegistryInject) if defined? RegistryInject
+      ResourceRegistry.send(:remove_const, 'RegistryInject') if defined? RegistryInject
       ResourceRegistry.const_set(:RegistryInject, container.injector)
 
       Kernel.send(:remove_const, 'Registry') if defined? Registry
