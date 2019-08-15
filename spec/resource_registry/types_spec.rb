@@ -23,12 +23,10 @@ RSpec.describe ResourceRegistry::Types do
   end
 
   describe "Types::Environments" do
-    subject(:type)          { ResourceRegistry::Types::Environments }
+    subject(:type)          { ResourceRegistry::Types::Environment }
     let(:valid_key)         { :production }
     let(:valid_key_string)  { "development" }
     let(:invalid_key)       { :silly }
-
-
 
     it 'a correct value is valid' do
       expect(type[valid_key]).to be_truthy

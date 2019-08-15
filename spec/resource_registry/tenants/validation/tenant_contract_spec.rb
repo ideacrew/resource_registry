@@ -66,59 +66,59 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
     end
 
     describe "Site parameters" do
-      let(:site_key)    { :ivl }
-      let(:environment) { :production }
+      let(:site_key)     { :ivl }
+      let(:environments) { [{key: :production}] }
       let(:url)         { "http://ivl.hbx_guru.org" }
       let(:title)       { "title_value" }
       let(:description) { "description_value" }
       let(:features)    { [] }
       let(:options)     { [] }
 
-      let(:required_sites_params) do
-        {
-          key: site_key,
-          environment: environment,
-        }
-      end
+      # let(:required_sites_params) do
+      #   {
+      #     key: site_key,
+      #     environments: [environment],
+      #   }
+      # end
 
-      let(:defaulted_sites_parameters) do
-        {
-          key: nil,
-          environment: nil,
-        }
-      end
 
       let(:all_sites_params)  do
         { 
           key: site_key,
-          environment: environment,
+          environments: environments,
           url: url,
           title: title,
           description: description,
           options: options,
-          features: features,
-          }
+          # features: features,
+        }
       end
 
       context "with all core parameters and only required Site params" do
-        let(:wrapped_required_sites_params)  { { sites: [required_sites_params] } }
+        let(:wrapped_required_sites_params)  { { sites: [all_sites_params] } }
         let(:core_and_required_sites_params) { all_core_params.merge(wrapped_required_sites_params) }
 
-        it {expect(subject.call(core_and_required_sites_params).success?).to be_truthy }
-        it {expect(subject.call(core_and_required_sites_params).to_h).to eq core_and_required_sites_params }
+        # it {expect(subject.call(core_and_required_sites_params).success?).to be_truthy }
+        # it {expect(subject.call(core_and_required_sites_params).to_h).to eq core_and_required_sites_params }
 
         context "with all core parameters and defaulted Site param" do
-          let(:defaulted_sites_param)           { required_sites_params.except(:key) }
-          let(:wrapped_defaulted_sites_params)  { { sites: [defaulted_sites_param] } }
+          # let(:defaulted_sites_param)           { required_sites_params.except(:key) }
+          let(:defaulted_sites_params) do
+            {
+              key: nil,
+              environments: [],
+            }
+          end
+          let(:wrapped_defaulted_sites_params)  { { sites: [defaulted_sites_params] } }
           let(:core_and_defaulted_sites_params) { core_and_required_sites_params.merge(wrapped_defaulted_sites_params) }
 
           it {expect(subject.call(core_and_defaulted_sites_params).success?).to be_truthy }
-          it {expect(subject.call(core_and_defaulted_sites_params).errors).to eq "" }
+          it {expect(subject.call(core_and_defaulted_sites_params).errors.messages).to be_empty }
         end
 
-        context "with all core parameters and invalid required Site param" do
-          let(:invalid_param)                 { { environment: :bad_environment } }
-          let(:wrapped_invalid_sites_params)  { { sites: [required_sites_params.merge(invalid_param)] } }
+        context "with all core parameters and invalid defaulted Site param" do
+          let(:invalid_param)                 { { environments: [{key: :bad_environment}] } }
+          let(:wrapped_invalid_sites_params)  { { sites: [all_sites_params.merge(invalid_param)] } }
           let(:core_and_invalid_sites_params) { core_and_required_sites_params.merge(wrapped_invalid_sites_params) }
 
           it {expect(subject.call(core_and_invalid_sites_params).success?).to be_falsey }

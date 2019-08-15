@@ -18,7 +18,6 @@ module ResourceRegistry
 
           optional(:namespaces).array(:hash)
         end
-
       end
     end
   end
