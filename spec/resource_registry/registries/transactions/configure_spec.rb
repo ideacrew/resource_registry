@@ -1,8 +1,9 @@
 require 'spec_helper'
-require 'resource_registry/registries/registry'
+require 'support/registry_configure'
+require 'resource_registry/registries/transactions/configure'
 require 'resource_registry/registries/validation/registry_contract'
 
-RSpec.describe ResourceRegistry::Registries::Registry do
+RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   include RegistryDataSeed
 
   it 'should have Registry container' do
@@ -24,8 +25,10 @@ RSpec.describe ResourceRegistry::Registries::Registry do
 
   context "when valid configuration options passed" do
 
-    before(:all) do
-      ResourceRegistry::Registries::Registry.new.call(configuration_options_hash)
+    subject { described_class.new.call(configuration_options_hash) }
+
+    before do
+      subject
     end
 
     it "should load application configuration" do
