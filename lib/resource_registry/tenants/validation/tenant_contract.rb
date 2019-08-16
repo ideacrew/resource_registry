@@ -5,7 +5,8 @@ module ResourceRegistry
       PrimarySiteType = Types::Symbol.default(:primary)
 
       EnvironmentHash = Dry::Schema.Params do
-        required(:key).value(ResourceRegistry::Types::Environment)
+        required(:key).value(:symbol)
+        # required(:key).value(ResourceRegistry::Types::Environment)
         optional(:features).array(:hash)
         optional(:options).array(:hash)
       end
@@ -43,37 +44,33 @@ module ResourceRegistry
         end
 
 
-        # rule(sites: :environments).validate(:environment_check)
-
-        # rule(:sites).each do
-        #   # if value[:environments] 
-        #   #   value[:environments].each do |env|
-        #   #     key.failure("validation failed: #{validation_errors.flatten}")
-        #   #   end
-        #   # end
-        # end
-
         rule(:sites).each do
           validation_errors = []
 
           if value[:environments]
-            [:production, :development, :test].each do |env|
-              next if value[env].blank?
+            valid_environments = [:production, :development, :test]
+binding.pry
+            if (valid_environments.include? value[:environments]) || value[:environments].blank?
+              valid_environments.each do |env|
+                next if value[:environments].blank?
 
-              value[env].each do |hash_key, val|
-                result = case hash_key
-                when :options
-                  ResourceRegistry::Options::Validation::OptionContract.call(val)
-                when :features
-                  ResourceRegistry::Features::Validation::FeatureContract.call(val)
-                end
+                value[:environments].each do |hash_key, val|
+                  result = case hash_key
+                  when :options
+                    ResourceRegistry::Options::Validation::OptionContract.call(val)
+                  when :features
+                    ResourceRegistry::Features::Validation::FeatureContract.call(val)
+                  end
 
-                if result && result.failure?
-                  validation_errors << result.errors.messages.reduce([]) do |list, message|
-                    list << { hash_key => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
+                  if result && result.failure?
+                    validation_errors << result.errors.messages.reduce([]) do |list, message|
+                      list << { hash_key => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
+                    end
                   end
                 end
               end
+            else
+              validation_errors << { :environments => "invalid key: #{value[:environments]}" }
             end
           end
           key.failure("validation failed: #{validation_errors.flatten}") if validation_errors.size > 0

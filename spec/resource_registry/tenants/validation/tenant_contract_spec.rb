@@ -71,26 +71,22 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
       let(:url)         { "http://ivl.hbx_guru.org" }
       let(:title)       { "title_value" }
       let(:description) { "description_value" }
-      let(:features)    { [] }
       let(:options)     { [] }
 
-      # let(:required_sites_params) do
-      #   {
-      #     key: site_key,
-      #     environments: [environment],
-      #   }
-      # end
-
+      let(:required_sites_params) do
+        {
+          key: site_key,
+        }
+      end
 
       let(:all_sites_params)  do
         { 
           key: site_key,
-          environments: environments,
           url: url,
           title: title,
           description: description,
           options: options,
-          # features: features,
+          environments: environments,
         }
       end
 
@@ -122,7 +118,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           let(:core_and_invalid_sites_params) { core_and_required_sites_params.merge(wrapped_invalid_sites_params) }
 
           it {expect(subject.call(core_and_invalid_sites_params).success?).to be_falsey }
-          it {expect(subject.call(core_and_invalid_sites_params).errors).to eq "" }
+          it {expect(subject.call(core_and_invalid_sites_params).errors.messages.first.text).to start_with "validation failed: [{:environments" }
         end
       end
 
@@ -130,7 +126,8 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
         let(:wrapped_sites_params)  { { sites: [all_sites_params] } }
         let(:core_and_sites_params) { all_core_params.merge(wrapped_sites_params) }
 
-        it {expect(subject.call(core_and_sites_params).success?).to be_truthy }
+        it {binding.pry;expect(subject.call(core_and_sites_params).success?).to be_truthy }
+        it {expect(subject.call(core_and_sites_params).errors.messages.first.text).to eq "" }
         it {expect(subject.call(core_and_sites_params).to_h).to eq core_and_sites_params }
 
         describe "Environment parameters" do
@@ -140,7 +137,8 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           context "with required, valid Feature params" do
             let(:feature_key)                       { :shiney_feature }
             let(:is_required)                       { true }
-            let(:feature_required_params)           { { key: feature_key, is_required: is_required } }
+            let(:is_enabled)                        { true }
+            let(:feature_required_params)           { { key: feature_key, is_required: is_required, is_enabled: is_enabled } }
             let(:wrapped_feature_params)            { { features: [feature_required_params] } }
             let(:wrapped_site_and_feature_params)   { { sites: [all_sites_params.merge(wrapped_feature_params)] } }
             let(:core_and_sites_and_feature_params) { all_core_params.merge(wrapped_site_and_feature_params) }
@@ -152,7 +150,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
 
           context "with required Feature params, but a bad value" do
             let(:feature_key) { :shiney_feature }
-            let(:is_required_bad_value) { "bad_value" }
+            let(:is_required_bad_value) { :bad_value }
 
             let(:feature_bad_value_params)                    { { key: feature_key, is_required: is_required_bad_value } }
             let(:wrapped_feature_bad_value_params)            { { features: [feature_bad_value_params] } }
