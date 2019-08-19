@@ -27,15 +27,16 @@ namespaces:
                 namespaces:
                   - key: :environments
                     namespaces:
-                    - key: :production
-                      settings:
-                        - key: :is_enabled     
+                    - key: :production  
                       namespaces:
                         - key: :features
                           namespaces:
                             - key: :enroll_app
                               settings:
                                 - key: is_required
+                                  description: Feature must be required if true
+                                  default: false
+                                - key: is_enabled
                                   description: Feature must be enabled if true
                                   default: false
                                 - key: alt_key
@@ -56,6 +57,9 @@ namespaces:
                                     - key: :aca_shop_market
                                       settings:
                                         - key: is_required
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: is_enabled
                                           description: Feature must be enabled if true
                                           default: false
                                         - key: alt_key
@@ -163,6 +167,9 @@ namespaces:
                                     - key: :aca_individual_market
                                       settings:
                                         - key: is_required
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: is_enabled
                                           description: Feature must be enabled if true
                                           default: false
                                         - key: alt_key

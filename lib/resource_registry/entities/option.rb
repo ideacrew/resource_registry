@@ -13,7 +13,7 @@ module ResourceRegistry
         option :key,          type: Dry::Types["coercible.symbol"]
         option :title,        type: Dry::Types["coercible.string"], optional: true
         option :description,  type: Dry::Types["coercible.string"], optional: true
-        option :type,         type: Dry::Types["coercible.string"], optional: true
+        option :type,         type: Dry::Types["coercible.symbol"], optional: true
         option :default,      type: Dry::Types["any"]
         option :value,        type: Dry::Types["any"], optional: true
       end

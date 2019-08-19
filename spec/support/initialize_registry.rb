@@ -12,6 +12,3 @@ ResourceRegistry.configure do
     }
   }
 end
-
-path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
-ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration.new.call(path)

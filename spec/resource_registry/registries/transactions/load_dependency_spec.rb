@@ -5,6 +5,14 @@ require 'resource_registry/registries/transactions/load_dependency'
 RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
   include RegistryDataSeed
 
+  before(:all) do
+    configure_registry unless defined? Registry
+  end
+
+  after(:all) do
+    reset_registry
+  end
+
   context 'When valid option passed' do  
 
     let(:step_dependencies) {
@@ -15,6 +23,10 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
         'resource_registry.serializers.generate_container',
         'resource_registry.stores.persist_container'
       ]
+    }
+
+    let(:file_path) {
+      ResourceRegistry.config.to_h[:config][:root].join('system', 'config', 'enterprise.yml')
     }
 
     it 'should have Registry container' do
@@ -28,12 +40,11 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
     end
 
     context "when valid configuration options passed" do
-      subject { described_class.new.call(options_file_path) }
+      subject { described_class.new.call(file_path) }
 
       it 'should load options' do
         subject
-        expect(Registry.keys.include?("tenants.dchbx.applications.enroll.features")).to be_truthy
-        expect(Registry.keys.include?("tenants.dchbx.applications.edi.features")).to be_truthy
+        expect(Registry.keys.any?{|key| key.match(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market/).present?}).to be_truthy
       end
     end
   end

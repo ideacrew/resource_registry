@@ -1,11 +1,4 @@
 key: :enterprise
-# settings:
-#   - key: :owner_organization_name
-#     default: nil
-#   - key: :owner_account_name
-#     default: nil
-#   - key: :tenant_keys
-#     default: []
 namespaces:
   - key: :tenants
     namespaces:
@@ -17,91 +10,199 @@ namespaces:
             default: admin@hbx_org.com
           - key: :owner_account_password
             default: ChangeMe123!
-          # - key: :subscriptions
-          #   description: Enterprise applications accessed by this tenant
-          #   default: 
-          #     - :enroll_app
-          #     - :edi_db
         namespaces:
           - key: :sites
             namespaces:
               - key: :shop_site
                 settings:
-                - key: :url
-                  type: URL
-                  default: https://shop.openhbx.org
-                - key: :title
-                  type: string
-                  default: ACA SHOP market
-                - key: :description
-                  type: string
-                  default: shop market                 
+                  - key: :url
+                    type: URL
+                    default: https://shop.openhbx.org
+                  - key: :title
+                    type: string
+                    default: ACA SHOP market
+                  - key: :description
+                    type: string
+                    default: shop market
                 namespaces:
-                  - key: :features
+                  - key: :environments
                     namespaces:
-                      - key: :enroll_app
-                        settings:
-                          - key: is_required
-                            description: Feature must be enabled if true
-                            default: false
-                          - key: alt_key
-                            description: Shortened Key reference to be used in Registry
-                            default: ea
-                          - key: :title
-                            description: Name for this setting that will appear in the UI
-                            default: Enroll Application Component
-                          - key: :parent
-                            description: Next highest feature in the hierarchy
-                            default: :nil
-                          - key: :description
-                            description: Help text that will appear in the UI
-                            default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
-                        namespaces:
-                          - key: :environments
-                            namespaces:
-                              - key: :development
-                                settings:
-                                  - key: :is_enabled
-                                namespaces:
-                                  - key: :registry
-                                  - key: :options
-                                  - key: :features
-                                    namespaces:
-                                      - key: :aca_shop_market
-                                        settings:
-                                          - key: is_required
-                                            description: Feature must be enabled if true
-                                            default: false
-                                          - key: alt_key
-                                            description: Shortened Key reference to be used in Registry
-                                            default: shop
-                                          - key: :title
-                                            description: Name for this setting that will appear in the UI
-                                            default: ACA SHOP Market
-                                          - key: :parent
-                                            description: Next highest feature in the hierarchy
-                                            default: :enroll_app
-                                          - key: :description
-                                            description: Help text that will appear in the UI
-                                            default: ACA Small Business Health Options (SHOP) Portal
-                                        namespaces:
-                                          - key: :registry
-                                          - key: :options
-                                          - key: :features                                          
-                                      - key: :aca_individual_market
-                                        settings:
-                                          - key: is_required
-                                            description: Feature must be enabled if true
-                                            default: false
-                                          - key: alt_key
-                                            description: Shortened Key reference to be used in Registry
-                                            default: ivl
-                                          - key: :title
-                                            description: Name for this setting that will appear in the UI
-                                            default: ACA Individual Market
-                                          - key: :parent
-                                            description: Next highest feature in the hierarchy
-                                            default: :enroll_app
+                    - key: :production  
+                      namespaces:
+                        - key: :features
+                          namespaces:
+                            - key: :enroll_app
+                              settings:
+                                - key: is_required
+                                  description: Feature must be required if true
+                                  default: false
+                                - key: is_enabled
+                                  description: Feature must be enabled if true
+                                  default: false
+                                - key: alt_key
+                                  description: Shortened Key reference to be used in Registry
+                                  default: ea
+                                - key: :title
+                                  description: Name for this setting that will appear in the UI
+                                  default: Enroll Application Component
+                                - key: :parent
+                                  description: Next highest feature in the hierarchy
+                                  default: :nil
+                                - key: :description
+                                  description: Help text that will appear in the UI
+                                  default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
+                              namespaces:
+                                - key: :features
+                                  namespaces:
+                                    - key: :aca_shop_market
+                                      settings:
+                                        - key: is_required
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: is_enabled
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: alt_key
+                                          description: Shortened Key reference to be used in Registry
+                                          default: shop
+                                        - key: :title
+                                          description: Name for this setting that will appear in the UI
+                                          default: ACA SHOP Market
+                                        - key: :parent
+                                          description: Next highest feature in the hierarchy
+                                          default: :enroll_app
+                                        - key: :description
+                                          description: Help text that will appear in the UI
+                                          default: ACA Small Business Health Options (SHOP) Portal
+                                      namespaces:
+                                        - key: :options
+                                          namespaces:
+                                            - key: :settings
+                                              settings:
+                                                - key: small_market_employee_count_maximumt
+                                                  type: :integer
+                                                  default: 50
+                                                - key: employer_contribution_percent_minimum
+                                                  type: :integer
+                                                  default: 50    
+                                                - key: employer_dental_contribution_percent_minimumt
+                                                  type: :integer
+                                                  default: 0
+                                                - key: employer_family_contribution_percent_minimum
+                                                  type: :integer
+                                                  default: 0
+                                            - key: :benefit_market_catalog_2017
+                                              namespaces:
+                                                - key: :month_1
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23
+                                                - key: :month_2
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23
+                                            - key: :benefit_market_catalog_2018
+                                              namespaces:
+                                                - key: :month_1
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23
+                                                - key: :month_2
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23
+                                            - key: :benefit_market_catalog_2019
+                                              namespaces:
+                                                - key: :month_1
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23
+                                                - key: :month_2
+                                                  settings:
+                                                    - key: :open_enrollment_begin_dom
+                                                      type: :integer
+                                                      default: 1
+                                                    - key: :open_enrollment_end_dom
+                                                      type: :integer
+                                                      default: 20    
+                                                    - key: :binder_payment_due_dom
+                                                      type: :integer
+                                                      default: 23                                        
+                                        - key: :features                                          
+                                    - key: :aca_individual_market
+                                      settings:
+                                        - key: is_required
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: is_enabled
+                                          description: Feature must be enabled if true
+                                          default: false
+                                        - key: alt_key
+                                          description: Shortened Key reference to be used in Registry
+                                          default: ivl
+                                        - key: :title
+                                          description: Name for this setting that will appear in the UI
+                                          default: ACA Individual Market
+                                        - key: :parent
+                                          description: Next highest feature in the hierarchy
+                                          default: :enroll_app
+                        - key: :options
+                          namespaces:
+                            - key: :settings
+                              settings:
+                                - key: copyright_period_start
+                                  type: :string
+                                  default: "2013"
+                                - key: policies_url
+                                  type: :string
+                                  default: "https://dchealthlink.com/"         
+                                - key: faqs_url
+                                  type: :string
+                                  default: "https://www.dchealthlink.com/Frequently-Asked-Questions"   
+                                - key: help_url
+                                  type: :string
+                                  default: "https://www.dchealthlink.com/help"  
+                                - key: business_resource_center_url
+                                  type: :string
+                                  default: "https://dchealthlink.com/smallbusiness/"    
+                                - key: nondiscrimination_notice_url
+                                  type: :string
+                                  default: "https://www.dchealthlink.com/nondiscrimination"
               - key: :individual_site
                 settings:
                   - key: :url

@@ -3,6 +3,10 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry do
   include RegistryDataSeed
 
+  after(:all) do
+    reset_registry
+  end
+
   context ".configure" do
     let(:config) {
       {
@@ -54,7 +58,7 @@ RSpec.describe ResourceRegistry do
     end
 
     it 'should not load resource registry configuration' do
-      configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
+      configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
         expect(Registry.keys).not_to include("resource_registry.config.#{key}")
       end
     end
@@ -94,8 +98,8 @@ RSpec.describe ResourceRegistry do
     end
 
     it "should load resource registry configuration" do
-      configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
-        value = Pathname.new(value) if key == 'root'
+      configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
+        value = Pathname.new(value) if key == :root
         if value.present?
           expect(Registry["resource_registry.config.#{key}"]).to eq value
         end
@@ -103,12 +107,12 @@ RSpec.describe ResourceRegistry do
     end
 
     it 'should load site options' do
-      expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.business_resource_center_url")).to be_truthy
-      expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.help_url")).to be_truthy
+      expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.copyright_period_start")).to be_truthy
+      expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.policies_url")).to be_truthy
     end
 
     it 'should load shop market options' do
-      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market/).present?}).to be_truthy
+      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximumt/).present?}).to be_truthy
     end
 
     # it 'should load individual market options' do

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'resource_registry/serializers/operations/generate_container'
 
 RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
   include RegistryDataSeed
@@ -14,11 +15,13 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
 
     let(:expected_keys) {
       [
-        "tenants.dchbx.applications.enroll.features.enroll_main.test_setting",
-        "tenants.dchbx.applications.enroll.features",
-        "tenants.dchbx.applications.edi.features",
-        "tenants.dchbx.owner",
-        "tenants.dchbx.subscriptions"
+       "enterprise.tenants.dchbx.sites.shop_site.url",
+       "enterprise.tenants.dchbx.sites.shop_site.description",
+       "enterprise.tenants.dchbx.sites.individual_site.url",
+       "enterprise.tenants.dchbx.owner_account_name",
+       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_contribution_percent_minimum",
+       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_dental_contribution_percent_minimumt",
+       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_family_contribution_percent_minimum"
       ]
     }
 
@@ -28,7 +31,11 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
     end
 
     it "should have keys registered" do
-      expect(subject.value!.keys.sort).to eq(expected_keys.sort)
+      result = subject.value!
+
+      expected_keys.each do |key|
+        expect(result.keys).to include(key)
+      end
     end
   end
 end

@@ -1,10 +1,20 @@
 require 'spec_helper'
-require 'support/registry_configure'
+require 'support/initialize_registry'
 require 'resource_registry/registries/transactions/configure'
 require 'resource_registry/registries/validation/registry_contract'
 
 RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   include RegistryDataSeed
+
+
+  before(:all) do
+    reset_registry
+    initialize_registry 
+  end
+
+  after(:all) do
+    reset_registry
+  end
 
   it 'should have Registry container' do
     expect(Registry).to be_present
@@ -18,7 +28,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   end
 
   it 'should not have resource registry configuration' do
-    configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
+    configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
       expect(Registry.keys).not_to include("resource_registry.config.#{key}")
     end
   end
@@ -28,17 +38,22 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
     subject { described_class.new.call(configuration_options_hash) }
 
     before do
+      initialize_registry
       subject
     end
 
+    after do
+      reset_registry
+    end
+
     it "should load application configuration" do
-      configuration_options_hash['application']['config'].each_pair do |key, value|
+      configuration_options_hash[:application][:config].each_pair do |key, value|
         expect(Registry.config.send(key)).to eq value
       end
     end
 
     it "should load resource registry configuration" do
-      configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
+      configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
         expect(Registry["resource_registry.config.#{key}"]).to eq value
       end
     end

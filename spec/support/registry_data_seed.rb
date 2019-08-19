@@ -9,7 +9,7 @@ module RegistryDataSeed
 
   def configuration_options_hash
     return @configuration_options if defined? @configuration_options
-    @configuration_options = YAML.load(IO.read(File.open(configuration_file_path)))
+    @configuration_options = YAML.load(IO.read(File.open(configuration_file_path))).deep_symbolize_keys!
   end
 
   def options_file_path
@@ -25,14 +25,38 @@ module RegistryDataSeed
   end
 
   def reset_registry
-    Kernel.send(:remove_const, 'Registry')
-    ResourceRegistry.send(:remove_const, 'RegistryInject')
-    ResourceRegistry.send(:remove_const, 'Container')
-    
-    load Pathname.pwd.join('lib', 'system', 'boot.rb')
+    Kernel.send(:remove_const, 'Registry') if defined? Registry
+  end
 
-    Dir.glob(Pathname.pwd.join('lib', 'system', 'dependencies', '*')).each do |file_path|
-      load file_path
+  def override_config
+    {
+      application: {
+        config: {
+          name: "EdiApp",
+          default_namespace: "options",
+          root: Pathname.pwd.join('spec', 'rails_app'),
+          system_dir: "system",
+          auto_register: []
+          },
+        load_paths: ['system']
+      }
+    }
+  end
+
+  def initialize_registry
+    ResourceRegistry.configure do
+      override_config
     end
+  end
+
+  def configure_registry
+    initialize_registry
+
+    path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
+    ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration.new.call(path)
+
+    dir = Pathname.pwd.join('lib', 'system', 'dependencies')
+    result = ResourceRegistry::Stores::Operations::ListPath.new.call(dir)
+    result.value!.each{|path| load path}
   end
 end

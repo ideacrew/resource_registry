@@ -1,9 +1,17 @@
 require 'spec_helper'
-require 'support/registry_configure'
+require 'support/initialize_registry'
 require 'resource_registry/registries/transactions/load_application_configuration'
 
 RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration do
   include RegistryDataSeed
+
+  before do
+    initialize_registry unless defined? Registry
+  end
+
+  after(:all) do
+    reset_registry
+  end
 
   it 'should have Registry container' do
     expect(Registry).to be_present
@@ -17,7 +25,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfig
   end
 
   it 'should not have resource registry configuration' do
-    configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
+    configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
       expect(Registry.keys).not_to include("resource_registry.config.#{key}")
     end
   end
@@ -26,22 +34,18 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfig
 
     subject { described_class.new.call(configuration_file_path) }
 
-    before do
-      subject 
-    end
+    it "should load application & registry configuration" do
+      subject
 
-    it "should load application configuration" do
-      configuration_options_hash['application']['config'].each_pair do |key, value|
+      override_config[:application][:config].each_pair do |key, value|
         if key == 'root'
           value = Pathname.new(value)
         end
         expect(Registry.config.send(key)).to eq value
       end
-    end
 
-    it "should load resource registry configuration" do
-      configuration_options_hash['resource_registry']['config'].each_pair do |key, value|
-        if key == 'root'
+      configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
+        if key == :root
           value = Pathname.new(value)
         end
         expect(Registry["resource_registry.config.#{key}"]).to eq value
