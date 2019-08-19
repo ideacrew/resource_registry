@@ -9,7 +9,7 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
   let(:setting_default)               { "setting default attribute value" }
   let(:setting_title)                 { "setting title attribute value" }
   let(:setting_description)           { "setting description value" }
-  let(:setting_type)                  { "setting type attribute value" }
+  let(:setting_type)                  { :sample_type }
   let(:setting_value)                 { "setting value attribute value" }
 
   let(:required_settings)             { { key: setting_key, default: setting_default } }
@@ -72,7 +72,7 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
                                                   namespaces: nested_namespaces } }
 
       it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_truthy }
-      it { expect(subject.call(nested_namespaces_and_all_settings).to_h).to eq nested_namespaces_and_all_settings }
+      it { expect(subject.call(nested_namespaces_and_all_settings).to_h).to include(nested_namespaces_and_all_settings) }
     end
 
     context "with OptionContract key, all Settings params and invalid nested Namespaces params" do
