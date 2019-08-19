@@ -107,9 +107,10 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           let(:invalid_param)                 { { environments: [{key: :bad_environment}] } }
           let(:wrapped_invalid_sites_params)  { { sites: [all_sites_params.merge(invalid_param)] } }
           let(:core_and_invalid_sites_params) { core_and_required_sites_params.merge(wrapped_invalid_sites_params) }
+          let(:environment_key_error)         { "must be one of: development, test, production" }
 
           it { expect(subject.call(core_and_invalid_sites_params).success?).to be_falsey }
-          it { expect(subject.call(core_and_invalid_sites_params).errors.messages.first.text).to start_with "validation failed: [{:environments" }
+          it { expect(subject.call(core_and_invalid_sites_params).errors.messages.first.text).to start_with environment_key_error }
         end
       end
 
@@ -120,68 +121,6 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
         it {expect(subject.call(core_and_sites_params).success?).to be_truthy }
         it { expect(subject.call(core_and_sites_params).errors.messages).to eq [] }
         it { expect(subject.call(core_and_sites_params).to_h).to eq core_and_sites_params }
-
-        describe "Environment parameters" do
-          let(:environments)  { [{ key: :production }] }
-        end
-      #         describe "Feature Environments parameters" do
-      #   let(:environment_key) { :production }
-      #   let(:is_enabled)      { false }
-
-      #   context "with all core parameters and required environment params" do
-      #     let(:environment_required_params)          { { is_enabled: is_enabled } }
-      #     let(:wrapped_environment_required_params)  { { environments: [ environment_key => { is_enabled: is_enabled } ] } }
-      #     let(:core_and_env_required_params)         { all_params.merge(wrapped_environment_required_params) }
-
-      #     it { expect(subject.call(core_and_env_required_params).success?).to be_truthy }
-      #     it { expect(subject.call(core_and_env_required_params).errors.to_h).to eq Hash.new }
-      #     it { expect(subject.call(core_and_env_required_params).to_h).to eq core_and_env_required_params }
-
-      #     context "with required, valid Registry params" do
-      #       let(:registry_name)             { key.to_s }
-      #       let(:registry_root)             { Pathname.pwd }
-      #       let(:registry_required_params)  { { config: { name: registry_name, root: registry_root } } }
-
-      #       let(:env_and_registry_required_params)          { environment_required_params.merge(registry: registry_required_params) }
-      #       let(:wrapped_env_and_registry_required_params)  { { environments: [ environment_key => env_and_registry_required_params ] } }
-      #       let(:core_and_env_and_registry_required_params) { all_params.merge(wrapped_env_and_registry_required_params) } 
-
-      #       it { expect(subject.call(core_and_env_and_registry_required_params).success?).to be_truthy }
-      #       it { expect(subject.call(core_and_env_and_registry_required_params).to_h).to eq core_and_env_and_registry_required_params }
-      #     end
-
-      #     context "with required Registy params, but a bad value" do
-      #       let(:registry_name)             { key.to_s }
-      #       let(:registry_root_bad_value)   { "bad/pathname/not/found" }
-      #       let(:registry_required_params)  { { config: { name: registry_name, root: registry_root_bad_value } } }
-
-      #       let(:env_and_registry_bad_value_params)           { environment_required_params.merge(registry: registry_required_params) }
-      #       let(:wrapped_env_and_registry_bad_value_params)   { { environments: [ environment_key => env_and_registry_bad_value_params ] } }
-      #       let(:core_and_env_and_registry_bad_value_params)  { all_params.merge(wrapped_env_and_registry_bad_value_params) } 
-
-      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).success?).to be_falsey }
-      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).errors.first.path).to include(:environments) }
-      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).errors.first.text).to start_with "validation failed: [{:registry=>" }
-      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).to_h).to eq core_and_env_and_registry_bad_value_params }
-      #     end
-          
-      #     context "with required Registry param missing" do
-      #       let(:registry_name)             { key.to_s }
-      #       let(:registry_missing_params)   { { config: { name: registry_name } } }
-
-      #       let(:env_and_registry_missing_params)           { environment_required_params.merge(registry: registry_missing_params) }
-      #       let(:wrapped_env_and_registry_missing_params)   { { environments: [ environment_key => env_and_registry_missing_params ] } }
-      #       let(:core_and_env_and_registry_missing_params)  { all_params.merge(wrapped_env_and_registry_missing_params) } 
-
-      #       it { expect(subject.call(core_and_env_and_registry_missing_params).success?).to be_falsey }
-      #       it { expect(subject.call(core_and_env_and_registry_missing_params).errors.first.path).to include(:environments)  }
-      #       it { expect(subject.call(core_and_env_and_registry_missing_params).errors.first.text).to start_with "validation failed: [{:registry=>" }
-      #       it { expect(subject.call(core_and_env_and_registry_missing_params).to_h).to eq core_and_env_and_registry_missing_params }
-      #     end
-            
-      #   end
-
-      # end
 
         describe "Feature parameters" do
           context "with required, valid Feature params" do

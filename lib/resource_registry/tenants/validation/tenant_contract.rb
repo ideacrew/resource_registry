@@ -5,8 +5,7 @@ module ResourceRegistry
       PrimarySiteType = Types::Symbol.default(:primary)
 
       EnvironmentHash = Dry::Schema.Params do
-        required(:key).value(:symbol)
-        # required(:key).value(ResourceRegistry::Types::Environment)
+        required(:key).value(ResourceRegistry::Types::Environment)
         optional(:features).array(:hash)
         optional(:options).array(:hash)
       end
@@ -39,7 +38,6 @@ module ResourceRegistry
           end
         end
 
-
         rule(:sites).each do
           validation_errors = []
           if value[:environments]
@@ -48,24 +46,23 @@ module ResourceRegistry
 
               if valid_environment_keys.include? environment[:key]
 
-                if environment[:features]
-                  environment[:features].each do |feature|
-                    result = ResourceRegistry::Features::Validation::FeatureContract.call(feature)
-                    if result && result.failure?
-                      validation_errors << result.errors.messages.reduce([]) do |list, message|
-                        list << { :features => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
-                      end
+                features = environment[:features] || []
+                options  = environment[:options] || []
+
+                features.each do |feature|
+                  result = ResourceRegistry::Features::Validation::FeatureContract.call(feature)
+                  if result && result.failure?
+                    validation_errors << result.errors.messages.reduce([]) do |list, message|
+                      list << { :features => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
                     end
                   end
                 end
 
-                if environment[:options]
-                  environment[:options].each do |option|
-                    result = ResourceRegistry::Options::Validation::OptionContract.call(option)
-                    if result && result.failure?
-                      validation_errors << result.errors.messages.reduce([]) do |list, message|
-                        list << { :options => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
-                      end
+                options.each do |option|
+                  result = ResourceRegistry::Options::Validation::OptionContract.call(option)
+                  if result && result.failure?
+                    validation_errors << result.errors.messages.reduce([]) do |list, message|
+                      list << { :options => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
                     end
                   end
                 end
