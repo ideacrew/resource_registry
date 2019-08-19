@@ -3,6 +3,10 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry do
   include RegistryDataSeed
 
+  before(:all) do
+    reset_registry
+  end
+
   after(:all) do
     reset_registry
   end
@@ -23,20 +27,8 @@ RSpec.describe ResourceRegistry do
     }
 
     before(:all) do
-      ResourceRegistry.configure do
-        {
-          application: {
-            config: {
-              name: "EdiApp",
-              default_namespace: "options",
-              root: Pathname.pwd.join('spec', 'rails_app'),
-              system_dir: "system",
-              auto_register: []
-            },
-            load_paths: ['system']
-          }
-        }
-      end
+      initialize_registry
+      load_dependencies
     end
 
     it 'should create Registry container' do
@@ -72,21 +64,7 @@ RSpec.describe ResourceRegistry do
 
   context ".create" do
     before do
-      ResourceRegistry.configure do
-        {
-          application: {
-            config: {
-              name: "EdiApp",
-              default_namespace: "options",
-              root: Pathname.pwd.join('spec', 'rails_app'),
-              system_dir: "system",
-              auto_register: []
-              },
-              load_paths: ['system']
-          }
-        }
-      end
-
+      initialize_registry
       ResourceRegistry.create
     end
 

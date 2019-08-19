@@ -49,14 +49,16 @@ module RegistryDataSeed
     end
   end
 
-  def configure_registry
-    initialize_registry
-
-    path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
-    ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration.new.call(path)
-
+  def load_dependencies
     dir = Pathname.pwd.join('lib', 'system', 'dependencies')
     result = ResourceRegistry::Stores::Operations::ListPath.new.call(dir)
     result.value!.each{|path| load path}
+  end
+
+  def configure_registry
+    initialize_registry
+    path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
+    ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration.new.call(path)
+    load_dependencies
   end
 end
