@@ -59,25 +59,21 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
         let(:wrapped_subscriptions_params)  { { subscriptions: [all_subscriptions_params] } }
         let(:core_and_subscriptions_params) { all_core_params.merge(wrapped_subscriptions_params) }
 
-        it {expect(subject.call(core_and_subscriptions_params).success?).to be_truthy }
-        it {expect(subject.call(core_and_subscriptions_params).to_h).to eq core_and_subscriptions_params }
+        it { expect(subject.call(core_and_subscriptions_params).success?).to be_truthy }
+        it { expect(subject.call(core_and_subscriptions_params).to_h).to eq core_and_subscriptions_params }
 
       end
     end
 
     describe "Site parameters" do
-      let(:site_key)     { :ivl }
-      let(:environments) { [{key: :production}] }
-      let(:url)         { "http://ivl.hbx_guru.org" }
-      let(:title)       { "title_value" }
-      let(:description) { "description_value" }
-      let(:options)     { [] }
+      let(:site_key)      { :primary }
+      let(:environments)  { [{ key: :production }] }
+      let(:url)           { "http://ivl.hbx_guru.org" }
+      let(:title)         { "title_value" }
+      let(:description)   { "description_value" }
+      let(:options)       { [] }
 
-      let(:required_sites_params) do
-        {
-          key: site_key,
-        }
-      end
+      let(:required_sites_params) { { key: site_key, } }
 
       let(:all_sites_params)  do
         { 
@@ -94,22 +90,17 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
         let(:wrapped_required_sites_params)  { { sites: [all_sites_params] } }
         let(:core_and_required_sites_params) { all_core_params.merge(wrapped_required_sites_params) }
 
-        # it {expect(subject.call(core_and_required_sites_params).success?).to be_truthy }
-        # it {expect(subject.call(core_and_required_sites_params).to_h).to eq core_and_required_sites_params }
+        # it { expect(subject.call(core_and_required_sites_params).success?).to be_truthy }
+        # it { expect(subject.call(core_and_required_sites_params).to_h).to eq core_and_required_sites_params }
 
         context "with all core parameters and defaulted Site param" do
           # let(:defaulted_sites_param)           { required_sites_params.except(:key) }
-          let(:defaulted_sites_params) do
-            {
-              key: nil,
-              environments: [],
-            }
-          end
+          let(:defaulted_sites_params) { { key: site_key, environments: [], } }
           let(:wrapped_defaulted_sites_params)  { { sites: [defaulted_sites_params] } }
           let(:core_and_defaulted_sites_params) { core_and_required_sites_params.merge(wrapped_defaulted_sites_params) }
 
-          it {expect(subject.call(core_and_defaulted_sites_params).success?).to be_truthy }
-          it {expect(subject.call(core_and_defaulted_sites_params).errors.messages).to be_empty }
+          it { expect(subject.call(core_and_defaulted_sites_params).success?).to be_truthy }
+          it { expect(subject.call(core_and_defaulted_sites_params).errors.messages).to be_empty }
         end
 
         context "with all core parameters and invalid defaulted Site param" do
@@ -117,8 +108,8 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           let(:wrapped_invalid_sites_params)  { { sites: [all_sites_params.merge(invalid_param)] } }
           let(:core_and_invalid_sites_params) { core_and_required_sites_params.merge(wrapped_invalid_sites_params) }
 
-          it {expect(subject.call(core_and_invalid_sites_params).success?).to be_falsey }
-          it {expect(subject.call(core_and_invalid_sites_params).errors.messages.first.text).to start_with "validation failed: [{:environments" }
+          it { expect(subject.call(core_and_invalid_sites_params).success?).to be_falsey }
+          it { expect(subject.call(core_and_invalid_sites_params).errors.messages.first.text).to start_with "validation failed: [{:environments" }
         end
       end
 
@@ -126,26 +117,87 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
         let(:wrapped_sites_params)  { { sites: [all_sites_params] } }
         let(:core_and_sites_params) { all_core_params.merge(wrapped_sites_params) }
 
-        it {binding.pry;expect(subject.call(core_and_sites_params).success?).to be_truthy }
-        it {expect(subject.call(core_and_sites_params).errors.messages.first.text).to eq "" }
-        it {expect(subject.call(core_and_sites_params).to_h).to eq core_and_sites_params }
+        it {expect(subject.call(core_and_sites_params).success?).to be_truthy }
+        it { expect(subject.call(core_and_sites_params).errors.messages).to eq [] }
+        it { expect(subject.call(core_and_sites_params).to_h).to eq core_and_sites_params }
 
         describe "Environment parameters" do
+          let(:environments)  { [{ key: :production }] }
         end
+      #         describe "Feature Environments parameters" do
+      #   let(:environment_key) { :production }
+      #   let(:is_enabled)      { false }
+
+      #   context "with all core parameters and required environment params" do
+      #     let(:environment_required_params)          { { is_enabled: is_enabled } }
+      #     let(:wrapped_environment_required_params)  { { environments: [ environment_key => { is_enabled: is_enabled } ] } }
+      #     let(:core_and_env_required_params)         { all_params.merge(wrapped_environment_required_params) }
+
+      #     it { expect(subject.call(core_and_env_required_params).success?).to be_truthy }
+      #     it { expect(subject.call(core_and_env_required_params).errors.to_h).to eq Hash.new }
+      #     it { expect(subject.call(core_and_env_required_params).to_h).to eq core_and_env_required_params }
+
+      #     context "with required, valid Registry params" do
+      #       let(:registry_name)             { key.to_s }
+      #       let(:registry_root)             { Pathname.pwd }
+      #       let(:registry_required_params)  { { config: { name: registry_name, root: registry_root } } }
+
+      #       let(:env_and_registry_required_params)          { environment_required_params.merge(registry: registry_required_params) }
+      #       let(:wrapped_env_and_registry_required_params)  { { environments: [ environment_key => env_and_registry_required_params ] } }
+      #       let(:core_and_env_and_registry_required_params) { all_params.merge(wrapped_env_and_registry_required_params) } 
+
+      #       it { expect(subject.call(core_and_env_and_registry_required_params).success?).to be_truthy }
+      #       it { expect(subject.call(core_and_env_and_registry_required_params).to_h).to eq core_and_env_and_registry_required_params }
+      #     end
+
+      #     context "with required Registy params, but a bad value" do
+      #       let(:registry_name)             { key.to_s }
+      #       let(:registry_root_bad_value)   { "bad/pathname/not/found" }
+      #       let(:registry_required_params)  { { config: { name: registry_name, root: registry_root_bad_value } } }
+
+      #       let(:env_and_registry_bad_value_params)           { environment_required_params.merge(registry: registry_required_params) }
+      #       let(:wrapped_env_and_registry_bad_value_params)   { { environments: [ environment_key => env_and_registry_bad_value_params ] } }
+      #       let(:core_and_env_and_registry_bad_value_params)  { all_params.merge(wrapped_env_and_registry_bad_value_params) } 
+
+      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).success?).to be_falsey }
+      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).errors.first.path).to include(:environments) }
+      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).errors.first.text).to start_with "validation failed: [{:registry=>" }
+      #       it { expect(subject.call(core_and_env_and_registry_bad_value_params).to_h).to eq core_and_env_and_registry_bad_value_params }
+      #     end
+          
+      #     context "with required Registry param missing" do
+      #       let(:registry_name)             { key.to_s }
+      #       let(:registry_missing_params)   { { config: { name: registry_name } } }
+
+      #       let(:env_and_registry_missing_params)           { environment_required_params.merge(registry: registry_missing_params) }
+      #       let(:wrapped_env_and_registry_missing_params)   { { environments: [ environment_key => env_and_registry_missing_params ] } }
+      #       let(:core_and_env_and_registry_missing_params)  { all_params.merge(wrapped_env_and_registry_missing_params) } 
+
+      #       it { expect(subject.call(core_and_env_and_registry_missing_params).success?).to be_falsey }
+      #       it { expect(subject.call(core_and_env_and_registry_missing_params).errors.first.path).to include(:environments)  }
+      #       it { expect(subject.call(core_and_env_and_registry_missing_params).errors.first.text).to start_with "validation failed: [{:registry=>" }
+      #       it { expect(subject.call(core_and_env_and_registry_missing_params).to_h).to eq core_and_env_and_registry_missing_params }
+      #     end
+            
+      #   end
+
+      # end
 
         describe "Feature parameters" do
           context "with required, valid Feature params" do
             let(:feature_key)                       { :shiney_feature }
             let(:is_required)                       { true }
             let(:is_enabled)                        { true }
+
             let(:feature_required_params)           { { key: feature_key, is_required: is_required, is_enabled: is_enabled } }
             let(:wrapped_feature_params)            { { features: [feature_required_params] } }
-            let(:wrapped_site_and_feature_params)   { { sites: [all_sites_params.merge(wrapped_feature_params)] } }
-            let(:core_and_sites_and_feature_params) { all_core_params.merge(wrapped_site_and_feature_params) }
+            let(:wrapped_environment_and_feature_params)  { { environments: [{ key: :production }.merge(wrapped_feature_params)] } }
+            let(:wrapped_site_and_feature_params)         { { sites: [all_sites_params.merge(wrapped_environment_and_feature_params)] } }
+            let(:core_and_sites_and_feature_params)       { all_core_params.merge(wrapped_site_and_feature_params) }
 
-            it {expect(subject.call(core_and_sites_and_feature_params).success?).to be_truthy }
-            it {expect(subject.call(core_and_sites_and_feature_params).errors.messages).to eq [] }
-            it {expect(subject.call(core_and_sites_and_feature_params).to_h).to eq core_and_sites_and_feature_params }
+            it { expect(subject.call(core_and_sites_and_feature_params).success?).to be_truthy }
+            it { expect(subject.call(core_and_sites_and_feature_params).errors.messages).to eq [] }
+            it { expect(subject.call(core_and_sites_and_feature_params).to_h).to eq core_and_sites_and_feature_params }
           end
 
           context "with required Feature params, but a bad value" do
@@ -154,12 +206,13 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
 
             let(:feature_bad_value_params)                    { { key: feature_key, is_required: is_required_bad_value } }
             let(:wrapped_feature_bad_value_params)            { { features: [feature_bad_value_params] } }
-            let(:wrapped_site_and_feature_bad_value_params)   { { sites: [all_sites_params.merge(wrapped_feature_bad_value_params)] } }
+            let(:wrapped_environment_and_feature_bad_value_params)  { { environments: [{ key: :production }.merge(wrapped_feature_bad_value_params)] } }
+            let(:wrapped_site_and_feature_bad_value_params)   { { sites: [all_sites_params.merge(wrapped_environment_and_feature_bad_value_params)] } }
             let(:core_and_sites_and_feature_bad_value_params) { all_core_params.merge(wrapped_site_and_feature_bad_value_params) }
 
-            it {expect(subject.call(core_and_sites_and_feature_bad_value_params).success?).to be_falsey }
-            it {expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.path).to include(:sites) }
-            it {expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.text).to start_with "validation failed: [{:path=>[:is_required]}" }
+            it { expect(subject.call(core_and_sites_and_feature_bad_value_params).success?).to be_falsey }
+            it { expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.path).to include(:sites) }
+            it { expect(subject.call(core_and_sites_and_feature_bad_value_params).errors.first.text).to start_with "validation failed: [{:features=>[{:path=>[:is_required]}, {:input=>\"bad_value\"" }
           end
 
           context "with required Feature param missing" do
@@ -167,12 +220,13 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
             let(:feature_missing_params)  { { is_required: is_required  } }
 
             let(:wrapped_feature_missing_params)            { { features: [feature_missing_params] } }
-            let(:wrapped_site_and_feature_missing_params)   { { sites: [all_sites_params.merge(wrapped_feature_missing_params)] } }
+            let(:wrapped_environment_and_feature_missing_params)  { { environments: [{ key: :production }.merge(wrapped_feature_missing_params)] } }
+            let(:wrapped_site_and_feature_missing_params)   { { sites: [all_sites_params.merge(wrapped_environment_and_feature_missing_params)] } }
             let(:core_and_sites_and_feature_missing_params) { all_core_params.merge(wrapped_site_and_feature_missing_params) }
 
-            it {expect(subject.call(core_and_sites_and_feature_missing_params).success?).to be_falsey }
-            it {expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.path).to include(:sites) }
-            it {expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.text).to start_with "validation failed: [{:path=>[:key]}" }
+            it { expect(subject.call(core_and_sites_and_feature_missing_params).success?).to be_falsey }
+            it { expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.path).to include(:sites) }
+            it { expect(subject.call(core_and_sites_and_feature_missing_params).errors.first.text).to start_with "validation failed: [{:features=>[{:path=>[:key]}" }
           end
         end
 
