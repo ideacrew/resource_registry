@@ -11,9 +11,6 @@ require 'resource_registry/entities/qualifying_life_event'
 module ResourceRegistry
   module Entities
 
-    FeatureConstructor  = Types.Constructor('Feature')  { |val| Feature.new(val) rescue nil }
-    OptionConstructor   = Types.Constructor('Option')   { |val| Option.new(val) rescue nil }
     RegistryConstructor = Types.Constructor('Registry') { |val| Registry.new(val) rescue nil }
-
   end
 end
