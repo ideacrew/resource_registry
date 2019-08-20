@@ -35,7 +35,7 @@
 
   In your project build the directory tree to house configuration files:
 
-      $ mkdir -p ./system/boot && mkdir -p ./system/dependencies
+      $ mkdir -p ./system/boot && mkdir -p ./system/config
 
   Then, create Resource Registry's initializer file:
 
@@ -161,11 +161,11 @@
 
   ```
 
-  Configuration files are located in your project's ```system/dependency``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
+  Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
 
   An example of a simple configuration file:
   ```
-  # ./system/dependencies/enterprise.yml
+  # ./system/config/enterprise.yml
 
   namespace: 
     key: :enterprise
