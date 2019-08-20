@@ -9,6 +9,15 @@ ResourceRegistry.configure do
         auto_register: []
       },
       load_paths: ['system']
+    },
+    resource_registry: {
+      resolver: {
+        root: :enterprise,
+        tenant: :dchbx,
+        site: :shop_site,
+        env: :production,
+        application: :enroll_app
+      }
     }
   }
 end

@@ -6,7 +6,6 @@ require 'resource_registry/registries/validation/registry_contract'
 RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   include RegistryDataSeed
 
-
   before(:all) do
     reset_registry
     initialize_registry 
@@ -35,24 +34,23 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
 
   context "when valid configuration options passed" do
 
-    subject { described_class.new.call(configuration_options_hash) }
+    subject { described_class.new.call(configuration_options_with_resolver_options) }
 
-    before do
+    before(:all) do
       initialize_registry
-      subject
     end
 
     after do
       reset_registry
     end
 
-    it "should load application configuration" do
+    it "should load application & resource registry configuration" do
+      subject
+
       configuration_options_hash[:application][:config].each_pair do |key, value|
         expect(Registry.config.send(key)).to eq value
       end
-    end
 
-    it "should load resource registry configuration" do
       configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
         expect(Registry["resource_registry.config.#{key}"]).to eq value
       end

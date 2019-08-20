@@ -28,6 +28,20 @@ module RegistryDataSeed
     Kernel.send(:remove_const, 'Registry') if defined? Registry
   end
 
+  def resolver_options_hash
+    {
+      resource_registry: {
+        resolver: {
+          root: :enterprise,
+          tenant: :dchbx,
+          site: :shop_site,
+          env: :production,
+          application: :enroll_app
+        }
+      }
+    }
+  end
+
   def override_config
     {
       application: {
@@ -37,10 +51,16 @@ module RegistryDataSeed
           root: Pathname.pwd.join('spec', 'rails_app'),
           system_dir: "system",
           auto_register: []
-          },
+        },
         load_paths: ['system']
       }
-    }
+    }.merge(resolver_options_hash)
+  end
+
+  def configuration_options_with_resolver_options
+    options = configuration_options_hash
+    options[:resource_registry].merge!(resolver_options_hash[:resource_registry])
+    options
   end
 
   def initialize_registry

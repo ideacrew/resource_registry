@@ -11,6 +11,8 @@ module ResourceRegistry
         step :validate_resource_registry_configuration, with: 'resource_registry.registries.validate'
         step :load_resource_registry_configuration
         step :set_resource_registry_load_paths
+        step :load_resolver_configuration
+        step :set_custom_resolver
 
         private
 
@@ -64,12 +66,28 @@ module ResourceRegistry
           return Success(input)
         end
 
+        def load_resolver_configuration(input)
+          input[:resource_registry][:resolver].each_pair do |key, value|
+            container.register("resource_registry.resolver.#{key}", value)
+          end
+
+          return Success(input)
+        end
+
+        def set_custom_resolver(input)
+          container.configure do |config|
+            config.resolver = ResourceRegistry::Serializers::OptionResolver.new
+          end
+          
+          return Success(input)
+        end
+
         def container
           ::Registry
         end
 
         def transform_root_to_path(params)
-          params[:config][:root] = Pathname.new(params[:config][:root]) if params[:config][:root] && !params[:config][:root].is_a?(Pathname)
+          params[:config][:root] = Pathname.new(params[:config][:root]) if params[:config] && params[:config][:root] && !params[:config][:root].is_a?(Pathname)
           params
         end
       end
