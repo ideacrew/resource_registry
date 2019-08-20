@@ -10,6 +10,7 @@ require 'resource_registry/entities'
 require 'resource_registry/validations'
 require 'resource_registry/registries/operations/create_container'
 require 'resource_registry/registries/transactions/load_container_dependencies'
+require 'resource_registry/registries/transactions/registry_configuration'
 require 'resource_registry/version'
 
 module ResourceRegistry

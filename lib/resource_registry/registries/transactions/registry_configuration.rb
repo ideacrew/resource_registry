@@ -3,14 +3,14 @@ module ResourceRegistry
     module Transactions
       class RegistryConfiguration
 
-        include Dry::Transaction(container: ::Registry)
+        include Dry::Transaction
 
-        step :validate, with: 'resource_registry.registries.validate'
+        step :validate
 
         private
 
         def validate(input)
-          result = super
+          result = ResourceRegistry::Registries::Validation::RegistryContract.call(input)
           return Success(result)
         end
 
