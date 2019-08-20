@@ -51,12 +51,12 @@ module ResourceRegistry
     end
 
     def load_container_dependencies
-      dependencies_path = Pathname.pwd.join('lib', 'system', 'dependencies')
+      dependencies_path = Pathname.new(__dir__).join('system', 'dependencies')
       Registries::Transactions::LoadContainerDependencies.new.call(dependencies_path)
     end
 
     def create
-      path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
+      path = Pathname.new(__dir__).join('system', 'config', 'configuration_options.yml')
       Registries::Transactions::Create.new.call(path)
     end
 
