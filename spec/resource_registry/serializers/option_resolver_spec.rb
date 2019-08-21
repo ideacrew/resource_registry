@@ -25,7 +25,7 @@ RSpec.describe ResourceRegistry::Serializers::OptionResolver do
     end
 
     it "should resolve site key" do
-      expect(Registry[site_key]).to be_present 
+      expect(Registry[site_key]).to be_present
     end
 
     it "should raise exception when wrong key passed" do

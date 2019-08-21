@@ -114,7 +114,7 @@ RSpec.describe ResourceRegistry do
       }.merge(resolver_options_hash)
     }
 
-    it 'should throw an error' do 
+    it 'should throw an error' do
       begin
         ResourceRegistry.configure { initializer_config }
       rescue ResourceRegistry::Error::InitializationFileError => e

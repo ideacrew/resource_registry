@@ -21,7 +21,7 @@ module ResourceRegistry
         option :default,      type: Dry::Types["any"]
         option :value,        type: Dry::Types["any"], optional: true
       end
-    
+
     end
   end
 end
