@@ -10,14 +10,14 @@ require 'resource_registry/registries'
 
 RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
-  let(:top_parms) {
+  let(:top_parms) do
     {
       app_name: 'app_name_value',
       timestamp: 'timestamp_value'
     }
-  }
+  end
 
-  let(:config_parms)  {
+  let(:config_parms) do
     {
       config: {
         name: 'name_value',
@@ -29,9 +29,9 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
         auto_register: ['auto_register_value']
       }
     }
-  }
+  end
 
-  let(:persistence_parms) {
+  let(:persistence_parms) do
     {
       persistence: {
         store: 'file_store',
@@ -39,7 +39,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
         container: 'container_value'
       }
     }
-  }
+  end
 
 
   context "with valid params" do

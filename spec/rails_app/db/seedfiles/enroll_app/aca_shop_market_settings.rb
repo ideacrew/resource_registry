@@ -2,7 +2,7 @@
 
 # nested configuration settings file called from load_settings.rb
 
-## FIXME -- cross-reference these settings with BenefitMarket Engine seed files to verify comprehensive coverage
+## FIXME: cross-reference these settings with BenefitMarket Engine seed files to verify comprehensive coverage
 
 Repo.namespace("#{TopNamespaceName}.ea_component") do
   namespace :aca_shop_market do
@@ -22,10 +22,10 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                                     { electronic_only: "Electronic only" },
 ] }) #{ |vals| Hash(metadata: vals) }
 
-    # FIXME ?? Is this needed? Change to dependency injection?
+    # FIXME: ?? Is this needed? Change to dependency injection?
     register(:use_simple_employer_calculation_model,     { title: "", description: "", type: :boolean, default: false, value: false })  #{ |vals| Hash(metadata: vals)}
 
-    # FIXME rename or deprecate
+    # FIXME: rename or deprecate
     namespace :rename_or_deprecate do
       register(:benefit_period_min_year,                 { title: "", description: "", type: :integer, default: 1, value: 1 })  #{ |vals| Hash(metadata: vals)}
       register(:benefit_period_max_year,                 { title: "", description: "", type: :integer, default: 1, value: 1 })  #{ |vals| Hash(metadata: vals)}
@@ -35,17 +35,17 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
     end
 
 
-    # FIXME move these EDI-related settings to EDI DB
+    # FIXME: move these EDI-related settings to EDI DB
     namespace :move_these_settings_to_edi_db do
       ## FIXME: replace gf_update_trans_dow and move this setting to EDI DB
       register(:group_updates_transmit_dow,  { title: "", description: "", type: :string,  default: "friday", value: "friday" })  #{ |vals| Hash(metadata: vals)}
 
-      ## FIXME What is this?
+      ## FIXME: What is this?
       register(:transmit_scheduled_employers,             { title: "", description: "", type: :boolean, default: true, value: true })  #{ |vals| Hash(metadata: vals)}
       register(:transmit_employers_immediately,          { title: "", description: "", type: :boolean, default: false, value: false })  #{ |vals| Hash(metadata: vals)}
 
-      # FIXME replace group_file_new_enrollment_transmit_on with new_groups_transmit_dom
-      # FIXME replace employer_transmission_day_of_month with new_groups_transmit_dom
+      # FIXME: replace group_file_new_enrollment_transmit_on with new_groups_transmit_dom
+      # FIXME: replace employer_transmission_day_of_month with new_groups_transmit_dom
       # register(:group_file_new_enrollment_transmit_on,   { title: "", description: "", type: :integer, default: 16, value: 16 })  #{ |vals| Hash(metadata: vals)}
       # register(:employer_transmission_day_of_month,      { title: "", description: "", type: :integer, default: 16, value: 16 })  #{ |vals| Hash(metadata: vals)}
       register(:new_groups_transmit_dom,            { title: "", description: "", type: :integer, default: 16, value: 16 })  #{ |vals| Hash(metadata: vals)}
@@ -59,7 +59,7 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                       default: Date.new(2019,1,1)..Date.new(2019,12,31),
                                                       value: Date.new(2019,1,1)..Date.new(2019,12,31) }) #{ |vals| Hash(metadata: vals) }
 
-        # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
+        # FIXME: add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
         register(:enrollment_transmit_period, { title: "", description: "", type: :range,
                                                 default: Date.new(2019, 1, 26)..Date.new(2019, 1, 31),
                                                 value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31) })
@@ -91,7 +91,7 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
 
         register(:employer_attestation_required,    { title: "", description: "", type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
 
-        # FIXME replace standard_industrial_classification with employer_sic_required
+        # FIXME: replace standard_industrial_classification with employer_sic_required
         register(:employer_sic_required,            { title: "", description: "", type: :boolean, default: false, value: false })  #{ |vals| Hash(metadata: vals)}
         # register(:standard_industrial_classification,      { title: "", description: "", type: :boolean, default: false, value: false })  #{ |vals| Hash(metadata: vals)}
 
@@ -111,12 +111,12 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
           register(:open_enrollment_length_months_max,  { title: "", description: "", type: :integer, default: 2, value: 2 })  #{ |vals| Hash(metadata: vals)}
 
 
-          # FIXME New Enrollment Exception Processing tools obsolete these settings - remove from code
+          # FIXME: New Enrollment Exception Processing tools obsolete these settings - remove from code
           # register(:grace_period_length_days_min, { title: "", description: "", type: :integer, default: 5, value: 5 })  #{ |vals| Hash(metadata: vals)}
           # register(:adv_days_min,                 { title: "", description: "", type: :integer, default: 5, value: 5 })  #{ |vals| Hash(metadata: vals)}
         end
 
-        # FIXME placeholder for any rule definition
+        # FIXME: placeholder for any rule definition
         namespace :member_market_policy do
         end
 

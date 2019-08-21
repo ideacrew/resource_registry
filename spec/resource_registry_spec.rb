@@ -14,7 +14,7 @@ RSpec.describe ResourceRegistry do
   end
 
   context ".configure" do
-    let(:config) {
+    let(:config) do
       {
         config: {
           name: "EdiApp",
@@ -26,7 +26,7 @@ RSpec.describe ResourceRegistry do
         env: :production,
         load_paths: ['system']
       }
-    }
+    end
 
     before(:all) do
       initialize_registry

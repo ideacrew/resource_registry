@@ -8,10 +8,10 @@ RSpec.describe ResourceRegistry::Enterprises::Validation::EnterpriseContract do
   let(:owner_organization_name) { "owner_organization_name attribute value" }
   let(:owner_account_name)      { "owner_account_name attribute value" }
 
-  let(:optional_params)         {
+  let(:optional_params) do
     { owner_organization_name: owner_organization_name,
       owner_account_name: owner_account_name}
-  }
+  end
 
   let(:all_params)              { optional_params }
 
