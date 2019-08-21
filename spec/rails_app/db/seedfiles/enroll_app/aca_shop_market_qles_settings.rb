@@ -101,7 +101,7 @@ Repo.namespace(:aca_shop_market_qles) do
              date_options_available: false,
              ordinal_position: 35,
              event_kind_label: 'Date of losing coverage',
-             tool_tip: "Someone in the household is losing other health insurance involuntarily",
+             tool_tip: "Someone in the household is losing other health insurance involuntarily"
            })
 
   register(:death,
@@ -254,7 +254,7 @@ Repo.namespace(:aca_shop_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
 end

@@ -53,7 +53,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           key: subscription_key,
           id: id,
           validator_id: validator_id,
-          subscribed_on: subscribed_on,
+          subscribed_on: subscribed_on
         }
       end
 
@@ -75,7 +75,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
       let(:description)   { "description_value" }
       let(:options)       { [] }
 
-      let(:required_sites_params) { { key: site_key, } }
+      let(:required_sites_params) { { key: site_key } }
 
       let(:all_sites_params)  do
         {
@@ -84,7 +84,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
           title: title,
           description: description,
           options: options,
-          environments: environments,
+          environments: environments
         }
       end
 
@@ -97,7 +97,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
 
         context "with all core parameters and defaulted Site param" do
           # let(:defaulted_sites_param)           { required_sites_params.except(:key) }
-          let(:defaulted_sites_params) { { key: site_key, environments: [], } }
+          let(:defaulted_sites_params) { { key: site_key, environments: [] } }
           let(:wrapped_defaulted_sites_params)  { { sites: [defaulted_sites_params] } }
           let(:core_and_defaulted_sites_params) { core_and_required_sites_params.merge(wrapped_defaulted_sites_params) }
 

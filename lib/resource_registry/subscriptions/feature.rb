@@ -85,7 +85,7 @@ module ResourceRegistry
         # Entry Point: Enterprise
         trans_gw_component: { key: :trans_gw_component,
                               title: "Transport Gateway Component",
-                              description: "" },
+                              description: "" }
       }
 
       # has_many  :subscriptions,

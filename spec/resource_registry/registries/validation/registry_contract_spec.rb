@@ -13,7 +13,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
   let(:top_parms) {
     {
       app_name: 'app_name_value',
-      timestamp: 'timestamp_value',
+      timestamp: 'timestamp_value'
     }
   }
 
@@ -26,7 +26,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
         env: 'development',
         system_dir: 'system_dir_value',
         load_path: 'load_path_value',
-        auto_register: ['auto_register_value'],
+        auto_register: ['auto_register_value']
       }
     }
   }
@@ -36,7 +36,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
       persistence: {
         store: 'file_store',
         serializer: 'yaml_serializer',
-        container: 'container_value',
+        container: 'container_value'
       }
     }
   }

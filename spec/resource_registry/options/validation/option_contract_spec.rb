@@ -19,13 +19,13 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
     { title: setting_title,
       description: setting_description,
       type: setting_type,
-      value: setting_value, }
+      value: setting_value }
   }
 
   let(:all_settings)                  { [required_settings.merge(optional_settings)] }
 
   let(:namespaces_key)                    { :namespaces_key_level_0 }
-  let(:required_namespaces_params)        { { key: namespaces_key, } }
+  let(:required_namespaces_params)        { { key: namespaces_key } }
   let(:all_namespaces)                    { [required_namespaces_params] }
 
   let(:required_namespaces_and_settings)  {

@@ -62,7 +62,7 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
         # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
         register(:enrollment_transmit_period, { title: "", description: "", type: :range,
                                                 default: Date.new(2019, 1, 26)..Date.new(2019, 1, 31),
-                                                value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31), })
+                                                value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31) })
 
 
         register(:application_interval_kind,        { title: "", description: "", type: :enumerated_hash,
