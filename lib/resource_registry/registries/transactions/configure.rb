@@ -25,7 +25,7 @@ module ResourceRegistry
           if result.success?
             Success(input)
           else
-            Failure(result)
+            Failure(result.errors)
           end
         end
 
@@ -50,7 +50,7 @@ module ResourceRegistry
           if result.success?
             Success(input)
           else
-            Failure(result)
+            Failure(result.errors)
           end
         end
 
