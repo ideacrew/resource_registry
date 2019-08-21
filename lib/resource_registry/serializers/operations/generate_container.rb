@@ -28,11 +28,11 @@ module ResourceRegistry
             return
           end
 
-          container.namespace(attributes.delete(:key) || :enterprise) do |namespace|
+          container.namespace(attributes.delete(:key) || :enterprise) do |resolved_ns|
             attributes.each do |key, value|
 
               if value.is_a?(Array) && is_an_entity?(value[0])
-                value.each{|val| construct_container(val, namespace) }
+                value.each{|val| construct_container(val, resolved_ns) }
               else
                 # namespace.register(key, value)
               end

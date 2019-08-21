@@ -41,13 +41,9 @@ module ResourceRegistry
       private
 
       def execute
-        if File.writeable?(@file_name)
-        else
-          raise ResourceRegistry::Error, "Insufficient privilege to write file: #{@file_name}"
-        end
+        raise ResourceRegistry::Error, "Insufficient privilege to write file: #{@file_name}" unless File.writeable?(@file_name)
 
         version_file if File.exist?(@file_name)
-
 
         File.open(@file_name, "w") { |file| file.write(@content) }
       end

@@ -69,7 +69,7 @@ module ResourceRegistry
       # rubocop:disable Style/Semicolon
       register("#{namespace_name}._all_keys") { ns_exp = /\A#{Regexp.quote(namespace_name)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
       register("#{namespace_name}._keys")     { ns_exp = /\A#{Regexp.quote(namespace_name)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
-      register("#{namespace_name}._pairs")    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
+      register("#{namespace_name}._pairs")    { resolve("_keys").reduce([]) { |list, key| list <<  Hash(key.to_s => resolve(key.split('.').last)) } }
       # rubocop:enable Style/Semicolon
     end
 
@@ -101,12 +101,7 @@ module ResourceRegistry
     # @return [Hash]
     def to_h
       self.each_with_object({}) do |(key, value), hash|
-        case value
-        when Repository
-          hash[key] = value.to_h
-        else
-          hash[key] = value
-        end
+        hash[key] = value.is_a?(Repository) ? value.to_h : value
       end
     end
 

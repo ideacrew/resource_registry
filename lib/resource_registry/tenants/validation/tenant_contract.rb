@@ -52,19 +52,17 @@ module ResourceRegistry
 
                 features.each do |feature|
                   result = ResourceRegistry::Features::Validation::FeatureContract.call(feature)
-                  if result && result.failure?
-                    validation_errors << result.errors.messages.reduce([]) do |list, message|
-                      list << { :features => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
-                    end
+                  next unless result && result.failure?
+                  validation_errors << result.errors.messages.reduce([]) do |list, message|
+                    list << { :features => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
                   end
                 end
 
                 options.each do |option|
                   result = ResourceRegistry::Options::Validation::OptionContract.call(option)
-                  if result && result.failure?
-                    validation_errors << result.errors.messages.reduce([]) do |list, message|
-                      list << { :options => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
-                    end
+                  next unless result && result.failure?
+                  validation_errors << result.errors.messages.reduce([]) do |list, message|
+                    list << { :options => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }
                   end
                 end
 

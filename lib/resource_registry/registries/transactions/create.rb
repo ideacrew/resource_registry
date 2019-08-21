@@ -28,7 +28,7 @@ module ResourceRegistry
           Success(input)
         end
 
-        def finalize_registry(input)
+        def finalize_registry(_input)
           Registry.finalize!(freeze: true)
 
           Success(true)

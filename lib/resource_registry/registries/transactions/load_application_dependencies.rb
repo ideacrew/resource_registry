@@ -12,7 +12,7 @@ module ResourceRegistry
 
         private
 
-        def list_path(input)
+        def list_path(_input)
           path = Registry.config.root.join('system', 'config')
           super path
         end

@@ -9,7 +9,7 @@ module ResourceRegistry
   module Types
     include Dry::Types(default: :nominal)
 
-    Environment     = Types::Coercible::Symbol.default(:production.freeze).enum(:development, :test, :production)
+    Environment     = Types::Coercible::Symbol.default(:production).enum(:development, :test, :production)
     Serializers     = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
     Stores          = Types::String.default('file_store'.freeze).enum('file_store')
 
