@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(path)
           Kernel.send(:require, path)
-          return Success(path)
+          Success(path)
         end
       end
     end

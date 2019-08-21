@@ -36,11 +36,11 @@ module ResourceRegistry
             end
           end
 
-          return Success(input)
+          Success(input)
         end
 
         def set_application_load_paths(input)
-          return Success(input)
+          Success(input)
         end
 
         def validate_resource_registry_configuration(input)
@@ -59,13 +59,13 @@ module ResourceRegistry
             container.register("resource_registry.config.#{key}", value)
           end
 
-          return Success(input)
+          Success(input)
         end
 
         def set_resource_registry_load_paths(input)
           container.register("resource_registry.load_paths", input[:resource_registry][:load_paths])
 
-          return Success(input)
+          Success(input)
         end
 
         def load_resolver_configuration(input)
@@ -73,7 +73,7 @@ module ResourceRegistry
             container.register("resource_registry.resolver.#{key}", value)
           end
 
-          return Success(input)
+          Success(input)
         end
 
         def set_custom_resolver(input)
@@ -81,7 +81,7 @@ module ResourceRegistry
             config.resolver = ResourceRegistry::Serializers::OptionResolver.new
           end
 
-          return Success(input)
+          Success(input)
         end
 
         def container

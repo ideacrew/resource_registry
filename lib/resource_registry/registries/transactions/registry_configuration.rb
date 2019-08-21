@@ -13,7 +13,7 @@ module ResourceRegistry
 
         def validate(input)
           result = ResourceRegistry::Registries::Validation::RegistryContract.call(input)
-          return Success(result)
+          Success(result)
         end
 
         # def load_application_initializer(input, preferences: {})

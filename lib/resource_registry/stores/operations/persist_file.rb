@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(input, file_name)
           result = File.open(file_name, "w") { |file| file.write(input) }
-          return Success(result)
+          Success(result)
         end
       end
     end

@@ -22,7 +22,7 @@ module ResourceRegistry
         end
 
         def load_application_options_namespace(input)
-          return Success(input)
+          Success(input)
         end
       end
     end

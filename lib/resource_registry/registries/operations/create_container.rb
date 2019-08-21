@@ -10,7 +10,7 @@ module ResourceRegistry
         def call(input = nil)
           container = Class.new(Dry::System::Container)
 
-          return Success(container)
+          Success(container)
         end
       end
     end

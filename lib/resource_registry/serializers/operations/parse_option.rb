@@ -10,7 +10,7 @@ module ResourceRegistry
         def call(input)
           entity_hash = convert(input)
 
-          return Success(entity_hash)
+          Success(entity_hash)
         end
 
         private

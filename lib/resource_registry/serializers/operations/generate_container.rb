@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(input)
           container = construct_container(input)
-          return Success(container)
+          Success(container)
         end
 
         private

@@ -21,7 +21,7 @@ module ResourceRegistry
           paths.each do |path|
             ResourceRegistry::Registries::Transactions::LoadDependency.new.call(path)
           end
-          return Success(paths)
+          Success(paths)
         end
       end
     end

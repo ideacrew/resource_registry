@@ -10,7 +10,7 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
-          return Success(YAML.load(input))
+          Success(YAML.load(input))
         end
       end
     end
