@@ -29,7 +29,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   end
 
   it 'should not have resource registry configuration' do
-    configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
+    configuration_options_hash[:resource_registry][:config].each_pair do |key, _value|
       expect(Registry.keys).not_to include("resource_registry.config.#{key}")
     end
   end

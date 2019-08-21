@@ -8,7 +8,7 @@ module ResourceRegistry
       class ParseYaml
 
         include Dry::Transaction::Operation
-        
+
         # rubocop:disable Security/YAMLLoad
         def call(input)
           Success(YAML.load(input))

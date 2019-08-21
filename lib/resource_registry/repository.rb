@@ -66,9 +66,11 @@ module ResourceRegistry
     # _keys: list of all non-proc keys in the namespace
     # _pairs: list of key/value pairs in the namespace
     def register_namespace_procs(namespace_name)
+      # rubocop:disable Style/Semicolon
       register("#{namespace_name}._all_keys") { ns_exp = /\A#{Regexp.quote(namespace_name)}./;   keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
       register("#{namespace_name}._keys")     { ns_exp = /\A#{Regexp.quote(namespace_name)}.[^_]/; keys.reduce([]) { |list, key| list << key if ns_exp.match?(key, 0); list }}
       register("#{namespace_name}._pairs")    { resolve("_keys").reduce([]) { |list, key| list <<  Hash("#{key}" => resolve("#{key.split('.').last}")) } }
+      # rubocop:enable Style/Semicolon
     end
 
     # Recursively update values from a hash

@@ -52,7 +52,7 @@ RSpec.describe ResourceRegistry do
     end
 
     it 'should not load resource registry configuration' do
-      configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
+      configuration_options_hash[:resource_registry][:config].each_pair do |key, _value|
         expect(Registry.keys).not_to include("resource_registry.config.#{key}")
       end
     end
@@ -79,9 +79,9 @@ RSpec.describe ResourceRegistry do
 
     it "should load resource registry configuration" do
       configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
-        value = Pathname.new(value) if key == :root
-        if value.present?
-          expect(Registry["resource_registry.config.#{key}"]).to eq value
+        test_value = (key == :root) ? Pathname.new(value) : value
+        if test_value.present?
+          expect(Registry["resource_registry.config.#{key}"]).to eq test_value
         end
       end
     end

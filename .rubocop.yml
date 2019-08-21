@@ -71,6 +71,9 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 15
 
+Naming/AccessorMethodName:
+  Enabled: false
+
 Naming/PredicateName:
   Enabled: false
 
@@ -96,6 +99,9 @@ Style/EachWithObject:
 Style/EmptyLiteral:
   Enabled: false
 
+Style/EmptyMethod:
+  Enabled: false
+
 Style/ExpandPathArguments:
   Enabled: false
 
@@ -115,6 +121,9 @@ Style/StringLiterals:
   Enabled: false
 
 Style/SymbolArray:
+  Enabled: false
+
+Style/TernaryParentheses:
   Enabled: false
 
 Style/WordArray:

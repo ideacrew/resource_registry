@@ -2,7 +2,9 @@
 
 module ResourceRegistry
   module Entities
+    # rubocop:disable Style/RescueModifier
     TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) rescue nil }
+    # rubocop:enable Style/RescueModifier
 
     class Tenant
       extend Dry::Initializer

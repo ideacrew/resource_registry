@@ -24,17 +24,13 @@ module ResourceRegistry
 
     def configure
       result = initialize_container
-      if result.failure?
-        raise ResourceRegistry::Error::ContainerCreateError, result.errors
-      end
+      raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 
       assign_registry_constant(result.value!)
       load_container_dependencies
 
       result = Registries::Transactions::RegistryConfiguration.new.call(yield[:application])
-      if result.failure?
-        raise ResourceRegistry::Error::InitializationFileError, result.errors
-      end
+      raise ResourceRegistry::Error::InitializationFileError, result.errors if result.failure?
 
       @config = result.value!
       @resolver_config = {resolver: yield[:resource_registry][:resolver]}
