@@ -18,7 +18,7 @@ module ResourceRegistry
       option :registry,       optional: true
       option :options,        type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
       option :features,       type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
-    
+
     end
   end
 end
