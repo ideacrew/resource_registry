@@ -19,7 +19,7 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                         enum: [
                                                                     { paper_and_electronic: "Paper and Electronic" },
                                                                     { paper_only: "Paper only" },
-                                                                    { electronic_only: "Electronic only" },
+                                                                    { electronic_only: "Electronic only" }
 ] }) #{ |vals| Hash(metadata: vals) }
 
     # FIXME: ?? Is this needed? Change to dependency injection?
@@ -71,7 +71,7 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                       enum: [
                                                                   { monthly: "Monthly" },
                                                                   { annual: "Annual" },
-                                                                  { annual_with_midyear_initial: "Annual with midyear initial groups" },
+                                                                  { annual_with_midyear_initial: "Annual with midyear initial groups" }
 ]})
 
 
@@ -81,12 +81,12 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                                   { date_of_hire: "Date of hire" },
                                                                   { first_of_month: "First of month following date of hire" },
                                                                   { first_of_month_after_30_days: "First of month after 30 days following date of hire" },
-                                                                  { first_of_month_after_60_days: "First of month after 60 days following date of hire" },
+                                                                  { first_of_month_after_60_days: "First of month after 60 days following date of hire" }
                                                                 ],
                                                       value: [
                                                                   { first_of_month: "First of month following date of hire" },
                                                                   { first_of_month_after_30_days: "First of month after 30 days following date of hire" },
-                                                                  { first_of_month_after_60_days: "First of month after 60 days following date of hire" },
+                                                                  { first_of_month_after_60_days: "First of month after 60 days following date of hire" }
                                                                 ] }) #{ |vals| Hash(metadata: vals) }
 
         register(:employer_attestation_required,    { title: "", description: "", type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
@@ -173,12 +173,12 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
                                                 default: [
                                                   { employee: "Employee" },
                                                   { spouse: "Spouse" },
-                                                  { dependent: "Dependent" },
+                                                  { dependent: "Dependent" }
                                                 ],
                                                 value: [
                                                   { employee: "Employee" },
                                                   { spouse: "Spouse" },
-                                                  { dependent: "Dependent" },
+                                                  { dependent: "Dependent" }
                                                 ] })
 
         namespace :employee_member_relationship do

@@ -3,6 +3,7 @@
 require 'yaml'
 
 module RegistryDataSeed
+  # rubocop:disable Security/YAMLLoad
   def options_hash
     return @options_hash if defined? @options_hash
     @options_hash = YAML.load(IO.read(File.open(options_file_path)))
@@ -12,6 +13,7 @@ module RegistryDataSeed
     return @configuration_options if defined? @configuration_options
     @configuration_options = YAML.load(IO.read(File.open(configuration_file_path))).deep_symbolize_keys!
   end
+  # rubocop:enable Security/YAMLLoad
 
   def options_file_path
     Pathname.pwd.join('spec', 'db', 'seedfiles', 'client', 'enterprise.yml')

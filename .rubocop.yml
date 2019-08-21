@@ -105,6 +105,9 @@ Style/HashSyntax:
 Style/NumericPredicate:
   Enabled: false
 
+Style/RedundantSelf:
+  Enabled: false
+
 Style/SafeNavigation:
   Enabled: false
 
