@@ -10,7 +10,7 @@ module ResourceRegistry
         def call(input)
           Registry.merge(input)
 
-          return Success(input)
+          Success(input)
         end
       end
     end

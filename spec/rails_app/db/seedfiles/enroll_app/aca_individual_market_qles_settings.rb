@@ -17,7 +17,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:adoption,
@@ -34,7 +34,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:marriage,
@@ -51,7 +51,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:domestic_partnership,
@@ -68,7 +68,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:divorce,
@@ -85,7 +85,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:lost_access_to_mec,
@@ -102,7 +102,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 60,
              post_event_sep_in_days: 60, # "60 days before loss of coverage and 60 days after",
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:relocate,
@@ -119,7 +119,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 60,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:enrollment_error_or_misconduct_hbx,
@@ -135,7 +135,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:eligibility_change_income,
@@ -152,7 +152,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:contract_violation,
@@ -168,7 +168,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:qualified_native_american,
@@ -184,7 +184,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 30,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:lost_hardship_exemption,
@@ -201,7 +201,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 30,
              post_event_sep_in_days: 30,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:exceptional_circumstances_civic_service,
@@ -218,7 +218,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:court_order,
@@ -235,7 +235,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:eligibility_change_immigration_status,
@@ -252,7 +252,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:enrollment_error_or_misconduct_issuer,
@@ -268,7 +268,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:enrollment_error_or_misconduct_non_hbx,
@@ -284,7 +284,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:eligibility_change_medicaid_ineligible,
@@ -300,7 +300,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:eligibility_change_employer_ineligible,
@@ -316,7 +316,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:exceptional_circumstances_natural_disaster,
@@ -332,7 +332,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:exceptional_circumstances_medical_emergency,
@@ -348,7 +348,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:exceptional_circumstances_system_outage,
@@ -364,7 +364,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:exceptional_circumstances_domestic_abuse,
@@ -381,7 +381,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:employer_sponsored_coverage_termination,
@@ -398,7 +398,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 60,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:employee_gaining_medicare,
@@ -415,7 +415,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 60,
              post_event_sep_in_days: 60, # "60 days before loss of coverage and 60 days after",
              is_self_attested: true,
-             date_options_available: false,
+             date_options_available: false
            })
 
   register(:eligibility_failed_or_documents_not_received_by_due_date,
@@ -431,7 +431,7 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 
   register(:eligibility_documents_provided,
@@ -447,6 +447,6 @@ Repo.namespace(:aca_individual_market_qles) do
              pre_event_sep_in_days: 0,
              post_event_sep_in_days: 60,
              is_self_attested: false,
-             date_options_available: true,
+             date_options_available: true
            })
 end

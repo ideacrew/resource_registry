@@ -17,7 +17,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
 
   context 'When valid option passed' do
 
-    let(:step_dependencies) {
+    let(:step_dependencies) do
       [
         'resource_registry.options.load',
         'resource_registry.serializers.parse_option',
@@ -25,11 +25,11 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
         'resource_registry.serializers.generate_container',
         'resource_registry.stores.persist_container'
       ]
-    }
+    end
 
-    let(:file_path) {
+    let(:file_path) do
       ResourceRegistry.config.to_h[:config][:root].join('system', 'config', 'enterprise.yml')
-    }
+    end
 
     it 'should have Registry container' do
       expect(Registry).to be_present

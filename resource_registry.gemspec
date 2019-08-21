@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dan Thomas"]
   spec.email         = ["dan@ideacrew.com"]
 
-  spec.summary       = %q{Configure access to component features and custom behaviors on a multi-tenant basis}
+  spec.summary       = "Configure access to component features and custom behaviors on a multi-tenant basis}"
   spec.description   = %q{Provides ability to define and access multiple customer settings in the same instance,
                             supporting thread-safe configurations that enable/disable access to features and dynamic
                             changes to settings using a syntax that avoids inline conditionals.

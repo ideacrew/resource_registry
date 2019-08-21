@@ -13,10 +13,10 @@ RSpec.describe ResourceRegistry::Serializers::Operations::ParseOption do
     let(:hash_output) { ResourceRegistry::Serializers::Operations::ParseYaml.new.call(input) }
     # let!(:option)      { ResourceRegistry::Serializers::Operations::GenerateOption.new.call(option_hash) }
 
-    let(:option_hash) {
+    let(:option_hash) do
       options = hash_output.value!
       options.deep_symbolize_keys!
-    }
+    end
 
     it "should return success with options object" do
       subject.call(option_hash)

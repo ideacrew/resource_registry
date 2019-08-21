@@ -9,10 +9,10 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateOption do
 
   context 'When valid input hash passed' do
 
-    let(:input) {
+    let(:input) do
       options_hash.deep_symbolize_keys!
       options_hash
-    }
+    end
 
     it "should return success with options object" do
       expect(subject).to be_a Dry::Monads::Result::Success

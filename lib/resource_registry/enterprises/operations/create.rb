@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(input)
           entity = ResourceRegistry::Entities::Enterprise.new(input.to_h)
-          return Success(entity)
+          Success(entity)
         end
       end
     end

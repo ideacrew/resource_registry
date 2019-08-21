@@ -2,7 +2,9 @@
 
 module ResourceRegistry
   module Entities
+    # rubocop:disable Style/RescueModifier
     FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) rescue nil }
+    # rubocop:enable Style/RescueModifier
 
     class Feature
       extend Dry::Initializer

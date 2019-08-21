@@ -7,10 +7,10 @@ module ResourceRegistry
 
         include Dry::Transaction::Operation
 
-        def call(input = nil)
+        def call(_input = nil)
           container = Class.new(Dry::System::Container)
 
-          return Success(container)
+          Success(container)
         end
       end
     end

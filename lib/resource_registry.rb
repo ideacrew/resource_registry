@@ -24,9 +24,7 @@ module ResourceRegistry
 
     def configure
       result = initialize_container
-      if result.failure?
-        raise ResourceRegistry::Error::ContainerCreateError, result.errors
-      end
+      raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 
       assign_registry_constant(result.value!)
       load_container_dependencies

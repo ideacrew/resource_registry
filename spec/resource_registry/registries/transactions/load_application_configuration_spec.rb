@@ -27,7 +27,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfig
   end
 
   it 'should not have resource registry configuration' do
-    configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
+    configuration_options_hash[:resource_registry][:config].each_pair do |key, _value|
       expect(Registry.keys).not_to include("resource_registry.config.#{key}")
     end
   end
@@ -40,17 +40,13 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfig
       subject
 
       override_config[:application][:config].each_pair do |key, value|
-        if key == 'root'
-          value = Pathname.new(value)
-        end
-        expect(Registry.config.send(key)).to eq value
+        test_value = (key == 'root') ? Pathname.new(value) : value
+        expect(Registry.config.send(key)).to eq test_value
       end
 
       configuration_options_hash[:resource_registry][:config].each_pair do |key, value|
-        if key == :root
-          value = Pathname.new(value)
-        end
-        expect(Registry["resource_registry.config.#{key}"]).to eq value
+        test_value = (key == :root) ? Pathname.new(value) : value
+        expect(Registry["resource_registry.config.#{key}"]).to eq test_value
       end
     end
   end

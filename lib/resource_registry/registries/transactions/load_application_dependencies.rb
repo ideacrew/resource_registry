@@ -12,7 +12,7 @@ module ResourceRegistry
 
         private
 
-        def list_path(input)
+        def list_path(_input)
           path = Registry.config.root.join('system', 'config')
           super path
         end
@@ -21,7 +21,7 @@ module ResourceRegistry
           paths.each do |path|
             ResourceRegistry::Registries::Transactions::LoadDependency.new.call(path)
           end
-          return Success(paths)
+          Success(paths)
         end
       end
     end

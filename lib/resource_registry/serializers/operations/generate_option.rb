@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(input)
           option = ResourceRegistry::Entities::Option.new(input)
-          return Success(option)
+          Success(option)
         end
       end
     end

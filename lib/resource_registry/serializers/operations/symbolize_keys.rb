@@ -11,7 +11,7 @@ module ResourceRegistry
 
         def call(input)
           input.deep_symbolize_keys!
-          return Success(input)
+          Success(input)
         end
       end
     end

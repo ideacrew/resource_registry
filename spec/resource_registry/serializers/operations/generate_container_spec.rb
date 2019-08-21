@@ -10,12 +10,12 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
 
   context 'When valid option passed' do
 
-    let(:input) {
+    let(:input) do
       options_hash.deep_symbolize_keys!
       ResourceRegistry::Entities::Option.new(options_hash)
-    }
+    end
 
-    let(:expected_keys) {
+    let(:expected_keys) do
       [
        "enterprise.tenants.dchbx.sites.shop_site.url",
        "enterprise.tenants.dchbx.sites.shop_site.description",
@@ -25,7 +25,7 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
        "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_dental_contribution_percent_minimumt",
        "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_family_contribution_percent_minimum"
       ]
-    }
+    end
 
     it "should return success with container object" do
       expect(subject.success?).to be_truthy

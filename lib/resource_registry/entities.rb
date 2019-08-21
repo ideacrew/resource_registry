@@ -12,6 +12,8 @@ require 'resource_registry/entities/qualifying_life_event'
 
 module ResourceRegistry
   module Entities
+    # rubocop:disable Style/RescueModifier
     RegistryConstructor = Types.Constructor('Registry') { |val| Registry.new(val) rescue nil }
+    # rubocop:enable Style/RescueModifier
   end
 end

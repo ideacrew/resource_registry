@@ -10,7 +10,7 @@ module ResourceRegistry
         def call(input)
           entity_hash = convert(input)
 
-          return Success(entity_hash)
+          Success(entity_hash)
         end
 
         private
@@ -19,10 +19,10 @@ module ResourceRegistry
           hash = {}
 
           if entity_types.include?(input[:key])
-            hash[input[:key]] = input[:namespaces].inject({}) do |data, ns|
+            hash[input[:key]] = input.fetch(:namespaces,[]).inject({}) do |data, ns|
               data[ns[:key]] = ns[:namespaces].collect{|sub_ns| convert(sub_ns) } if ns[:namespaces]
               data
-            end if input[:namespaces]
+            end
           else
             hash[:key] = input[:key]
             if options
@@ -30,9 +30,9 @@ module ResourceRegistry
               hash[:namespaces] = input[:namespaces] if input[:namespaces]
             else
               input[:settings].each {|s| hash[s[:key]] = s[:default] } if input[:settings]
-              input[:namespaces].each do |ns|
+              input.fetch(:namespaces, []).each do |ns|
                 hash[ns[:key]] = ns[:namespaces].collect{|sub_ns| convert(sub_ns, ns[:key] == :options) } if ns[:namespaces]
-              end if input[:namespaces]
+              end
             end
           end
 

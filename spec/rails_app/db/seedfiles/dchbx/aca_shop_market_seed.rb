@@ -138,7 +138,7 @@ namespace :aca_shop_market do
 
       register(:application_interval_kinds,  { type: :array,
                                                default: [:monthly, :annual, :annual_with_midyear_initial],
-                                               value: [:monthly, :annual, :annual_with_midyear_initial], }) \
+                                               value: [:monthly, :annual, :annual_with_midyear_initial] }) \
         { |vals| Hash(metadata: vals) }
 
       register(:probation_period_kinds,  { type: :array,
@@ -148,7 +148,7 @@ namespace :aca_shop_market do
 
       register(:contact_methods_kinds,   { type: :array,
                                            default: [:paper_and_electronic, :paper_only, :electronic_only],
-                                           value: [:paper_and_electronic, :paper_only, :electronic_only], }) \
+                                           value: [:paper_and_electronic, :paper_only, :electronic_only] }) \
         { |vals| Hash(metadata: vals) }
 
 
@@ -167,7 +167,7 @@ namespace :aca_shop_market do
 
       register(:application_interval_kinds,  { type: :array,
                                                default: [:monthly, :annual, :annual_with_midyear_initial],
-                                               value: [:monthly, :annual, :annual_with_midyear_initial], }) \
+                                               value: [:monthly, :annual, :annual_with_midyear_initial] }) \
         { |vals| Hash(metadata: vals) }
 
       register(:probation_period_kinds,  { type: :array,
@@ -177,7 +177,7 @@ namespace :aca_shop_market do
 
       register(:contact_methods_kinds,   { type: :array,
                                            default: [:paper_and_electronic, :paper_only, :electronic_only],
-                                           value: [:paper_and_electronic, :paper_only, :electronic_only], }) \
+                                           value: [:paper_and_electronic, :paper_only, :electronic_only] }) \
         { |vals| Hash(metadata: vals) }
     end
   end

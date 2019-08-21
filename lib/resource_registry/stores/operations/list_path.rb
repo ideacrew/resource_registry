@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(dir)
           paths = Dir.glob(File.join(dir, "*"))
-          return Success(paths)
+          Success(paths)
         end
       end
     end

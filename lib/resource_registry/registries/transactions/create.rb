@@ -16,10 +16,10 @@ module ResourceRegistry
 
         private
 
-        def finalize_registry(input)
+        def finalize_registry(_input)
           Registry.finalize!(freeze: true)
 
-          return Success(true)
+          Success(true)
         end
       end
     end

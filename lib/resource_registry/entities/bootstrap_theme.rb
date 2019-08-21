@@ -24,6 +24,6 @@ module ResourceRegistry
 
       option :css_variables, [], optional: true do
       end
-      end
+    end
   end
 end

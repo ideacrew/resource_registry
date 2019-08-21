@@ -2,7 +2,9 @@
 
 module ResourceRegistry
   module Entities
+    # rubocop:disable Style/RescueModifier
     OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) rescue nil }
+    # rubocop:enable Style/RescueModifier
 
     class Option
       extend Dry::Initializer

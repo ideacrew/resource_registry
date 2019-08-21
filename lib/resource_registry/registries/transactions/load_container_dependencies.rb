@@ -10,12 +10,10 @@ module ResourceRegistry
 
         def call(dir)
           result = ResourceRegistry::Stores::Operations::ListPath.new.call(dir)
-
-          if result.success?
-            paths = result.value!
-            paths.each do |path|
-              ResourceRegistry::Stores::Operations::RequireFile.new.call(path)
-            end
+          return result unless result.success?
+          paths = result.value!
+          paths.each do |path|
+            ResourceRegistry::Stores::Operations::RequireFile.new.call(path)
           end
         end
       end
