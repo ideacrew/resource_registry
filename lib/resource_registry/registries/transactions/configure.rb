@@ -36,11 +36,11 @@ module ResourceRegistry
             end
           end
 
-          return Success(input)
+          Success(input)
         end
 
         def set_application_load_paths(input)
-          return Success(input)
+          Success(input)
         end
 
         def validate_resource_registry_configuration(input)

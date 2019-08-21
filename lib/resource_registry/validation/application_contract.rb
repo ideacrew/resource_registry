@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Dry::Validation.load_extensions(:monads)
+
 module ResourceRegistry
   module Validation
     class ApplicationContract < Dry::Validation::Contract
@@ -10,20 +12,6 @@ module ResourceRegistry
       # config.messages.load_paths - an array of files paths that are used to load messages
       # config.messages.top_namespace - the key in the locale files under which messages are defined, by default it’s dry_validation
       # config.messages.namespace - custom messages namespace for a contract class. Use this to differentiate common messages
-
-      # Define a macro for all subclasse that checks an email string format
-      # Reference it in contract: rule(:email).validate(:email_format)
-      register_macro(:email_format) do
-        unless /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(value)
-          key.failure('not a valid email format')
-        end
-      end
-
-      register_macro(:environment_check) do
-        unless [:development, :test, :production].include?(value)
-          key.failure('not a valid email format')
-        end
-      end
 
       StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
 

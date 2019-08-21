@@ -28,16 +28,16 @@ module ResourceRegistry
     Callable   = Types.Interface(:call)
     Duration   = Types.Constructor(:build, ->(val){ ActiveSupport::Duration.build(val) })
 
-    def self.duration_for(duration_hash = {})
-      span_kinds = [:years, :months, :weeks, :days, :hours, :minutes, :seconds]
-      size = duration_hash.first[1]
-      span = duration_hash.first[0].to_sym
+    # def self.duration_for(duration_hash = {})
+    #   span_kinds = [:years, :months, :weeks, :days, :hours, :minutes, :seconds]
+    #   size = duration_hash.first[1]
+    #   span = duration_hash.first[0].to_sym
 
-      raise ArgumentError, "invalid key: #{span}" unless span_kinds.include?(span)
-      raise ArgumentError, "invalid value: #{size}" unless size.is_a?(Integer)
+    #   raise ArgumentError, "invalid key: #{span}" unless span_kinds.include?(span)
+    #   raise ArgumentError, "invalid value: #{size}" unless size.is_a?(Integer)
 
-      size.to_i.send(span)
-    end
+    #   size.to_i.send(span)
+    # end
 
     # Expects input formatted as: { days: 60 }, { months: 6 }
     # Duration = Hash.with_type_transform do |key|

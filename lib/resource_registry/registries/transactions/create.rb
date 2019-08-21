@@ -16,18 +16,6 @@ module ResourceRegistry
 
         private
 
-        def start_registry_services(input)
-          return Success(input)
-        end
-
-        def load_override_settings(input)
-          return Success(input)
-        end
-
-        def start_application_services(input)
-          return Success(input)
-        end
-
         def finalize_registry(input)
           Registry.finalize!(freeze: true)
 

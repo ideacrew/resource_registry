@@ -19,11 +19,7 @@ module ResourceRegistry
         option :default,      type: Dry::Types["any"]
         option :value,        type: Dry::Types["any"], optional: true
       end
-
-      def each
-        settings.each   { |setting|   yield setting }
-        namespaces.each { |namespace| yield namespace }
-      end
+    
     end
   end
 end

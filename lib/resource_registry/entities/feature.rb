@@ -16,10 +16,7 @@ module ResourceRegistry
       option :registry,       optional: true
       option :options,        type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
       option :features,       type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
-
-      def each
-        environments.each { |environment| yield environment }
-      end
+    
     end
   end
 end

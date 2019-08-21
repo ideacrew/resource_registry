@@ -20,10 +20,6 @@ module ResourceRegistry
           input[:resource_registry].merge!(ResourceRegistry.resolver_config.to_h)
           super(input)
         end
-
-        def load_application_options_namespace(input)
-          return Success(input)
-        end
       end
     end
   end

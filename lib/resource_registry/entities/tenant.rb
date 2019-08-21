@@ -34,10 +34,6 @@ module ResourceRegistry
           option :features,   type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
         end
       end
-
-      def each
-        sites.each { |site| yield site }
-      end
     end
   end
 end

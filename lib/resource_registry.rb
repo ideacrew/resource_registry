@@ -33,7 +33,7 @@ module ResourceRegistry
 
       result = Registries::Transactions::RegistryConfiguration.new.call(yield[:application])
       if result.failure?
-        raise ResourceRegistry::Error::InitializationFileError, result.errors
+        raise ResourceRegistry::Error::InitializationFileError, result.failure.messages
       end
 
       @config = result.value!
@@ -61,14 +61,6 @@ module ResourceRegistry
       path = Pathname.new(__dir__).join('system', 'config', 'configuration_options.yml')
       Registries::Transactions::Create.new.call(path)
     end
-
-    def load_options(dir)
-      Dir.glob(File.join(dir, "*")).each do |file_path|
-        ResourceRegistry::Services::LoadRegistryOptions.new.call(file_path)
-      end
-    end
-
-    alias_method :load_options!, :load_options
   end
 end
 

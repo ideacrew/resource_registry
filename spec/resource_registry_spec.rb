@@ -63,7 +63,6 @@ RSpec.describe ResourceRegistry do
     end
   end
 
-
   context ".create" do
     before do
       initialize_registry
@@ -98,5 +97,29 @@ RSpec.describe ResourceRegistry do
     # it 'should load individual market options' do
     #   expect(Registry.keys.any?{|key| key.scan("tenants.dchbx.applications.enroll.features.aca_shop_market").present?}).to be_truthy
     # end
+  end
+
+  context 'when wrong initializer configuration passed' do
+    let(:initializer_config) {
+      {
+        application: {
+          config: {
+            name: "EdiApp",
+            default_namespace: "options",
+            system_dir: "system",
+            auto_register: []
+          },
+          load_paths: ['system']
+        }
+      }.merge(resolver_options_hash)
+    }
+
+    it 'should throw an error' do 
+      begin
+        ResourceRegistry.configure { initializer_config }
+      rescue ResourceRegistry::Error::InitializationFileError => e
+        expect(e).to be_present
+      end
+    end
   end
 end

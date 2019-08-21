@@ -12,15 +12,18 @@ module ResourceRegistry
         step :validate,            with: 'resource_registry.options.validate'
         # step :transform_option,    with: 'resource_registry.transactions.transform_option'
 
-
         private
 
         def validate(input)
           input.deep_symbolize_keys!
-          # result = super
-          Success(input)
-        end
+          result = super
 
+          if result.success?
+            Success(result.to_h)
+          else
+            Failure(result.errors)
+          end
+        end
       end
     end
   end

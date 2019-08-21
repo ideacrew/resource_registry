@@ -16,10 +16,6 @@ Registry.namespace :"resource_registry.stores" do |container|
     ResourceRegistry::Stores::Operations::RequireFile.new
   end
 
-  container.register :persist_file do
-    ResourceRegistry::Stores::Operations::PersistFile.new
-  end
-
   container.register :persist_container do
     ResourceRegistry::Stores::Operations::PersistContainer.new
   end
