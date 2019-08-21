@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Registries
     module Transactions
@@ -21,7 +23,7 @@ module ResourceRegistry
 
         def load_application_options_namespace(input)
           return Success(input)
-        end    
+        end
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'support/registry_configure'
 require 'resource_registry/registries/transactions/load_dependency'
@@ -13,7 +15,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
     reset_registry
   end
 
-  context 'When valid option passed' do  
+  context 'When valid option passed' do
 
     let(:step_dependencies) {
       [

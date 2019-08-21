@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 module RegistryDataSeed
-
   def options_hash
     return @options_hash if defined? @options_hash
     @options_hash = YAML.load(IO.read(File.open(options_file_path)))

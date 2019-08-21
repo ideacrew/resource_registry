@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # nested configuration settings file called from load_settings.rb
 
 ## FIXME -- cross-reference these settings with BenefitMarket Engine seed files to verify comprehensive coverage
@@ -12,13 +14,13 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
 
     register(:cobra_enrollment_period_max,            { title: "", description: "", type: :duration, default: { months: 6}, value: { months: 6 }})  #{ |vals| Hash(metadata: vals)}
     register(:contact_methods_kinds,                  { title: "", description: "", type:     :enumerated_hash,
-                                                        default:  { paper_and_electronic: "Paper and Electronic" },
-                                                        value:    { paper_and_electronic: "Paper and Electronic" }, 
-                                                        enum:     [ 
+                                                        default: { paper_and_electronic: "Paper and Electronic" },
+                                                        value: { paper_and_electronic: "Paper and Electronic" },
+                                                        enum: [
                                                                     { paper_and_electronic: "Paper and Electronic" },
                                                                     { paper_only: "Paper only" },
                                                                     { electronic_only: "Electronic only" },
-                                                                  ] }) #{ |vals| Hash(metadata: vals) }
+] }) #{ |vals| Hash(metadata: vals) }
 
     # FIXME ?? Is this needed? Change to dependency injection?
     register(:use_simple_employer_calculation_model,     { title: "", description: "", type: :boolean, default: false, value: false })  #{ |vals| Hash(metadata: vals)}
@@ -53,36 +55,35 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
 
     namespace :benefit_market_catalogs do
       namespace :catalog_2019 do
-         register(:application_period,               { title: "", description: "", type: :range,
-                                                      default:  Date.new(2019,1,1)..Date.new(2019,12,31),
-                                                      value:    Date.new(2019,1,1)..Date.new(2019,12,31) }) #{ |vals| Hash(metadata: vals) }
+        register(:application_period,               { title: "", description: "", type: :range,
+                                                      default: Date.new(2019,1,1)..Date.new(2019,12,31),
+                                                      value: Date.new(2019,1,1)..Date.new(2019,12,31) }) #{ |vals| Hash(metadata: vals) }
 
-         # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
-        register(:enrollment_transmit_period, { title: "", description: "", type: :range, 
+        # FIXME add duration for daily post-OE transmission (New Enrollment Exception Processing tools)
+        register(:enrollment_transmit_period, { title: "", description: "", type: :range,
                                                 default: Date.new(2019, 1, 26)..Date.new(2019, 1, 31),
                                                 value: Date.new(2019, 1, 26)..Date.new(2019, 1, 31), })
 
 
-        register(:application_interval_kind,        { title: "", description: "", type: :enumerated_hash, 
-                                                      default:  { monthly: "Monthly" }, 
-                                                      value:    { monthly: "Monthly" }, 
-                                                      enum:     [ 
-                                                                  { monthly: "Monthly" }, 
-                                                                  { annual: "Annual" }, 
+        register(:application_interval_kind,        { title: "", description: "", type: :enumerated_hash,
+                                                      default: { monthly: "Monthly" },
+                                                      value: { monthly: "Monthly" },
+                                                      enum: [
+                                                                  { monthly: "Monthly" },
+                                                                  { annual: "Annual" },
                                                                   { annual_with_midyear_initial: "Annual with midyear initial groups" },
-                                                                ]
-                                                      })
+]})
 
 
         register(:probation_period_kinds,           { title: "", description: "", type:     :enumerated_hash_array,
-                                                      default:  [
+                                                      default: [
                                                                   { first_of_month_before_15th: "First of month before 15th" },
                                                                   { date_of_hire: "Date of hire" },
                                                                   { first_of_month: "First of month following date of hire" },
                                                                   { first_of_month_after_30_days: "First of month after 30 days following date of hire" },
                                                                   { first_of_month_after_60_days: "First of month after 60 days following date of hire" },
                                                                 ],
-                                                      value:    [
+                                                      value: [
                                                                   { first_of_month: "First of month following date of hire" },
                                                                   { first_of_month_after_30_days: "First of month after 30 days following date of hire" },
                                                                   { first_of_month_after_60_days: "First of month after 60 days following date of hire" },
@@ -96,8 +97,8 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
 
 
         register(:employer_contribution_pct_min,    { title: "", description: "", type: :integer, default: 75, value: 75 })  #{ |vals| Hash(metadata: vals)}
-        register(:employee_non_owner_count_min,     { title: "", description: "", type: :integer, default: 1, value: 1 }      )  #{ |vals| Hash(metadata: vals)}
-        register(:employee_count_max,               { title: "", description: "", type: :integer, default: 50, value: 50 }    )  #{ |vals| Hash(metadata: vals)}
+        register(:employee_non_owner_count_min,     { title: "", description: "", type: :integer, default: 1, value: 1 })  #{ |vals| Hash(metadata: vals)}
+        register(:employee_count_max,               { title: "", description: "", type: :integer, default: 50, value: 50 })  #{ |vals| Hash(metadata: vals)}
         register(:employee_participation_ratio_min, { title: "", description: "", type: :float,   default: 0.75, value: 0.75 })  #{ |vals| Hash(metadata: vals)}
 
 
@@ -168,12 +169,12 @@ Repo.namespace("#{TopNamespaceName}.ea_component") do
           register :product_multiplicities
         end
 
-        register(:member_relationship_kinds,  { title: "", description: "", type: :enumerated_hash_array, 
+        register(:member_relationship_kinds,  { title: "", description: "", type: :enumerated_hash_array,
                                                 default: [
                                                   { employee: "Employee" },
                                                   { spouse: "Spouse" },
                                                   { dependent: "Dependent" },
-                                                ], 
+                                                ],
                                                 value: [
                                                   { employee: "Employee" },
                                                   { spouse: "Spouse" },

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RailsApp::Registry.namespace(:i18n) do |registry|
   load_paths = Dir["#{registry.root}/config/locales/**/*.yml"]
 

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Serializers
     module Operations
       class GenerateContainer
-        
+
         include Dry::Transaction::Operation
 
         def call(input)
@@ -26,9 +28,9 @@ module ResourceRegistry
             return
           end
 
-          container.namespace(attributes.delete(:key) || :enterprise) do |namespace|  
+          container.namespace(attributes.delete(:key) || :enterprise) do |namespace|
             attributes.each do |key, value|
-              
+
               if value.is_a?(Array) && is_an_entity?(value[0])
                 value.each{|val| construct_container(val, namespace) }
               else

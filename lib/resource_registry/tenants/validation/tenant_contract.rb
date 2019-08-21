@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Tenants
     module Validation
-
       PrimarySiteType = Types::Symbol.default(:primary)
 
       EnvironmentHash = Dry::Schema.Params do

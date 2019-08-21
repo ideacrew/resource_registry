@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require 'dry/container/stub'
 
@@ -10,7 +12,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
   let(:top_parms) {
     {
-      app_name: 'app_name_value',  
+      app_name: 'app_name_value',
       timestamp: 'timestamp_value',
     }
   }
@@ -18,12 +20,12 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
   let(:config_parms)  {
     {
       config: {
-        name: 'name_value',  
-        root: Pathname.pwd,  
-        default_namespace: 'default_namespace_value',  
-        env: 'development',  
-        system_dir: 'system_dir_value',  
-        load_path: 'load_path_value',  
+        name: 'name_value',
+        root: Pathname.pwd,
+        default_namespace: 'default_namespace_value',
+        env: 'development',
+        system_dir: 'system_dir_value',
+        load_path: 'load_path_value',
         auto_register: ['auto_register_value'],
       }
     }
@@ -32,9 +34,10 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
   let(:persistence_parms) {
     {
       persistence: {
-        store: 'file_store',  
-        serializer: 'yaml_serializer',  
-        container: 'container_value',        }
+        store: 'file_store',
+        serializer: 'yaml_serializer',
+        container: 'container_value',
+      }
     }
   }
 

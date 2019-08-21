@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry-types'
 require 'active_support'
 require 'active_support/core_ext'
@@ -28,8 +30,8 @@ module ResourceRegistry
 
     def self.duration_for(duration_hash = {})
       span_kinds = [:years, :months, :weeks, :days, :hours, :minutes, :seconds]
-      size  = duration_hash.first[1]
-      span  = duration_hash.first[0].to_sym
+      size = duration_hash.first[1]
+      span = duration_hash.first[0].to_sym
 
       raise ArgumentError, "invalid key: #{span}" unless span_kinds.include?(span)
       raise ArgumentError, "invalid value: #{size}" unless size.is_a?(Integer)
@@ -38,12 +40,11 @@ module ResourceRegistry
     end
 
     # Expects input formatted as: { days: 60 }, { months: 6 }
-    # Duration = Hash.with_type_transform do |key| 
+    # Duration = Hash.with_type_transform do |key|
     #   key = key.to_sym
     #   unless [:years, :months, :weeks, :days, :hours, :minutes, :seconds].includes? key
     #     raise Dry::Types::UnknownKeysError, "unexpected key [#{key}] in Hash input"
     #   end
     # end.with_type_transform { |type| type.required(false) }.schema(length: Integer)
-    
   end
 end

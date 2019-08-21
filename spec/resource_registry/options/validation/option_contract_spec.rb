@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'resource_registry/options/validation/option_contract'
 
@@ -13,24 +15,30 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
   let(:setting_value)                 { "setting value attribute value" }
 
   let(:required_settings)             { { key: setting_key, default: setting_default } }
-  let(:optional_settings)             { { title: setting_title,
-                                          description: setting_description, 
-                                          type: setting_type, 
-                                          value: setting_value, } }
+  let(:optional_settings)             {
+    { title: setting_title,
+      description: setting_description,
+      type: setting_type,
+      value: setting_value, }
+  }
 
-  let(:all_settings)                  { [ required_settings.merge(optional_settings) ] }
+  let(:all_settings)                  { [required_settings.merge(optional_settings)] }
 
   let(:namespaces_key)                    { :namespaces_key_level_0 }
   let(:required_namespaces_params)        { { key: namespaces_key, } }
   let(:all_namespaces)                    { [required_namespaces_params] }
 
-  let(:required_namespaces_and_settings)  { { key: option_contract_key, 
-                                              settings: [required_settings], 
-                                              namespaces: [required_namespaces_params] } }
+  let(:required_namespaces_and_settings)  {
+    { key: option_contract_key,
+      settings: [required_settings],
+      namespaces: [required_namespaces_params] }
+  }
 
-  let(:all_namespaces_and_settings)       { { key: option_contract_key, 
-                                              settings: all_settings, 
-                                              namespaces: all_namespaces } }
+  let(:all_namespaces_and_settings)       {
+    { key: option_contract_key,
+      settings: all_settings,
+      namespaces: all_namespaces }
+  }
 
 
 
@@ -62,28 +70,36 @@ RSpec.describe ResourceRegistry::Options::Validation::OptionContract do
     end
 
     context "with OptionContract key, all Settings params and valid nested Namespaces params" do
-     let(:nested_namespaces)                  { [
-                                                  { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1 }] },
-                                                  { key: :namespace_key_2, namespaces: [{ key: :namespace_key_2_1 }] }
-                                              ] }
+      let(:nested_namespaces)                  {
+        [
+                                                    { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1 }] },
+                                                    { key: :namespace_key_2, namespaces: [{ key: :namespace_key_2_1 }] }
+                                                ]
+      }
 
-     let(:nested_namespaces_and_all_settings) { { key: option_contract_key, 
-                                                  settings: all_settings, 
-                                                  namespaces: nested_namespaces } }
+      let(:nested_namespaces_and_all_settings) {
+        { key: option_contract_key,
+          settings: all_settings,
+          namespaces: nested_namespaces }
+      }
 
       it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_truthy }
       it { expect(subject.call(nested_namespaces_and_all_settings).to_h).to include(nested_namespaces_and_all_settings) }
     end
 
     context "with OptionContract key, all Settings params and invalid nested Namespaces params" do
-     let(:nested_invalid_namespaces)          { [
-                                                  { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1, settings: [{key: :first_setting}] }] },
-                                                  { key: :namespace_key_2, settings: [{key: :second_setting}], namespaces: [{ key: :namespace_key_2_1 }] }
-                                              ] }
+      let(:nested_invalid_namespaces)          {
+        [
+                                                    { key: :namespace_key_1, namespaces: [{ key: :namespace_key_1_1, settings: [{key: :first_setting}] }] },
+                                                    { key: :namespace_key_2, settings: [{key: :second_setting}], namespaces: [{ key: :namespace_key_2_1 }] }
+                                                ]
+      }
 
-     let(:nested_namespaces_and_all_settings) { { key: option_contract_key, 
-                                                  settings: all_settings, 
-                                                  namespaces: nested_invalid_namespaces } }
+      let(:nested_namespaces_and_all_settings) {
+        { key: option_contract_key,
+          settings: all_settings,
+          namespaces: nested_invalid_namespaces }
+      }
 
       it { expect(subject.call(nested_namespaces_and_all_settings).success?).to be_falsey }
       it { expect(subject.call(nested_namespaces_and_all_settings).errors.first.path).to include(:namespaces) }

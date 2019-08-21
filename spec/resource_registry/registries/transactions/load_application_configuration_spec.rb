@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'support/initialize_registry'
 require 'resource_registry/registries/transactions/load_application_configuration'

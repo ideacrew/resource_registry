@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     class PersistOptions
@@ -20,14 +22,13 @@ module ResourceRegistry
       end
 
 
-# File of DB?  What Store?
-# Serialized_as?
+      # File of DB?  What Store?
+      # Serialized_as?
 
 
 
 
       def self.load_files(*files)
-
         [files].flatten.compact.uniq.each do |file|
           option_repository.add_source!(file.to_s)
         end
@@ -50,7 +51,6 @@ module ResourceRegistry
 
         File.open(@file_name, "w") { |file| file.write(@content) }
       end
-
 
       def version_file
         modification_time = File.mtime(@file_name)

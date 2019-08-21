@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry-struct' unless defined?(Dry::Struct)
 require 'dry-initializer'
 require 'resource_registry/types'
@@ -10,7 +12,6 @@ require 'resource_registry/entities/qualifying_life_event'
 
 module ResourceRegistry
   module Entities
-
     RegistryConstructor = Types.Constructor('Registry') { |val| Registry.new(val) rescue nil }
   end
 end

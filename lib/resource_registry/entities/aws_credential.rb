@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
     class AwsCredential < Dry::Struct

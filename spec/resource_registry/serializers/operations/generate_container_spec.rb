@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'resource_registry/serializers/operations/generate_container'
 
@@ -6,7 +8,7 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
 
   subject { described_class.new.call(input) }
 
-  context 'When valid option passed' do  
+  context 'When valid option passed' do
 
     let(:input) {
       options_hash.deep_symbolize_keys!

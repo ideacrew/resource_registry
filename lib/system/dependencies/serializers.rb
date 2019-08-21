@@ -1,20 +1,22 @@
+# frozen_string_literal: true
+
 require 'resource_registry/serializers'
 
 Registry.namespace :"resource_registry.serializers" do
 
-  register :parse_yaml do 
+  register :parse_yaml do
     ResourceRegistry::Serializers::Operations::ParseYaml.new
   end
 
-  register :parse_option do 
+  register :parse_option do
     ResourceRegistry::Serializers::Operations::ParseOption.new
   end
 
-  register :generate_option do 
+  register :generate_option do
     ResourceRegistry::Serializers::Operations::GenerateOption.new
   end
 
-  register :generate_entity do 
+  register :generate_entity do
     ResourceRegistry::Serializers::Operations::GenerateEntity.new
   end
 

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 module ResourceRegistry
   module Serializers
     module Operations
       class SymbolizeKeys
-        
+
         include Dry::Transaction::Operation
 
         def call(input)

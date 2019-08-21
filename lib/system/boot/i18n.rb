@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ResourceRegistry::Registry.namespace(:i18n) do |container|
   load_paths = Dir["#{container.root}/config/locales/**/*.yml"]
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ResourceRegistry::Serializers::Operations::GenerateOption do
@@ -7,9 +9,9 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateOption do
 
   context 'When valid input hash passed' do
 
-    let(:input) { 
+    let(:input) {
       options_hash.deep_symbolize_keys!
-      options_hash 
+      options_hash
     }
 
     it "should return success with options object" do

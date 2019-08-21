@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
-
     class QualifyingLifeEvent < Dry::Struct
 
       attribute :key,                     Types::Symbol

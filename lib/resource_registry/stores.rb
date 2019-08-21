@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'stores/store'
 require_relative 'stores/file_store'
 require_relative 'stores/operations/list_path'

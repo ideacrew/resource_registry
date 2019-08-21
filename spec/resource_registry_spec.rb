@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ResourceRegistry do
@@ -96,5 +98,5 @@ RSpec.describe ResourceRegistry do
     # it 'should load individual market options' do
     #   expect(Registry.keys.any?{|key| key.scan("tenants.dchbx.applications.enroll.features.aca_shop_market").present?}).to be_truthy
     # end
-  end  
+  end
 end

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'dry/system/container'
 
 module ResourceRegistry
-  
   # Container = Class.new(Dry::System::Container)
   # Kernel.const_set("Registry", ResourceRegistry::Container)
   # ResourceRegistry.const_set(:RegistryInject, Registry.injector)

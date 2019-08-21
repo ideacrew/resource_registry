@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'resource_registry/enterprises/validation/enterprise_contract'
 
@@ -6,9 +8,10 @@ RSpec.describe ResourceRegistry::Enterprises::Validation::EnterpriseContract do
   let(:owner_organization_name) { "owner_organization_name attribute value" }
   let(:owner_account_name)      { "owner_account_name attribute value" }
 
-  let(:optional_params)         { { owner_organization_name: owner_organization_name, 
-                                        owner_account_name: owner_account_name, 
-                                  } }
+  let(:optional_params)         {
+    { owner_organization_name: owner_organization_name,
+      owner_account_name: owner_account_name,}
+  }
 
   let(:all_params)              { optional_params }
 

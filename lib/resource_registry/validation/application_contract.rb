@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Validation
     class ApplicationContract < Dry::Validation::Contract
@@ -22,7 +24,7 @@ module ResourceRegistry
           key.failure('not a valid email format')
         end
       end
-      
+
       StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
 
       def validate_nested_contract(contract_constant, params)

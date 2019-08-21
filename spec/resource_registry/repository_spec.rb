@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require 'dry/container/stub'
 require 'resource_registry/repository'
@@ -49,7 +51,7 @@ RSpec.describe ResourceRegistry::Repository do
 
       subject { described_class.new(top_namespace: top_namespace) }
       it { expect(subject.top_namespace).to eq top_namespace_str }
-    
+
       context "and an item is registered in the repository" do
         let(:logfile_key)   { :logfile_name}
         let(:logfile_value) { "logfile.log" }

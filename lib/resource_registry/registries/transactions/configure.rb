@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Registries
     module Transactions
@@ -17,7 +19,7 @@ module ResourceRegistry
         private
 
         def validate_application_configuration(input)
-          application_attrs  = transform_root_to_path(input[:application])
+          application_attrs = transform_root_to_path(input[:application])
           result = super(application_attrs)
 
           if result.success?
@@ -42,9 +44,9 @@ module ResourceRegistry
         end
 
         def validate_resource_registry_configuration(input)
-          registry_attrs  = transform_root_to_path(input[:resource_registry])
+          registry_attrs = transform_root_to_path(input[:resource_registry])
           result = super(registry_attrs)
-          
+
           if result.success?
             Success(input)
           else
@@ -78,7 +80,7 @@ module ResourceRegistry
           container.configure do |config|
             config.resolver = ResourceRegistry::Serializers::OptionResolver.new
           end
-          
+
           return Success(input)
         end
 

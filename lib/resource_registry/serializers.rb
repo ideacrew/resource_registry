@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resource_registry/serializers/xml_serializer'
 require 'resource_registry/serializers/json_serializer'
 require 'resource_registry/serializers/operations/parse_yaml'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :match_schema do |schema|
   match do |params|
     begin
@@ -5,7 +7,7 @@ RSpec::Matchers.define :match_schema do |schema|
       @result.success?
     rescue ArgumentError
       @result = {}
-      false 
+      false
     end
   end
 

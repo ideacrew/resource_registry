@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RailsApp::Registry.boot(:event_publisher) do |registry|
 
   init do

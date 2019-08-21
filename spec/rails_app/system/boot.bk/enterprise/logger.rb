@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RailsApp::Registry.boot(:logger) do |registry|
 
   start do

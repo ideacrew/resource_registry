@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "yaml"
 
 module ResourceRegistry
@@ -18,7 +20,7 @@ module ResourceRegistry
         yaml = File.exist?(path) ? YAML.load_file(path) : {}
 
         dict = schema.keys.each_with_object({}) { |key, memo|
-          value = yaml.dig(key.name.to_s) 
+          value = yaml.dig(key.name.to_s)
           memo[key.name.to_sym] = value
         }
 

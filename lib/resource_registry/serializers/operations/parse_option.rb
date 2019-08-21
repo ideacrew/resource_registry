@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Serializers
     module Operations
       class ParseOption
-        
+
         include Dry::Transaction::Operation
 
         def call(input)
           entity_hash = convert(input)
-          
+
           return Success(entity_hash)
         end
 
@@ -33,7 +35,7 @@ module ResourceRegistry
               end if input[:namespaces]
             end
           end
-          
+
           hash
         end
 

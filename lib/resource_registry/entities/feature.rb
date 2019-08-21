@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
-    
     FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) rescue nil }
-    
+
     class Feature
       extend Dry::Initializer
 
-      option :key          
+      option :key
       option :is_required
       option :is_enabled
       option :alt_key,        optional: true

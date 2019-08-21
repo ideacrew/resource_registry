@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'resource_registry/tenants/validation/tenant_contract'
 
@@ -76,7 +78,7 @@ RSpec.describe ResourceRegistry::Tenants::Validation::TenantContract do
       let(:required_sites_params) { { key: site_key, } }
 
       let(:all_sites_params)  do
-        { 
+        {
           key: site_key,
           url: url,
           title: title,

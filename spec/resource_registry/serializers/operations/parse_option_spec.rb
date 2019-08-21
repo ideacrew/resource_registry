@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ResourceRegistry::Serializers::Operations::ParseOption do
@@ -10,8 +12,8 @@ RSpec.describe ResourceRegistry::Serializers::Operations::ParseOption do
     let(:input)       { IO.read(options_file_path) }
     let(:hash_output) { ResourceRegistry::Serializers::Operations::ParseYaml.new.call(input) }
     # let!(:option)      { ResourceRegistry::Serializers::Operations::GenerateOption.new.call(option_hash) }
-    
-    let(:option_hash) { 
+
+    let(:option_hash) {
       options = hash_output.value!
       options.deep_symbolize_keys!
     }

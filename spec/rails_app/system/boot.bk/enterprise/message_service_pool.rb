@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RailsApp::Registry.boot(:message_service_pool) do
 
   init do

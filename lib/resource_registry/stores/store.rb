@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     class Store
@@ -23,7 +25,7 @@ module ResourceRegistry
       def store_files
         namespace = ResourceRegistry.module_parent_for(self.class)
         store_dir = ResourceRegistry.gem_file_path_for(namespace)
-        store_file_pattern  = '*_store.rb'
+        store_file_pattern = '*_store.rb'
 
         ResourceRegistry.file_kinds_for(file_pattern: store_file_pattern, dir_base: store_dir)
       end

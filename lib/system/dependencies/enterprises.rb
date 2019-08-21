@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resource_registry/enterprises'
 
 Registry.namespace :"resource_registry.enterprises" do

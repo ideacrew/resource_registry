@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Serializers
     class OptionResolver < Dry::Container::Resolver
@@ -10,7 +12,7 @@ module ResourceRegistry
 
         super container, key
       end
-      
+
       def key_prefix(container)
         return @key_prefix if defined? @key_prefix
 

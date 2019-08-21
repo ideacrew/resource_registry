@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'support/initialize_registry'
 require 'resource_registry/registries/transactions/configure'
@@ -8,7 +10,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
 
   before(:all) do
     reset_registry
-    initialize_registry 
+    initialize_registry
   end
 
   after(:all) do

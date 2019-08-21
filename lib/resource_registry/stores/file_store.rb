@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     class FileStore < Store
@@ -9,7 +11,7 @@ module ResourceRegistry
 
         send(@action)
       end
-      
+
       def load
         IO.read(File.open(@content))
       end
@@ -29,8 +31,8 @@ module ResourceRegistry
       def load_option_sources
         options_serializers ||= []
 
-        Dir.glob(File.join(Rails.root.to_s + "/#{seed_file_path}/*")).each do|path|
-           options_serializers << serializer.new(path)
+        Dir.glob(File.join(Rails.root.to_s + "/#{seed_file_path}/*")).each do |path|
+          options_serializers << serializer.new(path)
         end
 
         @options_hash = options_serializers.collect(&:parse)

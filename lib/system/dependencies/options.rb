@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resource_registry/options'
 
 Registry.namespace :"resource_registry.options" do

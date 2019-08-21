@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'resource_registry/options/validation/option_contract'
 
 module ResourceRegistry
   module Registries
     module Validation
-
       RegistryContract = ResourceRegistry::Validation::ApplicationContract.build do
         params do
           required(:config).hash do

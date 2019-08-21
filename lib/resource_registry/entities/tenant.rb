@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
-    
     TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) rescue nil }
 
     class Tenant
       extend Dry::Initializer
-      
+
       option :key
       option :owner_organization_name,  optional: true
       option :owner_account_name,       optional: true
@@ -20,7 +21,7 @@ module ResourceRegistry
         option :options,      type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
       end
 
-      option :sites, [], optional: true do 
+      option :sites, [], optional: true do
         option :key
         option :url,          optional: true
         option :title,        optional: true

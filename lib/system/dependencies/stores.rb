@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resource_registry/stores'
 
 Registry.namespace :"resource_registry.stores" do |container|
@@ -17,8 +19,8 @@ Registry.namespace :"resource_registry.stores" do |container|
   container.register :persist_file do
     ResourceRegistry::Stores::Operations::PersistFile.new
   end
-  
+
   container.register :persist_container do
     ResourceRegistry::Stores::Operations::PersistContainer.new
-  end  
+  end
 end

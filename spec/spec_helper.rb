@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
 
 # Custom matcher for dry-validation schema specs

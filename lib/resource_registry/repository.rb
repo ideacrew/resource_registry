@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry-container'
 
 # # How to access namespaces: reference the block variable assigned to that namespace
@@ -29,7 +31,7 @@ module ResourceRegistry
       return nil if name == nil
 
       ns = add_namespace(name)
-      ns.name 
+      ns.name
     end
 
     # Add a namespace to this container, prepending top_namespace if present
@@ -40,7 +42,7 @@ module ResourceRegistry
       namespace
     end
 
-    # Build a composite namespace string from an array list of component names 
+    # Build a composite namespace string from an array list of component names
     def self.namespace_join(namespaces)
       namespaces = namespaces.compact
       if namespaces.length > 1

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resource_registry/stores/operations/list_path'
 require 'resource_registry/stores/operations/require_file'
 

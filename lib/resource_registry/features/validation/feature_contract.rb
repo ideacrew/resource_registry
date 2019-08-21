@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Features
     module Validation
-
       FeatureContract = ResourceRegistry::Validation::ApplicationContract.build do
-        
+
         params do
           required(:key).value(:symbol)
           required(:is_required).value(:bool)

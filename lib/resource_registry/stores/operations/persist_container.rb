@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     module Operations
@@ -7,7 +9,7 @@ module ResourceRegistry
 
         def call(input)
           Registry.merge(input)
-          
+
           return Success(input)
         end
       end
