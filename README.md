@@ -157,7 +157,27 @@
   ```
   # ./config/initializers/resource_registry.rb
 
-
+ResourceRegistry.configure do 
+  {
+    application: {
+      config: {
+        name: "App Name",
+        root: Rails.root,
+        system_dir: "system",
+      },
+      load_paths: ['system']
+    },
+    resource_registry: {
+      resolver: {
+        root: :enterprise,
+        tenant: :dchbx,
+        site: :primary,
+        env: :production,
+        application: :enroll
+      }
+    }
+  }
+end
 
   ```
 
