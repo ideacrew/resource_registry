@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Entities::Feature do
   subject { described_class.new(params) }
 
   context 'when valid feature hash passed' do
-    let(:params) {
+    let(:params) do
       {
         :key => :aca_shop_market,
         :is_required => false,
@@ -36,7 +36,7 @@ RSpec.describe ResourceRegistry::Entities::Feature do
                 {:key => :open_enrollment_end_dom, :type => :integer, :default => 20},
                 {:key => :binder_payment_due_dom, :type => :integer, :default => 23}]}]}]
       }
-    }
+    end
 
     it 'should build feature object' do
       expect(subject).to be_instance_of(described_class)

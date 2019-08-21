@@ -100,7 +100,7 @@ RSpec.describe ResourceRegistry do
   end
 
   context 'when wrong initializer configuration passed' do
-    let(:initializer_config) {
+    let(:initializer_config) do
       {
         application: {
           config: {
@@ -112,7 +112,7 @@ RSpec.describe ResourceRegistry do
           load_paths: ['system']
         }
       }.merge(resolver_options_hash)
-    }
+    end
 
     it 'should throw an error' do
       begin
