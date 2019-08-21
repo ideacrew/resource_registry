@@ -1,17 +1,6 @@
 # This yaml describes our current checks.
 #   Any checks marked "# TODO: RWC" are "re-enable when corrected.RWC" are "re-enable when corrected.
 
-AllCops:
-  Exclude:
-    - './node_modules/**/*'
-    - './db/seedfiles/**/*'
-    - './lib/tasks/**/*'
-    - './components/benefit_markets/db/seedfiles/**/*'
-    - './components/benefit_sponsors/db/seedfiles/**/*'
-    - './components/old_sponsored_benefits/**/*'
-    - './eyes/enroll.eye.rb'
-
-# TODO: RWC
 Layout/CommentIndentation:
   Enabled: true
 
@@ -104,6 +93,9 @@ Style/Documentation:
 Style/EachWithObject:
   Enabled: false
 
+Style/EmptyLiteral:
+  Enabled: false
+
 Style/ExpandPathArguments:
   Enabled: false
 
@@ -111,6 +103,9 @@ Style/HashSyntax:
   Enabled: false
 
 Style/NumericPredicate:
+  Enabled: false
+
+Style/SafeNavigation:
   Enabled: false
 
 Style/StringLiterals:
