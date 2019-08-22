@@ -56,8 +56,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake',         '~> 12.0'
   spec.add_development_dependency 'rspec',        '~> 3.0'
   spec.add_development_dependency 'rspec-rails',  '~> 3.0'
-  spec.add_development_dependency 'byebug',       '~> 11.0'
-  spec.add_development_dependency 'pry-byebug',   '~> 3.0'
   spec.add_development_dependency 'mongoid',      '~> 7.0'
   spec.add_development_dependency 'activesupport','~> 5.2.3'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
