@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Subscriptions
     class Subscribe
@@ -17,11 +19,11 @@ module ResourceRegistry
         end
       end
 
-      def self.build 
+      def self.build
         new(
-            validator: SubscriptionValidator.new,
-            repository: repository
-          )
+          validator: SubscriptionValidator.new,
+          repository: repository
+        )
       end
 
     end

@@ -1,33 +1,21 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
-    class Registry < Dry::Struct
-
-      # Configuration values
-      attribute :config do
-        attribute :name,              Types::Strict::String
-        attribute :root,              Types::Strict::String
-        attribute :env,               Types::Strict::String
-
-        attribute :default_namespace, Types::NilOrString #| Types::Undefined
-        attribute :system_dir,        Types::NilOrString #| Types::Undefined
-        attribute :load_path,         Types::NilOrString #| Types::Undefined
-
-        # Dir, plus optional custom auto_register block
-        attribute :auto_register,     Types::Array.of(Types::NilOrString) #| Types::Undefined
+    class Registry
+      extend Dry::Initializer
+      
+      option :config do
+        option :name, type: Dry::Types["coercible.string"]
+        option :root, type: ResourceRegistry::Types::Path
+        option :default_namespace, type: Dry::Types["coercible.string"], optional: true
+        option :system_dir,        type: Dry::Types["coercible.string"], optional: true
+        option :load_path,         type: Dry::Types["coercible.string"], optional: true
+        option :auto_register,     type: Dry::Types["coercible.string"], optional: true
       end
-
-      attribute :timestamp,           Types::DateTime.default { DateTime.now }
-
-      # Persistence values
-      attribute :persistence do
-        attribute :store,       Types::Stores
-        attribute :serializer,  Types::Serializers
-        attribute :container,   Types::Strict::String
-      end
-
-      # Override or additional attributes
-      attribute :options,     ResourceRegistry::Entities::Option
-
+      
+      option :env,       type: Dry::Types["coercible.string"], optional: true
+      option :timestamp, type: Dry::Types["coercible.string"], optional: true
     end
   end
 end

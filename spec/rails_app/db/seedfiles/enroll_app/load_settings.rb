@@ -1,4 +1,6 @@
-# Boot file to configure system 
+# frozen_string_literal: true
+
+# Boot file to configure system
 require 'resource_registry/container'
 
 # Ordereed list of core files to configure system

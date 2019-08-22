@@ -1,4 +1,6 @@
-require 'resource_registry/stores/store'
-require 'resource_registry/stores/file_store'
-require 'resource_registry/stores/operations/load_file'
-require 'resource_registry/stores/operations/persist_container'
+# frozen_string_literal: true
+
+require_relative 'stores/operations/list_path'
+require_relative 'stores/operations/load_file'
+require_relative 'stores/operations/require_file'
+require_relative 'stores/operations/persist_container'

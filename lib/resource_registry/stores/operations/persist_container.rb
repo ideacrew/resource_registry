@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     module Operations
@@ -6,8 +8,9 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
-          ResourceRegistry::Container.merge(input)
-          return Success(input)
+          Registry.merge(input)
+
+          Success(input)
         end
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 site_repo.namespace(:site) do
   register :subscriptions, []
   register :benefit_markets, [:aca_shop_market, :aca_individual_market, :fehb_market]
@@ -15,7 +17,7 @@ end
 
 
 # @repo.namespace(@top_namespace_name) do
-#   namespace(:site) do 
+#   namespace(:site) do
 #     ea_settings_namespace_names = [:aca_shop_market, :aca_individual_market, :fehb_market]
 #     load_namespaces(ea_settings_namespace_names)
 # end

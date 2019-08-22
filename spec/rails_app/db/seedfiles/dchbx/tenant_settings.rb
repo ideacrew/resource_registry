@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 file_suffix = '*_settings.rb'
 settings_file_folder = File.expand_path('./spec/db/seedfiles/dchbx', __dir__)

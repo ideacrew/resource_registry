@@ -1,18 +1,26 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Entities
-    class Option  < Dry::Struct
-      include Enumerable
-      include DryStructSetters
+    # rubocop:disable Style/RescueModifier
+    OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) rescue nil }
+    # rubocop:enable Style/RescueModifier
 
-      transform_keys(&:to_sym)
+    class Option
+      extend Dry::Initializer
 
-      # attribute :parent_namespace?, Types::Symbol
-      attribute :namespace?,   Types::Symbol
-      attribute :key,          Types::Symbol
+      option :namespace,      type: Dry::Types["coercible.symbol"], optional: true
+      option :key,            type: Dry::Types["coercible.symbol"]
+      option :namespaces,     type: Dry::Types['coercible.array'].of(OptionConstructor), optional: true, default: -> { [] }
 
-      # TODO: Make settings attribute dynamically typed
-      attribute :settings?,   Types::Array.of(ResourceRegistry::Entities::Setting)
-      attribute :namespaces?, Types::Array.of(ResourceRegistry::Entities::Option)
+      option :settings, [], optional: true do
+        option :key,          type: Dry::Types["coercible.symbol"]
+        option :title,        type: Dry::Types["coercible.string"], optional: true
+        option :description,  type: Dry::Types["coercible.string"], optional: true
+        option :type,         type: Dry::Types["coercible.symbol"], optional: true
+        option :default,      type: Dry::Types["any"]
+        option :value,        type: Dry::Types["any"], optional: true
+      end
 
     end
   end

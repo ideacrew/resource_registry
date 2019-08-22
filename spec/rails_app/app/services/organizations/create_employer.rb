@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BenefitSponsors
   module Organizations
     class CreateEmployer
@@ -14,13 +16,9 @@ module BenefitSponsors
       def call(params)
         result = validate_employer.call(params)
 
-        if result.success?
-          persist_employer.call(params)
-        end
-
-        # puts features_repository.inspect
+        persist_employer.call(params) if result.success?
       end
-      
+
     end
   end
 end

@@ -1,8 +1,29 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
-  class Error
+  module Error
+    # @api private
+    module ErrorInitalizer
+      attr_reader :original
+      
+      def initialize(msg, original = $!)
+        super(msg)
+        @original = original
+      end
+    end
+    
     # @api public
-    Error = Class.new(StandardError)
-    InvalidOptionHash = Class.new(Error)
-    InvalidContractParams = Class.new(Error)
+    class Error < StandardError
+      include ErrorInitalizer
+    end
+    
+    class LoadException < LoadError
+      include ErrorInitalizer
+    end 
+
+    InvalidOptionHash       = Class.new(Error)
+    InvalidContractParams   = Class.new(Error)
+    InitializationFileError = Class.new(LoadException)
+    ContainerCreateError    = Class.new(LoadException)
   end
 end

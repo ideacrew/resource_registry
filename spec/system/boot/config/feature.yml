@@ -1,0 +1,555 @@
+---
+# Feature YAML structure
+# key: :feature
+#   namespaces:
+#     - key: :feature_key
+#       settings:
+#         - key: :is_required
+#         - key: :alt_key
+#         - key: :title
+#         - key: :description
+#         - ley: :parent
+#       namespaces:
+#         - key: :environments
+#           namespaces:
+#             - key: :production
+#               settings:
+#                 - key: :is_enabled
+#               namespaces:
+#                 - key: :registry
+#                 - key: :options
+#                 - key: :features               
+#             - key: :development
+#               settings:
+#                 - key: :is_enabled
+#               namespaces:
+#                 - key: :registry
+#                 - key: :options
+#                 - key: :features               
+#             - key: :test 
+#               settings:
+#                 - key: :is_enabled
+#               namespaces:
+#                 - key: :registry
+#                 - key: :options
+#                 - key: :features               
+
+
+
+---
+key: :feature
+  namespaces:
+    - key: :enroll_app
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ea
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Enroll Application Component
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
+      namespaces:
+        - key: :environments
+          namespaces:
+            - key: :development
+              settings:
+                - key: :is_enabled
+              namespaces:
+                - key: :registry
+                  settings:
+                    - key: :config
+                - key: :options
+                  settings:
+                  namespaces:
+
+                - key: :features
+                  settings:
+                  namespaces:
+                    
+    - key: :member_portal
+    settings:
+      - key: :title
+        description: Name for this setting that will appear in the UI
+        default: Member Portal
+      - key: :description
+        description: Help text that will appear in the UI
+        default: Web portal for members to register, shop and enroll for benefits offered by their sponsor(s)
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: true
+      - key: alt_key
+        description: Shortened Key reference to be used in Registry
+        default: member
+      - key: :parent
+        description: Next highest feature in the hierarchy
+        default: :enroll_app
+    - key: :aca_shop_market
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: shop
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: ACA SHOP Market
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: ACA Small Business Health Options (SHOP) Portal
+    - key: :aca_individual_market
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ivl
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: ACA Individual Market
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: ACA Individual Market Portal
+    - key: :fehb_market
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: fehb
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Congress and Federal Employee Market
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Federal Employee Health Benefits Portal
+    - key: :broker_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: broker
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Broker Agency Portal
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for Broker Agencies to manage customers and their benefits
+    - key: :general_agent_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ga
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: General Agency Portal
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for General Agencies to support Broker Agencies
+    - key: :broker_quoting_tool_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: bqt
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Broker Quoting Tool
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+    - key: :enroll_app_ops_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ea_ops
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Business Operations Portal
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for site business staff to manage site customers stakeholders and operations
+    - key: :enroll_app_ops_classic_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ea_ops_cls
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Business Operations Portal (classic)
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for site business staff to manage site products, customers, stakeholders and operations
+    - key: :plan_mgt_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: plan_mgt
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Plan Management Portal
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for site plan management staff to manage benefit products
+    - key: :enterprise_admin_portal
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: ent_admin
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Web portal for IT staff to configure and administer the site system and services
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :enroll_app
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+    - key: :edi_db_classic
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: edi_db_cls
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: EDI Database Component (classic)
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+    - key: :edi_database
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: edi_db
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: EDI Database Component
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+    - key: :ledger
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: nil
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Ledger Component
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: Web portal for accounts, billing and payment
+    - key: :notice_engine
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: notice
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Notice Component
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+    - key: :transport_gateway
+      settings:
+        - key: is_required
+          description: Feature must be enabled if true
+          default: false
+        - key: alt_key
+          description: Shortened Key reference to be used in Registry
+          default: tgw
+        - key: :title
+          description: Name for this setting that will appear in the UI
+          default: Transport Gateway Component
+        - key: :parent
+          description: Next highest feature in the hierarchy
+          default: :nil
+        - key: :description
+          description: Help text that will appear in the UI
+          default: 
+     
+
+
+
+key: feature
+namespaces:
+  - key: :enroll_app
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened reference for this feature to be used in building Registry keys
+        default: :ea
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: Enroll Application
+      - key: :description
+        description: Help text for this feature that will appear in the UI
+        default: A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits
+    namespaces:
+      - key: :environments
+        namespaces:
+          - key: :production
+          - key: :development
+          - key: :test 
+      - key: :features
+        namespaces:
+          - key: :app
+            settings:
+              - key: :title
+                default: General settings
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: true
+              - key: :parent
+                description: Next highest feature in the hierarchy
+                default: :enroll_app
+            namespaces:
+            - key: :environment
+            - key: :features
+              namespaces:
+              - key: :member_portal
+                settings:
+                  - key: :title
+                    default: Member Portal
+                  - key: :description
+                    default: Web portal for members to register, shop and enroll for benefits offered by their sponsor(s)
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: true
+                  - key: :parent
+                    description: Next highest feature in the hierarchy
+                    default: :app
+                namespaces:
+                  - key: :environments
+                    namespaces:
+                      - key: :production
+                        settings:
+                          - key: :feature_enabled
+                            default: true
+                      - key: :test
+                        settings:
+                          - key: :feature_enabled
+                            default: true
+                  - key: :features
+                    namespaces:
+                      - key: :custom_feature_1_instance
+              - key: :benefit_sponsor_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Benefit Sponsor Portal
+                  - key: :description
+                    default: Web portal for organizations to design and sponsor benefit plans for their members
+                namespaces:
+                  - key: :environment
+              - key: :broker_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Broker Agency Portal
+                  - key: :description
+                    default: Web portal for Broker Agencies to manage benefit sponsors, members and their benefits
+              - key: :general_agent_portal
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: General Agency Portal
+                  - key: :description
+                    default: Web portal for General Agencies to support Broker Agencies
+              - key: :ea_ops_portal_feature
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Business Operations Portal
+                  - key: :description
+                    default: Web portal for site business staff to manage site products, customers, stakeholders and operations
+              - key: :ea_ops_classic_portal_feature
+                settings:
+                  - key: :is_required
+                    description: Feature may not be disabled if true
+                    default: false
+                  - key: :title
+                    default: Business Operations Portal (classic)
+                  - key: :description
+                    default: Web portal for site business staff to manage site products, customers, stakeholders and operations
+                namespaces:
+                - key: :features
+                - key: :environments
+                  namespaces:
+                    - key: :production
+                    - key: :development
+                    - key: :test           
+          - key: :aca_shop_market
+            settings: 
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: false
+              - key: :alt_key
+                description: Shortened reference for this feature to be used in building Registry keys
+                default: :shop
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: ACA SHOP Market
+              - key: :description
+                default: ACA Small Business Health Options (SHOP) Portal
+            namespaces:
+            - key: :environments
+          - key: :aca_individual_market
+            settings:
+              - key: :is_required
+                description: Feature may not be disabled if true
+                default: false
+              - key: :alt_key
+                description: Shortened reference for this feature to be used in building Registry keys
+                default: :ivl
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: ACA Individual Market
+              - key: :description
+                default: ACA Individual Market Portal
+            namespaces:
+              key: :environments
+          - key: :fehb_market
+            settings: 
+              - key: :title
+                description: Name for this feature that will appear in UI
+                default: Congress and Federal Employee Market
+              - key: :description
+                default: Federal Employee Health Benefits Portal
+            namespaces:
+            - key: :environments
+  - key: :edi_database_classic
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened key reference to be used in Registry
+        default: :edi_classic
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: EDI Database Application (classic)
+      - key: :description
+        default: A system for conducting and tracking Electronic Data Interchange (EDI) with trading partners
+    namespaces:
+      - key: :environments
+      - key: :features
+        namespaces:
+          - key: :features
+            namespaces:
+            - key: :codec
+          - key: :environments
+  - key: :edi_database
+    settings:
+      - key: :is_required
+        description: Feature may not be disabled if true
+        default: false
+      - key: :alt_key
+        description: Shortened key reference to be used in Registry
+        default: :edi_db
+      - key: title
+        description: Name for this feature that will appear in UI
+        default: EDI Database Application
+      - key: :description
+        default: A system for conducting and tracking Electronic Data Interchange (EDI) with trading partners
+    namespaces:
+      - key: :environments
+      - key: :features
+        namespaces:
+          - key: :features
+            namespaces:
+            - key: :codec
+          - key: :environments
+  - key: :ledger
+
+
+

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Stores
     module Operations
@@ -6,7 +8,7 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(input)
-          return Success(IO.read(File.open(input)))
+          Success(IO.read(File.open(input)))
         end
       end
     end

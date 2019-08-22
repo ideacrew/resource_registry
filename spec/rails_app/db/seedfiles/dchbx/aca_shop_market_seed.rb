@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :aca_shop_market do
   register(:binder_payment_due_day_of_month,                   { type: :integer, default: 24, value: 24 }) { |vals| vals }
   register(:earliest_enroll_prior_effective_on_days,           { type: :integer, default: -30, value: -30 }) { |vals| Hash(metadata: vals)}
@@ -28,9 +30,9 @@ namespace :aca_shop_market do
 
     register(:employer_contribution_pct_min,           { type: :integer, default: 75, value: 75 })
 
-    register(:employee_count_max,                      { type: :integer, default: 50, value: 50 }    )
+    register(:employee_count_max,                      { type: :integer, default: 50, value: 50 })
     register(:employee_participation_ratio_min,        { type: :float,   default: 0.75, value: 0.75 })
-    register(:employee_non_owner_count_min,            { type: :integer, default: 1, value: 1 }      )
+    register(:employee_non_owner_count_min,            { type: :integer, default: 1, value: 1 })
   end
 
   register(:use_simple_employer_calculation_model,     { type: :boolean, default: false, value: false }) { |vals| Hash(metadata: vals)}
@@ -51,9 +53,9 @@ namespace :aca_shop_market do
       register :application_interval, :monthly
       register(:open_enrollment_minimum_days,  { type: :integer, default: 5, value: 5 }) { |value| Hash(metadata: value) }
       register(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
-      register(:application_period,  { type:     :date_range,
-                                         default:  Date.new(2018,1,1)..Date.new(2018,12,31),
-      value:    Date.new(2018,1,1)..Date.new(2018,12,31) }) \
+      register(:application_period,  { type: :date_range,
+                                       default: Date.new(2018,1,1)..Date.new(2018,12,31),
+                                       value: Date.new(2018,1,1)..Date.new(2018,12,31) }) \
         { |vals| Hash(metadata: vals) }
 
 
@@ -134,19 +136,19 @@ namespace :aca_shop_market do
       register :member_market_policy do
       end
 
-      register(:application_interval_kinds,  { type:     :array,
-                                                 default:  [:monthly, :annual, :annual_with_midyear_initial],
-      value:    [:monthly, :annual, :annual_with_midyear_initial], }) \
+      register(:application_interval_kinds,  { type: :array,
+                                               default: [:monthly, :annual, :annual_with_midyear_initial],
+                                               value: [:monthly, :annual, :annual_with_midyear_initial] }) \
         { |vals| Hash(metadata: vals) }
 
-      register(:probation_period_kinds,  { type:     :array,
-                                             default:  [:first_of_month_before_15th, :date_of_hire, :first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days],
-      value:    [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
+      register(:probation_period_kinds,  { type: :array,
+                                           default: [:first_of_month_before_15th, :date_of_hire, :first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days],
+                                           value: [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
         { |vals| Hash(metadata: vals) }
 
-      register(:contact_methods_kinds,   { type:     :array,
-                                             default:  [:paper_and_electronic, :paper_only, :electronic_only],
-      value:    [:paper_and_electronic, :paper_only, :electronic_only], }) \
+      register(:contact_methods_kinds,   { type: :array,
+                                           default: [:paper_and_electronic, :paper_only, :electronic_only],
+                                           value: [:paper_and_electronic, :paper_only, :electronic_only] }) \
         { |vals| Hash(metadata: vals) }
 
 
@@ -157,25 +159,25 @@ namespace :aca_shop_market do
       register :employer_attestation_required, false
       register(:open_enrollment_minimum_days,  { type: :integer, default: 5, value: 5 }) { |value| Hash(metadata: value) }
       register(:employer_attestation_required, { type: :boolean, default: false, value: false }) { |value| Hash(metadata: value) }
-      register(:application_period,  { type:     :date_range,
-                                         default:  Date.new(2019,1,1)..Date.new(2019,12,31),
-      value:    Date.new(2019,1,1)..Date.new(2019,12,31) } ) \
+      register(:application_period,  { type: :date_range,
+                                       default: Date.new(2019,1,1)..Date.new(2019,12,31),
+                                       value: Date.new(2019,1,1)..Date.new(2019,12,31) }) \
         { |vals| Hash(metadata: vals) }
 
 
-      register(:application_interval_kinds,  { type:     :array,
-                                                 default:  [:monthly, :annual, :annual_with_midyear_initial],
-      value:    [:monthly, :annual, :annual_with_midyear_initial], }) \
+      register(:application_interval_kinds,  { type: :array,
+                                               default: [:monthly, :annual, :annual_with_midyear_initial],
+                                               value: [:monthly, :annual, :annual_with_midyear_initial] }) \
         { |vals| Hash(metadata: vals) }
 
-      register(:probation_period_kinds,  { type:     :array,
-                                             default:  [:first_of_month_before_15th, :date_of_hire, :first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days],
-      value:    [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
+      register(:probation_period_kinds,  { type: :array,
+                                           default: [:first_of_month_before_15th, :date_of_hire, :first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days],
+                                           value: [:first_of_month, :first_of_month_after_30_days, :first_of_month_after_60_days] }) \
         { |vals| Hash(metadata: vals) }
 
-      register(:contact_methods_kinds,   { type:     :array,
-                                             default:  [:paper_and_electronic, :paper_only, :electronic_only],
-      value:    [:paper_and_electronic, :paper_only, :electronic_only], }) \
+      register(:contact_methods_kinds,   { type: :array,
+                                           default: [:paper_and_electronic, :paper_only, :electronic_only],
+                                           value: [:paper_and_electronic, :paper_only, :electronic_only] }) \
         { |vals| Hash(metadata: vals) }
     end
   end

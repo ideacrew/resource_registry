@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -9,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dan Thomas"]
   spec.email         = ["dan@ideacrew.com"]
 
-  spec.summary       = %q{Configure access to component features and custom behaviors on a multi-tenant basis}
+  spec.summary       = "Configure access to component features and custom behaviors on a multi-tenant basis}"
   spec.description   = %q{Provides ability to define and access multiple customer settings in the same instance,
                             supporting thread-safe configurations that enable/disable access to features and dynamic
                             changes to settings using a syntax that avoids inline conditionals.
@@ -34,15 +35,16 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-system',               '~> 0.12'
   spec.add_dependency 'dry-equalizer',            '~> 0.2'
   spec.add_dependency 'dry-matcher',              '~> 0.7'
-  spec.add_dependency 'dry-validation',           '~> 1.0'
+  spec.add_dependency 'dry-validation',           '~> 1.2'
   spec.add_dependency 'dry-core',                 '~> 0.4'
   spec.add_dependency 'dry-struct',               '~> 1.0'
   spec.add_dependency 'dry-types',                '~> 1.0'
   spec.add_dependency 'dry-inflector',            '~> 0.1'
   spec.add_dependency 'dry-container',            '~> 0.7'
   spec.add_dependency 'dry-auto_inject',          '~> 0.6'
-  spec.add_dependency 'dry-configurable',         '~> 0.8'
+  # spec.add_dependency 'dry-configurable',         '~> 0.8'
   spec.add_dependency 'dry-transaction',          '~> 0.13'
+  spec.add_dependency 'dry-initializer',          '~> 3.0'
 
   spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
@@ -54,12 +56,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake',         '~> 12.0'
   spec.add_development_dependency 'rspec',        '~> 3.0'
   spec.add_development_dependency 'rspec-rails',  '~> 3.0'
-  spec.add_development_dependency 'byebug',       '~> 11.0'
-  spec.add_development_dependency 'pry-byebug',   '~> 3.0'
   spec.add_development_dependency 'mongoid',      '~> 7.0'
   spec.add_development_dependency 'activesupport','~> 5.2.3'
-  spec.add_development_dependency "simplecov"#,  '~> 1.0'
-  spec.add_development_dependency "database_cleaner",           '~> 1.7'
-  spec.add_development_dependency "timecop",                    '~> 0.9'
+  spec.add_development_dependency "simplecov" #,  '~> 1.0'
+  spec.add_development_dependency "database_cleaner", '~> 1.7'
+  spec.add_development_dependency "timecop",          '~> 0.9'
 
 end

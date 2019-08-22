@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # require 'resource_registry/boot/logger'
 # require 'resource_registry/boot/error_handler'
 # require 'resource_registry/boot/authenticator'
@@ -48,7 +50,7 @@
 #     end
 
 #     def initialize_configuration
-      
+
 #     end
 
 #     def initialize_logger

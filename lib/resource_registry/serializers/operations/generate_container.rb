@@ -1,36 +1,49 @@
+# frozen_string_literal: true
+
 module ResourceRegistry
   module Serializers
     module Operations
       class GenerateContainer
-        
+
         include Dry::Transaction::Operation
 
         def call(input)
-          container = construct_container(element: input)
-          return Success(container)
+          container = construct_container(input)
+          Success(container)
         end
 
         private
 
-        def construct_container(element: nil, namespace: nil)
+        def construct_container(entity, namespace = nil)
           container = namespace || Dry::Container::new
+          attributes = entity.class.dry_initializer.public_attributes(entity)
 
-          container.namespace(element.key) do |namespace|
-            register_namespace_elements element.namespaces, namespace
-            register_settings element.settings, namespace
+          if entity.is_a?(ResourceRegistry::Entities::Option::Settings)
+            container.register(entity.key, entity.default || entity.value)
+            return
+          end
+
+          if entity.is_a?(ResourceRegistry::Entities::Option) && entity.key == :settings
+            entity.settings.each{|setting| construct_container(setting, container) }
+            return
+          end
+
+          container.namespace(attributes.delete(:key) || :enterprise) do |resolved_ns|
+            attributes.each do |key, value|
+
+              if value.is_a?(Array) && is_an_entity?(value[0])
+                value.each{|val| construct_container(val, resolved_ns) }
+              else
+                # namespace.register(key, value)
+              end
+            end
           end
 
           container
         end
 
-        def register_settings(settings, namespace)
-          return if settings.blank?
-          settings.each{|setting| namespace.register(setting.key, setting.value || setting.default) }
-        end
-
-        def register_namespace_elements(namespaces, namespace)
-          return if namespaces.blank?
-          namespaces.each {|namespace_ele| construct_container(element: namespace_ele, namespace: namespace) }
+        def is_an_entity?(element)
+          element.class.to_s.scan(/ResourceRegistry::Entities/).present?
         end
       end
     end
