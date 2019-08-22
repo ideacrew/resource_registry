@@ -8,7 +8,6 @@ require 'resource_registry/entities/feature'
 require 'resource_registry/entities/tenant'
 require 'resource_registry/entities/registry'
 require 'resource_registry/entities/enterprise'
-require 'resource_registry/entities/qualifying_life_event'
 
 module ResourceRegistry
   module Entities
