@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Entities::Enterprise do
   subject { described_class.new(params) }
 
   context 'when valid enterprise hash passed' do
-    let(:params) {
+    let(:params) do
       {:tenants =>
         [{:key => :dchbx,
           :organization_name => "DC Health Benefit Exchange Authority",
@@ -34,7 +34,7 @@ RSpec.describe ResourceRegistry::Entities::Enterprise do
                       {:key => "copyright_period_start", :type => :string, :default => "2013"},
                       {:key => "nondiscrimination_notice_url", :type => :string, :default => "https://www.dchealthlink.com/nondiscrimination"}
                     ]}]}]}]}]}
-    }
+    end
 
     it 'should build enterprise object' do
       expect(subject).to be_instance_of(described_class)

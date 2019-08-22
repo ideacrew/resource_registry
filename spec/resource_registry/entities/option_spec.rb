@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Entities::Option do
   subject { described_class.new(params) }
 
   context 'when valid option hash passed' do
-    let(:params) {
+    let(:params) do
       {:key => :benefit_market_catalog_2017,
        :namespaces =>
         [
@@ -27,7 +27,7 @@ RSpec.describe ResourceRegistry::Entities::Option do
               {:key => :binder_payment_due_dom, :type => :integer, :default => 23}
             ]}
         ]}
-    }
+    end
 
     it 'should build option object' do
       expect(subject).to be_instance_of(described_class)
