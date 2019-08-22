@@ -27,6 +27,7 @@ module ResourceRegistry
 
     Callable   = Types.Interface(:call)
     Duration   = Types.Constructor(:build, ->(val){ ActiveSupport::Duration.build(val) })
+    Path       = Types.Constructor(:build, ->(val){ val.is_a?(Pathname) ? val : Pathname.new(val) })
 
     # def self.duration_for(duration_hash = {})
     #   span_kinds = [:years, :months, :weeks, :days, :hours, :minutes, :seconds]
