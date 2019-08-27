@@ -19,7 +19,7 @@ module ResourceRegistry
           result = super
 
           if result.success?
-            Success(result.to_h)
+            Success(result)
           else
             Failure(result.errors)
           end

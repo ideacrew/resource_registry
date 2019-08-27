@@ -15,7 +15,7 @@ module ResourceRegistry
           result = ResourceRegistry::Registries::Validation::RegistryContract.call(input)
 
           if result.success?
-            Success(result.to_h)
+            Success(result)
           else
             Failure(result.errors)
           end

@@ -16,7 +16,8 @@ module ResourceRegistry
         private
 
         def convert(input, options = false)
-          hash = {}
+          hash  = {}
+          input = input.to_h
 
           if entity_types.include?(input[:key])
             hash[input[:key]] = input.fetch(:namespaces,[]).inject({}) do |data, ns|
