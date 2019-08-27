@@ -9,19 +9,18 @@ module ResourceRegistry
     class Option
       extend Dry::Initializer
 
-      option :namespace,      type: Dry::Types["coercible.symbol"], optional: true
-      option :key,            type: Dry::Types["coercible.symbol"]
+      option :namespace,      optional: true
+      option :key
       option :namespaces,     type: Dry::Types['coercible.array'].of(OptionConstructor), optional: true, default: -> { [] }
 
-      option :settings, [], optional: true do
-        option :key,          type: Dry::Types["coercible.symbol"]
-        option :title,        type: Dry::Types["coercible.string"], optional: true
-        option :description,  type: Dry::Types["coercible.string"], optional: true
-        option :type,         type: Dry::Types["coercible.symbol"], optional: true
-        option :default,      type: Dry::Types["any"]
-        option :value,        type: Dry::Types["any"], optional: true
+      option :settings, [],   optional: true do
+        option :key
+        option :title,        optional: true
+        option :description,  optional: true
+        option :type,         optional: true
+        option :default
+        option :value,        optional: true
       end
-
     end
   end
 end
