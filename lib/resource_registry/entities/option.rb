@@ -3,7 +3,7 @@
 module ResourceRegistry
   module Entities
     # rubocop:disable Style/RescueModifier
-    OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) rescue nil }
+    OptionConstructor = Types.Constructor("Option") { |val| Option.new(val) }
     # rubocop:enable Style/RescueModifier
 
     class Option
@@ -11,7 +11,7 @@ module ResourceRegistry
 
       option :namespace,      optional: true
       option :key
-      option :namespaces,     type: Dry::Types['coercible.array'].of(OptionConstructor), optional: true, default: -> { [] }
+      option :namespaces,     type: Types::Array.of(OptionConstructor), optional: true
 
       option :settings, [],   optional: true do
         option :key

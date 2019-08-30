@@ -3,7 +3,7 @@
 module ResourceRegistry
   module Entities
     # rubocop:disable Style/RescueModifier
-    FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) rescue nil }
+    FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) }
     # rubocop:enable Style/RescueModifier
 
     class Feature
@@ -16,8 +16,8 @@ module ResourceRegistry
       option :title,          optional: true
       option :description,    optional: true
       option :registry,       optional: true
-      option :options,        type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
-      option :features,       type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::FeatureConstructor), optional: true, default: -> { [] }
+      option :options,        type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      option :features,       type: Types::Array.of(ResourceRegistry::Entities::FeatureConstructor), optional: true
 
     end
   end

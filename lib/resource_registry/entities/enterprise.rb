@@ -7,8 +7,8 @@ module ResourceRegistry
 
       option :owner_organization_name,  optional: true
       option :owner_account_name,       optional: true
-      option :tenants, type: Dry::Types['coercible.array'].of(TenantConstructor), optional: true, default: -> { [] }
-      option :options, type: Dry::Types['coercible.array'].of(ResourceRegistry::Entities::OptionConstructor), optional: true, default: -> { [] }
+      option :tenants, type: Types::Array.of(TenantConstructor), optional: true
+      option :options, type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
 
     end
   end
