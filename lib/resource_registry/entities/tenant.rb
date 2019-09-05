@@ -3,37 +3,39 @@
 module ResourceRegistry
   module Entities
     # rubocop:disable Style/RescueModifier
-    TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) }
+    # TenantConstructor = Types.Constructor("Tenant") { |val| Tenant.new(val) }
     # rubocop:enable Style/RescueModifier
 
-    class Tenant
-      extend Dry::Initializer
+    class Tenant < Dry::Struct
+      transform_keys(&:to_sym)
 
-      option :key
-      option :owner_organization_name,  optional: true
-      option :owner_account_name,       optional: true
-      option :options,        type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      # extend Dry::Initializer
 
-      option :subscriptions, [], optional: true do
-        option :feature_key
-        option :id,                     optional: true
-        option :validator_id,           optional: true
-        option :subscribed_at
-        option :unsubscribed_at,        optional: true
-        option :options,      type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      attribute :key, Types::RequiredSymbol
+      attribute :owner_organization_name,  Types::String.optional.meta(omittable: true)
+      attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
+      # attribute :options,       Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
+
+      attribute :subscriptions,      Types::Array.meta(omittable: true).default([]) do
+        attribute :feature_key, Types::RequiredSymbol
+        attribute :id,                     Types::String.optional
+        attribute :validator_id,           Types::String.optional
+        attribute :subscribed_at,          Types::String.optional
+        attribute :unsubscribed_at,        Types::String.optional
+        # attribute :options,      Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
       end
 
-      option :sites, [], optional: true do
-        option :key
-        option :url,                    optional: true
-        option :title,                  optional: true
-        option :description,            optional: true
-        option :options,      type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      attribute :sites,      Types::Array.meta(omittable: true) do
+        attribute :key, Types::RequiredSymbol
+        attribute :url,                    Types::String
+        attribute :title,                  Types::String.optional.meta(omittable: true)
+        attribute :description,            Types::String.optional.meta(omittable: true)
+        # attribute :options,      Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
 
-        option :environments, [], optional: true do
-          option :key
-          option :options,    type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
-          option :features,   type: Types::Array.of(ResourceRegistry::Entities::FeatureConstructor), optional: true
+        attribute :environments,      Types::Array.meta(omittable: true) do
+          attribute :key, Types::RequiredSymbol
+          # attribute :options,    Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true)
+          attribute :features,   Types::Array.of(ResourceRegistry::Entities::Feature).meta(omittable: true)
         end
       end
     end

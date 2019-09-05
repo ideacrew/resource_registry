@@ -3,21 +3,22 @@
 module ResourceRegistry
   module Entities
     # rubocop:disable Style/RescueModifier
-    FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) }
+    # FeatureConstructor = Types.Constructor("Feature") { |val| Feature.new(val) }
     # rubocop:enable Style/RescueModifier
 
-    class Feature
-      extend Dry::Initializer
+    class Feature < Dry::Struct
+      transform_keys(&:to_sym)
+      # extend Dry::Initializer
 
-      option :key
-      option :is_required
-      option :is_enabled
-      option :alt_key,        optional: true
-      option :title,          optional: true
-      option :description,    optional: true
-      option :registry,       optional: true
-      option :options,        type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
-      option :features,       type: Types::Array.of(ResourceRegistry::Entities::FeatureConstructor), optional: true
+      attribute :key, Types::RequiredSymbol
+      attribute :is_required, Types::Bool.optional
+      attribute :is_enabled, Types::Bool.optional
+      attribute :alt_key, Types::Symbol.optional.meta(omittable: true)
+      attribute :title,         Types::String.optional.meta(omittable: true)
+      attribute :description,   Types::String.optional.meta(omittable: true)
+      # attribute :registry,      Types::String.optional.meta(omittable: true)
+      # attribute :options,        type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      attribute :features,       Types::Array.of(ResourceRegistry::Entities::Feature).meta(omittable: true)
 
     end
   end

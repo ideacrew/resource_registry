@@ -2,13 +2,13 @@
 
 module ResourceRegistry
   module Entities
-    class Enterprise
-      extend Dry::Initializer
+    class Enterprise < Dry::Struct
+      transform_keys(&:to_sym)
 
-      option :owner_organization_name,  optional: true
-      option :owner_account_name,       optional: true
-      option :tenants, type: Types::Array.of(TenantConstructor), optional: true
-      option :options, type: Types::Array.of(ResourceRegistry::Entities::OptionConstructor), optional: true
+      attribute :owner_organization_name,  Types::String.optional.meta(omittable: true)
+      attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
+      attribute :tenants, Types::Array.of(ResourceRegistry::Entities::Tenant).meta(omittable: true) 
+      # attribute :options, Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
 
     end
   end
