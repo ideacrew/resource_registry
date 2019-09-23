@@ -19,7 +19,7 @@ module ResourceRegistry
           attributes = entity.attributes
 
           if entity.is_a?(ResourceRegistry::Entities::Option::Setting)
-            container.register(entity.key, entity.default || entity.value)
+            container.register(entity.key, (entity.value.blank? ? entity.default : entity.value))
             return
           end
 

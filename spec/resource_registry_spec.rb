@@ -86,6 +86,7 @@ RSpec.describe ResourceRegistry do
     end
 
     it 'should load site options' do
+      expect(Registry["enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.transmit_monthly_employers"]).to be_falsey
       expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.copyright_period_start")).to be_truthy
       expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.policies_url")).to be_truthy
     end

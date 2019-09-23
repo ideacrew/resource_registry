@@ -82,6 +82,9 @@ namespaces:
                                                 - key: small_market_employee_count_maximumt
                                                   type: :integer
                                                   default: 50
+                                                - key: transmit_monthly_employers
+                                                  type: :boolean
+                                                  default: false
                                                 - key: employer_contribution_percent_minimum
                                                   type: :integer
                                                   default: 50    
