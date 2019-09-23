@@ -8,7 +8,7 @@ module ResourceRegistry
       attribute :owner_organization_name,  Types::String.optional.meta(omittable: true)
       attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
       attribute :tenants, Types::Array.of(ResourceRegistry::Entities::Tenant).meta(omittable: true) 
-      # attribute :options, Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
+      attribute :options, Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
 
     end
   end

@@ -8,7 +8,7 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(path)
-          Kernel.send(:require, path)
+          Kernel.send(:load, path)
           Success(path)
         end
       end

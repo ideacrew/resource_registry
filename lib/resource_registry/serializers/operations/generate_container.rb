@@ -16,9 +16,9 @@ module ResourceRegistry
 
         def construct_container(entity, namespace = nil)
           container = namespace || Dry::Container::new
-          attributes = entity.class.dry_initializer.public_attributes(entity)
+          attributes = entity.attributes
 
-          if entity.is_a?(ResourceRegistry::Entities::Option::Settings)
+          if entity.is_a?(ResourceRegistry::Entities::Option::Setting)
             container.register(entity.key, entity.default || entity.value)
             return
           end

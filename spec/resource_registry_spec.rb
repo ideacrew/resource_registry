@@ -30,7 +30,7 @@ RSpec.describe ResourceRegistry do
 
     before(:all) do
       initialize_registry
-      load_dependencies
+      # load_dependencies
     end
 
     it 'should create Registry container' do
@@ -64,9 +64,9 @@ RSpec.describe ResourceRegistry do
   end
 
   context ".create" do
+
     before do
-      initialize_registry
-      ResourceRegistry.create
+      create_registry
     end
 
     it "should load application configuration" do
