@@ -21,8 +21,8 @@ module ResourceRegistry
       end
 
       attribute :sites,      Types::Array.meta(omittable: true) do
-        attribute :key, Types::RequiredSymbol
-        attribute :url,                    Types::String
+        attribute :key,                    Types::RequiredSymbol
+        attribute :url,                    Types::String.optional.meta(omittable: true)
         attribute :title,                  Types::String.optional.meta(omittable: true)
         attribute :description,            Types::String.optional.meta(omittable: true)
         attribute :options,      Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
