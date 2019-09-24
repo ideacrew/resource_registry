@@ -13,6 +13,7 @@ module ResourceRegistry
             required(:default).filled(:any)
             optional(:title).maybe(:string)
             optional(:description).maybe(:string)
+            optional(:options).maybe(:array)
             optional(:type).maybe(:symbol)
             optional(:value).maybe(:string)
           end

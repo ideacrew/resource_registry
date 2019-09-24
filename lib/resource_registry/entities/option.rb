@@ -13,6 +13,7 @@ module ResourceRegistry
         attribute :key,          Types::String
         attribute :title,        Types::String.optional.meta(omittable: true)
         attribute :description,  Types::String.optional.meta(omittable: true)
+        attribute :options,      Types::Array.optional.meta(omittable: true)
         attribute :type,         Types::Symbol.optional.meta(omittable: true)
         attribute :default,      Types::Any
         attribute :value,        Types::String.optional.meta(omittable: true)
