@@ -17,7 +17,7 @@ module ResourceRegistry
 
         def configure_registry(input)
           input[:application].merge!(ResourceRegistry.config.to_h)
-          input[:resource_registry].merge!(ResourceRegistry.resolver_config.to_h)
+          input[:resource_registry].merge!(ResourceRegistry.resource_registry_config.to_h)
           super(input)
         end
       end

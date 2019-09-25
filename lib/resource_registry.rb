@@ -20,7 +20,7 @@ module ResourceRegistry
 
   class << self
 
-    attr_reader :config, :resolver_config
+    attr_reader :config, :resource_registry_config
 
     def configure
       result = initialize_container
@@ -35,7 +35,7 @@ module ResourceRegistry
       end
 
       @config = result.value!
-      @resolver_config = {resolver: yield[:resource_registry][:resolver]}
+      @resource_registry_config = yield[:resource_registry]
     end
 
     def initialize_container

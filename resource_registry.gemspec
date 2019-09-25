@@ -45,12 +45,13 @@ Gem::Specification.new do |spec|
   # spec.add_dependency 'dry-configurable',         '~> 0.8'
   spec.add_dependency 'dry-transaction',          '~> 0.13'
   spec.add_dependency 'dry-initializer',          '~> 3.0'
+  spec.add_dependency 'deep_merge',               '~> 1.2.1'
+
 
   spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'bootsnap',                 '~> 1.0'
   spec.add_dependency 'mime-types'
-
 
   spec.add_development_dependency "bundler",      "~> 2.0"
   spec.add_development_dependency 'rake',         '~> 12.0'
@@ -61,5 +62,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
   spec.add_development_dependency "database_cleaner", '~> 1.7'
   spec.add_development_dependency "timecop",          '~> 0.9'
-
 end

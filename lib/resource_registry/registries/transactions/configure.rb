@@ -55,6 +55,8 @@ module ResourceRegistry
             container.register("resource_registry.config.#{key}", value)
           end
 
+          container.register("resource_registry.load_application_settings", input[:resource_registry][:load_application_settings])
+
           Success(input)
         end
 

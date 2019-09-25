@@ -19,7 +19,8 @@ ResourceRegistry.configure do
         site: :shop_site,
         env: :production,
         application: :enroll_app
-      }
+      },
+      load_application_settings: true
     }
   }
 end

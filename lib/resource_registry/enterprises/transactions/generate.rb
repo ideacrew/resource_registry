@@ -23,6 +23,14 @@ module ResourceRegistry
             Failure(result.errors)
           end
         end
+
+        def create(input)
+          if Registry['resource_registry.load_application_settings']
+            super(input)
+          else
+            Success(input)
+          end
+        end
       end
     end
   end
