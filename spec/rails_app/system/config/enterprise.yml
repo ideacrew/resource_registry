@@ -38,7 +38,7 @@ namespaces:
                                   default: false
                                 - key: is_enabled
                                   description: Feature must be enabled if true
-                                  default: false
+                                  default: true
                                 - key: alt_key
                                   description: Shortened Key reference to be used in Registry
                                   default: ea
@@ -61,7 +61,7 @@ namespaces:
                                           default: false
                                         - key: is_enabled
                                           description: Feature must be enabled if true
-                                          default: false
+                                          default: true
                                         - key: alt_key
                                           description: Shortened Key reference to be used in Registry
                                           default: shop
