@@ -15,7 +15,7 @@ module ResourceRegistry
             optional(:description).maybe(:string)
             optional(:options).maybe(:array)
             optional(:type).maybe(:symbol)
-            optional(:value).maybe(:string)
+            optional(:value).maybe(:any)
           end
 
           optional(:namespaces).array(:hash)

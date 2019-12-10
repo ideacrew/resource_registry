@@ -79,7 +79,7 @@ namespaces:
                                           namespaces:
                                             - key: :settings
                                               settings:
-                                                - key: small_market_employee_count_maximumt
+                                                - key: small_market_employee_count_maximum
                                                   type: :integer
                                                   default: 50
                                                 - key: transmit_monthly_employers

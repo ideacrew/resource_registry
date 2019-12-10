@@ -92,7 +92,7 @@ RSpec.describe ResourceRegistry do
     end
 
     it 'should load shop market options' do
-      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximumt/).present?}).to be_truthy
+      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximum/).present?}).to be_truthy
     end
 
     # it 'should load individual market options' do

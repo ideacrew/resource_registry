@@ -28,7 +28,7 @@ RSpec.describe ResourceRegistry::Registries::Transactions::Create do
 
       expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.copyright_period_start")).to be_truthy
       expect(Registry.keys.include?("enterprise.dchbx.shop_site.production.policies_url")).to be_truthy
-      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximumt/).present?}).to be_truthy
+      expect(Registry.keys.any?{|key| key.scan(/enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximum/).present?}).to be_truthy
     end
   end
 end
