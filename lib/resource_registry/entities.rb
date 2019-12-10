@@ -12,7 +12,7 @@ require 'resource_registry/entities/enterprise'
 module ResourceRegistry
   module Entities
     # rubocop:disable Style/RescueModifier
-    RegistryConstructor = Types.Constructor('Registry') { |val| Registry.new(val) rescue nil }
+    RegistryConstructor = Types.Constructor(Registry) { |val| Registry.new(val) rescue nil }
     # rubocop:enable Style/RescueModifier
   end
 end
