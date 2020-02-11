@@ -4,8 +4,7 @@ module ResourceRegistry
   module Registries
     module Transactions
       class Configure
-
-        include Dry::Transaction(container: ::Registry)
+        send(:include, Dry::Transaction(container: ::Registry))
 
         step :validate_application_configuration,       with: 'resource_registry.registries.validate'
         step :load_application_configuration
@@ -55,7 +54,7 @@ module ResourceRegistry
             container.register("resource_registry.config.#{key}", value)
           end
 
-          container.register("resource_registry.load_application_settings", input[:resource_registry][:load_application_settings])
+          # container.register("resource_registry.load_application_settings", input[:resource_registry][:load_application_settings])
 
           Success(input)
         end

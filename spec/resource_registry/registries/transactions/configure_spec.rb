@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 require 'support/initialize_registry'
-require 'resource_registry/registries/transactions/configure'
-require 'resource_registry/registries/validation/registry_contract'
+# require 'resource_registry/registries/transactions/configure'
+# require 'resource_registry/registries/validation/registry_contract'
 
 RSpec.describe ResourceRegistry::Registries::Transactions::Configure do
   include RegistryDataSeed

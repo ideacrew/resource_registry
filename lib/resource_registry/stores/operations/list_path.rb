@@ -8,7 +8,7 @@ module ResourceRegistry
         include Dry::Transaction::Operation
 
         def call(dir)
-          paths = Dir.glob(File.join(dir, "*"))
+          paths = ::Dir.glob(::File.join(dir, "*"))
           Success(paths)
         end
       end

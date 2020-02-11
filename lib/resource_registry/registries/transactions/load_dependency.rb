@@ -4,8 +4,7 @@ module ResourceRegistry
   module Registries
     module Transactions
       class LoadDependency
-
-        include Dry::Transaction(container: ::Registry)
+        send(:include, Dry::Transaction(container: Registry))
 
         step :load_options,        with: 'resource_registry.options.load'
         step :parse_options,       with: 'resource_registry.serializers.parse_option'

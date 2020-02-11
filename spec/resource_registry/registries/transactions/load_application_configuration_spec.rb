@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'support/initialize_registry'
-require 'resource_registry/registries/transactions/load_application_configuration'
+# require 'resource_registry/registries/transactions/load_application_configuration'
 
 RSpec.describe ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration do
   include RegistryDataSeed

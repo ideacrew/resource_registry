@@ -5,6 +5,7 @@ module ResourceRegistry
     class Enterprise < Dry::Struct
       transform_keys(&:to_sym)
 
+      attribute :key,                      Types::Symbol.optional.meta(omittable: true)
       attribute :owner_organization_name,  Types::String.optional.meta(omittable: true)
       attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
       attribute :tenants, Types::Array.of(ResourceRegistry::Entities::Tenant).meta(omittable: true) 

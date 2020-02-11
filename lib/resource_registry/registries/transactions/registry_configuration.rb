@@ -4,33 +4,10 @@ module ResourceRegistry
   module Registries
     module Transactions
       class RegistryConfiguration
+        send(:include, Dry::Transaction(container: Registry))
 
-        include Dry::Transaction
+        step :validate, with: 'resource_registry.registries.validate'
 
-        step :validate
-
-        private
-
-        def validate(input)
-          result = ResourceRegistry::Registries::Validation::RegistryContract.call(input)
-
-          if result.success?
-            Success(result)
-          else
-            Failure(result.errors)
-          end
-        end
-
-        # def load_application_initializer(input, preferences: {})
-        #   preferences.deep_stringify_keys!
-
-        #   super input.merge(preferences)
-        # end
-
-        # def load_application_options_namespace(input)
-
-        #   return Success(input)
-        # end
       end
     end
   end

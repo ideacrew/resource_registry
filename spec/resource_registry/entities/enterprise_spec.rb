@@ -22,6 +22,7 @@ RSpec.describe ResourceRegistry::Entities::Enterprise do
               [{:key => :production,
                 :features =>
                  [{:key => :enroll_app,
+                   :parent_key => :enroll_app,
                    :is_required => false,
                    :is_enabled => false,
                    :alt_key => "ea",

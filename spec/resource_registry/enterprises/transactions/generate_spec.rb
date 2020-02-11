@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'support/initialize_registry'
-require 'resource_registry/enterprises/transactions/generate'
+# require 'support/initialize_registry'
+# require 'resource_registry/enterprises/transactions/generate'
 
 RSpec.describe ResourceRegistry::Enterprises::Transactions::Generate do
 
@@ -25,6 +25,7 @@ RSpec.describe ResourceRegistry::Enterprises::Transactions::Generate do
                   [{:key => environment,
                     :features =>
                      [{:key => :enroll_app,
+                       :parent_key => :enroll_app,
                        :is_required => false,
                        :is_enabled => false,
                        :alt_key => "ea",

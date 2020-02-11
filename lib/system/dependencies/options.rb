@@ -5,7 +5,7 @@ require 'resource_registry/options'
 Registry.namespace :"resource_registry.options" do
 
   register :validate do
-    ResourceRegistry::Options::Validation::OptionContract
+    ResourceRegistry::Options::Validation::OptionContract.new
   end
 
   register :load do

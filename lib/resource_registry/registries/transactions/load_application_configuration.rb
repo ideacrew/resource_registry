@@ -4,11 +4,13 @@ module ResourceRegistry
   module Registries
     module Transactions
       class LoadApplicationConfiguration
+        send(:include, Dry::Transaction(container: Registry))
 
-        include Dry::Transaction(container: ::Registry)
+        step :read_file,            with: 'resource_registry.stores.file.read'
+        step :parse_configuration,  with: 'resource_registry.serializers.yaml.deserialize'
 
-        step :load_source,        with: 'resource_registry.stores.load_file'
-        step :parse,              with: 'resource_registry.serializers.parse_yaml'
+        # step :load_source,        with: 'resource_registry.stores.load_file'
+        # step :parse,              with: 'resource_registry.serializers.parse_yaml'
         step :symbolize_keys,     with: 'resource_registry.serializers.symbolize_keys'
         step :configure_registry, with: 'resource_registry.registries.configure'
         # step :load_application_options_namespace

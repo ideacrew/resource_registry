@@ -11,7 +11,7 @@ module ResourceRegistry
       attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
       attribute :options,       Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
 
-      attribute :subscriptions,      Types::Array.meta(omittable: true).default([]) do
+      attribute :subscriptions,      Types::Array.meta(omittable: true).default([].freeze) do
         attribute :feature_key, Types::RequiredSymbol
         attribute :id,                     Types::String.optional
         attribute :validator_id,           Types::String.optional

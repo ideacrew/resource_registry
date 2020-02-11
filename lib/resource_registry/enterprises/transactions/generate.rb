@@ -4,8 +4,7 @@ module ResourceRegistry
   module Enterprises
     module Transactions
       class Generate
-
-        include Dry::Transaction(container: ::Registry)
+        send(:include, Dry::Transaction(container: ::Registry))
 
         step :symbolize_keys, with: 'resource_registry.serializers.symbolize_keys'
         step :validate,       with: 'resource_registry.enterprises.validate'

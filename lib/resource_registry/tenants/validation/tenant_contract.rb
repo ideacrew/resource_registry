@@ -6,12 +6,12 @@ module ResourceRegistry
       PrimarySiteType = Types::Symbol.default(:primary)
 
       EnvironmentHash = Dry::Schema.Params do
-        required(:key).value(ResourceRegistry::Types::Environment)
+        required(:key).value(Types::Environment)
         optional(:features).array(:hash)
         optional(:options).array(:hash)
       end
 
-      TenantContract = ResourceRegistry::Validation::ApplicationContract.build do
+      class TenantContract < ResourceRegistry::Validation::ApplicationContract
 
         params do
           required(:key).value(:symbol)
@@ -23,7 +23,7 @@ module ResourceRegistry
             optional(:key).value(:symbol)
             optional(:id).maybe(:string)
             optional(:validator_id).maybe(:string)
-            optional(:subscribed_on).maybe(ResourceRegistry::Types::CallableDate)
+            optional(:subscribed_on).maybe(Types::CallableDate)
             optional(:unsubscribed_on).maybe(type?: Date)
             optional(:options).array(:hash)
           end
@@ -51,7 +51,7 @@ module ResourceRegistry
                 options  = environment[:options] || []
 
                 features.each do |feature|
-                  result = ResourceRegistry::Features::Validation::FeatureContract.call(feature)
+                  result = ResourceRegistry::Features::Validation::FeatureContract.new.call(feature)
                   next unless result && result.failure?
                   validation_errors << result.errors.messages.reduce([]) do |list, message|
                     list << { :features => [{ path: message.path }, { input: message.input.to_s }, { text: message.text.to_s }] }

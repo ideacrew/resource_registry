@@ -4,8 +4,7 @@ module ResourceRegistry
   module Options
     module Transactions
       class Load
-
-        include Dry::Transaction(container: Registry)
+        send(:include, Dry::Transaction(container: Registry))
 
         step :load_source,         with: 'resource_registry.stores.load_file'
         step :parse,               with: 'resource_registry.serializers.parse_yaml'

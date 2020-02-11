@@ -6,23 +6,59 @@ require 'dry/transaction/operation'
 require 'dry/initializer'
 require 'dry/validation'
 require 'dry/monads/result'
+
+require 'resource_registry/version'
 require 'resource_registry/error'
 require 'resource_registry/types'
 require 'resource_registry/entities'
 require 'resource_registry/validations'
+require 'resource_registry/operations'
+require 'resource_registry/stores'
+require 'resource_registry/serializers'
+
 require 'resource_registry/registries/operations/create_container'
 require 'resource_registry/registries/transactions/load_container_dependencies'
-require 'resource_registry/registries/transactions/registry_configuration'
-require 'resource_registry/version'
 
 module ResourceRegistry
   include Dry::Core::Constants
 
+
+  begin
+    require "pry"
+  rescue LoadError
+  end
+
   class << self
 
-    attr_reader :config, :resource_registry_config
+    # attr_reader :config, :resource_registry_config
+
+    # attr_writer :configuration
+
+    # def configuration
+    #   @configuration ||= Configuration.new
+    # end
+
+    # def reset
+    #   @configuration = Configuration.new
+    # end
+
+    # def configure
+    #   yield configuration
+    # end
+
+
+    # Create container
+    # Assign constant to container
+    # Load local container dependencies
+    #   Serializers
+    #   Stores
+    #   Registries
+    #   Enterprises (entities?)
+
+    # Load host application container dependencies/overrides
 
     def configure
+
       result = initialize_container
       raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 
@@ -37,6 +73,7 @@ module ResourceRegistry
       @config = result.value!
       @resource_registry_config = yield[:resource_registry]
     end
+
 
     def initialize_container
       Registries::Operations::CreateContainer.new.call
@@ -61,4 +98,3 @@ module ResourceRegistry
     end
   end
 end
-

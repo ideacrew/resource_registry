@@ -4,8 +4,7 @@ module ResourceRegistry
   module Registries
     module Transactions
       class Create
-
-        include Dry::Transaction(container: ::Registry)
+        send(:include, Dry::Transaction(container: ::Registry))
 
         # step :start_registry_services
         step :load_application_configuration, with: 'resource_registry.registries.load_application_configuration'

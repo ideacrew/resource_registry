@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require 'resource_registry/registries/transactions/registry_configuration'
 require 'resource_registry/registries'
+
 
 Registry.namespace :"resource_registry.registries" do
 
   register :validate do
-    ResourceRegistry::Registries::Validation::RegistryContract
+    ResourceRegistry::Registries::Validation::RegistryContract.new
   end
 
   register :initialize_container do

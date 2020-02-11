@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
+require 'resource_registry'
+require 'pry'
 
 # Custom matcher for dry-validation schema specs
 require "support/matchers/match_schema"
@@ -13,10 +15,10 @@ end
 require 'dry/container/stub'
 require "timecop"
 
-require "dry/validation"
-require "dry/container"
-require "dry/transaction"
-require "dry/transaction/operation"
+# require "dry/validation"
+# require "dry/container"
+# require "dry/transaction"
+# require "dry/transaction/operation"
 require "active_support/all"
 
 require 'support/dry_types'

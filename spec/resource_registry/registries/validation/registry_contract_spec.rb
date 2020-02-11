@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require 'dry/container/stub'
+# require 'dry/container/stub'
 
-require 'resource_registry/types'
-require 'resource_registry/entities'
-require 'resource_registry/validations'
-require 'resource_registry/registries'
+# require 'resource_registry/types'
+# require 'resource_registry/entities'
+# require 'resource_registry/validations'
+# require 'resource_registry/registries'
 
 RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
 
@@ -46,7 +46,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
     let(:valid_parms)       { top_parms.merge(config_parms.merge(persistence_parms)) }
 
     it "validation should pass" do
-      expect(subject.call(valid_parms).errors.to_h).to eq Hash.new
+      expect(subject.new.call(valid_parms).errors.to_h).to eq Hash.new
     end
 
     it "returns data in specified format" do
@@ -59,7 +59,7 @@ RSpec.describe ResourceRegistry::Registries::Validation::RegistryContract do
     let(:pathname_error)    { ["pathname not found: sillypathname"] }
 
     it "validation should fail" do
-      expect(subject.call(invalid_pathname).errors.to_h[:config][:root]).to eq pathname_error
+      expect(subject.new.call(invalid_pathname).errors.to_h[:config][:root]).to eq pathname_error
     end
 
     it "returns data in specified format" do

@@ -4,8 +4,7 @@ module ResourceRegistry
   module Registries
     module Transactions
       class LoadApplicationDependencies
-
-        include Dry::Transaction(container: ::Registry)
+        send(:include, Dry::Transaction(container: Registry))
 
         step :list_path, with: 'resource_registry.stores.list_path'
         step :load_dependencies

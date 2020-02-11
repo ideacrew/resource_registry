@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require 'resource_registry/tenants/validation/tenant_contract'
-
 module ResourceRegistry
   module Enterprises
     module Validation
-      EnterpriseContract = ResourceRegistry::Validation::ApplicationContract.build do
+      class EnterpriseContract < ResourceRegistry::Validation::ApplicationContract
 
         params do
-          optional(:owner_organization_name).value(:string)
-          optional(:owner_account_name).value(:string)
+          optional(:key).maybe(:symbol)
+          optional(:owner_organization_name).maybe(:string)
+          optional(:owner_account_name).maybe(:string)
           optional(:tenants).array(:hash)
           optional(:options).array(:hash)
         end
+
       end
     end
   end

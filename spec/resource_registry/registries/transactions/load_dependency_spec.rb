@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'support/registry_configure'
-require 'resource_registry/registries/transactions/load_dependency'
+# require 'resource_registry/registries/transactions/load_dependency'
 
 RSpec.describe ResourceRegistry::Registries::Transactions::LoadDependency do
   include RegistryDataSeed

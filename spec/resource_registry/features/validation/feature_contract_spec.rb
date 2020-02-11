@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'resource_registry/features/validation/feature_contract'
 
 RSpec.describe ResourceRegistry::Features::Validation::FeatureContract do
 
   describe "Feature core parameters" do
     let(:key)         { :feature_key_value }
+    let(:parent_key)  { :parent_key_value }
     let(:is_required) { false }
     let(:is_enabled)  { false }
-    let(:alt_key)     { :alt_key_value }
-    let(:title)       { "title_value" }
-    let(:description) { "description_value" }
-    let(:registry)    { Hash.new }
     let(:options)     { [] }
     let(:features)    { [] }
 
-    let(:required_params)     { { key: key, is_required: is_required, is_enabled: is_enabled } }
-    let(:optional_params)     { { alt_key: alt_key, title: title, description: description, registry: registry, options: options, features: features } }
+    let(:ui_title)    { "title of this UI element" }
+    let(:ui_type)     { :string }
+    let(:ui_default)  { "default value for this element" }
+    let(:ui_metadata) { { ui_title: ui_title, ui_type: ui_type, ui_default: ui_default } }
+
+    let(:required_params)     { { key: key, parent_key: parent_key, is_required: is_required, is_enabled: is_enabled, ui_metadata: ui_metadata } }
+    let(:optional_params)     { { options: options, features: features } }
     let(:all_params)          { required_params.merge(optional_params) }
-    let(:key_coercion_params) { {key: key.to_s, alt_key: alt_key.to_s } }
+    let(:key_coercion_params) { {key: key.to_s, parent_key: parent_key.to_s } }
 
     context "with no parameters" do
       it { expect(subject.call({}).success?).to be_falsey }
@@ -33,6 +34,7 @@ RSpec.describe ResourceRegistry::Features::Validation::FeatureContract do
 
     context "with required parameters only" do
       it { expect(subject.call(required_params).success?).to be_truthy }
+      it { expect(subject.call(required_params).to_h).to eq required_params }
     end
 
     context "with all required and optional parameters" do
@@ -45,7 +47,7 @@ RSpec.describe ResourceRegistry::Features::Validation::FeatureContract do
         result = subject.call(key_coercion_params.merge({is_required: is_required})).to_h
 
         expect(result[:key]).to eq key
-        expect(result[:alt_key]).to eq alt_key
+        expect(result[:parent_key]).to eq parent_key
       end
     end
   end

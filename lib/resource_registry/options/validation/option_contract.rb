@@ -3,7 +3,7 @@
 module ResourceRegistry
   module Options
     module Validation
-      OptionContract = ResourceRegistry::Validation::ApplicationContract.build do
+      class OptionContract < ResourceRegistry::Validation::ApplicationContract
 
         params do
           required(:key).value(:symbol)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'resource_registry/enterprises/validation/enterprise_contract'
+# require 'resource_registry/enterprises/validation/enterprise_contract'
 
 RSpec.describe ResourceRegistry::Enterprises::Validation::EnterpriseContract do
 
@@ -47,9 +47,16 @@ RSpec.describe ResourceRegistry::Enterprises::Validation::EnterpriseContract do
         let(:nested_invalid_tenants)                { { tenants: [{ owner_account_name: "mary@example.com" }] } }
         let(:all_params_and_nested_invalid_tenants) { all_params.merge(nested_invalid_tenants) }
 
-        it { expect(subject.call(all_params_and_nested_invalid_tenants).success?).to be_falsey }
-        it { expect(subject.call(all_params_and_nested_invalid_tenants).errors.first.path).to include(:tenants) }
-        it { expect(subject.call(all_params_and_nested_invalid_tenants).errors.first.text).to start_with "validation failed: [{:key=>[{:path=>\"[:key]\"}" }
+        let(:error_key)     { :tenants }
+        let(:error_message) { {:key=>["is missing"]} }
+
+        it "shouild fail validation" do
+          result = subject.call(all_params_and_nested_invalid_tenants)
+
+          expect(result.failure?).to be_truthy
+          expect(result.errors.to_h.keys).to eq [error_key]
+          expect(result.errors.to_h[error_key].values.flatten.first[:error]).to eq error_message 
+        end
       end
     end
   end
