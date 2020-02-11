@@ -5,7 +5,7 @@ module ResourceRegistry
     module Features
 
       # Determine if a user is authorized to perform an action
-      class Authorized
+      class AuthorizeAccess
         send(:include, Dry::Monads[:result, :do])
 
         # @param [String] account The authenticated account requesting access
