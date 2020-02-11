@@ -47,19 +47,22 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-initializer',          '~> 3.0'
   spec.add_dependency 'deep_merge',               '~> 1.2.1'
 
-
   spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'bootsnap',                 '~> 1.0'
   spec.add_dependency 'mime-types'
 
-  spec.add_development_dependency "bundler",      "~> 2.0"
-  spec.add_development_dependency 'rake',         '~> 12.0'
-  spec.add_development_dependency 'rspec',        '~> 3.0'
-  spec.add_development_dependency 'rspec-rails',  '~> 3.0'
-  spec.add_development_dependency 'mongoid',      '~> 7.0'
-  spec.add_development_dependency 'activesupport','~> 5.2.3'
+  spec.add_development_dependency "bundler",          "~> 2.0"
+  spec.add_development_dependency 'rake',             '~> 12.0'
+  spec.add_development_dependency 'rspec',            '~> 3.0'
+  spec.add_development_dependency 'rspec-rails',      '~> 3.8'
+  spec.add_development_dependency 'mongoid',          '~> 6.0'
+  spec.add_development_dependency 'activesupport',    '~> 5.2.4'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
   spec.add_development_dependency "database_cleaner", '~> 1.7'
   spec.add_development_dependency "timecop",          '~> 0.9'
+  spec.add_development_dependency "rubocop",          '~> 0.74.0'
+  spec.add_development_dependency "yard",         "~> 0.9"
+  spec.add_development_dependency 'pry-byebug'
+
 end
