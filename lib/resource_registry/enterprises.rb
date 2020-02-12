@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'enterprises/validation/enterprise_contract'
-require_relative 'enterprises/operations/create'
-require_relative 'enterprises/transactions/generate'
+puts 'in ResourceRegistry::Enterprises!!!'
+
+require_relative 'validation/enterprises/enterprise_contract'
+require_relative 'entities/enterprise'
+require_relative 'operations/enterprises/create'
 
 module ResourceRegistry
   module Enterprises

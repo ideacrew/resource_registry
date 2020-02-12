@@ -29,6 +29,9 @@ module Types
   SymbolOrString  = Types::Symbol | Types::String
   NilOrString     = Types::Nil | Types::String
 
+  StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
+
+
   Callable   = Types.Interface(:call)
 
   Duration   = Types.Constructor(ActiveSupport::Duration) {|val| ActiveSupport::Duration.build(val) }

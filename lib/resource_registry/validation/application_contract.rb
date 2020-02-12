@@ -13,8 +13,6 @@ module ResourceRegistry
       # config.messages.top_namespace - the key in the locale files under which messages are defined, by default it's dry_validation
       # config.messages.namespace - custom messages namespace for a contract class. Use this to differentiate common messages
 
-      StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
-
       def validate_nested_contract(contract_constant, params)
         result = contract_constant.call(params)
         unpack_result(result)

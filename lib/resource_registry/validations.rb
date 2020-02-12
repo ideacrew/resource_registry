@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
-require 'resource_registry/validation/application_contract'
-require 'resource_registry/options/validation/option_contract'
-require 'resource_registry/ui_metadatas/validation/ui_metadata_contract'
-require 'resource_registry/registries/validation/registry_contract'
-require 'resource_registry/features/validation/feature_contract'
-require 'resource_registry/tenants/validation/tenant_contract'
-require 'resource_registry/enterprises/validation/enterprise_contract'
+require_relative 'validation/application_contract'
 
 module ResourceRegistry
-  module Validations
+  module Validation
+
+    puts "in resource_registry/validations!!!!!"
   end
 end

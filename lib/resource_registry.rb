@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+puts "in resource_registry!!!"
 
 require 'dry/system/container'
 require 'dry/transaction'
@@ -6,27 +7,38 @@ require 'dry/transaction/operation'
 require 'dry/initializer'
 require 'dry/validation'
 require 'dry/monads/result'
+require 'dry/monads'
+require 'dry/monads/do'
+
 
 require 'resource_registry/version'
 require 'resource_registry/error'
 require 'resource_registry/types'
-require 'resource_registry/entities'
-require 'resource_registry/validations'
-require 'resource_registry/operations'
-require 'resource_registry/stores'
-require 'resource_registry/serializers'
 
-require 'resource_registry/registries/operations/create_container'
-require 'resource_registry/registries/transactions/load_container_dependencies'
+require 'resource_registry/validations'
+
+puts "past validations require!!!"
+
+# require 'resource_registry/stores'
+# require 'resource_registry/serializers'
+
+# require 'resource_registry/registries'
+# require 'resource_registry/options'
+# require 'resource_registry/metas'
+# require 'resource_registry/features'
+# require 'resource_registry/tenants'
+require 'resource_registry/enterprises'
+
+# require 'resource_registry/operations'
+
+
+# require 'resource_registry/registries/operations/create_container'
+# require 'resource_registry/registries/transactions/load_container_dependencies'
+
+puts "past all requires!!!"
 
 module ResourceRegistry
   include Dry::Core::Constants
-
-
-  begin
-    require "pry"
-  rescue LoadError
-  end
 
   class << self
 
@@ -58,7 +70,7 @@ module ResourceRegistry
     # Load host application container dependencies/overrides
 
     def configure
-
+binding.pry
       result = initialize_container
       raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 

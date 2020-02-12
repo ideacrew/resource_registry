@@ -8,8 +8,6 @@ module ResourceRegistry
     # @see ResourceRegistry::Stores::Container::Create
     class Registry < Dry::Struct
 
-      # attribute :config do
-
       # @!attribute [r] name
       # A unique identifier for this container
       # @return [String]

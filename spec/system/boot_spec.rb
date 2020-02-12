@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require "spec_helper"
 require 'dry/system/stubs'
 require 'resource_registry' unless defined?(ResourceRegistry::CoreContainer)
@@ -18,6 +17,10 @@ RSpec.describe ResourceRegistry do
     let(:stores_key)        { 'stores.file_store' }
     let(:serializer_key)    { 'serializers.yaml_serializer' }
     let(:injector_constant) { ResourceRegistry::CoreInject }
+
+    it "should do somethiing!" do
+      binding.pry
+    end
 
     it { expect(subject).to respond_to(:boot, :config) }
     it { expect(subject.config.name).to eq config_name}
