@@ -5,7 +5,7 @@ module ResourceRegistry
     module Container
 
       # Instantiate a new Dry::Container object
-      class Create
+      class Build
         send(:include, Dry::Monads[:result, :do])
 
         # @param [ResourceRegistry::Entities::Registry] params configuration option values for the container
