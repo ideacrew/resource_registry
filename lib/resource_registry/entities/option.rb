@@ -4,7 +4,7 @@ module ResourceRegistry
   module Entities
     class Option < Dry::Struct
 
-      attribute :key,            Types::RequiredSymbol
+      attribute :key,           Types::RequiredSymbol
 
       attribute :settings,      Types::Array.meta(omittable: true).default([].freeze) do
         # attribute :key,         Types::String # This need to made Symbol. Contracts rules are validating but not returning coerced values for nested entities.

@@ -10,7 +10,6 @@ require 'dry/monads/result'
 require 'dry/monads'
 require 'dry/monads/do'
 
-
 require 'resource_registry/version'
 require 'resource_registry/error'
 require 'resource_registry/types'
@@ -19,21 +18,20 @@ require 'resource_registry/validations'
 
 puts "past validations require!!!"
 
-# require 'resource_registry/stores'
-# require 'resource_registry/serializers'
+require 'resource_registry/stores'
+require 'resource_registry/serializers'
 
-# require 'resource_registry/registries'
-# require 'resource_registry/options'
-# require 'resource_registry/metas'
-# require 'resource_registry/features'
-# require 'resource_registry/tenants'
+require 'resource_registry/options'
+require 'resource_registry/metas'
+require 'resource_registry/features'
+require 'resource_registry/tenants'
 require 'resource_registry/enterprises'
 
-# require 'resource_registry/operations'
+require 'resource_registry/operations'
 
-
-# require 'resource_registry/registries/operations/create_container'
-# require 'resource_registry/registries/transactions/load_container_dependencies'
+require 'resource_registry/operations/registries/create'
+require 'resource_registry/registries/transactions/load_container_dependencies'
+require 'resource_registry/registries'
 
 puts "past all requires!!!"
 
@@ -58,7 +56,6 @@ module ResourceRegistry
     #   yield configuration
     # end
 
-
     # Create container
     # Assign constant to container
     # Load local container dependencies
@@ -70,7 +67,6 @@ module ResourceRegistry
     # Load host application container dependencies/overrides
 
     def configure
-binding.pry
       result = initialize_container
       raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 
@@ -85,7 +81,6 @@ binding.pry
       @config = result.value!
       @resource_registry_config = yield[:resource_registry]
     end
-
 
     def initialize_container
       Registries::Operations::CreateContainer.new.call
