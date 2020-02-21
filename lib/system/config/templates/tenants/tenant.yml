@@ -1,0 +1,177 @@
+---
+namespace: 
+  path: [:enterprise]
+  settings:
+  - key: :multitenant
+    is_enabled: false
+    meta:
+      label: Multitenant Mode
+      type: :boolean
+      default: false
+      description: Host multiple organizations on a shared infrastructure
+      is_required: false
+      is_visible: true
+  - key: :key
+    value: nil
+    is_enabled: true
+    meta:
+      label: Organization ID
+      type: :symbol
+      default: nil
+      description: "Unique identifier for your organization. Short names such as acronyms are best. Case insensitive and must start with a letter (not number) and not contain any special characters (!@#$%^&*+-:;[]<>?.,)"
+      choices: nil
+      is_required: true
+      is_visible: true
+      order: nil
+  - key: :organization_name
+    value: nil
+    is_enabled: true
+    meta:
+      label: Organization Name
+      type: :symbol
+      default: nil
+      description: "The title of your Organization as it will appear in the UI"
+      choices: nil
+      is_required: true
+      is_visible: true
+      order: nil
+  - key: :owner_account
+    value: nil
+    is_enabled: true
+    meta:
+      label: Owner Account
+      type: :string
+      default: nil
+      description: "Unique identifier for your organization.  Short names such as acronyms are best. Case insensitive and must start with a letter (not number) and not contain any special characters (!@#$%^&*+-:;[]<>?.,)"
+      choices: nil
+      is_required: true
+      is_visible: true
+      order: nil
+  - key: copyright_period_start
+    value: 2020
+    meta:
+      label: Initial Operation Year
+      description: "The first year your site became operational (for display on the UI copyright notice)"
+      type: :integer
+      default: 2013
+      choices: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+      is_required: true
+      is_visible: true
+
+
+
+
+    namespace: 
+      path: [:subscriptions]
+      meta: nil
+      instances:
+      - instance:
+        fields:
+        - key: :feature_key
+          value: nil
+          meta:
+        - key: :id
+          value: nil
+        - key: validator_id
+          value: nil
+        - key: subscribed_at
+          value: nil
+        - key: unsubsribed_at
+          value: nil
+        - key: settings
+    namespace: 
+      key: [:sites]
+      meta: nil
+      instances:
+      - instance:
+          fields:
+          - key: :key
+            value: nil
+            meta: nil
+          - key: url
+            value: nil
+            meta: nil
+          - key: title
+            value: nil
+            meta: nil
+          - key: description
+            value: nil
+            meta: nil
+          settings:
+            setting:
+              - key: nil
+              - value: nil
+              - meta: nil
+
+    namespace: environments
+    - key: key
+      value: development
+      namespace: options
+    namespace: 
+      path: sites
+      meta: nil
+      instances:
+      - instance:
+        settings:
+        - key: domain_name
+          value: nil
+          meta:
+            label: Site Host Name
+            description: "Shared URL host name for all site portals, for example: mysite.com"
+            type: :string
+            default: mysite.com
+            is_required: true
+            is_visible: true
+        - key: site_support_urls
+          value: nil
+          meta:
+            label: Site Support URLs 
+            description: Links to associated sites with additional customer resources
+            type: heading
+            is_required: true
+            is_visible: true
+        - key: policies_url
+          value: nil
+          meta:
+            label: Organization Policies URL
+            type: :url
+            description: Link to site use policies
+            default: https://acme.com/policies
+            is_required: false
+            is_visible: true
+        - key: faqs_url
+          value: nil
+          meta:
+            label: FAQs URL
+            type: :url
+            description: Link to Frequently Asked Questions 
+            default: https://www.acme.com/faqs
+            is_required: false
+            is_visible: true
+        - key: help_url
+          value: nil
+          meta:
+            label: Help URL
+            type: :url
+            description: Link to general help resources
+            default: "https://www.acme.com/help"  
+            is_required: false
+            is_visible: true
+        - key: business_resource_center_url
+          value: nil
+          meta:
+            label: Small Business URL
+            type: :string
+            description: Link to help for small business owners
+            default: "https://acme.com/smallbusiness/"    
+            is_required: false
+            is_visible: true
+        - key: nondiscrimination_notice_url
+          value: nil
+          meta:
+            label: Nondescrimination URL
+            type: :string
+            description: Link to nondiscrimination policy statement and resources
+            default: "https://www.acme.com/nondiscrimination"
+            is_required: false
+            is_visible: true

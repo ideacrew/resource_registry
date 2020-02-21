@@ -1,0 +1,110 @@
+---
+namespace:
+  path: [:features, :enroll_app]
+  features:
+  - key: :aca_shop_market
+    is_enabled: false
+    meta:
+      label: Enable ACA SHOP Market
+      type: :boolean
+      default: true
+      value: true
+      description: ACA Small Business Health Options (SHOP) Portal
+      is_required: false
+      is_visible: true
+    settings:
+    - key: :enroll_prior_to_effective_on_max
+      value: { days: -30 }
+      meta:
+        label: Earliest Enrollment Date
+        description: Maximum period prior to effective date that a group member may enroll
+        type: :duration
+        default: { days: -30 }
+        is_required: true
+        is_visible: true
+    - key: :enroll_after_effective_on_max
+      value: { days: 30 }
+      meta:
+        label: 
+        description: Maximum period after coverage effective date that a group member may be retroactively enrolled
+        type: :duration
+        default: { days: 30 }
+        is_required: true
+        is_visible: true
+    - key: :enroll_after_ee_roster_correction_max
+      value: { days: 30 }
+      meta:
+        label: 
+        description: Maximum period after roster correction that a group member may be retroactively enrolled (from date of correction)
+        type: :duration
+        default: { days: 30 }
+        is_required: true
+        is_visible: true
+    - key: :retro_term_max_days
+      value: { days: -60 }
+      meta:
+        label: 
+        description: Maximum period that coverage may be retroactively terminated
+        type: :duration
+        default: { days: -60 }
+        is_required: true
+        is_visible: true
+namespace: 
+  path: [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog]
+  features:
+  - key: :cobra
+    is_enabled: true
+    settings:
+    - key: :cobra_enrollment_period_max
+      value: { months: 6 }
+      meta:
+        label: Maximum Enrollment Period
+        description: Maximum period following termination that a group member may enroll in COBRA coverage
+        type: :duration
+        default: { months: 6 }
+        is_required: true
+        is_visible: true
+namespace: 
+  path: [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog]
+  features:
+  - key: :groups
+    is_enabled: true
+    settings:
+    - key: :contact_methods_kinds
+      value: { paper_and_electronic: "Paper and Electronic" }
+      meta:
+        label: 
+        description: 
+        type: :enumerated_hash
+        default: { paper_and_electronic: "Paper and Electronic" }
+        enum:   [
+                    { paper_and_electronic: "Paper and Electronic" }.freeze,
+                    { paper_only: "Paper only" }.freeze,
+                    { electronic_only: "Electronic only" }.freeze
+                  ]
+        is_required: true
+        is_visible: true
+# Employer Attestation Feature settngs
+# Only accessed if enabled in catalog settings [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :catalog_2020, :use_employer_attestation_required
+namespace:
+  path: [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog]
+  features:
+  - key: :employer_attestation
+    is_enabled: false
+    meta:
+      label: Employer Attestation Feature
+      description: Workflow for documenting and verifying employer eligibility to sponsor group benefits
+      is_required: false
+      is_visible: true
+# Employer SIC Feature settngs.  
+# Only accessed if enabled in catalog settings [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :catalog_2020, :use_employer_sic] == true
+namespace:
+  path: [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :employer_sic]
+  features:
+  - key: :employer_attestation
+    is_enabled: false
+    meta:
+      is_required: false
+      is_visible: true
+
+        

@@ -5,7 +5,7 @@ development: &base
   # assets_server_read_url: "http://localhost:8080"
   # admin_url: "http://localhost:3000/admin"
   canonical_domain: "http://localhost:3000"
-  tenent_key: "dchbx"
+  tenant_key: "dchbx"
   # precompiled_assets: false
   # precompiled_assets_host:
   # app_mailer_from_email: "hello@berg.dev"

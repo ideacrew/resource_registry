@@ -4,11 +4,10 @@ module ResourceRegistry
   module Entities
     
     class Tenant < Dry::Struct
-      transform_keys(&:to_sym)
 
       attribute :key, Types::RequiredSymbol
       attribute :owner_organization_name,  Types::String.optional.meta(omittable: true)
-      attribute :owner_account_name,       Types::String.optional.meta(omittable: true)
+      attribute :owner_account,       Types::String.optional.meta(omittable: true)
       attribute :options,       Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true) 
 
       attribute :subscriptions,      Types::Array.meta(omittable: true).default([].freeze) do

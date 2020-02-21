@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-puts "in Helper!!!!!"
-
-
 require "bundler/setup"
 require 'resource_registry'
 require 'pry'

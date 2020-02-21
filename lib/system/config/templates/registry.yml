@@ -1,0 +1,40 @@
+---
+namespace:
+  path: [:config]
+  features:
+  - key: :resource_registry
+    is_enabled: true
+    meta:
+      is_required: true
+      is_visible: true
+    settings:
+    - key: :default_namespace
+      value: options
+      meta:
+        type: :string
+    - key: :root
+      value: lib
+      meta:
+        type: :string
+    - key: :system_dir
+      value: system
+      meta:
+        type: :string
+    - key: :auto_register
+      value:
+      - resource_registry/operations
+      - resource_registry/serializers
+      - resource_registry/stores
+      - resource_registry/entities
+      - resource_registry/validation
+      meta:
+        type: :array
+    - key: :load_paths
+      value:
+      - system
+      meta:
+        type: :array
+    - key: :load_application_settings
+      value: true
+      meta:
+        type: boolean
