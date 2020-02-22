@@ -10,7 +10,7 @@ module ResourceRegistry
 
         # @!method call(params)
         # @param params [Hash] options used to create the contract
-        #   @options params [String] :title (required)
+        #   @options params [String] :label (required)
         #   @options params [Symbol] :type (required)
         #   @options params [Any] :default (required)
         #   @options params [Any] :value (optional)
@@ -20,7 +20,7 @@ module ResourceRegistry
         #   @options params [Bool] :is_visible (optional)
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
-          required(:title).value(:string)
+          required(:label).value(:string)
           required(:type).value(:symbol)
           required(:default).value(:any)
           optional(:value).maybe(:any)

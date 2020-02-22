@@ -21,9 +21,12 @@ puts "past validations require!!!"
 require 'resource_registry/stores'
 require 'resource_registry/serializers'
 
-require 'resource_registry/options'
+require 'resource_registry/account_roles'
 require 'resource_registry/metas'
+require 'resource_registry/settings'
+require 'resource_registry/options'
 require 'resource_registry/features'
+require 'resource_registry/namespaces'
 require 'resource_registry/tenants'
 require 'resource_registry/enterprises'
 
@@ -31,7 +34,7 @@ require 'resource_registry/operations'
 
 require 'resource_registry/operations/registries/create'
 require 'resource_registry/registries/transactions/load_container_dependencies'
-require 'resource_registry/registries'
+# require 'resource_registry/registries'
 
 puts "past all requires!!!"
 

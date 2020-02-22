@@ -4,7 +4,7 @@ module ResourceRegistry
   module Entities
     class Namespace < Dry::Struct
 
-      attribute :path,        Types::Array.of(RequiredSymbol)
+      attribute :path,        Types::Array.of(Types::RequiredSymbol)
 
       # @!attribute [r] meta (optional)
       # Configuration settings and attributes that support presenting and updatig their values n the User Interface
