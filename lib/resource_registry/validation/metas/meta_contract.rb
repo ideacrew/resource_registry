@@ -15,7 +15,7 @@ module ResourceRegistry
         #   @options params [Any] :default (required)
         #   @options params [Any] :value (optional)
         #   @options params [String] :description (required)
-        #   @options params [Array<Any>] :choices (optional)
+        #   @options params [Array<Any>] :enum (optional)
         #   @options params [Bool] :is_required (optional)
         #   @options params [Bool] :is_visible (optional)
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
@@ -25,7 +25,7 @@ module ResourceRegistry
           required(:default).value(:any)
           optional(:value).maybe(:any)
           optional(:description).maybe(:string)
-          optional(:choices).array(:hash)
+          optional(:enum).array(:hash)
           optional(:is_required).maybe(:bool)
           optional(:is_visible).maybe(:bool)
         end

@@ -1,7 +1,18 @@
 # frozen_string_literal: true
 
+# require_relative 'entities/account_roles'
+
+require_relative 'entities/meta'
+require_relative 'entities/setting'
 require_relative 'entities/feature'
+
 require_relative 'validation/features/feature_contract'
+require_relative 'validation/metas/meta_contract'
+require_relative 'validation/settings/setting_contract'
+
+require 'dry/monads'
+require 'dry/monads/do'
+
 require_relative 'operations/features/create'
 require_relative 'operations/features/authorize'
 require_relative 'operations/features/configure'

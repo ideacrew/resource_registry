@@ -7,9 +7,19 @@ module ResourceRegistry
 
         params do
           required(:key).value(:symbol)
-          optional(:value).maybe(:any)
+          required(:value).filled(:any)
           optional(:meta).maybe(:hash)
         end
+
+        rule(:meta) do
+          if key? && value
+            result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
+
+            # Use dry-validation metadata error form to pass error hash along with text to calling service
+            key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
+          end
+        end
+
 
         # rule([:settings, :options]) do
         #   if key? && value

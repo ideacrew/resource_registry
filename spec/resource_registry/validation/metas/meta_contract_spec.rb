@@ -6,20 +6,20 @@ RSpec.describe ResourceRegistry::Validation::Metas::MetaContract do
 
   # subject { described_class.new(params) }
 
-  let(:title)       { "Name of this UI Feature" }
+  let(:label)       { "Name of this UI Feature" }
   let(:type)        { :integer }
   let(:default)     { 42 }
   let(:value)       { 57 }
   let(:description) { "The Answer to Life, the Universe and Everything" }
-  let(:choices)     { [] }
+  let(:enum)        { [] }
   let(:is_required) { false }
   let(:is_visible)  { false }
 
-  let(:required_params)   { { title: title, type: type, default: default, } }
+  let(:required_params)   { { label: label, type: type, default: default, } }
   let(:optional_params)   { {
                               value: value,
                               description: description,
-                              choices: choices,
+                              enum: enum,
                               is_required: is_required,
                               is_visible: is_visible,
                             }
@@ -27,7 +27,7 @@ RSpec.describe ResourceRegistry::Validation::Metas::MetaContract do
   let(:all_params)        { required_params.merge(optional_params) }                            
 
   context "Validation with invalid input" do
-    let (:required_params_error) { {:default=>["is missing"], :title=>["is missing"], :type=>["is missing"]} }
+    let (:required_params_error) { {:default=>["is missing"], :label=>["is missing"], :type=>["is missing"]} }
 
     context "Given hash params are empty" do
 
@@ -64,7 +64,7 @@ RSpec.describe ResourceRegistry::Validation::Metas::MetaContract do
         :is_required => false,
         :is_enabled => false,
         :alt_key => "shop",
-        :title => "ACA SHOP Market",
+        :label => "ACA SHOP Market",
         :description => "ACA Small Business Health Options (SHOP) Portal",
         :options =>
         [{:key => :settings,
