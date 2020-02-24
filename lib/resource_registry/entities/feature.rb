@@ -9,6 +9,8 @@ module ResourceRegistry
       # @return [Symbol]
       attribute :key,         Types::Symbol.meta(omittable: false)
 
+      attribute :namespace,   Types::Array.of(Types::RequiredSymbol).meta(omittable: false)
+
       # @!attribute [r] is_required (required)
       # State of this Feature either enabled or disabled
       # @return [boolean]
@@ -18,6 +20,7 @@ module ResourceRegistry
       # Configuration settings and attributes that support presenting and updatig their values in the User Interface
       # @return [ResourceRegistry::Entities::Meta]
       attribute :meta,        ResourceRegistry::Entities::Meta.optional.meta(omittable: true)
+
 
       # @!attribute [r] settings (optional)
       # Configuration settings and values for this Feature 

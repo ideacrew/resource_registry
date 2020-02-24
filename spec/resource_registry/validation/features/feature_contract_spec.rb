@@ -5,50 +5,79 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Validation::Features::FeatureContract do
 
   describe "Feature core parameters" do
-    let(:key)         { :feature_key_value }
-    let(:parent_key)  { :parent_key_value }
-    let(:is_required) { false }
+    let(:key)         { :my_feature }
+    let(:namespace)   { [:level_1, :level_2, :level_3 ]}
     let(:is_enabled)  { false }
-    let(:options)     { [] }
-    let(:features)    { [] }
+    let(:meta)        { { label: "label", default: 42, type: :integer } }
+    let(:settings)    { [{ service: "weather/forcast" }, { retries: 4 }] }
 
-    let(:ui_title)    { "title of this UI element" }
-    let(:ui_type)     { :string }
-    let(:ui_default)  { "default value for this element" }
-    let(:ui_metadata) { { ui_title: ui_title, ui_type: ui_type, ui_default: ui_default } }
-
-    let(:required_params)     { { key: key, parent_key: parent_key, is_required: is_required, is_enabled: is_enabled, ui_metadata: ui_metadata } }
-    let(:optional_params)     { { options: options, features: features } }
+    let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled } }
+    let(:optional_params)     { { meta: meta, settings: settings } }
     let(:all_params)          { required_params.merge(optional_params) }
-    let(:key_coercion_params) { {key: key.to_s, parent_key: parent_key.to_s } }
+    let(:key_coercion_params) { {key: key.to_s } }
 
-    context "with no parameters" do
-      it { expect(subject.call({}).success?).to be_falsey }
-      it { expect(subject.call({}).error?(:key)).to be_truthy }
-    end
-
-    context "with optional parameters only" do
-      it { expect(subject.call(optional_params).success?).to be_falsey }
-      it { expect(subject.call(optional_params).error?(:key)).to be_truthy }
-    end
-
-    context "with required parameters only" do
-      it { expect(subject.call(required_params).success?).to be_truthy }
-      it { expect(subject.call(required_params).to_h).to eq required_params }
-    end
-
-    context "with all required and optional parameters" do
-      it { expect(subject.call(all_params).success?).to be_truthy }
-      it { expect(subject.call(all_params).to_h).to eq all_params }
-    end
-
-    context "and passing in keys as strings" do
-      it "should coerce all stringified keys into hashes" do
-        result = subject.call(key_coercion_params.merge({is_required: is_required})).to_h
-
-        expect(result[:key]).to eq key
-        expect(result[:parent_key]).to eq parent_key
+    context "Given invalid parameters" do
+      context "and parameters are empty" do
+        it { expect(subject.call({}).success?).to be_falsey }
+        it { expect(subject.call({}).error?(:key)).to be_truthy }
       end
+
+      context "with optional parameters only" do
+        it { expect(subject.call(optional_params).success?).to be_falsey }
+        it { expect(subject.call(optional_params).error?(:key)).to be_truthy }
+      end
+
+      context "and a non-boolean value is passed to :is_enabled" do
+        let(:invalid_is_enabled)  { "blue" }
+        let(:invalid_params)      { { key: key, namespace: namespace, is_enabled: invalid_is_enabled } }
+        let(:error_message)       { "must be boolean" }
+
+        it "should should fail validation" do
+          result = subject.call(invalid_params)
+
+          expect(result.success?).to be_falsey
+          expect(result.errors.first.text).to eq error_message
+        end
+      end
+    end
+
+    context "Given valid parameters" do
+
+      context "with required parameters only" do
+        it { expect(subject.call(required_params).success?).to be_truthy }
+        it { expect(subject.call(required_params).to_h).to eq required_params }
+      end
+
+      context "with all required and optional parameters" do
+        it { expect(subject.call(all_params).success?).to be_truthy }
+        it { expect(subject.call(all_params).to_h).to eq all_params }
+      end
+
+      context "and passing keys in as strings" do
+        let(:key_string)  { "my_feature" }
+        let(:params)      { { key: key_string, namespace: namespace, is_enabled: is_enabled } }
+
+        it "should coerce stringified key into symbol" do
+          result = subject.call(params)
+
+          expect(result.success?).to be_truthy
+          expect(result[:key]).to eq key
+        end
+      end
+
+      context "and passing namespace values in as strings" do
+        let(:namespace_strings) { namespace.map(&:to_s ) }
+        let(:params)            { { key: key, namespace: namespace_strings, is_enabled: is_enabled } }
+
+        it "should coerce stringified key into symbol" do
+          result = subject.call(params)
+
+          expect(result.success?).to be_truthy
+          expect(result.to_h).to eq required_params
+        end
+
+      end
+
     end
   end
 end

@@ -10,22 +10,33 @@ module ResourceRegistry
         # @!method call(params)
         # @param params [Hash] options used to create the contract
         #   @options params [Symbol] :key (optional)
-        #   @options params [Symbol] :parent_key (optional)
-        #   @options params [Bool] :is_required (optional)
-        #   @options params [Bool] :is_enabled (optional)
-        #   @options params [ResourceRegistry::Entities::::Option] :options (optional)
+        #   @options params [Array<Symbol>] :namespace (required)
+        #   @options params [Bool] :is_enabled (required)
+        #   @options params [ResourceRegistry::Entities::Meta] :meta (optional)
+        #   @options params [Array<ResourceRegistry::Entities::Setting>] :meta (optional)
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
           required(:key).value(:symbol)
-          optional(:parent_key).maybe(:symbol)
-          required(:is_required).value(:bool)
+          required(:namespace).maybe(:array)
           required(:is_enabled).value(:bool)
           # required(:ui_metadata).value(ResourceRegistry::UiMetadata::Validation::UiMetadataContract)
-          optional(:ui_metadata).maybe(:hash)
+          optional(:meta).maybe(:hash)
           # optional(:options).array(ResourceRegistry::Options::Validation::OptionContract)
-          optional(:options).array(:hash)
-          optional(:features).array(:hash)
+          optional(:settings).array(:hash)
+
+          before(:value_coercer) do |result|
+            # binding.pry
+            result.to_h.merge({namespace: result[:namespace].map(&:to_sym)}) if result[:namespace] && result[:namespace].size > 0
+          end
         end
+
+        # rule(:namespace) do
+        #   if key? && value
+        #     # binding.pry
+        #     value = value.map(&:to_sym)
+        #   end
+        # end
+
 
       end
     end
