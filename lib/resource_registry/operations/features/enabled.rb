@@ -4,11 +4,16 @@ module ResourceRegistry
   module Operations
     module Features
 
-      # Check whether a Feature is enabled
+      # Check if a Feature is enabled
+      # @param [Symbol] name Name of the feature
+      # @param [Hash] options Options passed through to feature enabled check
+      # @return [true] if the feature is enabled
+      # @return [false] if the feature is disabled
       class Enabled
         send(:include, Dry::Monads[:result, :do])
 
-        def call(params)
+        def call(name:, options: {})
+          feature(name).enabled(args)
         end
         
       end
