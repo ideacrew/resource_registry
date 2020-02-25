@@ -21,6 +21,8 @@ require_relative 'operations/features/disabled'
 require_relative 'operations/features/enable'
 require_relative 'operations/features/enabled'
 require_relative 'operations/features/enable'
+require_relative 'operations/features/register'
+require_relative 'operations/features/exist'
 
 
 module ResourceRegistry

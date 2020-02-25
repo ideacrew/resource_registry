@@ -2,44 +2,41 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Entities::Meta do
+RSpec.describe ResourceRegistry::Meta do
 
-  let(:title)       { "Minimum days for Open Enrollment" }
+  let(:label)       { "Name of this UI Feature" }
   let(:type)        { :integer }
-  let(:default)     { 5 }
-  let(:value)       { 5 }
-  let(:description) { "Shortest period in days that a group must offer open enrollment" }
-  let(:choices)     { nil }
-  let(:is_required) { true }
-  let(:is_visible)  { true }
+  let(:default)     { 42 }
+  let(:value)       { 57 }
+  let(:description) { "The Answer to Life, the Universe and Everything" }
+  let(:enum)        { [] }
+  let(:is_required) { false }
+  let(:is_visible)  { false }
 
-  let(:required_params)   { { title: title, type: type, default: default } }
+  let(:required_params)   { { label: label, type: type, default: default, } }
   let(:optional_params)   { {
                               value: value,
                               description: description,
-                              choices: choices,
+                              enum: enum,
                               is_required: is_required,
                               is_visible: is_visible,
                             }
                             }
-
   let(:all_params)        { required_params.merge(optional_params) }
 
-
   context "Validation with valid input" do
-    context "Given hash params include required attributes" do
+    context "Given hash params include only required attributes" do
       it "should pass validation" do
-        expect(described_class.new(required_params)).to be_a ResourceRegistry::Entities::UiMetadata
+        expect(described_class.new(required_params)).to be_a ResourceRegistry::Meta
         expect(described_class.new(required_params).to_h).to eq required_params
       end
     end
 
-    context "Given hash params include all required no optional attributes" do
+    context "Given hash params include all required and optional attributes" do
       it "should pass validation" do
-        expect(described_class.new(all_params)).to be_a ResourceRegistry::Entities::UiMetadata
+        expect(described_class.new(all_params)).to be_a ResourceRegistry::Meta
         expect(described_class.new(all_params).to_h).to eq all_params
       end
     end
   end
-
 end

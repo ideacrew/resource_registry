@@ -4,8 +4,6 @@ require 'spec_helper'
 
 RSpec.describe ResourceRegistry::Validation::Metas::MetaContract do
 
-  # subject { described_class.new(params) }
-
   let(:label)       { "Name of this UI Feature" }
   let(:type)        { :integer }
   let(:default)     { 42 }

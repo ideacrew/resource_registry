@@ -13,29 +13,6 @@ module ResourceRegistry
       # config.messages.top_namespace - the key in the locale files under which messages are defined, by default it's dry_validation
       # config.messages.namespace - custom messages namespace for a contract class. Use this to differentiate common messages
 
-      def validate_nested_contract(contract_constant, params)
-        result = contract_constant.call(params)
-        unpack_result(result)
-      end
-
-      def parse_message_path(path = [])
-        if path.length == 1
-          path.first.to_sym
-        else
-          path.reduce([]) { |list, val| list << val.to_s }.join('.').to_sym
-        end
-      end
-
-      def unpack_result(result)
-        if result && result.failure?
-          message_list = result.errors.messages.reduce([]) do |list, message|
-            message_key = parse_message_path(message.path)
-            list << { message_key => [{path: message.path.to_s}, {input: message.input.to_s }, { text: message.text.to_s }] }
-          end
-        end
-        message_list ||= []
-      end
-
       def create_contract_klass(rule_keys)
         klass_parts = rule_keys[0].to_s.split('_')
         module_name = klass_parts.reduce([]) { |memo, word| memo << word.capitalize }.join
@@ -55,21 +32,22 @@ module ResourceRegistry
         (result && result.failure?) ? { text: "invalid #{rule_keys[0]}", error: result.errors.to_h } : {}
       end
 
-      rule(:ui_metadatas) do
-        error_hash = apply_contract_for(self)
-        key.failure(error_hash) if error_hash.size > 0
+      rule(:meta) do
+        if key? && value
+          result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
+
+          # Use dry-validation error form to pass error hash along with text to calling service
+          key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
+        end
       end
 
-      rule(:features).each do
-        error_hash = apply_contract_for(self)
-        key.failure(error_hash) if error_hash.size > 0
+      rule(:setting) do
+        if key? && value
+          result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
 
-        # if key? && value
-        #   result = ResourceRegistry::Features::Validation::FeatureContract.new.call(value)
-
-        #   # Use dry-validation metadata form to pass error hash along with text to calling service
-        #   key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
-        # end
+          # Use dry-validation error form to pass error hash along with text to calling service
+          key.failure(text: "invalid setting", error: result.errors.to_h) if result && result.failure?
+        end
       end
 
       rule(:tenants).each do
@@ -82,25 +60,6 @@ module ResourceRegistry
         #   # Use dry-validation metadata form to pass error hash along with text to calling service
         #   key.failure(text: "invalid tenant", error: result.errors.to_h) if result && result.failure?
         # end
-      end
-
-      # rule(:features).each do
-      #   errors = validate_nested_contract(ResourceRegistry::Features::Validation::FeatureContract, value)
-      #   key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      # end
-
-      rule(:options).each do
-        error_hash = apply_contract_for(self)
-        key.failure(error_hash) if error_hash.size > 0
-        # errors = validate_nested_contract(ResourceRegistry::Options::Validation::OptionContract, value)
-        # key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      end
-
-      rule(:namespaces).each do
-        # error_hash = apply_contract_for(self)
-        # key.failure(error_hash) if error_hash.size > 0
-        errors = validate_nested_contract(ResourceRegistry::Options::Validation::OptionContract, value)
-        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
       end
 
     end

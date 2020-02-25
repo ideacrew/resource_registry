@@ -9,7 +9,7 @@ module ResourceRegistry
 
         # @!method call(params)
         # @param params [Hash] options used to create the contract
-        #   @options params [Symbol] :key (optional)
+        #   @options params [Symbol] :key (required)
         #   @options params [Array<Symbol>] :namespace (required)
         #   @options params [Bool] :is_enabled (required)
         #   @options params [ResourceRegistry::Entities::Meta] :meta (optional)
@@ -25,18 +25,12 @@ module ResourceRegistry
           optional(:settings).array(:hash)
 
           before(:value_coercer) do |result|
-            # binding.pry
-            result.to_h.merge({namespace: result[:namespace].map(&:to_sym)}) if result[:namespace] && result[:namespace].size > 0
+            if result[:namespace] && result[:namespace].size > 0
+              result.to_h.merge({namespace: result[:namespace].map(&:to_sym)})
+            end
           end
+          
         end
-
-        # rule(:namespace) do
-        #   if key? && value
-        #     # binding.pry
-        #     value = value.map(&:to_sym)
-        #   end
-        # end
-
 
       end
     end

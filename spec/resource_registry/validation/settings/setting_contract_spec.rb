@@ -51,7 +51,7 @@ RSpec.describe ResourceRegistry::Validation::Settings::SettingContract do
         let(:key_string)  { "my_key" }
         let(:params)      { { key: key_string, value: value } }
 
-      it "should coerce key into symbol" do
+      it "should coerce stringified key into symbol" do
         expect(subject.call({key: key, value: value}).success?).to be_truthy
         expect(subject.call({key: key, value: value}).to_h[:key]).to be_a Symbol
       end

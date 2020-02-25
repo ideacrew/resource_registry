@@ -1,48 +1,42 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'resource_registry/entities/feature'
 
-RSpec.describe ResourceRegistry::Entities::Feature do
+RSpec.describe ResourceRegistry::Feature do
 
-  subject { described_class.new(params) }
+  let(:key)         { :my_feature }
+  let(:namespace)   { [:level_1, :level_2, :level_3 ]}
+  let(:is_enabled)  { false }
+  let(:meta)        { { label: "label", default: 42, type: :integer } }
+  let(:settings)    { [{ key: :service, value: "weather/forcast" }, { key: :retries, value: 4 }] }
 
-  context 'when valid feature hash passed' do
-    let(:params) do
-      {
-        :key => :aca_shop_market,
-        :parent_key => :enroll_app,
-        :is_required => true,
-        :is_enabled => true,
-        :ui_metadata => {
-          :title   => "ACA SHOP Market",
-          :type    => :string,
-          :default => "default value for this element",
-        },
-        :options =>
-        [{:key => :settings,
-          :settings =>
-          [{:key => "small_market_employee_count_maximumt", :type => :integer, :default => 50},
-           {:key => "employer_contribution_percent_minimum", :type => :integer, :default => 50},
-           {:key => "employer_dental_contribution_percent_minimumt", :type => :integer, :default => 0},
-           {:key => "employer_family_contribution_percent_minimum", :type => :integer, :default => 0}]},
-         {:key => :benefit_market_catalog_2017,
-          :namespaces =>
-          [{:key => :month_1,
-            :settings =>
-            [{:key => :open_enrollment_begin_dom, :type => :integer, :default => 1},
-             {:key => :open_enrollment_end_dom, :type => :integer, :default => 20},
-             {:key => :binder_payment_due_dom, :type => :integer, :default => 23}]},
-           {:key => :month_2,
-            :settings =>
-            [{:key => :open_enrollment_begin_dom, :type => :integer, :default => 1},
-             {:key => :open_enrollment_end_dom, :type => :integer, :default => 20},
-             {:key => :binder_payment_due_dom, :type => :integer, :default => 23}]}]}]
-      }
+  let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled } }
+  let(:optional_params)     { { meta: meta, settings: settings } }
+  let(:all_params)          { required_params.merge(optional_params) }
+
+  context "Validation with invalid input" do
+    context "Given hash params are nissing required attributes" do
+      let(:error_hash)  { {} }
+
+      it "should fail validation" do
+        expect{described_class.new(optional_params)}.to raise_error Dry::Struct::Error
+      end
+    end
+  end
+
+  context "Validation with valid input" do
+    context "Given hash params include only required attributes" do
+      it "should pass validation" do
+        expect(described_class.new(required_params)).to be_a ResourceRegistry::Feature
+        expect(described_class.new(required_params).to_h).to eq required_params
+      end
     end
 
-    it 'should build feature object' do
-      expect(subject).to be_instance_of(described_class)
+    context "Given hash params include all required and optional attributes" do
+      it "should pass validation" do
+        expect(described_class.new(all_params)).to be_a ResourceRegistry::Feature
+        expect(described_class.new(all_params).to_h).to eq all_params
+      end
     end
   end
 end
