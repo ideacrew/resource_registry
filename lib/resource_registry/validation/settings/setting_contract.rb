@@ -5,9 +5,17 @@ module ResourceRegistry
     module Settings
       class SettingContract < ResourceRegistry::Validation::ApplicationContract
 
+        # @!method call(params)
+        # @param params [Hash] options used to create the contract
+        #   @options params [Symbol] :key (required)
+        #   @options params [Any] :item (optional)
+        #   @options params [Hash] :options (optional)
+        #   @options params [ResourceRegistry::Entities::Meta] :meta (optional)
+        #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
           required(:key).value(:symbol)
-          required(:value).filled(:any)
+          required(:item).filled(:any)
+          optional(:options).maybe(:hash)
           optional(:meta).maybe(:hash)
         end
 

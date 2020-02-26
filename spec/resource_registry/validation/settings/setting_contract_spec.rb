@@ -5,11 +5,12 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Validation::Settings::SettingContract do
 
   let(:key)     { :my_key }
-  let(:value)   { "setting value attribute value" }
+  let(:item)    { ->(val){ val.to_sym } }
+  let(:options) { { name: "Dolly" } }
   let(:meta)    { { label: "label", default: 42, type: :integer } }
 
-  let(:required_params) { { key: key, value: value } }
-  let(:optional_params) { { meta: meta } }
+  let(:required_params) { { key: key, item: item } }
+  let(:optional_params) { { options: options, meta: meta } }
   let(:all_params)      { required_params.merge(optional_params) }
 
   context "Given invalid parameters" do
@@ -20,12 +21,12 @@ RSpec.describe ResourceRegistry::Validation::Settings::SettingContract do
 
     context "and :key parameter only" do
       it { expect(subject.call({key: key}).success?).to be_falsey }
-      it { expect(subject.call({key: key}).error?(:value)).to be_truthy }
+      it { expect(subject.call({key: key}).error?(:item)).to be_truthy }
     end
 
-    context "and :value parameter only" do
-      it { expect(subject.call({value: value}).success?).to be_falsey }
-      it { expect(subject.call({value: value}).error?(:key)).to be_truthy }
+    context "and :item parameter only" do
+      it { expect(subject.call({item: item}).success?).to be_falsey }
+      it { expect(subject.call({item: item}).error?(:key)).to be_truthy }
     end
 
     context "and :meta params are invalid" do
@@ -48,12 +49,12 @@ RSpec.describe ResourceRegistry::Validation::Settings::SettingContract do
     end
 
     context "and key is passed as string" do
-        let(:key_string)  { "my_key" }
-        let(:params)      { { key: key_string, value: value } }
+      let(:key_string)  { "my_key" }
+      let(:params)      { { key: key_string, item: item } }
 
       it "should coerce stringified key into symbol" do
-        expect(subject.call({key: key, value: value}).success?).to be_truthy
-        expect(subject.call({key: key, value: value}).to_h[:key]).to be_a Symbol
+        expect(subject.call({key: key, item: item}).success?).to be_truthy
+        expect(subject.call({key: key, item: item}).to_h[:key]).to be_a Symbol
       end
 
     end

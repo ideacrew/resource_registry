@@ -15,6 +15,17 @@ module ResourceRegistry
     # @return [boolean]
     attribute :is_enabled,  Types::Bool.meta(omittable: false)
 
+    # @!attribute [r] item (required)
+    # Reference or code to be executed when this feature is invoked
+    # @return [Any]
+    attribute :item,        Types::Any.meta(omittable: false)
+
+    # @!attribute [r] options (optional)
+    # Options passed through for item execution 
+    # The user-assigned values passed through for this configuratino setting
+    # @return [Hash]
+    attribute :options,     Types::Any.optional.meta(omittable: true)
+
     # @!attribute [r] meta (optional)
     # Configuration settings and attributes that support presenting and updatig their values in the User Interface
     # @return [ResourceRegistry::Meta]

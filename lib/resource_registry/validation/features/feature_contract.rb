@@ -12,6 +12,8 @@ module ResourceRegistry
         #   @options params [Symbol] :key (required)
         #   @options params [Array<Symbol>] :namespace (required)
         #   @options params [Bool] :is_enabled (required)
+        #   @options params [Any] :item (optional)
+        #   @options params [Hash] :options (optional)
         #   @options params [ResourceRegistry::Entities::Meta] :meta (optional)
         #   @options params [Array<ResourceRegistry::Entities::Setting>] :meta (optional)
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
@@ -19,9 +21,10 @@ module ResourceRegistry
           required(:key).value(:symbol)
           required(:namespace).maybe(:array)
           required(:is_enabled).value(:bool)
-          # required(:ui_metadata).value(ResourceRegistry::UiMetadata::Validation::UiMetadataContract)
+          required(:item).value(:any)
+          optional(:options).maybe(:hash)
+
           optional(:meta).maybe(:hash)
-          # optional(:options).array(ResourceRegistry::Options::Validation::OptionContract)
           optional(:settings).array(:hash)
 
           before(:value_coercer) do |result|

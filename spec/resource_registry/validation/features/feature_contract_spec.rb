@@ -8,11 +8,13 @@ RSpec.describe ResourceRegistry::Validation::Features::FeatureContract do
     let(:key)         { :my_feature }
     let(:namespace)   { [:level_1, :level_2, :level_3 ]}
     let(:is_enabled)  { false }
+    let(:item)        { ->(val){ val.to_sym } }
+    let(:options)     { { name: "Dolly" } }
     let(:meta)        { { label: "label", default: 42, type: :integer } }
     let(:settings)    { [{ service: "weather/forcast" }, { retries: 4 }] }
 
-    let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled } }
-    let(:optional_params)     { { meta: meta, settings: settings } }
+    let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled, item: item } }
+    let(:optional_params)     { { options: options, meta: meta, settings: settings } }
     let(:all_params)          { required_params.merge(optional_params) }
     let(:key_coercion_params) { {key: key.to_s } }
 
@@ -42,18 +44,17 @@ RSpec.describe ResourceRegistry::Validation::Features::FeatureContract do
     end
 
     context "Given valid parameters" do
-
-      context "with required parameters only" do
+      context "and required parameters only" do
         it { expect(subject.call(required_params).success?).to be_truthy }
         it { expect(subject.call(required_params).to_h).to eq required_params }
       end
 
-      context "with all required and optional parameters" do
+      context "and all required and optional parameters" do
         it { expect(subject.call(all_params).success?).to be_truthy }
         it { expect(subject.call(all_params).to_h).to eq all_params }
       end
 
-      context "and passing keys in as strings" do
+      context "and key is passed as string" do
         let(:key_string)  { "my_feature" }
         let(:params)      { { key: key_string, namespace: namespace, is_enabled: is_enabled } }
 

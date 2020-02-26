@@ -4,13 +4,23 @@ require 'spec_helper'
 
 RSpec.describe ResourceRegistry::Setting do
 
+  before do
+    class ::Greeter
+      def call(params)
+        return "Hello #{params[:name]}"
+      end
+    end
+  end
+
   let(:key)     { :my_key }
-  let(:value)   { "setting value attribute value" }
+  let(:item)    { Greeter.new }
+  let(:options) { { name: "Dolly" } }
   let(:meta)    { { label: "label", default: 42, type: :integer } }
 
-  let(:required_params) { { key: key, value: value } }
-  let(:optional_params) { { meta: meta } }
+  let(:required_params) { { key: key, item: item } }
+  let(:optional_params) { { meta: meta, options: options } }
   let(:all_params)      { required_params.merge(optional_params) }
+
 
   context "Validation with invalid input" do
     context "Given hash params are nissing required attributes" do
@@ -37,9 +47,9 @@ RSpec.describe ResourceRegistry::Setting do
       end
     end
 
-    context "Given nil for value attribute" do
-      let(:nil_value)   { nil }
-      let(:params)      { { key: key, value: nil_value } }
+    context "Given nil for item attribute" do
+      let(:nil_item)   { nil }
+      let(:params)     { { key: key, item: nil_item } }
 
       it "should pass validation" do
         expect(described_class.new(params)).to be_a ResourceRegistry::Setting
@@ -47,4 +57,14 @@ RSpec.describe ResourceRegistry::Setting do
       end
     end
   end
+
+  context "Given hash params include a class as the item value" do
+    let(:greet_message) { "Hello " + options[:name] }
+
+    it "should invoke the class with the passed options parameters" do
+      setting = described_class.new(all_params)
+      expect(setting[:item].call(setting[:options])).to eq greet_message
+    end
+  end
+  
 end
