@@ -1,23 +1,29 @@
-  # ResourceRegistry
+# ResourceRegistry
 
-  Resource Registry is a library for system configuration and dependency management based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/).  It provides an enterprise-down taxonomy for organizing, defining and configuring an application's behavior, supporting single monolith and multiple component microservice architectures alike.
+  Resource Registry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
 
-  ## Features
+  * Customer-level preference profiles
+  * Multitenancy
+  * Access control based on privilidges and subscriptions
 
-  * Create and access system configuration settings using a thread-safe key/value store
-  * Organize settings into namespaces for readability and to help avoid key naming conflicts 
-  * Use YAML to seed configuration setting namespaces, keys and values  
-  * Group related settings and enable/disable them as a collection
+  Resource Registry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
+
+## Features
+
+  * Use a Feature to group associated system code and configuration settings
+  * Use a Taxonomy to structure Features and their associations
+  * Access Features and their settings using a thread-safe key/value store
+  * Enable/disable individual Features and groups/dependencies based on Taxonomy associations
+  * Use YAML to seed Features and Taxonomies
   * Manage configuration settings on an environment basis, including: :development, :test and :production
   * Use multi-tenancy to switch between configuration settings for different tenants running in the same context
   * Autoload classes that support Command pattern, both single Operation and multi-step Transactions
 
-
-  ## Compatibility
+## Compatibility
 
   * Ruby >= 2.6
 
-  ### Installing on Rails
+### Installing on Rails
 
   Add this line to your project's Gemfile:
 
@@ -41,7 +47,65 @@
 
       $ touch ./config/initializers/resource_registry.rb
 
-  ## Usage
+## Usage
+
+  Resource Registry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
+
+### Brief Example
+  ``` ruby
+  require 'resource_registry
+
+  # Initialize registry
+  registry = ResourceRegistry::Container.create(key: :example)
+
+  # Register a Feature with an item attribute that is invoked when key is resolved
+  registry.register(key: :stringify, is_enabled: true, item: ->(val){ val.to_s })
+
+  # Verify the Feature is registered and enabled
+  registry[:stringify].exist # => true
+  registry[:stringify].enabled # => true
+
+  # Use its key to resolve and invoke the Feature
+  registry[:stringify] :my_symbol # => "my_symbol"
+  ```
+
+
+### Detailed Example
+``` ruby
+
+    registry = ResourceRegistry::Container.create(key: :example)
+
+    # Assign the Feature to a namespace 
+    three_deep = [:level_1, :level_2, :level_3]
+
+    # Define a key/value pair Setting to attach to the Feature
+    setting = ResourceRegistry::Setting.new(key: :scope, item: "all")
+
+    # Executable code to associate with the Feature
+    class ::Greeter
+      def call(params)
+        return "Hello #{params[:name]}"
+      end
+    end
+
+    # Specify the code to invoke when the container resolves the Feature key
+    item = Greeter.new    
+
+    greet_feature = ResourceRegistry::Feature.new(key: :greeter, item: Greeter.new, namespace: three_deep, settings: [setting])
+
+    registry.register(greet_feature.to_h)    
+
+    registry[:greet_feature] "Dolly"          # => "Hello Dolly"
+    registry[:greet_feature].namespace        # => "level_1.level_2.level_3"
+    registry[:greet_feature].settings.scope   # => "all"
+```
+
+
+
+  Features in turn may be structured into a system model Taxonomy that defines associations and dependencies between them.
+
+
+## Rails Integration
 
   A registry is configured and loaded when your application starts.  At runtime, a value may be accessed directly by referencing its key or indirectly using the registry's associated dependency injector.  By default, the registry object is assigned to the constant: ```Registry``` (this setting may be changed in the initializer file). 
 
@@ -179,8 +243,6 @@ ResourceRegistry.configure do
   }
 end
 
-  ```
-
   Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
 
   An example of a simple configuration file:
@@ -228,14 +290,15 @@ end
 
   ### UI-ready configuration settings
 
+  ## Credits
+  Based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/)  ```
 
   ## Future Features
 
   * Subscription
   * Bootable infrastructure components
 
-
-  ## Development
+ ## Development
 
   After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
