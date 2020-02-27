@@ -50,32 +50,29 @@
 
   ResourceRegistry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
 
-### Feature  
+### Features
 
-Has one meta
-Has many settings
 
-#### Brief Example
 ``` ruby
 require 'resource_registry'
 
 # Initialize registry
-my_registry = ResourceRegistry::Registry.new(key: :demo)
+my_registry = ResourceRegistry::Registry.new(key: :my_registry)
 
 # Register a Feature with an item attribute that is invoked when key is resolved
-my_registry.register(key: :stringify, is_enabled: true, item: ->(val){ val.to_s })
+my_registry.register(key: :stringify, item: ->(val){ val.to_s }, is_enabled: true)
 
 # Verify the Feature is registered and enabled
-my_registry[:stringify].exist?     # => true
-my_registry[:stringify].enabled?   # => true
+my_registry.resolve('stringify').exist?     # => true
+my_registry.resolve('stringify').enabled?   # => true
 
 # Use its key to resolve and invoke the Feature
-my_registry[:stringify] :my_symbol # => "my_symbol"
+my_registry.resolve('stringify') :my_symbol # => "my_symbol"
 ```
 
 #### Detailed Example
 ```ruby
-my_registry = ResourceRegistry::Registry.new(key: :demo)
+my_registry = ResourceRegistry::Registry.new(key: :my_registry)
 
 # Executable code to associate with the Feature
 class ::Greeter
@@ -94,16 +91,19 @@ ns = [:operations, :ai]
 scope_setting = {key: :scope, item: "online"}
  
 
+# Register a Feature with a namespace and settings
 my_registry.register(key:       :greeter, 
                      item:      greeter_instance, 
                      namespace: ns, 
                      settings:  [scope_setting])
 
-my_registry[:greeter].namespace        # => "operations.human.interfaces"
+# Use syntax shortcut to resolve the registered Feature
+my_registry[:greeter].namespace        # => "operations.ai"
 my_registry[:greeter].settings.scope   # => "online"
 my_registry[:greeter] "Dolly"          # => "Hello Dolly"
 ```
 
+### Feature Namepace
 
   Features in turn may be structured into a system model Taxonomy that defines associations and dependencies between them.
 
