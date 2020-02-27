@@ -1,12 +1,12 @@
 # ResourceRegistry
 
-  Resource Registry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
+  ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
 
   * Customer-level preference profiles
   * Multitenancy
   * Access control based on privilidges and subscriptions
 
-  Resource Registry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
+  ResourceRegistry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
 
 ## Features
 
@@ -48,7 +48,7 @@
 
 ## Usage
 
-  Resource Registry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
+  ResourceRegistry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
 
 ### Feature  
 
@@ -60,22 +60,22 @@ Has many settings
 require 'resource_registry'
 
 # Initialize registry
-registry = ResourceRegistry::Registry.create(key: :example)
+my_registry = ResourceRegistry::Registry.new(key: :demo)
 
 # Register a Feature with an item attribute that is invoked when key is resolved
-registry.register(key: :stringify, is_enabled: true, item: ->(val){ val.to_s })
+my_registry.register(key: :stringify, is_enabled: true, item: ->(val){ val.to_s })
 
 # Verify the Feature is registered and enabled
-registry[:stringify].exist?     # => true
-registry[:stringify].enabled?   # => true
+my_registry[:stringify].exist?     # => true
+my_registry[:stringify].enabled?   # => true
 
 # Use its key to resolve and invoke the Feature
-registry[:stringify] :my_symbol # => "my_symbol"
+my_registry[:stringify] :my_symbol # => "my_symbol"
 ```
 
 #### Detailed Example
 ```ruby
-registry = ResourceRegistry::Registry.create(key: :example)
+my_registry = ResourceRegistry::Registry.new(key: :demo)
 
 # Executable code to associate with the Feature
 class ::Greeter
@@ -91,19 +91,17 @@ greeter_instance = Greeter.new
 ns = [:operations, :ai]
 
 # Associate a Setting key/value pair with the Feature
-scope_setting = ResourceRegistry::Setting.new(key: :scope, item: "online")
+scope_setting = {key: :scope, item: "online"}
  
 
-greet_feature = ResourceRegistry::Register(key: :greeter, 
-                                           item: greeter_instance, 
-                                           namespace: ns, 
-                                           settings: [scope_setting])
+my_registry.register(key:       :greeter, 
+                     item:      greeter_instance, 
+                     namespace: ns, 
+                     settings:  [scope_setting])
 
-registry.register greet_feature     # => Feature
-
-registry[:greeter].namespace        # => "operations.human.interfaces"
-registry[:greeter].settings.scope   # => "online"
-registry[:greeter] "Dolly"          # => "Hello Dolly"
+my_registry[:greeter].namespace        # => "operations.human.interfaces"
+my_registry[:greeter].settings.scope   # => "online"
+my_registry[:greeter] "Dolly"          # => "Hello Dolly"
 ```
 
 
