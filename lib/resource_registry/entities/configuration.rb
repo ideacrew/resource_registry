@@ -6,7 +6,7 @@ module ResourceRegistry
     # The Dry::Container's reserved configuration namespace structure
     # Used when initilizing a new container instance. 
     # @see ResourceRegistry::Stores::Container::Create
-    class Registry < Dry::Struct
+    class Configuration < Dry::Struct
 
       # @!attribute [r] name
       # A unique identifier for this container

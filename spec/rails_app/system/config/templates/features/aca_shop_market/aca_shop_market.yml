@@ -1,0 +1,106 @@
+---
+registry:
+  - namespace:
+      - :features
+      - :enroll_app
+    features:
+    - key: :aca_shop_market
+      is_enabled: false
+      meta:
+        label: Enable ACA SHOP Market
+        type: :boolean
+        default: true
+        value: true
+        description: ACA Small Business Health Options (SHOP) Portal
+        is_required: false
+        is_visible: true
+      settings:
+      - key: :enroll_prior_to_effective_on_max
+        item: { days: -30 }
+        meta:
+          label: Earliest Enrollment Date
+          description: Maximum period prior to effective date that a group member may enroll
+          type: :duration
+          default: { days: -30 }
+          is_required: true
+          is_visible: true
+      - key: :enroll_after_effective_on_max
+        item: { days: 30 }
+        meta: 
+          label: Retroactive Enrollment Period
+          description: Maximum period after coverage effective date that a group member may be retroactively enrolled
+          type: :duration
+          default: { days: 30 }
+          is_required: true
+          is_visible: true
+      - key: :enroll_after_ee_roster_correction_max
+        item: { days: 30 }
+        meta:
+          label: Retroactive Enrollment Period After Roster Correction
+          description: Maximum period after roster correction that a group member may be retroactively enrolled (from date of correction)
+          type: :duration
+          default: { days: 30 }
+          is_required: true
+          is_visible: true
+      - key: :retro_term_max_days
+        item: { days: -60 }
+        meta:
+          label: Retroactive Termination Period
+          description: Maximum period that coverage may be retroactively terminated
+          type: :duration
+          default: { days: -60 }
+          is_required: true
+          is_visible: true
+  - namespace: 
+      - :features
+      - :enroll_app
+      - :aca_shop_market
+      - :benefit_market_catalog
+    features:
+    - key: :cobra
+      is_enabled: true
+      settings:
+      - key: :cobra_enrollment_period_max
+        item: { months: 6 }
+        meta:
+          label: Maximum Enrollment Period
+          description: Maximum period following termination that a group member may enroll in COBRA coverage
+          type: :duration
+          default: { months: 6 }
+          is_required: true
+          is_visible: true
+    - key: :groups
+      is_enabled: true
+      settings:
+      - key: :contact_methods_kinds
+        item: { paper_and_electronic: "Paper and Electronic" }
+        meta:
+          label: Contact Preferences
+          description: 
+          type: :enumerated_hash
+          default: { paper_and_electronic: "Paper and Electronic" }
+          # enum:   [
+          #             { paper_and_electronic: "Paper and Electronic" }.freeze,
+          #             { paper_only: "Paper only" }.freeze,
+          #             { electronic_only: "Electronic only" }.freeze
+          #           ]
+          is_required: true
+          is_visible: true
+    # Employer SIC Feature settngs.  
+    # Only accessed if enabled in catalog settings [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :catalog_2020, :use_employer_sic] == true
+    - key: :employer_sic
+      is_enabled: false
+      namespace:
+        - :features
+        - :enroll_app
+        - :aca_shop_market
+        - :benefit_market_catalog
+        - :employer_sic
+      meta:
+        label: Employer SIC
+        is_required: false
+        is_visible: true
+        type: :string
+        default: 637
+
+        

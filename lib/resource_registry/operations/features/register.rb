@@ -14,9 +14,9 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do])
 
         def call(name:, item:, options: {})
-          feature(name).register(args)
+          feature(name).register(item, options)
         end
-
+        
       end
     end
   end

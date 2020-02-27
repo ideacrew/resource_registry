@@ -17,17 +17,19 @@ module ResourceRegistry
           required(:item).filled(:any)
           optional(:options).maybe(:hash)
           optional(:meta).maybe(:hash)
+
+          before(:value_coercer) do |result|
+            result.to_h.merge({meta: result[:meta].symbolize_keys})
+          end
         end
 
         rule(:meta) do
           if key? && value
             result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
-
             # Use dry-validation metadata error form to pass error hash along with text to calling service
             key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
           end
         end
-
       end
     end
   end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'yaml'
+require 'erb'
 
 module ResourceRegistry
   module Serializers
@@ -19,9 +20,13 @@ module ResourceRegistry
         private
 
         def transform(params)
-          Success(YAML.load(params))
-        end
+          result = YAML.load(ERB.new(params).result)
+          Success(result || {})
 
+          rescue Psych::SyntaxError => e
+            raise "YAML syntax error occurred while parsing #{params}. " \
+                  "Error: #{e.message}"
+        end
       end
     end
   end
