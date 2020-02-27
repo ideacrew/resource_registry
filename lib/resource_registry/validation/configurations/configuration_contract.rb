@@ -2,35 +2,34 @@
 
 module ResourceRegistry
   module Validation
-    module Registries
+    module Configurations
 
       # Schema and validation rules for {ResourceRegistry::Entities::Registry}
-      class RegistryContract < ResourceRegistry::Validation::ApplicationContract
+      class ConfigurationContract < ResourceRegistry::Validation::ApplicationContract
 
         # @!method call(params)
         # @param params [Hash] options used to create the contract
         #   @options params[Symbol] :name (required)
         #   @options params[String] :root (required)
-        #   @options params[String] :default_namespace (optional)
+        #   @options params[DateTime] :created_at (optional)
+        #   @options params[Boolean] :register_meta(optional)
         #   @options params[String] :system_dir (optional)
-        #   @options params[Array<String>] :load_path (optional)
+        #   @options params[String] :default_namespace (optional)
         #   @options params[String] :auto_register (optional)
-        #   @options params[ResourceRegistry::Entities::::Option] :options (optional)
-        #   @options params[String] :timestamp (optional)
-        #   @see ResourceRegistry::Entities::Registry
+        #   @options params[Array<String>] :load_path (optional)
+        #   @options params[Array<ResourceRegistry::Entities::Setting>] :settings (optional)
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
           required(:name).value(:symbol)
           required(:root).value(type?: Pathname)
-          optional(:default_namespace).maybe(:string)
+          optional(:created_at).maybe(:string)
+          optional(:register_meta).maybe(:boolean)
+
           optional(:system_dir).maybe(:string)
+          optional(:default_namespace).maybe(:string)
           optional(:auto_register).array(:string)
-
           optional(:load_path).maybe(:string)
-
-          optional(:load_paths).array(:string)
-          optional(:timestamp).value(:string)
-          optional(:options).array(:hash)
+          optional(:settings).array(:hash)
         end
 
         # Path name must exist

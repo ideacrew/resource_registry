@@ -40,7 +40,7 @@ module ResourceRegistry
 
       # @!attribute [r] options
       # @return [Array<ResourceRegistry::Entities::Option>]
-      attribute :options,   Types::Array.of(ResourceRegistry::Entities::Option).meta(omittable: true)
+      attribute :settings,   Types::Array.of(ResourceRegistry::Entities::Setting).meta(omittable: true)
 
       # @!attribute [r] timestamp
       # @return [String]
