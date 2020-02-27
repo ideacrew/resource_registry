@@ -20,14 +20,9 @@ require 'resource_registry/serializers'
 
 require 'resource_registry/features'
 
-# require 'resource_registry/enterprises'
-
-
-require 'resource_registry/operations/registries/create'
-require 'resource_registry/registries/transactions/load_container_dependencies'
+# require 'resource_registry/operations/registries/create'
+# require 'resource_registry/registries/transactions/load_container_dependencies'
 # require 'resource_registry/registries'
-
-puts "past all requires!!!"
 
 module ResourceRegistry
   include Dry::Core::Constants

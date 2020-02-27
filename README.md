@@ -1,12 +1,12 @@
 # ResourceRegistry
 
-  Resource Registry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
+  ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
 
   * Customer-level preference profiles
   * Multitenancy
   * Access control based on privilidges and subscriptions
 
-  Resource Registry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
+  ResourceRegistry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
 
 ## Features
 
@@ -21,15 +21,14 @@
 
 ## Compatibility
 
-  * Ruby >= 2.6
+  * Ruby 2.6
+  * Rails 5.2.4
 
 ### Installing on Rails
 
   Add this line to your project's Gemfile:
 
-  ```ruby
-  gem 'resource_registry'
-  ```
+      gem 'resource_registry'
 
   And then execute:
 
@@ -49,58 +48,62 @@
 
 ## Usage
 
-  Resource Registry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
+  ResourceRegistry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
 
-### Brief Example
-  ``` ruby
-  require 'resource_registry
-
-  # Initialize registry
-  registry = ResourceRegistry::Container.create(key: :example)
-
-  # Register a Feature with an item attribute that is invoked when key is resolved
-  registry.register(key: :stringify, is_enabled: true, item: ->(val){ val.to_s })
-
-  # Verify the Feature is registered and enabled
-  registry[:stringify].exist # => true
-  registry[:stringify].enabled # => true
-
-  # Use its key to resolve and invoke the Feature
-  registry[:stringify] :my_symbol # => "my_symbol"
-  ```
+### Features
 
 
-### Detailed Example
 ``` ruby
+require 'resource_registry'
 
-    registry = ResourceRegistry::Container.create(key: :example)
+# Initialize registry
+my_registry = ResourceRegistry::Registry.new(key: :my_registry)
 
-    # Assign the Feature to a namespace 
-    three_deep = [:level_1, :level_2, :level_3]
+# Register a Feature with an item attribute that is invoked when key is resolved
+my_registry.register(key: :stringify, item: ->(val){ val.to_s }, is_enabled: true)
 
-    # Define a key/value pair Setting to attach to the Feature
-    setting = ResourceRegistry::Setting.new(key: :scope, item: "all")
+# Verify the Feature is registered and enabled
+my_registry.resolve('stringify').exist?     # => true
+my_registry.resolve('stringify').enabled?   # => true
 
-    # Executable code to associate with the Feature
-    class ::Greeter
-      def call(params)
-        return "Hello #{params[:name]}"
-      end
-    end
-
-    # Specify the code to invoke when the container resolves the Feature key
-    item = Greeter.new    
-
-    greet_feature = ResourceRegistry::Feature.new(key: :greeter, item: Greeter.new, namespace: three_deep, settings: [setting])
-
-    registry.register(greet_feature.to_h)    
-
-    registry[:greet_feature] "Dolly"          # => "Hello Dolly"
-    registry[:greet_feature].namespace        # => "level_1.level_2.level_3"
-    registry[:greet_feature].settings.scope   # => "all"
+# Use its key to resolve and invoke the Feature
+my_registry.resolve('stringify') :my_symbol # => "my_symbol"
 ```
 
+#### Detailed Example
+```ruby
+my_registry = ResourceRegistry::Registry.new(key: :my_registry)
 
+# Executable code to associate with the Feature
+class ::Greeter
+  def call(params)
+    return "Hello #{params[:name]}"
+  end
+end
+
+# Specify the code to invoke when the registry resolves the Feature key
+greeter_instance = Greeter.new   
+
+# Assign the Feature to a Taxonomy namespace 
+ns = [:operations, :ai]
+
+# Associate a Setting key/value pair with the Feature
+scope_setting = {key: :scope, item: "online"}
+ 
+
+# Register a Feature with a namespace and settings
+my_registry.register(key:       :greeter, 
+                     item:      greeter_instance, 
+                     namespace: ns, 
+                     settings:  [scope_setting])
+
+# Use syntax shortcut to resolve the registered Feature
+my_registry[:greeter].namespace        # => "operations.ai"
+my_registry[:greeter].settings.scope   # => "online"
+my_registry[:greeter] "Dolly"          # => "Hello Dolly"
+```
+
+### Feature Namepace
 
   Features in turn may be structured into a system model Taxonomy that defines associations and dependencies between them.
 
@@ -202,13 +205,13 @@
   </p>
   </details>
 
-  ### Dependency Injection
+### Dependency Injection
   By default, the dependency injector object associated with the Registry is assigned to the constant: ```Registry.injector``` (this setting may be changed in the initializer file). 
 
   Resource Registry uses [dry-auto_inject](https://dry-rb.org/gems/dry-auto_inject/) to support dependency injection.  See documentation on the dry website for more information.
 
 
-  ## Configuration
+## Configuration
 
   The initializer and configuration files manage the setup and loading process. The initializer file manages configuration options, including:
 
@@ -242,11 +245,12 @@ ResourceRegistry.configure do
     }
   }
 end
+```
 
   Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
 
   An example of a simple configuration file:
-  ```
+  ```ruby
   # ./system/config/enterprise.yml
 
   namespace: 
@@ -259,7 +263,7 @@ end
       - key: :features
   ```
 
-  ## Taxonomy
+## Taxonomy
   Resource Registry classifies configuration settings into the following structure:
 
   1. **Enterprise:** top level entry providing global information about the application solution and hosting infrastructure. 
@@ -290,24 +294,24 @@ end
 
   ### UI-ready configuration settings
 
-  ## Credits
+## Credits
   Based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/)  ```
 
-  ## Future Features
+## Future Features
 
   * Subscription
   * Bootable infrastructure components
 
- ## Development
+## Development
 
   After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
   To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-  ## Contributing
+## Contributing
 
   Bug reports and pull requests are welcome on GitHub at https://github.com/ideacrew/resource_registry.
 
-  ## License
+## License
 
   The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-# require 'dry/container/stub'
-
-# require 'resource_registry/types'
-# require 'resource_registry/entities'
-# require 'resource_registry/validations'
-# require 'resource_registry/registries'
 
 RSpec.describe ResourceRegistry::Validation::Registries::RegistryContract do
 

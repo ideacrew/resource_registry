@@ -8,12 +8,12 @@ module ResourceRegistry
     # @return [Symbol]
     attribute :key,         Types::Symbol.meta(omittable: false)
 
-    attribute :namespace,   Types::Array.of(Types::RequiredSymbol).meta(omittable: false)
+    attribute :namespace,   Types::Array.of(Types::RequiredSymbol).default([].freeze).meta(omittable: false)
 
     # @!attribute [r] is_required (required)
     # State of this Feature either enabled or disabled
     # @return [boolean]
-    attribute :is_enabled,  Types::Bool.meta(omittable: false)
+    attribute :is_enabled,  Types::Bool.meta(omittable: false).default(false)
 
     # @!attribute [r] item (required)
     # Reference or code to be executed when this feature is invoked
@@ -35,7 +35,7 @@ module ResourceRegistry
     # @!attribute [r] settings (optional)
     # Configuration settings and values for this Feature
     # @return [Array<ResourceRegistry::Setting>]
-    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).meta(omittable: true)
+    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).optional.meta(omittable: true)
 
   end
 end

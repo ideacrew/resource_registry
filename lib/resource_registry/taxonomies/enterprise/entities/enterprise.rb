@@ -12,16 +12,23 @@ module ResourceRegistry
       # @return [Symbol]
       attribute :key,                     Types::Symbol.meta(omittable: false)
 
+      attribute :registry,                ResourceRegistry::Entities::Subscription.meta(omittable: false)
+
       # @!attribute [r] owner_account
       # Reference to Super Admin account for this domain (required)
       # @return [String]
       attribute :owner_account,           Types::String.meta(omittable: false)
 
-      # @!attribute [r] owner_organization_name
+      # @!attribute [r] organization_name
       # Title for organization adminstering this domain (optional)
       # @return [String]
       attribute :organization_name,       Types::String.optional.meta(omittable: true)
 
+      attribute :is_multitenant,          Types::Bool.meta(omittable: false)
+
+      attribute :subscriptions,           Types::Array.of(ResourceRegistry::Entities::Subscription).meta(omittable: true)
+
+      attribute :portals,                 Types::Array.of(ResourceRegistry::Entities::Portal).meta(omittable: true)
 
       # @!attribute [r] tenants
       # Tenant organizations supported by this domain (optional)
