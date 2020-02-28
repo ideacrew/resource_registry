@@ -18,7 +18,7 @@ module ResourceRegistry
     # @!attribute [r] item (required)
     # Reference or code to be executed when this feature is invoked
     # @return [Any]
-    attribute :item,        Types::Any.meta(omittable: false)
+    attribute :item,        Types::Any.meta(omittable: true)
 
     # @!attribute [r] options (optional)
     # Options passed through for item execution 
