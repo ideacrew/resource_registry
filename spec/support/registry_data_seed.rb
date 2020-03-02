@@ -71,11 +71,11 @@ module RegistryDataSeed
     options
   end
 
-  def initialize_registry
-    ResourceRegistry.configure do
-      override_config
-    end
-  end
+  # def initialize_registry
+  #   ResourceRegistry.configure do
+  #     override_config
+  #   end
+  # end
 
   def load_dependencies
     dir = Pathname.pwd.join('lib', 'system', 'dependencies')
@@ -90,9 +90,9 @@ module RegistryDataSeed
     # load_dependencies
   end
 
-  def create_registry
-    initialize_registry
-    path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
-    ResourceRegistry::Registries::Transactions::Create.new.call(path)
-  end
+  # def create_registry
+  #   initialize_registry
+  #   path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
+  #   ResourceRegistry::Registries::Transactions::Create.new.call(path)
+  # end
 end

@@ -19,7 +19,7 @@ module ResourceRegistry
           optional(:meta).maybe(:hash)
 
           before(:value_coercer) do |result|
-            result.to_h.merge({meta: result[:meta].symbolize_keys})
+            result.to_h.merge({meta: result[:meta].symbolize_keys}) if result[:meta].is_a? Hash
           end
         end
 

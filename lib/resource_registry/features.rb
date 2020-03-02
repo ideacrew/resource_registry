@@ -2,14 +2,16 @@
 
 require 'dry-struct' unless defined?(Dry::Struct)
 require 'dry-initializer'
+
 require 'dry/monads'
 require 'dry/monads/do'
 
 require_relative 'entities/account_role'
 
-require_relative 'entities/configuration'
 require_relative 'entities/meta'
 require_relative 'entities/setting'
+require_relative 'entities/configuration'
+
 require_relative 'entities/feature'
 
 require_relative 'validation/configurations/configuration_contract'

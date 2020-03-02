@@ -11,12 +11,12 @@ module ResourceRegistry
     # @!attribute [r] root (required)
     # System root directory
     # @return [String]
-    attribute :root,              Types::String.optional.meta(omittable: false)
+    attribute :root,              Types::Path.meta(omittable: false)
 
     # @!attribute [r] created_at (optional)
     # Timestamp when this instance was initialized
     # @return [DateTime]
-    attribute :created_at,        Types::CallableDateTime.meta(omittable: false)
+    attribute :created_at,        Types::DateTime.default(->{DateTime.now}).meta(omittable: false)
 
     # @!attribute [r] settings (optional)
     # Include meta attribute values when registering Features
@@ -47,7 +47,6 @@ module ResourceRegistry
     # Configuration settings and values for this Feature
     # @return [Array<ResourceRegistry::Setting>]
     # @return [Array<ResouceRegistry::Setting>]
-    attribute :settings,          Types::Array.of(String).optional.meta(omittable: true)
-
+    attribute :settings,          Types::Array.of(ResourceRegistry::Setting).optional.meta(omittable: true)
   end
 end

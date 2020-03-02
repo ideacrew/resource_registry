@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe ResourceRegistry::Serializers::Operations::ParseYaml do
-  include RegistryDataSeed
+  # include RegistryDataSeed
 
   subject { described_class.new.call(input) }
 

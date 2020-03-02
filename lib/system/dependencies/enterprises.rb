@@ -5,7 +5,7 @@ require 'resource_registry/enterprises'
 Registry.namespace :"resource_registry.enterprises" do
 
   register :validate do
-    ResourceRegistry::Enterprises::Validation::EnterpriseContract
+    ResourceRegistry::Enterprises::Validation::EnterpriseContract.new
   end
 
   register :create do

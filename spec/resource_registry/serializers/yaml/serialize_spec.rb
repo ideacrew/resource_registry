@@ -20,7 +20,7 @@ RSpec.describe ResourceRegistry::Serializers::Yaml::Serialize do
     end
 
     it "should return options yaml" do
-      expect(subject.value!).to eq source_yaml
+      expect(subject.value!.strip!).to eq source_yaml.strip!
     end
   end
 end

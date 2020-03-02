@@ -14,15 +14,13 @@ require 'resource_registry/version'
 require 'resource_registry/error'
 
 require 'resource_registry/types'
-require 'resource_registry/validations'
 require 'resource_registry/stores'
 require 'resource_registry/serializers'
+require 'resource_registry/validations'
 
 require 'resource_registry/features'
+require 'resource_registry/registry'
 
-# require 'resource_registry/operations/registries/create'
-# require 'resource_registry/registries/transactions/load_container_dependencies'
-# require 'resource_registry/registries'
 
 module ResourceRegistry
   include Dry::Core::Constants
@@ -55,42 +53,47 @@ module ResourceRegistry
 
     # Load host application container dependencies/overrides
 
-    def configure
-      result = initialize_container
-      raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
+    # def configure
+    #   result = initialize_container
+    #   raise ResourceRegistry::Error::ContainerCreateError, result.errors if result.failure?
 
-      assign_registry_constant(result.value!)
-      load_container_dependencies
+    #   assign_registry_constant(result.value!)
+    #   load_container_dependencies
 
-      result = Registries::Transactions::RegistryConfiguration.new.call(yield[:application])
-      if result.failure?
-        raise ResourceRegistry::Error::InitializationFileError, result.failure.messages
-      end
+    #   result = Registries::Transactions::RegistryConfiguration.new.call(yield[:application])
+    #   if result.failure?
+    #     raise ResourceRegistry::Error::InitializationFileError, result.failure.messages
+    #   end
 
-      @config = result.value!
-      @resource_registry_config = yield[:resource_registry]
-    end
+    #   @config = result.value!
+    #   @resource_registry_config = yield[:resource_registry]
+    # end
 
-    def initialize_container
-      Registries::Operations::CreateContainer.new.call
-    end
+    # def initialize_container
+    #   Registries::Operations::CreateContainer.new.call
+    # end
 
-    def assign_registry_constant(container)
-      ResourceRegistry.send(:remove_const, 'RegistryInject') if defined? RegistryInject
-      ResourceRegistry.const_set(:RegistryInject, container.injector)
+      # @config = result.value!
+      # @resource_registry_config = yield[:resource_registry]
 
-      Kernel.send(:remove_const, 'Registry') if defined? Registry
-      Kernel.const_set("Registry", container)
-    end
+    # def assign_registry_constant(container)
+    #   ResourceRegistry.send(:remove_const, 'RegistryInject') if defined? RegistryInject
+    #   ResourceRegistry.const_set(:RegistryInject, container.injector)
 
-    def load_container_dependencies
-      dependencies_path = Pathname.new(__dir__).join('system', 'dependencies')
-      Registries::Transactions::LoadContainerDependencies.new.call(dependencies_path)
-    end
+    #   Kernel.send(:remove_const, 'Registry') if defined? Registry
+    #   Kernel.const_set("Registry", container)
+    # end
 
-    def create
-      path = Pathname.new(__dir__).join('system', 'config', 'configuration_options.yml')
-      Registries::Transactions::Create.new.call(path)
-    end
+    # def load_container_dependencies
+    #   dependencies_path = Pathname.new(__dir__).join('system', 'dependencies')
+    #   Registries::Transactions::LoadContainerDependencies.new.call(dependencies_path)
+    # end
+
+    # def create
+    #   path = Pathname.new(__dir__).join('system', 'config', 'configuration_options.yml')
+    #   Registries::Transactions::Create.new.call(path)
+    # end
+
+
   end
 end

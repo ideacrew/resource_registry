@@ -17,7 +17,7 @@ module ResourceRegistry
         klass_parts = rule_keys[0].to_s.split('_')
         module_name = klass_parts.reduce([]) { |memo, word| memo << word.capitalize }.join
         klass_name  = module_name.chomp('s')
-        # binding.pry
+
         full_klass_name = ["ResourceRegistry", module_name, "Validation", klass_name + "Contract"].join('::')
         ::Kernel.const_get(full_klass_name)
       end
@@ -37,29 +37,17 @@ module ResourceRegistry
           result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
 
           # Use dry-validation error form to pass error hash along with text to calling service
+          # self.result.to_h.merge!({meta: result.to_h})
           key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
         end
       end
 
-      rule(:setting) do
+      rule(:settings).each do
         if key? && value
-          result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
-
-          # Use dry-validation error form to pass error hash along with text to calling service
-          key.failure(text: "invalid setting", error: result.errors.to_h) if result && result.failure?
+          result = ResourceRegistry::Validation::Settings::SettingContract.new.call(value)
+          # Use dry-validation metadata error form to pass error hash along with text to calling service
+          key.failure(text: "invalid settings", error: result.errors.to_h) if result && result.failure?
         end
-      end
-
-      rule(:tenants).each do
-        error_hash = apply_contract_for(self)
-        key.failure(error_hash) if error_hash.size > 0
-
-        # if key? && value
-        #   result = ResourceRegistry::Tenants::Validation::TenantContract.new.call(value)
-
-        #   # Use dry-validation metadata form to pass error hash along with text to calling service
-        #   key.failure(text: "invalid tenant", error: result.errors.to_h) if result && result.failure?
-        # end
       end
 
     end

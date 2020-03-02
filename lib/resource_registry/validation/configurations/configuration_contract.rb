@@ -21,22 +21,27 @@ module ResourceRegistry
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
           required(:name).value(:symbol)
-          required(:root).value(type?: Pathname)
-          optional(:created_at).maybe(:string)
-          optional(:register_meta).maybe(:boolean)
+          required(:root).value(:any)
+          optional(:created_at).maybe(:date_time)
+          optional(:register_meta).maybe(:bool)
 
           optional(:system_dir).maybe(:string)
           optional(:default_namespace).maybe(:string)
           optional(:auto_register).array(:string)
           optional(:load_path).maybe(:string)
           optional(:settings).array(:hash)
+
+          before(:value_coercer) do |result|
+            result.to_h.merge({ root: Pathname.new(result[:root]) }) if result[:root].is_a? String
+          end
         end
 
         # Path name must exist
         # @!method rule(:root)
         # rubocop:disable Style/RescueModifier
         rule(:root) do
-          Pathname(value).realpath rescue key.failure("pathname not found: #{value}")
+          return unless key? && value
+          value.realpath rescue key.failure("pathname not found: #{value}")
         end
         # rubocop:enable Style/RescueModifier
 

@@ -13,7 +13,7 @@ module ResourceRegistry
     # @!attribute [r] is_required (required)
     # State of this Feature either enabled or disabled
     # @return [boolean]
-    attribute :is_enabled,  Types::Bool.meta(omittable: false).default(false)
+    attribute :is_enabled,  Types::Bool.default(false).meta(omittable: false)
 
     # @!attribute [r] item (required)
     # Reference or code to be executed when this feature is invoked
@@ -29,13 +29,12 @@ module ResourceRegistry
     # @!attribute [r] meta (optional)
     # Configuration settings and attributes that support presenting and updatig their values in the User Interface
     # @return [ResourceRegistry::Meta]
-    attribute :meta,        ResourceRegistry::Meta.optional.meta(omittable: true)
-
+    attribute :meta,        ResourceRegistry::Meta.optional.default({}.freeze).meta(omittable: true)
 
     # @!attribute [r] settings (optional)
     # Configuration settings and values for this Feature
     # @return [Array<ResourceRegistry::Setting>]
-    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).optional.meta(omittable: true)
+    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).default([].freeze).optional.meta(omittable: true)
 
   end
 end
