@@ -22,7 +22,7 @@ module ResourceRegistry
           required(:namespace).maybe(:array)
           required(:is_enabled).value(:bool)
           optional(:item).value(:any)
-          optional(:options).maybe(:hash)
+          # optional(:options).maybe(:hash)
 
           optional(:meta).maybe(:hash)
           optional(:settings).array(:hash)

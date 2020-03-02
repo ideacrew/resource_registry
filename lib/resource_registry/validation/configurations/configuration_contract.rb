@@ -23,7 +23,7 @@ module ResourceRegistry
           required(:name).value(:symbol)
           required(:root).value(type?: Pathname)
           optional(:created_at).maybe(:string)
-          optional(:register_meta).maybe(:boolean)
+          optional(:register_meta).maybe(:bool)
 
           optional(:system_dir).maybe(:string)
           optional(:default_namespace).maybe(:string)

@@ -19,6 +19,7 @@ require 'resource_registry/stores'
 require 'resource_registry/serializers'
 
 require 'resource_registry/features'
+require 'resource_registry/registry'
 
 # require 'resource_registry/operations/registries/create'
 # require 'resource_registry/registries/transactions/load_container_dependencies'
