@@ -21,8 +21,8 @@ module ResourceRegistry
         #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         params do
           required(:name).value(:symbol)
-          required(:root).value(:any)
-          optional(:created_at).maybe(:date_time)
+          required(:root).value(type?: Pathname)
+          optional(:created_at).maybe(:string)
           optional(:register_meta).maybe(:bool)
 
           optional(:system_dir).maybe(:string)

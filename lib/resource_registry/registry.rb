@@ -10,14 +10,15 @@ module ResourceRegistry
     # @params [Hash] conf
     # @return ResourceRegistry::Registry
     def initialize(key:, conf: {})
-      configuration = configure(conf)
+      # configuration = configure(conf)
 
-      super
+      super()
     end
+  
+    def register_feature(feature)
+      binding.pry
 
-    def register(feature)
-      # validate feature_hash using feature_contract
-      # instantiate a feature struct
+      # super(feature.key, -> { self.resolve(:data_store)[:users] })
 
       # validate and find_or_create namespace if populated
 
@@ -25,8 +26,8 @@ module ResourceRegistry
       # add the feature to namespace
     end
 
-    def resolve(key:)
-
+    def resolve_feature(key:)
+    
     end
 
     private
@@ -38,6 +39,10 @@ module ResourceRegistry
     end
 
     def index_feature(feature)
+    end
+
+    def find_or_create_namespace(namespace)
+
     end
 
   end
