@@ -24,7 +24,7 @@ RSpec.describe ResourceRegistry::Feature do
   let(:optional_params) { { options: options, meta: meta, settings: settings } }
   let(:all_params)      { required_params.merge(optional_params) }
 
-  let(:required_attr_defaults)  { { meta: {} } }
+  let(:required_attr_defaults)  { { meta: {}, settings: [] } }
   let(:required_attr_out)       { required_params.merge(required_attr_defaults) }
 
   context "Validation with invalid input" do
@@ -55,7 +55,7 @@ RSpec.describe ResourceRegistry::Feature do
     context "Given nil for item attribute" do
       let(:nil_item)   { nil }
       let(:params)     { required_params.select { |k,v| k != :item }.merge({item: nil_item}) }
-      let(:attr_out)   { required_attr_out.merge(item: nil) }
+      let(:attr_out)   { required_attr_out.merge({item: nil}) }
 
       it "should pass validation" do
         expect(described_class.new(params)).to be_a ResourceRegistry::Feature

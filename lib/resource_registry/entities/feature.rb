@@ -24,17 +24,17 @@ module ResourceRegistry
     # Options passed through for item execution 
     # The user-assigned values passed through for this configuratino setting
     # @return [Hash]
-    attribute :options,     Types::Any.optional.meta(omittable: true)
+    attribute :options,     Types::Any.meta(omittable: true)
 
     # @!attribute [r] meta (optional)
     # Configuration settings and attributes that support presenting and updatig their values in the User Interface
     # @return [ResourceRegistry::Meta]
-    attribute :meta,        ResourceRegistry::Meta.optional.default({}.freeze).meta(omittable: true)
+    attribute :meta,        ResourceRegistry::Meta.default(Hash.new).meta(omittable: true)
 
     # @!attribute [r] settings (optional)
     # Configuration settings and values for this Feature
     # @return [Array<ResourceRegistry::Setting>]
-    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).default([].freeze).optional.meta(omittable: true)
+    attribute :settings,    Types::Array.of(ResourceRegistry::Setting).default([].freeze).meta(omittable: true)
 
   end
 end
