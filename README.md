@@ -98,9 +98,9 @@ my_registry.register(key:       :greeter,
                      settings:  [scope_setting])
 
 # Use syntax shortcut to resolve the registered Feature
-my_registry[:greeter].namespace        # => "operations.ai"
-my_registry[:greeter].settings.scope   # => "online"
-my_registry[:greeter] "Dolly"          # => "Hello Dolly"
+my_registry[:greeter].namespace_dot_notation  # => "operations.ai"
+my_registry[:greeter].settings(:scope)        # => "online"
+my_registry[:greeter] "Dolly"                 # => "Hello Dolly"
 ```
 
 ### Feature Namepace

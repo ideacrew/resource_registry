@@ -19,14 +19,9 @@ module ResourceRegistry
       # validate feature_hash using feature_contract
       # instantiate a feature struct
 
-      # validate and find_or_create namespace if populated
-
-      # add the feature to index
-      # add the feature to namespace
     end
 
     def resolve(key:)
-
     end
 
     private
@@ -34,7 +29,7 @@ module ResourceRegistry
     def configure(params)
       default_conf = ResourceRegistry::Configuration.new.to_h
       values = default_conf.merge(params)
-      ResourceRegistry::Operations::Configurations::Create.call(values) 
+      ResourceRegistry::Operations::Configurations::Create.call(values)
     end
 
     def index_feature(feature)
