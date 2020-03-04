@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe ResourceRegistry::FeatureDSL do
+RSpec.describe ResourceRegistry::FeatureDsl do
 
   before do
     class ::Greeter

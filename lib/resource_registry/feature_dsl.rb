@@ -3,7 +3,7 @@ require 'forwardable'
 module ResourceRegistry
 
   # Define a Domain-Specific Language (DSL) for ResourceRegisty::Feature object
-  class FeatureDSL
+  class FeatureDsl
     extend Forwardable
 
     attr_reader :feature

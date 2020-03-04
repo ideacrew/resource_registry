@@ -15,15 +15,13 @@ module ResourceRegistry
       super()
     end
   
-    def register_feature(feature)
-      binding.pry
-
-      # super(feature.key, -> { self.resolve(:data_store)[:users] })
-
+    def register(feature)
+      super(feature.key, -> { feature })
     end
 
-    def resolve_feature(key:)
-    
+    def resolve(key, &block)
+      result = super
+      ResourceRegistry::FeatureDsl.new(feature: result)
     end
 
     private

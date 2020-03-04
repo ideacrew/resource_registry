@@ -19,8 +19,9 @@ require 'resource_registry/serializers'
 require 'resource_registry/validations'
 
 require 'resource_registry/features'
+require 'resource_registry/feature_dsl'
 require 'resource_registry/registry'
-
+require 'resource_registry/registries'
 
 module ResourceRegistry
   include Dry::Core::Constants
