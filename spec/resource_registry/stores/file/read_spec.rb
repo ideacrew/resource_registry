@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Stores::File::Read do
   subject { described_class.new }
 
   context 'When valid file name is passed' do
-    let(:valid_file) { options_file_path.to_s }
+    let(:valid_file) { feature_template_path.to_s }
 
     it "the file should exist" do
       expect(::File.exist?(valid_file)).to be_truthy
