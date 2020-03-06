@@ -69,7 +69,7 @@ module ResourceRegistry
     private
 
     def dsl_for(feature)
-      ResourceRegistry::FeatureDSL.new(feature)
+      ResourceRegistry::FeatureDsl.new(feature)
     end
 
     def features_stale?
