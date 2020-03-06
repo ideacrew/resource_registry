@@ -85,7 +85,7 @@ RSpec.describe ResourceRegistry::Registry do
       it "should resolve a feature key" do
         result = registry.resolve_feature(key)
         # binding.pry
-        expect(result).to be_a ResourceRegistry::FeatureDsl
+        expect(result).to be_a ResourceRegistry::FeatureDSL
         expect(result.enabled?).to eq is_enabled
       end
     end
