@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-puts "in resource_registry!!!"
 
 require 'dry/transaction'
 require 'dry/transaction/operation'

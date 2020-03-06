@@ -5,22 +5,23 @@ module ResourceRegistry
     # @api private
     module ErrorInitalizer
       attr_reader :original
-      
+
       def initialize(msg, original = $!)
         super(msg)
         @original = original
       end
     end
-    
+
     # @api public
     class Error < StandardError
       include ErrorInitalizer
     end
-    
+
     class LoadException < LoadError
       include ErrorInitalizer
-    end 
+    end
 
+    DuplicateFeatureError     = Class.new(Error)
     InvalidConfigurationError = Class.new(Error)
     InvalidOptionHash         = Class.new(Error)
     InvalidContractParams     = Class.new(Error)
