@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 
 module ResourceRegistry
@@ -10,10 +12,17 @@ module ResourceRegistry
 
     # @param [ResourceRegistry::Feature] feature Instance of a feature
     # @param [Hash] options Options passed through to feature enabled check
-    def initialize(feature:, options: {})
+    def initialize(feature, options: {})
       @feature = feature
       @options = options
     end
+
+    def key
+      @feature.key.to_s
+    end
+
+    def_delegator :@feature, :item
+    def_delegator :@feature, :options
 
     # Check if a feature is enabled
     #
@@ -29,8 +38,9 @@ module ResourceRegistry
       @feature.is_enabled == false
     end
 
-    def namespace_dot_notation
-      @feature.namespace.reduce("") { |str, ns| str == "" ? str = ns.to_s : str += ".#{ns.to_s}"; str }
+    def namespace
+      @feature.namespace.map(&:to_s).join('.')
+      # @feature.namespace.reduce("") { |str, ns| str == "" ? str = ns.to_s : str += ".#{ns.to_s}"; str }
     end
 
     def settings(id = nil)

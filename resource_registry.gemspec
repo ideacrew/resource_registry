@@ -32,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.5.0'
 
   spec.add_dependency 'dry-monads',               '~> 1.2'
-  spec.add_dependency 'dry-system',               '~> 0.12'
   spec.add_dependency 'dry-equalizer',            '~> 0.2'
   spec.add_dependency 'dry-matcher',              '~> 0.7'
   spec.add_dependency 'dry-validation',           '~> 1.2'
@@ -40,9 +39,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-struct',               '~> 1.0'
   spec.add_dependency 'dry-types',                '~> 1.0'
   spec.add_dependency 'dry-inflector',            '~> 0.1'
+
+  spec.add_dependency 'dry-system',               '~> 0.12'
   spec.add_dependency 'dry-container',            '~> 0.7'
   spec.add_dependency 'dry-auto_inject',          '~> 0.6'
-  # spec.add_dependency 'dry-configurable',         '~> 0.8'
   spec.add_dependency 'dry-transaction',          '~> 0.13'
   spec.add_dependency 'dry-initializer',          '~> 3.0'
   spec.add_dependency 'deep_merge',               '~> 1.2.1'

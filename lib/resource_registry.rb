@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 puts "in resource_registry!!!"
 
-require 'dry/system/container'
 require 'dry/transaction'
 require 'dry/transaction/operation'
 require 'dry/initializer'

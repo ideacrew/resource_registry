@@ -20,13 +20,12 @@ require_relative 'validation/features/feature_contract'
 require_relative 'validation/metas/meta_contract'
 require_relative 'validation/settings/setting_contract'
 
+require_relative 'operations/configurations/create'
 require_relative 'operations/features/create'
 require_relative 'operations/features/authorize'
 require_relative 'operations/features/configure'
 require_relative 'operations/features/disable'
 require_relative 'operations/features/enable'
-require_relative 'operations/features/register'
-require_relative 'operations/features/exist'
 
 
 module ResourceRegistry

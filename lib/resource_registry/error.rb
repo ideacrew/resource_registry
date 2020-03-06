@@ -21,9 +21,10 @@ module ResourceRegistry
       include ErrorInitalizer
     end 
 
-    InvalidOptionHash       = Class.new(Error)
-    InvalidContractParams   = Class.new(Error)
-    InitializationFileError = Class.new(LoadException)
-    ContainerCreateError    = Class.new(LoadException)
+    InvalidConfigurationError = Class.new(Error)
+    InvalidOptionHash         = Class.new(Error)
+    InvalidContractParams     = Class.new(Error)
+    InitializationFileError   = Class.new(LoadException)
+    ContainerCreateError      = Class.new(LoadException)
   end
 end
