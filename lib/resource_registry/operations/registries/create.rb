@@ -26,13 +26,13 @@ module ResourceRegistry
         end
 
         def deserialize(file_io)
-          params = ResourceRegistry::Serializers::Yaml::Deserialize.new.call(file_io)
+          params = ResourceRegistry::Serializers::Yaml::Deserialize.new.call(file_io.value!)
 
           Success(params)
         end
 
         def serialize(params)
-          features = ResourceRegistry::Serializers::Features::Serialize.new.call(params)
+          features = ResourceRegistry::Serializers::Features::Serialize.new.call(params.value!)
         end
 
         def register(features, registry)

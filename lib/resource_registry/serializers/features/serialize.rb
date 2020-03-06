@@ -20,8 +20,9 @@ module ResourceRegistry
 
         def transform(params)
           features = params['registry'].reduce([]) do |features_list, namespace|
-            path = namespace['namespace']
 
+            path = namespace['namespace'] if namespace.key?('namespace')
+            
             namespace_features = namespace['features'].reduce([]) do |ns_features_list, feature_hash|
               feature_hash['namespace'] ||= path
               feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)

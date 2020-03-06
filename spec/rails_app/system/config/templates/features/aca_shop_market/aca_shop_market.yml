@@ -1,8 +1,6 @@
 ---
 registry:
-  - namespace:
-      - :features
-      - :enroll_app
+  - namespace: ['features', 'enroll_app']
     features:
     - key: :aca_shop_market
       is_enabled: false
@@ -79,11 +77,11 @@ registry:
           description: 
           type: :enumerated_hash
           default: { paper_and_electronic: "Paper and Electronic" }
-          # enum:   [
-          #             { paper_and_electronic: "Paper and Electronic" }.freeze,
-          #             { paper_only: "Paper only" }.freeze,
-          #             { electronic_only: "Electronic only" }.freeze
-          #           ]
+          enum:   [
+                      { paper_and_electronic: "Paper and Electronic" },
+                      { paper_only: "Paper only" },
+                      { electronic_only: "Electronic only" }
+                    ]
           is_required: true
           is_visible: true
     # Employer SIC Feature settngs.  

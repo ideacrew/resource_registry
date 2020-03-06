@@ -20,7 +20,7 @@ module RegistryDataSeed
   end
 
   def features_folder_path
-    Pathname.pwd.join('spec', 'rails_app', 'system', 'config')
+    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features')
   end
 
   def configuration_file_path

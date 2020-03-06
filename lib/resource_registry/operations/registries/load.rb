@@ -24,8 +24,8 @@ module ResourceRegistry
         end
 
         def load(paths, registry)
-          paths.each do |path|
-            ResourceRegistry::Operations::Registry::Create.new(path: path, registry: registry)
+          paths.value!.each do |path|
+            ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
           end
 
           Success(registry)
