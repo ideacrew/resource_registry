@@ -22,15 +22,10 @@ module ResourceRegistry
           features = params['registry'].reduce([]) do |features_list, namespace|
 
             path = namespace['namespace'] if namespace.key?('namespace')
-            
+
             namespace_features = namespace['features'].reduce([]) do |ns_features_list, feature_hash|
               feature_hash['namespace'] ||= path
-              feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
-              if feature.success?
-                ns_features_list << feature.value!
-              else
-                raise "Failed to create feature with #{feature.failure.errors.inspect}"
-              end
+              ns_features_list << feature_hash
             end
 
             features_list += namespace_features

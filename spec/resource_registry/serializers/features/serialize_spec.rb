@@ -12,15 +12,13 @@ RSpec.describe ResourceRegistry::Serializers::Features::Serialize do
     let(:serializer)    { ResourceRegistry::Serializers::Features::Serialize.new }
     let(:source_yaml)   { IO.read(File.open(feature_template_path)) }
     let(:input)         { ResourceRegistry::Serializers::Yaml::Deserialize.new.call(source_yaml).value! }
+    let(:features)      { [:aca_shop_market, :cobra, :groups, :employer_sic] }
 
     it "should return success with hash output" do
       subject
-      # expect(subject).to be_a Dry::Monads::Result::Success
-      # expect(subject.value!).to be_a String
-    end
 
-    it "should return options yaml" do
-      expect(subject.value!.strip!).to eq source_yaml.strip!
+      expect(subject).to be_a Dry::Monads::Result::Success
+      expect(subject.value!.size).to eq features.size
     end
   end
 end
