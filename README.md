@@ -57,22 +57,23 @@
 require 'resource_registry'
 
 # Initialize registry
-my_registry = ResourceRegistry::Registry.new(key: :my_registry)
+my_registry = ResourceRegistry::Registry.new
 
 # Register a Feature with an item attribute that is invoked when key is resolved
-my_registry.register(key: :stringify, item: ->(val){ val.to_s }, is_enabled: true)
+stringify = ResourceRegistry::Feature.new(key: :stringify, item: ->(val){ val.to_s }, is_enabled: true)
+my_registry.register_feature(stringify)
 
 # Verify the Feature is registered and enabled
-my_registry.resolve('stringify').exist?     # => true
-my_registry.resolve('stringify').enabled?   # => true
+my_registry.feature_exist?('stringify')             # => true
+my_registry.resolve_feature('stringify').enabled?   # => true
 
 # Use its key to resolve and invoke the Feature
-my_registry.resolve('stringify') :my_symbol # => "my_symbol"
+my_registry.resolve_feature('stringify') :my_symbol # => "my_symbol"
 ```
 
 #### Detailed Example
 ```ruby
-my_registry = ResourceRegistry::Registry.new(key: :my_registry)
+my_registry = ResourceRegistry::Registry.new
 
 # Executable code to associate with the Feature
 class ::Greeter
@@ -92,15 +93,16 @@ scope_setting = {key: :scope, item: "online"}
  
 
 # Register a Feature with a namespace and settings
-my_registry.register(key:       :greeter, 
-                     item:      greeter_instance, 
-                     namespace: ns, 
-                     settings:  [scope_setting])
+greeter = ResourceRegistry::Feature.new(key:       :greeter, 
+                                        item:      greeter_instance, 
+                                        namespace: ns, 
+                                        settings:  [scope_setting])
 
+my_registry.register_feature(greeter)
 # Use syntax shortcut to resolve the registered Feature
-my_registry[:greeter].namespace_dot_notation  # => "operations.ai"
-my_registry[:greeter].settings(:scope)        # => "online"
-my_registry[:greeter] "Dolly"                 # => "Hello Dolly"
+my_registry.resolve_feature(:greeter).namespace              # => "operations.ai"
+my_registry.resolve_feature(:greeter).settings(:scope).to_h  # => {:key=>:scope, :item=>"online"}
+my_registry.resolve_feature(:greeter) "Dolly"                # => "Hello Dolly"
 ```
 
 ### Feature Namepace

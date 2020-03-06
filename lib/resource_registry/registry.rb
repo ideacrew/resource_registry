@@ -47,7 +47,7 @@ module ResourceRegistry
       register(namespace_key_for(feature), feature)
     end
 
-    def resolve_feature(feature_key)
+    def resolve_feature(feature_key, options = {})
       resolve(index_key_for(feature_key))
     end
 
