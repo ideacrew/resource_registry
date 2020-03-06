@@ -29,7 +29,7 @@ module ResourceRegistry
     # @!attribute [r] meta (optional)
     # Configuration settings and attributes that support presenting and updatig their values in the User Interface
     # @return [ResourceRegistry::Meta]
-    attribute :meta,        ResourceRegistry::Meta.default(Hash.new).meta(omittable: true)
+    attribute :meta,        ResourceRegistry::Meta.default(Hash.new.freeze).meta(omittable: true)
 
     # @!attribute [r] settings (optional)
     # Configuration settings and values for this Feature

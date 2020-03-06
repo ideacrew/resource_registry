@@ -50,13 +50,13 @@ RSpec.describe ResourceRegistry::FeatureDSL do
 
   describe "initialize" do
     it 'sets feature' do
-      dsl = described_class.new(feature: feature)
+      dsl = described_class.new(feature)
       expect(dsl.feature) == feature
     end
   end
 
   describe 'DSL methods' do
-    let(:dsl) { described_class.new(feature: feature) }
+    let(:dsl) { described_class.new(feature) }
 
     describe '#enabled/disabled' do
       it "correctly reports feature's state" do
@@ -70,8 +70,8 @@ RSpec.describe ResourceRegistry::FeatureDSL do
     describe '#namespace' do
       let(:ns_string) { 'level_1.level_2.level_3' }
 
-      it "correctly returns feature's namespace in dot notation" do
-        expect(dsl.namespace_dot_notation).to eq ns_string
+      it "correctly returns feature's namespace in stringified dot notation" do
+        expect(dsl.namespace).to eq ns_string
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
       context "and settings are not present" do
         let(:feature_hash_sans_settings)  { min_feature_hash }
         let(:feature_sans_settings)       { ResourceRegistry::Feature.new(feature_hash_sans_settings) }
-        let(:dsl_sans_settings)           { described_class.new(feature: feature_sans_settings) }
+        let(:dsl_sans_settings)           { described_class.new(feature_sans_settings) }
 
         it "should return an empty array" do
           expect(dsl_sans_settings.settings).to eq []
@@ -134,7 +134,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
       context "and meta is not present" do
         let(:feature_hash_sans_meta) { min_feature_hash }
         let(:feature_sans_meta) { ResourceRegistry::Feature.new(feature_hash_sans_meta) }
-        let(:dsl_sans_meta)     { described_class.new(feature: feature_sans_meta) }
+        let(:dsl_sans_meta)     { described_class.new(feature_sans_meta) }
 
         it "should return an empty hash" do
           expect(dsl_sans_meta.meta).to eq Hash.new

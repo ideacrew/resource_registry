@@ -12,7 +12,7 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   SimpleCov.start {add_filter '/spec/' }
 end
 
-require 'dry/container/stub'
+# require 'dry/container/stub'
 require "timecop"
 
 
