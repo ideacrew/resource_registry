@@ -63,8 +63,19 @@ RSpec.describe ResourceRegistry::Registry do
     let(:registry)          { described_class.new(params) }
 
     describe '#register_feature' do
-      it "should register a feature" do
-        expect(registry.register_feature(feature).keys).to include namespace_key
+      context "given a new feature" do
+
+        it "should register a feature" do
+          expect(registry.register_feature(feature).keys).to include namespace_key
+        end
+
+        context "given an already-registered feature" do
+          before { registry.register_feature(feature) }
+
+          it "should raise an error" do
+            expect{registry.register_feature(feature)}.to raise_error ResourceRegistry::Error::DuplicateFeatureError
+          end
+        end
       end
     end
 

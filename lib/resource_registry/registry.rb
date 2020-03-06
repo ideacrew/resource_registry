@@ -35,9 +35,14 @@ module ResourceRegistry
         raise ArgumentError, "#{feature_entity} must be a ResourceRegistry::Feature"
       end
 
+      feature = dsl_for(feature_entity)
+
+      if feature_exist?(feature.key)
+        raise ResourceRegistry::Error::DuplicateFeatureError, "#{feature.key.inspect} feature is already registered"
+      end
+
       @features_stale = true
 
-      feature = dsl_for(feature_entity)
       register(index_key_for(feature.key), proc { resolve(namespace_key_for(feature)) })
       register(namespace_key_for(feature), feature)
     end
