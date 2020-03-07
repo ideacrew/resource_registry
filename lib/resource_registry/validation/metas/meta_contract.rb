@@ -4,21 +4,21 @@ module ResourceRegistry
   module Validation
     module Metas
 
-      # Schema and validation rules for {ResourceRegistry::Entities::UiMetadata}
+      # Schema and validation rules for the {ResourceRegistry::Meta} domain model
       class MetaContract < ResourceRegistry::Validation::ApplicationContract
 
-
         # @!method call(params)
-        # @param params [Hash] options used to create the contract
-        #   @options params [String] :label (required)
-        #   @options params [Symbol] :type (required)
-        #   @options params [Any] :default (required)
-        #   @options params [Any] :value (optional)
-        #   @options params [String] :description (required)
-        #   @options params [Array<Any>] :enum (optional)
-        #   @options params [Bool] :is_required (optional)
-        #   @options params [Bool] :is_visible (optional)
-        #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+        # Validate a meta hash 
+        # @param [String] label required
+        # @param [Symbol] type required
+        # @param [Any] default required
+        # @param [Any] value optional
+        # @param [String] description optional
+        # @param [Array<Any>] enum optional
+        # @param [Bool] is_required optional
+        # @param [Bool] is_visible optional
+        # @return [Dry::Monads::Result::Success] if params pass validation
+        # @return [Dry::Monads::Result::Failure] if params fail validation
         params do
           required(:label).value(:string)
           required(:type).value(:symbol)

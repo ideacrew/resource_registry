@@ -4,7 +4,7 @@ require 'forwardable'
 
 module ResourceRegistry
 
-  # Define a Domain-Specific Language (DSL) for ResourceRegisty::Feature object
+  # Define a Domain-Specific Language (DSL) for {ResourceRegistry::Feature} object
   class FeatureDSL
     extend Forwardable
 
@@ -21,23 +21,28 @@ module ResourceRegistry
       @feature.key.to_s
     end
 
+    # @!method item
+    # The reference or code to be evaluated when feature is resolved
     def_delegator :@feature, :item
+
+    # @!method options
     def_delegator :@feature, :options
 
+    # @!method enabled?
     # Check if a feature is enabled
-    #
     # @return [true] If feature is enabled
     # @return [false] If feature is not enabled
     def_delegator :@feature, :is_enabled, :enabled?
 
+    # @!method disabled?
     # Check if a feature is disabled
-    #
     # @return [true] If feature is disabled
     # @return [false] If feature is not disabled
     def disabled?
       @feature.is_enabled == false
     end
 
+    # @return [String] the namespace under which the feature is stored, in dot notation
     def namespace
       @feature.namespace.map(&:to_s).join('.')
       # @feature.namespace.reduce("") { |str, ns| str == "" ? str = ns.to_s : str += ".#{ns.to_s}"; str }
@@ -51,7 +56,7 @@ module ResourceRegistry
     def setting(id)
       if !id.is_a?(String) && !id.is_a?(Symbol)
         raise ArgumentError, "#{id} must be a String or Symbol"
-      end      
+      end
 
       id = id.to_sym
       @feature.settings.detect { |setting| setting.key == id }

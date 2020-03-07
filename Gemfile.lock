@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resource_registry (0.4.1)
+    resource_registry (0.7.0)
       bootsnap (~> 1.0)
       deep_merge (~> 1.2.1)
       dry-auto_inject (~> 0.6)

@@ -3,15 +3,17 @@
 module ResourceRegistry
   module Validation
     module Settings
+
+      # Schema and validation rules for the {ResourceRegistry::Setting} domain model
       class SettingContract < ResourceRegistry::Validation::ApplicationContract
 
         # @!method call(params)
-        # @param params [Hash] options used to create the contract
-        #   @options params [Symbol] :key (required)
-        #   @options params [Any] :item (optional)
-        #   @options params [Hash] :options (optional)
-        #   @options params [ResourceRegistry::Entities::Meta] :meta (optional)
-        #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+        # @param [Symbol] key required
+        # @param [Any] item optional
+        # @param [Hash] options optional
+        # @param [ResourceRegistry::Meta] meta optional
+        # @return [Dry::Monads::Result::Success] if params pass validation
+        # @return [Dry::Monads::Result::Failure] if params fail validation
         params do
           required(:key).value(:symbol)
           required(:item).filled(:any)

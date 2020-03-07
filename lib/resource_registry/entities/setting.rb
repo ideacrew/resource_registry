@@ -3,22 +3,25 @@
 module ResourceRegistry
   class Setting < Dry::Struct
 
-    # @!attribute [r] key (required)
-    # ID for this Feature. Must be unique within a registry namespace (required)
+    # @!attribute [r] key
+    # ID for this setting
     # @return [Symbol]
     attribute :key,     Types::RequiredSymbol
 
-    # @!attribute [r] item (required)
-    # The user-assigned value for this configuratino setting
+    # @!attribute [r] item
+    # The value for this setting
     # @return [Any]
     attribute :item,    Types::Any.meta(omittable: false)
 
-    # @!attribute [r] options (optional)
+    # @!attribute [r] options
     # Options passed through for this setting 
-    # The user-assigned value for this configuratino setting
     # @return [Hash]
     attribute :options, Types::Any.optional.meta(omittable: true)
 
+    # @!attribute [r] meta
+    # Configuration settings and attributes that support presenting and updating 
+    # their values in the User Interface
+    # @return [ResourceRegistry::Meta]
     attribute :meta,    ResourceRegistry::Meta.optional.meta(omittable: true)
   end
 end

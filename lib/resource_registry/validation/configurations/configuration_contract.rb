@@ -4,21 +4,21 @@ module ResourceRegistry
   module Validation
     module Configurations
 
-      # Schema and validation rules for {ResourceRegistry::Entities::Registry}
+      # Schema and validation rules for the {ResourceRegistry::Configuration} domain model
       class ConfigurationContract < ResourceRegistry::Validation::ApplicationContract
 
         # @!method call(params)
-        # @param params [Hash] options used to create the contract
-        #   @options params[Symbol] :name (required)
-        #   @options params[String] :root (required)
-        #   @options params[DateTime] :created_at (optional)
-        #   @options params[Boolean] :register_meta(optional)
-        #   @options params[String] :system_dir (optional)
-        #   @options params[String] :default_namespace (optional)
-        #   @options params[String] :auto_register (optional)
-        #   @options params[Array<String>] :load_path (optional)
-        #   @options params[Array<ResourceRegistry::Entities::Setting>] :settings (optional)
-        #   @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+        # @param [Symbol] name required
+        # @param [String, Pathname] root required
+        # @param [DateTime] created_at optional
+        # @param [Bool] register_meta optional
+        # @param [String] system_dir optional
+        # @param [String] default_namespace optional
+        # @param [String] auto_register optional
+        # @param [Array<String>] load_path optional
+        # @param [Array<ResourceRegistry::Setting>] :settings optional
+        # @return [Dry::Monads::Result::Success] if params pass validation
+        # @return [Dry::Monads::Result::Failure] if params fail validation
         params do
           required(:name).value(:symbol)
           required(:root).value(:any)
@@ -31,14 +31,16 @@ module ResourceRegistry
           optional(:load_path).maybe(:string)
           optional(:settings).array(:hash)
 
+          # @!method before(value_coercer)
+          # Coerce root String values to Pathname type
           before(:value_coercer) do |result|
             result.to_h.merge({ root: Pathname.new(result[:root]) }) if result[:root].is_a? String
           end
         end
 
-        # Path name must exist
-        # @!method rule(:root)
         # rubocop:disable Style/RescueModifier
+        # Verifies the Pathname exists
+        # @!method rule(root)
         rule(:root) do
           return unless key? && value
           value.realpath rescue key.failure("pathname not found: #{value}")
