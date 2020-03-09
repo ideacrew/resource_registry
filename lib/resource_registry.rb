@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'dry/transaction'
-require 'dry/transaction/operation'
-require 'dry/initializer'
+# require 'dry/transaction'
+# require 'dry/transaction/operation'
+# require 'dry/initializer'
 require 'dry/validation'
 require 'dry/monads/result'
 

@@ -7,9 +7,10 @@ Registry.namespace :"resource_registry.stores.file" do |container|
     ResourceRegistry::Stores::File::Read.new
   end
 
-  container.register :require do
-    ResourceRegistry::Stores::File::Require.new
+  container.register :list_path do
+    ResourceRegistry::Stores::File::ListPath.new
   end
+
 end
 
 Registry.namespace :"resource_registry.stores.container" do |container|
@@ -27,21 +28,5 @@ Registry.namespace :"resource_registry.stores.container" do |container|
 end
 
 
-Registry.namespace :"resource_registry.stores" do |container|
 
-  container.register :load_file do
-    ResourceRegistry::Stores::Operations::LoadFile.new
-  end
-
-  container.register :list_path do
-    ResourceRegistry::Stores::Operations::ListPath.new
-  end
-
-  container.register :require_file do
-    ResourceRegistry::Stores::Operations::RequireFile.new
-  end
-
-  container.register :persist_container do
-    ResourceRegistry::Stores::Operations::PersistContainer.new
-  end
 end

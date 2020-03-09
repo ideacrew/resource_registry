@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "spec_helper"
-require 'dry/system/stubs'
+# require 'dry/system/stubs'
 require 'resource_registry' unless defined?(ResourceRegistry::CoreContainer)
 
 RSpec.describe ResourceRegistry do
