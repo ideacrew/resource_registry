@@ -59,9 +59,8 @@ module ResourceRegistry
     # @!method options
     def_delegator :@feature, :options
 
-    def meta
-      @feature.meta
-    end
+    # @!method meta
+    def_delegator :@feature, :meta
 
     # @return [Array<Setting>] all settings for the feature
     def settings(id = nil)
@@ -78,6 +77,7 @@ module ResourceRegistry
       id = id.to_sym
       @feature.settings.detect { |setting| setting.key == id }
     end
+
 
     def label
       @feature.meta.label

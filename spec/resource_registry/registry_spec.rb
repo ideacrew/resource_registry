@@ -102,6 +102,7 @@ RSpec.describe ResourceRegistry::Registry do
     end
 
     describe '#resolve_feature' do
+      let(:block_text) { "Dolly" }
       before { registry.register_feature(feature) }
 
       it "should resolve a feature key" do
@@ -110,6 +111,15 @@ RSpec.describe ResourceRegistry::Registry do
         expect(result).to be_a ResourceRegistry::FeatureDSL
         expect(result.enabled?).to eq is_enabled
       end
+
+      it "should support shortcut syntax" do
+        expect(registry[key.to_sym]).to eq registry.resolve_feature(key)
+      end
+
+      it "should accept a block and pass to a registered class" do
+        expect(registry[key] { block_text }).to eq "Hello Dolly"
+      end
+
     end
 
     describe '#feature_exist?' do
