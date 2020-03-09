@@ -68,7 +68,7 @@ my_registry.feature_exist?('stringify')             # => true
 my_registry.resolve_feature('stringify').enabled?   # => true
 
 # Use its key to resolve and invoke the Feature
-my_registry.resolve_feature('stringify') :my_symbol # => "my_symbol"
+my_registry.resolve_feature('stringify') {:my_symbol} # => "my_symbol"
 ```
 
 #### Detailed Example
@@ -100,9 +100,9 @@ greeter = ResourceRegistry::Feature.new(key:       :greeter,
 
 my_registry.register_feature(greeter)
 # Use syntax shortcut to resolve the registered Feature
-my_registry.resolve_feature(:greeter).namespace              # => "operations.ai"
-my_registry.resolve_feature(:greeter).settings(:scope).to_h  # => {:key=>:scope, :item=>"online"}
-my_registry.resolve_feature(:greeter) "Dolly"                # => "Hello Dolly"
+my_registry[:greeter].namespace              # => "operations.ai"
+my_registry[:greeter].settings(:scope).to_h  # => {:key=>:scope, :item=>"online"}
+my_registry[:greeter] {"Dolly"}              # => "Hello Dolly"
 ```
 
 ### Feature Namepace

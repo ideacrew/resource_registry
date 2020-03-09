@@ -30,6 +30,10 @@ module ResourceRegistry
 
     end
 
+    def configure(&block)
+      ResourceRegistry::Operations::Registries::Configure.new.call(self, &block)
+    end
+
     # Store a feature in the registry
     # @param [ResourceRegistry::Feature] The subject feature to be stored
     # @raise [ArgumentError] if the feature_entity parameter isn't an instance of {ResourceRegistry::Feature}
@@ -56,13 +60,14 @@ module ResourceRegistry
     # Look up a feature stored in the registry
     # @param [Symbol] feature_key unique identifier for the subject feature
     # @param [hash] options 
-    def resolve_feature(feature_key, options = {})
-      resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE))
+    def resolve_feature(feature_key, &block)
+      feature = resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE), &block)
+      block_given? ? feature.item.call(yield) : feature
     end
 
-    # def [](feature_key)
-    #   resolve_feature(feature_key)
-    # end
+    def [](feature_key, &block)
+      resolve_feature(feature_key, &block)
+    end
 
     # Produce an enumerated list of all features stored in this registry
     # @return [Array<Symbol>] list of registered features

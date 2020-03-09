@@ -22,7 +22,7 @@ module ResourceRegistry
         private
 
         def validate(params)
-          result = ResourceRegistry::Validation::Configurations::ConfigurationContract.new.call(params)
+          result = ResourceRegistry::Validation::ConfigurationContract.new.call(params)
 
           if result.success?
             Success(result.to_h)
