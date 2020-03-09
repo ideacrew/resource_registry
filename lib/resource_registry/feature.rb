@@ -8,6 +8,12 @@ require_relative 'operations/features/disable'
 require_relative 'operations/features/enable'
 
 module ResourceRegistry
+
+  # Define a Feature together with its settings, code hook for dependency injection, and configuration UI attributes 
+  #
+  # @example Define the feature
+  # Feature.new(key: :greeter, item: proc { |name| "Hello #{name}!" })
+  # Feature.new(key: :logger, item: Logger.new(STDERR), settings: [{default: :warn}])
   class Feature < Dry::Struct
 
     # @!attribute [r] key (required)
@@ -15,6 +21,9 @@ module ResourceRegistry
     # @return [Symbol]
     attribute :key,         Types::Symbol.meta(omittable: false)
 
+    # @!attribute [r] namespace (optional)
+    # The registry namespace where this item is stored
+    # @return [Symbol]
     attribute :namespace,   Types::Array.of(Types::RequiredSymbol).default([].freeze).meta(omittable: false)
 
     # @!attribute [r] is_enabled  (required)
@@ -47,75 +56,3 @@ module ResourceRegistry
   end
 end
 
-
-module Features
-
-  # class << self
-  #   attr_accessor :configuration
-
-  #   # Get or initilize the configuration settings
-  #   #
-  #   # @example Get the settings.
-  #   #   Features.configuration
-  #   #
-  #   # @return [ Hash ] The setting options.
-  #   def configuration
-  #     @configuration ||= Dry::Container.new
-  #   end
-
-  #   def enable(key)
-  #     key.is_enabled = true
-  #   end
-
-  #   def disable(key)
-  #     key.is_enabled = false
-  #   end
-
-  #   def enabled?(key)
-  #     key.is_enabled == true
-  #   end
-
-  #   def disabled?(key)
-  #     key.is_enabled == false
-  #   end
-
-  #   # Define a configuration option with a default.
-  #   #
-  #   # @example Define the option.
-  #   #   Features.option(:logger, :default => Logger.new(STDERR, :warn))
-  #   #
-  #   # @param [Symbol] feature The name of the feature to load
-  #   def load(feature)
-  #     # yield configuration if block_given
-  #     # configuration.register(feature) || do
-  #     #   :result
-  #     # end
-
-  #     container.register(key, options)
-  #     build_class_methods(key)
-  #   end
-
-  #   def create_method(name, &block)
-  #     self.class.send(:define_method, name, &block)
-  #   end
-
-  #   def build_class_methods(key)
-  #     module_eval do
-  #       create_method(name) { configuration[name] }
-
-  #       # define_method(name) do
-  #       #   configuration[name]
-  #       # end
-
-  #       define_method("#{name}=") do |value|
-  #         configuration[name] = value
-  #       end
-
-  #       define_method("#{name}?") do
-  #         !!send(name)
-  #       end
-  #     end
-  #   end
-
-  # end
-end

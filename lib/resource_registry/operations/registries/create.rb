@@ -69,7 +69,7 @@ module ResourceRegistry
         end
 
         def register(features, registry)
-          features.each {|feature| registry.register(feature) }
+          features.each {|feature| registry.register_feature(feature) }
           
           Success(registry)
         end
