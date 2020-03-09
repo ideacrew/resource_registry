@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'validation/configuration_contract'
+require_relative 'operations/configurations/create'
+
 module ResourceRegistry
   class Configuration < Dry::Struct
 

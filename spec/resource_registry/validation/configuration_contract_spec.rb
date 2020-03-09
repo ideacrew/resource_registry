@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Validation::Configurations::ConfigurationContract do
+RSpec.describe ResourceRegistry::Validation::ConfigurationContract do
 
   let(:name)              { :my_registry }
   let(:root)              { Pathname.new('./lib') }

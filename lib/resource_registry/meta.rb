@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'validation/meta_contract'
+
 module ResourceRegistry
 
   # Attributes for storing configuration values and driving their presentation in User Interface

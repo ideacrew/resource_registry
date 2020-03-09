@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'operations/registries/create'
+require_relative 'operations/registries/load'
+
 module ResourceRegistry
 
   # Registries are containers for storing and accessing an application's {ResourceRegistry::Feature} and setting values
@@ -74,7 +77,7 @@ module ResourceRegistry
     # @return [ResourceRegistry::Feature] if feature is found in registry
     # @return [false] if feature_key isn't found in registry
     def feature_exist?(feature_key)
-      key?(index_key_for(feature_key)) ? resolve_feature(index_key_for(feature_key)) : false
+      key?(index_key_for(feature_key)) ? resolve_feature(feature_key) : false
     end
 
 

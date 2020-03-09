@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Validation::Settings::SettingContract do
+RSpec.describe ResourceRegistry::Validation::SettingContract do
 
   let(:key)     { :my_key }
   let(:item)    { ->(val){ val.to_sym } }

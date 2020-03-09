@@ -18,7 +18,7 @@ module ResourceRegistry
         private
 
         def validate(params)
-          result = ResourceRegistry::Validation::Features::FeatureContract.new.call(params)
+          result = ResourceRegistry::Validation::FeatureContract.new.call(params)
 
           if result.success?
             Success(result.to_h)

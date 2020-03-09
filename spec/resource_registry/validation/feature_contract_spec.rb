@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Validation::Features::FeatureContract do
+RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
   describe "Feature core parameters" do
     let(:key)         { :my_feature }

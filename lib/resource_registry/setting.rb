@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'validation/setting_contract'
+
 module ResourceRegistry
   class Setting < Dry::Struct
 

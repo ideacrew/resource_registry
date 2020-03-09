@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Validation::Metas::MetaContract do
+RSpec.describe ResourceRegistry::Validation::MetaContract do
 
   let(:label)       { "Name of this UI Feature" }
   let(:type)        { :integer }

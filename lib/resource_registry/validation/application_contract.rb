@@ -34,7 +34,7 @@ module ResourceRegistry
 
       rule(:meta) do
         if key? && value
-          result = ResourceRegistry::Validation::Metas::MetaContract.new.call(value)
+          result = ResourceRegistry::Validation::MetaContract.new.call(value)
 
           # Use dry-validation error form to pass error hash along with text to calling service
           # self.result.to_h.merge!({meta: result.to_h})
@@ -44,7 +44,7 @@ module ResourceRegistry
 
       rule(:settings).each do
         if key? && value
-          result = ResourceRegistry::Validation::Settings::SettingContract.new.call(value)
+          result = ResourceRegistry::Validation::SettingContract.new.call(value)
           # Use dry-validation metadata error form to pass error hash along with text to calling service
           key.failure(text: "invalid settings", error: result.errors.to_h) if result && result.failure?
         end
