@@ -12,8 +12,8 @@ module ResourceRegistry
   # Define a Feature together with its settings, code hook for dependency injection, and configuration UI attributes 
   #
   # @example Define the feature
-  # Feature.new(key: :greeter, item: proc { |name| "Hello #{name}!" })
-  # Feature.new(key: :logger, item: Logger.new(STDERR), settings: [{default: :warn}])
+  #   Feature.new(key: :greeter, item: proc { |name| "Hello #{name}!" })
+  #   Feature.new(key: :logger, item: Logger.new(STDERR), settings: [{default: :warn}])
   class Feature < Dry::Struct
 
     # @!attribute [r] key (required)

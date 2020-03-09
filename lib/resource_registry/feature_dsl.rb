@@ -4,7 +4,8 @@ require 'forwardable'
 
 module ResourceRegistry
 
-  # Define a Domain-Specific Language (DSL) for {ResourceRegistry::Feature} object
+  # @api private
+  # Domain-Specific Language (DSL) for defining {ResourceRegistry::Feature} objects
   class FeatureDSL
     extend Forwardable
 
@@ -12,21 +13,30 @@ module ResourceRegistry
 
     # @param [ResourceRegistry::Feature] feature Instance of a feature
     # @param [Hash] options Options passed through to feature enabled check
-    def initialize(feature, options: {})
+    # @yield the block to evaulate to define the feature
+    # @return [Mixed]
+    def initialize(feature, options: {}, &block)
       @feature = feature
       @options = options
+
+      # super(feature)
+
+      # if block.arity.zero?
+      #   instance_eval(&block)
+      # else
+      #   yield self
+      # end
+
     end
 
     def key
       @feature.key.to_s
     end
 
-    # @!method item
-    # The reference or code to be evaluated when feature is resolved
-    def_delegator :@feature, :item
-
-    # @!method options
-    def_delegator :@feature, :options
+    # @return [String] the namespace under which the feature is stored, in dot notation
+    def namespace
+      @feature.namespace.map(&:to_s).join('.')
+    end
 
     # @!method enabled?
     # Check if a feature is enabled
@@ -42,17 +52,24 @@ module ResourceRegistry
       @feature.is_enabled == false
     end
 
-    # @return [String] the namespace under which the feature is stored, in dot notation
-    def namespace
-      @feature.namespace.map(&:to_s).join('.')
-      # @feature.namespace.reduce("") { |str, ns| str == "" ? str = ns.to_s : str += ".#{ns.to_s}"; str }
+    # @!method item
+    # The reference or code to be evaluated when feature is resolved
+    def_delegator :@feature, :item
+
+    # @!method options
+    def_delegator :@feature, :options
+
+    def meta
+      @feature.meta
     end
 
+    # @return [Array<Setting>] all settings for the feature
     def settings(id = nil)
       return [] unless @feature.settings
       id == nil ? @feature.settings : setting(id)
     end
 
+    # @return [Setting] referenced setting for the feature
     def setting(id)
       if !id.is_a?(String) && !id.is_a?(Symbol)
         raise ArgumentError, "#{id} must be a String or Symbol"
@@ -60,10 +77,6 @@ module ResourceRegistry
 
       id = id.to_sym
       @feature.settings.detect { |setting| setting.key == id }
-    end
-
-    def meta
-      @feature.meta
     end
 
     def label
