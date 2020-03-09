@@ -41,7 +41,7 @@ RSpec.describe ResourceRegistry::Registry do
     before do
       class ::Greeter
         def call(params)
-          return "Hello #{params[:name]}"
+          return "Hello #{params}"
         end
       end
     end
@@ -52,15 +52,37 @@ RSpec.describe ResourceRegistry::Registry do
     let(:namespace_key)     { namespace_str + '.' + key.to_s }
     let(:is_enabled)        { false }
     let(:item)              { Greeter.new }
-    let(:feature_hash)      { {
-                                key: key,
-                                namespace: namespace,
-                                is_enabled: is_enabled,
-                                item: item,
-                              }
-                              }
-    let(:feature)           { ResourceRegistry::Feature.new(feature_hash) }
-    let(:registry)          { described_class.new(params) }
+
+    let(:label)       { "Name of this UI Feature" }
+    let(:type)        { :integer }
+    let(:default)     { 42 }
+    let(:value)       { 57 }
+    let(:description) { "The Answer to Life, the Universe and Everything" }
+    let(:enum)        { [] }
+    let(:is_required) { false }
+    let(:is_visible)  { false }
+
+    let(:meta)        { { label: label,
+                          type: type,
+                          default: default,
+                          value: value,
+                          description: description,
+                          enum: enum,
+                          is_required: is_required,
+                          is_visible: is_visible,
+                          }
+                        }
+
+    let(:feature_hash)  { {
+                            key: key,
+                            namespace: namespace,
+                            is_enabled: is_enabled,
+                            item: item,
+                            meta: meta,
+                          }
+                          }
+    let(:feature)       { ResourceRegistry::Feature.new(feature_hash) }
+    let(:registry)      { described_class.new(params) }
 
     describe '#register_feature' do
       context "given a new feature" do
@@ -84,7 +106,7 @@ RSpec.describe ResourceRegistry::Registry do
 
       it "should resolve a feature key" do
         result = registry.resolve_feature(key)
-        # binding.pry
+
         expect(result).to be_a ResourceRegistry::FeatureDSL
         expect(result.enabled?).to eq is_enabled
       end

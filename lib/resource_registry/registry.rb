@@ -31,7 +31,7 @@ module ResourceRegistry
     end
 
     # Store a feature in the registry
-    # @param [Symbol] feature_key Unique identifier for the subject feature
+    # @param [ResourceRegistry::Feature] The subject feature to be stored
     # @raise [ArgumentError] if the feature_entity parameter isn't an instance of {ResourceRegistry::Feature}
     # @raise [ResourceRegistry::Error::DuplicateFeatureError] if a feature is already registered under this key in the registry
     # @return [ResourceRegistry::Registry]
@@ -47,24 +47,29 @@ module ResourceRegistry
       end
 
       @features_stale = true
-
-      register(index_key_for(feature.key), proc { resolve(namespace_key_for(feature)) })
-      register(namespace_key_for(feature), feature)
+      # "feature_index.greeter_feature_1" => "level_1.level_2.level_3.greeter_feature_1"
+      register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
+      register(namespaced(feature.key, feature.namespace), feature)
       self
     end
 
+    # Look up a feature stored in the registry
     # @param [Symbol] feature_key unique identifier for the subject feature
     # @param [hash] options 
     def resolve_feature(feature_key, options = {})
-      resolve(index_key_for(feature_key))
+      resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE))
     end
 
-    # 
-    # @return [Array<ResourceRegistry::FeatureDSL>] list of registered features
+    # def [](feature_key)
+    #   resolve_feature(feature_key)
+    # end
+
+    # Produce an enumerated list of all features stored in this registry
+    # @return [Array<Symbol>] list of registered features
     def features
       if features_stale?
         @features = self.keys.reduce([]) do |list, key|
-          list << strip_index_namespace(key).to_sym if in_index_namespace?(key)
+          list << strip_namespace(key).to_sym if is_indexed_feature?(key)
           list
         end
         @features_stale = false
@@ -77,7 +82,7 @@ module ResourceRegistry
     # @return [ResourceRegistry::Feature] if feature is found in registry
     # @return [false] if feature_key isn't found in registry
     def feature_exist?(feature_key)
-      key?(index_key_for(feature_key)) ? resolve_feature(feature_key) : false
+      key?(namespaced(feature_key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(feature_key) : false
     end
 
 
@@ -91,24 +96,20 @@ module ResourceRegistry
       @features_stale
     end
 
-    def in_index_namespace?(feature_key)
-      (/\A#{Regexp.escape(FEATURE_INDEX_NAMESPACE)}/ =~ feature_key) == 0
+    def is_indexed_feature?(feature_key)
+      (/\A#{Regexp.escape(FEATURE_INDEX_NAMESPACE)}/ =~ feature_key.to_s) == 0
     end
 
-    def strip_index_namespace(feature_key)
-      ns_size = FEATURE_INDEX_NAMESPACE.size + 1
-      feature_key[ns_size, feature_key.to_s.length - ns_size]
+    def strip_namespace(feature_key)
+      feature_key.to_s.split('.').last
     end
 
-    def namespace_key_for(feature)
-      [feature.namespace, feature.key.to_s].join('.').to_s
-    end
-
-    # Add the feature index namespace to a feature key
-    # @param [ResourceRegistry::FeatureDSL] feature_key
-    # @return [String] A key with the feature index namespace prepended in dot notation
-    def index_key_for(feature_key)
-      [FEATURE_INDEX_NAMESPACE, feature_key.to_s].join('.').to_s
+    # Concatenate a namespace with a feature key
+    # @param [String] namespace
+    # @param [Symbol] feature_key
+    # @return [String] A key with namespace prepended key in dot notation
+    def namespaced(key, namespace = '')
+      [namespace, key.to_s].join('.').to_s
     end
 
     def compose_configuration(conf_options)
