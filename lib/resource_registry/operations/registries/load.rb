@@ -8,17 +8,17 @@ module ResourceRegistry
       class Load
         send(:include, Dry::Monads[:result, :do])
 
-        def call(config_dir:, registry:)
-          paths    = yield list_paths(config_dir)
+        def call(registry:)
+          paths    = yield list_paths(registry.load_path)
           result   = yield load(paths, registry)
 
           Success(result)
         end
 
-        private 
+        private
 
-        def list_paths(config_dir)
-          paths = ResourceRegistry::Stores::File::ListPath.new.call(config_dir)
+        def list_paths(load_path)
+          paths = ResourceRegistry::Stores::File::ListPath.new.call(load_path)
 
           Success(paths)
         end

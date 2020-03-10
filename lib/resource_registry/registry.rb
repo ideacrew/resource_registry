@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
 require_relative 'operations/registries/load'
 
@@ -32,6 +33,27 @@ module ResourceRegistry
 
     def configure(&block)
       ResourceRegistry::Operations::Registries::Configure.new.call(self, &block)
+      load! if load_path_given?
+    end
+
+    def load_path_given?
+      key?('configuration.load_path')
+    end
+
+    def load_path
+      resolve('configuration.load_path')
+    end
+
+    def load!
+      ResourceRegistry::Operations::Registries::Load.new.call(registry: self)
+    end
+
+    def register_configuration(configuration_entity)
+      self.namespace(:configuration) do
+        configuration_entity.to_h.each do |attribute, value|
+          register(attribute, value)
+        end
+      end
     end
 
     # Store a feature in the registry
@@ -59,14 +81,18 @@ module ResourceRegistry
 
     # Look up a feature stored in the registry
     # @param [Symbol] feature_key unique identifier for the subject feature
-    # @param [hash] options 
+    # @param [hash] options
     def resolve_feature(feature_key, &block)
       feature = resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE), &block)
       block_given? ? feature.item.call(yield) : feature
     end
 
-    def [](feature_key, &block)
-      resolve_feature(feature_key, &block)
+    def [](key, &block)
+      if key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
+        resolve_feature(key, &block)
+      else
+        resolve(key, &block)
+      end
     end
 
     # Produce an enumerated list of all features stored in this registry

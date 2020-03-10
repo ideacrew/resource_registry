@@ -20,7 +20,7 @@ module ResourceRegistry
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
         required(:name).value(:symbol)
-        required(:root).value(:any)
+        optional(:root).value(:any)
         optional(:created_at).maybe(:date_time)
         optional(:register_meta).maybe(:bool)
 
@@ -41,8 +41,9 @@ module ResourceRegistry
       # Verifies the Pathname exists
       # @!method rule(root)
       rule(:root) do
-        return unless key? && value
-        value.realpath rescue key.failure("pathname not found: #{value}")
+        if key? && value
+          value.realpath rescue key.failure("pathname not found: #{value}")
+        end
       end
       # rubocop:enable Style/RescueModifier
 

@@ -14,12 +14,12 @@ module ResourceRegistry
     # @!attribute [r] root
     # System root directory
     # @return [Pathname]
-    attribute :root,              Types::Path.meta(omittable: false)
+    attribute :root,              Types::Path.meta(omittable: true)
 
     # @!attribute [r] created_at 
     # Timestamp when this instance was initialized
     # @return [DateTime]
-    attribute :created_at,        Types::DateTime.default(->{DateTime.now}.freeze).meta(omittable: false)
+    attribute :created_at,        Types::DateTime.meta(omittable: true)
 
     # @!attribute [r] settings 
     # Include meta attribute values when registering Features

@@ -5,12 +5,15 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Operations::Registries::Load do
   include RegistryDataSeed
 
-  subject { described_class.new.call(config_dir: config_dir, registry: registry) }
+  subject { described_class.new.call(registry: registry) }
 
   context 'When valid feature hash passed' do
 
-    let(:config_dir) { features_folder_path }
     let(:registry)   { ResourceRegistry::Registry.new(key: :enroll) }
+
+    before do
+      registry.register('configuration.load_path', features_folder_path)
+    end
 
     it "should return success with hash output" do
       expect(subject).to be_a Dry::Monads::Result::Success
