@@ -9,7 +9,7 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do])
 
         def call(registry:)
-          paths    = yield list_paths(registry.load_path)
+          paths    = yield list_paths(load_path_for(registry))
           result   = yield load(paths, registry)
 
           Success(result)
@@ -29,6 +29,10 @@ module ResourceRegistry
           end
 
           Success(registry)
+        end
+
+        def load_path_for(registry)
+          registry.resolve('configuration.load_path')
         end
       end
     end

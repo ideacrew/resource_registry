@@ -11,8 +11,9 @@ module ResourceRegistry
         def call(registry, config_params)
           config_values   = yield validate(config_params)
           configuration   = yield create(config_values)
-          registry        = yield register(registry, configuration)
-          
+          registry        = yield register_configuration(registry, configuration)
+          registry        = yield load_features(registry)
+
           Success(registry)
         end
 
@@ -24,7 +25,7 @@ module ResourceRegistry
           if result.success?
             Success(result.to_h)
           else
-            Failure("invalid configuration passed")
+            Failure("invalid configuration passed #{result.to_h[:errors]}")
           end
         end
 
@@ -34,10 +35,28 @@ module ResourceRegistry
           Success(configuration)
         end
 
-        def register(registry, configuration)
-          registry.register_configuration(configuration.to_h)
+        def register_configuration(registry, configuration)
+          registry.namespace(:configuration) do
+            configuration.to_h.each do |attribute, value|
+              register(attribute, value)
+            end
+          end
 
           Success(registry)
+        end
+
+        def load_features(registry)
+
+          if load_path_given?(registry)
+            result = ResourceRegistry::Operations::Registries::Load.new.call(registry: registry)
+            result.success? ? Success(result.value!) : Failure(result.to_h[:errors])
+          else
+            Success(registry)
+          end
+        end
+
+        def load_path_given?(registry)
+          registry.key?('configuration.load_path')
         end
       end
     end

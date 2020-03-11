@@ -11,49 +11,21 @@ module ResourceRegistry
 
     FEATURE_INDEX_NAMESPACE = 'feature_index'.freeze
 
-    # @param [Symbol] identifier for this Registry instance
-    # @param [ResourceRegistry::Configuration] configuration Registry configuration entity
+    # attr_accessor :name, :load_path, :created_at
+
+
     # @return ResourceRegistry::Registry
-    def initialize(key: {}, options: {})
+    def initialize
       super()
 
-      @options  = options
       @features = []
       @features_stale = true
-
-      # if !key.is_a?(String) && !key.is_a?(Symbol)
-      #   raise ArgumentError, "#{key} must be a String or Symbol"
-      # end
-
-      # conf_options = options[:configuration] || {}
-      # conf_options.merge!(name: key.to_sym)
-      # compose_configuration(conf_options)
-
     end
 
     def configure(&block)
-      ResourceRegistry::Operations::Registries::Configure.new.call(self, &block)
-      load! if load_path_given?
-    end
-
-    def load_path_given?
-      key?('configuration.load_path')
-    end
-
-    def load_path
-      resolve('configuration.load_path')
-    end
-
-    def load!
-      ResourceRegistry::Operations::Registries::Load.new.call(registry: self)
-    end
-
-    def register_configuration(configuration_entity)
-      self.namespace(:configuration) do
-        configuration_entity.to_h.each do |attribute, value|
-          register(attribute, value)
-        end
-      end
+      config = OpenStruct.new
+      yield(config)
+      ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
     end
 
     # Store a feature in the registry
@@ -115,7 +87,6 @@ module ResourceRegistry
     def feature_exist?(feature_key)
       key?(namespaced(feature_key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(feature_key) : false
     end
-
 
     private
 

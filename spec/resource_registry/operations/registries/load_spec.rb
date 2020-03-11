@@ -9,7 +9,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Load do
 
   context 'When valid feature hash passed' do
 
-    let(:registry)   { ResourceRegistry::Registry.new(key: :enroll) }
+    let(:registry)   { ResourceRegistry::Registry.new }
 
     before do
       registry.register('configuration.load_path', features_folder_path)

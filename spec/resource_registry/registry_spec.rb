@@ -19,10 +19,10 @@ RSpec.describe ResourceRegistry::Registry do
                         }
 
   let(:options)       { { configuration: configuration } }
-  let(:params)        { { key: key, options: options } }
+  # let(:params)        { { key: key, options: options } }
 
   describe '#initialize' do
-    let(:my_registry) { described_class.new(params) }
+    let(:my_registry) { described_class.new }
     let(:item_name)   { :name }
     let(:item)        { "my_registry" }
 
@@ -35,6 +35,18 @@ RSpec.describe ResourceRegistry::Registry do
 
       expect(my_registry.resolve(item_name)).to eq item
     end
+  end
+
+  describe '#configure' do
+    let(:my_registry) { described_class.new }
+
+    before do
+      my_registry.configure do |config|
+        config.name       = :enroll
+        config.created_at = DateTime.now
+      end
+    end
+
   end
 
   describe 'DSL extensions' do
@@ -82,7 +94,7 @@ RSpec.describe ResourceRegistry::Registry do
                           }
                           }
     let(:feature)       { ResourceRegistry::Feature.new(feature_hash) }
-    let(:registry)      { described_class.new(params) }
+    let(:registry)      { described_class.new }
 
     describe '#register_feature' do
       context "given a new feature" do

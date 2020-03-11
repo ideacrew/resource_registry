@@ -21,7 +21,7 @@ module ResourceRegistry
       params do
         required(:name).value(:symbol)
         optional(:root).value(:any)
-        optional(:created_at).maybe(:date_time)
+        required(:created_at).maybe(:date_time)
         optional(:register_meta).maybe(:bool)
 
         optional(:system_dir).maybe(:string)

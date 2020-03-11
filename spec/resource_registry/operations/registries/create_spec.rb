@@ -10,7 +10,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
   context 'When valid feature hash passed' do
 
     let(:path)     { feature_template_path }
-    let(:registry) { ResourceRegistry::Registry.new(key: :enroll) }
+    let(:registry) { ResourceRegistry::Registry.new }
 
 
     it "should return success with hash output" do

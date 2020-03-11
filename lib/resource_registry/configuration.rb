@@ -19,7 +19,7 @@ module ResourceRegistry
     # @!attribute [r] created_at 
     # Timestamp when this instance was initialized
     # @return [DateTime]
-    attribute :created_at,        Types::DateTime.meta(omittable: true)
+    attribute :created_at,        Types::DateTime.default(->{DateTime.now}.freeze).meta(omittable: false)
 
     # @!attribute [r] settings 
     # Include meta attribute values when registering Features

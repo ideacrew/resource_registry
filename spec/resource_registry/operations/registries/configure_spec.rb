@@ -12,11 +12,12 @@ RSpec.describe ResourceRegistry::Operations::Registries::Configure do
     let(:config_params) {
       {
         name: :enroll,
-        load_path: 'system/templates'
+        load_path: 'system/templates',
+        created_at: DateTime.now
       }
     }
 
-    let(:registry) { ResourceRegistry::Registry.new(key: :enroll) }
+    let(:registry) { ResourceRegistry::Registry.new }
 
 
     it "should return success with registry as output" do
