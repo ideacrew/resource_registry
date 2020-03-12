@@ -1,4 +1,5 @@
   # ResourceRegistry
+  [![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=master)](https://travis-ci.com/ideacrew/resource_registry)
 
   Resource Registry is a library for system configuration and dependency management based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/).  It provides an enterprise-down taxonomy for organizing, defining and configuring an application's behavior, supporting single monolith and multiple component microservice architectures alike.
 
