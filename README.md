@@ -67,7 +67,7 @@ my_registry.register_feature(stringify)
 my_registry.feature_exist?('stringify')             # => true
 my_registry.resolve_feature('stringify').enabled?   # => true
 
-# Use its key to resolve and invoke the Feature
+# Use its key to resolve and invoke the Feature with argument passed as block
 my_registry.resolve_feature('stringify') {:my_symbol} # => "my_symbol"
 ```
 
