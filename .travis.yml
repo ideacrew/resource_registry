@@ -1,7 +1,16 @@
----
-sudo: false
 language: ruby
+ruby:
+  - 2.6.3
 cache: bundler
-rvm:
-  - 2.5.1
-before_install: gem install bundler -v 2.0.1
+
+before_script:
+  - bundle install
+
+script:
+  - bundle exec rspec
+
+after_failure:
+  - cd $TRAVIS_BUILD_DIR && ./travis/post_build_results
+
+after_success:
+  - cd $TRAVIS_BUILD_DIR && ./travis/post_build_results
