@@ -1,24 +1,24 @@
 # ResourceRegistry
+
 [![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=branch_0.7.0)](https://travis-ci.com/ideacrew/resource_registry)
 
-  ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration from a single codebase, supporting use cases such as: 
+  ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration for a single codebase, supporting use cases such as: 
 
   * Customer-level preference profiles
   * Multitenancy
   * Access control based on privilidges and subscriptions
 
-  ResourceRegistry is also intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes along with improper abstraction code smell that often pops up when using Rails Concerns.
+  ResourceRegistry is intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes.  It offers an
+  alternative to code obfuscation issues that often pops up when using Rails Concerns.
 
 ## Features
 
-  * Use a Feature to group associated system code and configuration settings
-  * Use a Taxonomy to structure Features and their associations
-  * Access Features and their settings using a thread-safe key/value store
-  * Enable/disable individual Features and groups/dependencies based on Taxonomy associations
-  * Use YAML to seed Features and Taxonomies
-  * Manage configuration settings on an environment basis, including: :development, :test and :production
-  * Use multi-tenancy to switch between configuration settings for different tenants running in the same context
-  * Autoload classes that support Command pattern, both single Operation and multi-step Transactions
+  * Group associated system code and configuration settings as a Feature
+  * Define a namespace taxonomy to associate and nest Features and dependencies
+  * Enable/disable individual Features 
+  * Store metadata values for a Feature that support auto generation of a configuration UI
+  * Access Features and their attribute values using a thread-safe key/value store
+  * Use YAML files to seed Features and namespaces
 
 ## Compatibility
 
