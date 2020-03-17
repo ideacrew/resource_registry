@@ -22,6 +22,7 @@ module ResourceRegistry
       @features_stale = true
     end
 
+    # Set options for this Registry. See {ResourceRegistry::Configuration} for setting attributes
     def configure(&block)
       config = OpenStruct.new
       yield(config)
@@ -55,10 +56,12 @@ module ResourceRegistry
     # @param [Symbol] feature_key unique identifier for the subject feature
     # @param [hash] options
     def resolve_feature(feature_key, &block)
-      feature = resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE), &block)
+      feature = resolve(namespaced(feature_key, FEATURE_INDEX_NAMESPACE), &block)
       block_given? ? feature.item.call(yield) : feature
     end
 
+    # (see #resolve_feature)
+    # @note This is syntactic sugar for {resolve_feature}
     def [](key, &block)
       if key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
         resolve_feature(key, &block)
@@ -88,6 +91,25 @@ module ResourceRegistry
       key?(namespaced(feature_key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(feature_key) : false
     end
 
+    # Indicates if a feature is enabled.  To be considered enabled the subject feature
+    # plus all its parent features must be in enabled state
+    # @param [Symbol] feature_key unique identifier for the subject feature
+    # @return [true] if feature_key is enabled
+    # @return [ResourceRegistry::Feature] if feature is found in registry
+    def feature_enabled?(feature_key)
+      feature = resolve_feature(feature_key)
+      return false unless feature.enabled?
+
+      namespaces = feature.namespace.split('.')
+      namespaces.detect(-> {true}) do |ancestor_key|
+        feature_exist?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
+      end
+    end
+
+    def features_by_namespace(namespace)
+      keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
+    end
+
     private
 
     def dsl_for(feature)
@@ -102,6 +124,15 @@ module ResourceRegistry
       (/\A#{Regexp.escape(FEATURE_INDEX_NAMESPACE)}/ =~ feature_key.to_s) == 0
     end
 
+    def key_in_namespace?(key, namespace)
+      ((/\A#{Regexp.escape(namespace.to_s)}/ =~ key) == 0) && (key.delete_prefix(namespace + '.').count('.') == 0)
+    end
+
+    def parent_namespace(feature_key)
+      parts = feature_key.to_s.split('.')
+      parts[0..(parts.size - 2)].join('.')
+    end
+
     def strip_namespace(feature_key)
       feature_key.to_s.split('.').last
     end
@@ -112,20 +143,6 @@ module ResourceRegistry
     # @return [String] A key with namespace prepended key in dot notation
     def namespaced(key, namespace = '')
       [namespace, key.to_s].join('.').to_s
-    end
-
-    def compose_configuration(conf_options)
-      configuration = create_configuration(conf_options)
-      assign_configuration(configuration)
-    end
-
-    def create_configuration(values)
-      result = ResourceRegistry::Operations::Configurations::Create.call(values)
-      result.success? ? result.value! : result.failure
-    end
-
-    def assign_configuration(configuration)
-      configuration.attributes.each_pair { |k, v| register(k, v) }
     end
 
   end
