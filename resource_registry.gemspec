@@ -10,10 +10,11 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Dan Thomas"]
   spec.email         = ["dan@ideacrew.com"]
 
-  spec.summary       = "Configure access to component features and custom behaviors on a multi-tenant basis}"
-  spec.description   = %q{Provides ability to define and access multiple customer settings in the same instance,
-                            supporting thread-safe configurations that enable/disable access to features and dynamic
-                            changes to settings using a syntax that avoids inline conditionals.
+  spec.summary       = "Configure and organize system settings in the form of Features}"
+  spec.description   = %q{Provides a Feature model to organize, set and retrieve application settings.  
+                            Features may be enabled/disabled, include setting attributes of any
+                            type and metadata settings designed to drive auto-display of confguration 
+                            settings.
                           }
   spec.homepage      = "https://github.com/ideacrew/resource_registry"
   spec.license       = "MIT"
@@ -47,8 +48,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler",          "~> 2.0"
   spec.add_development_dependency 'rake',             '~> 12.0'
-  spec.add_development_dependency 'rspec',            '~> 3.0'
-  spec.add_development_dependency 'rspec-rails',      '~> 3.8'
+  spec.add_development_dependency 'rspec',            '~> 3.9'
+  spec.add_development_dependency 'rspec-rails',      '~> 3.9'
   spec.add_development_dependency 'mongoid',          '~> 6.0'
   spec.add_development_dependency 'activesupport',    '~> 5.2.4'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
