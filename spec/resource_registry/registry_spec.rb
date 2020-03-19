@@ -97,6 +97,16 @@ RSpec.describe ResourceRegistry::Registry do
     let(:registry)      { described_class.new }
 
     describe '#register_feature' do
+
+      context "passing a non-feature class argument" do
+        let(:non_feature) { "feature poser" }
+     
+        it "should raise an error" do
+          expect{registry.register_feature(non_feature)}.to raise_error ArgumentError
+        end
+
+      end
+
       context "given a new feature" do
 
         it "should register a feature" do
@@ -114,24 +124,35 @@ RSpec.describe ResourceRegistry::Registry do
     end
 
     describe '#resolve_feature' do
-      let(:block_text) { "Dolly" }
-      before { registry.register_feature(feature) }
 
-      it "should resolve a feature key" do
-        result = registry.resolve_feature(key)
+      context "given a key for an unregistered feature" do
+        let(:unregistered_feature)  { :unregistered_feature  }
 
-        expect(result).to be_a ResourceRegistry::FeatureDSL
-        expect(result.enabled?).to eq is_enabled
+        it "should raise an error" do
+          expect{registry.resolve_feature(unregistered_feature)}.to raise_error ResourceRegistry::Error::FeatureNotFoundError
+        end
       end
 
-      it "should support shortcut syntax" do
-        expect(registry[key.to_sym]).to eq registry.resolve_feature(key)
-      end
+      context "given a key for a registered feature" do
+        let(:block_text) { "Dolly" }
+        before { registry.register_feature(feature) }
 
-      it "should accept a block and pass to a registered class" do
-        expect(registry[key] { block_text }).to eq "Hello Dolly"
-      end
+        it "should resolve a feature key" do
+          result = registry.resolve_feature(key)
 
+          expect(result).to be_a ResourceRegistry::FeatureDSL
+          expect(result.enabled?).to eq is_enabled
+        end
+
+        it "should support shortcut syntax" do
+          expect(registry[key.to_sym]).to eq registry.resolve_feature(key)
+        end
+
+        it "should accept a block and pass to a registered class" do
+          expect(registry[key] { block_text }).to eq "Hello Dolly"
+        end
+
+      end
     end
 
     describe '#feature_exist?' do
