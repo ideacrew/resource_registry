@@ -41,6 +41,12 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-container',            '~> 0.7'
   spec.add_dependency 'deep_merge',               '~> 1.2.1'
 
+  # Dependency gems added for security purposes
+  spec.add_dependency 'nokogiri',                 '~> 1.10'
+  spec.add_dependency "rack",                     ">= 2.0.8"
+  spec.add_dependency "loofah",                   ">= 2.3.1"
+  # end of dependency gem security updates
+
   spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'bootsnap',                 '~> 1.0'
