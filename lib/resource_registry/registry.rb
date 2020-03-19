@@ -51,7 +51,7 @@ module ResourceRegistry
 
     # Look up a feature stored in the registry
     # @param key [Symbol] unique identifier for the subject feature
-    # @raise [esourceRegistry::Error::FeatureNotFoundError] if a feature with this key isn't found in the registry
+    # @raise [ResourceRegistry::Error::FeatureNotFoundError] if a feature with this key isn't found in the registry
     # @return [mixed] the value stored in Feature's item attribute
     def resolve_feature(key, &block)
       unless key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
@@ -100,10 +100,11 @@ module ResourceRegistry
     end
 
     # Indicates if a feature is enabled.  To be considered enabled the subject feature
-    # plus all its parent features must be in enabled state
+    # plus all its ancestor features must be in enabled state. Ancestor features are any 
+    # that are registered in this feature's namespace tree
     # @param key [Symbol] unique identifier for the subject feature
-    # @return [true] if key is enabled
-    # @return [ResourceRegistry::Feature] if feature is found in registry
+    # @return [true] if feature and all its ancestors are enabled
+    # @return [false] if feature or one of its ancestors isn't enabled
     def feature_enabled?(key)
       feature = resolve_feature(key)
       return false unless feature.enabled?

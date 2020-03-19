@@ -1,3 +1,9 @@
+<!--
+# @markup markdown
+# @title README.md
+# @author Dan Thomas
+-->
+
 # ResourceRegistry
 
 [![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=branch_0.7.0)](https://travis-ci.com/ideacrew/resource_registry)

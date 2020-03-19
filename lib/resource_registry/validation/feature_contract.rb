@@ -6,14 +6,15 @@ module ResourceRegistry
     # Schema and validation rules for the {ResourceRegistry::Feature} domain model
     class FeatureContract < ResourceRegistry::Validation::ApplicationContract
 
-      # @!method call(params)
-      # @param [Symbol] key (required)
-      # @param [Bool] is_enabled (required)
-      # @param [Array<Symbol>] namespace (optional)
-      # @param [Any] item (optional)
-      # @param [Hash] options (optional)
-      # @param [ResourceRegistry::Meta] meta (optional)
-      # @param [Array<ResourceRegistry::Setting>] settings (optional)
+      # @!method call(opts)
+      # @param [Hash] opts the parameters to validate using this contract
+      # @option opts [Symbol] :key required
+      # @option opts [Bool] :is_enabled required
+      # @option opts [Array<Symbol>] :namespace optional
+      # @option opts [Any] :item optional
+      # @option opts [Hash] :options optional
+      # @option opts [ResourceRegistry::Meta] :meta optional
+      # @option opts [Array<ResourceRegistry::Setting>] :settings optional
       # @return [Dry::Monads::Result::Success] if params pass validation
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do

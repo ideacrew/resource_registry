@@ -6,16 +6,17 @@ module ResourceRegistry
     # Schema and validation rules for the {ResourceRegistry::Configuration} domain model
     class ConfigurationContract < ResourceRegistry::Validation::ApplicationContract
 
-      # @!method call(params)
-      # @param [Symbol] name required
-      # @param [String, Pathname] root required
-      # @param [DateTime] created_at optional
-      # @param [Bool] register_meta optional
-      # @param [String] system_dir optional
-      # @param [String] default_namespace optional
-      # @param [String] auto_register optional
-      # @param [Array<String>] load_path optional
-      # @param [Array<ResourceRegistry::Setting>] :settings optional
+      # @!method call(opts)
+      # @param [Hash] opts the parameters to validate using this contract
+      # @option opts [Symbol] :name required
+      # @option opts [String, Pathname] :root required
+      # @option opts [DateTime] :created_at optional
+      # @option opts [Bool] :register_meta optional
+      # @option opts [String] :system_dir optional
+      # @option opts [String] :default_namespace optional
+      # @option opts [String] :auto_register optional
+      # @option opts [Array<String>] :load_path optional
+      # @option opts [Array<ResourceRegistry::Setting>] :settings optional
       # @return [Dry::Monads::Result::Success] if params pass validation
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
@@ -30,16 +31,17 @@ module ResourceRegistry
         optional(:load_path).maybe(:string)
         optional(:settings).array(:hash)
 
-        # @!method before(value_coercer)
-        # Coerce root String values to Pathname type
+        # @!macro [attach] beforehook
+        #   @!method $0($1)
+        #   Coerce root String values to Pathname type
         before(:value_coercer) do |result|
           result.to_h.merge({ root: Pathname.new(result[:root]) }) if result[:root].is_a? String
         end
       end
 
       # rubocop:disable Style/RescueModifier
+      
       # Verifies the Pathname exists
-      # @!method rule(root)
       rule(:root) do
         if key? && value
           value.realpath rescue key.failure("pathname not found: #{value}")

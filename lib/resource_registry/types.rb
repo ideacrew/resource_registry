@@ -3,10 +3,9 @@
 require 'dry-types'
 require 'active_support'
 require 'active_support/core_ext'
-# Dry::Types.load_extensions(:maybe)
 
 module Types
-  include Dry.Types()
+  send(:include, Dry.Types())
   include Dry::Logic
 
   Uri               = Types.Constructor(::URI) { |val| ::URI.parse(val) }

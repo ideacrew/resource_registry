@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# require 'dry/transaction'
-# require 'dry/transaction/operation'
-# require 'dry/initializer'
 require 'dry/validation'
 require 'dry/monads/result'
 
@@ -27,6 +24,7 @@ require 'resource_registry/configuration'
 require 'resource_registry/registry'
 
 module ResourceRegistry
+
   include Dry::Core::Constants
 
   class << self

@@ -8,7 +8,8 @@ module ResourceRegistry
       class Persist
         send(:include, Dry::Monads[:result, :do])
 
-        # @param [ResourceRegistry::Entities::Registry] params configuration option values for the container
+        # @param [ResourceRegistry::Entities::Registry] container the container instance to which the constant will be assigned
+        # @param [String] constant_name the name to assign to the container and its associated dependency injector
         # @return [Dry::Container] A non-finalized Dry::Container with associated configuration values wrapped in Dry::Monads::Result
         def call(container, constant_name)
           container_constant  = yield set_container_constant(container, constant_name)
