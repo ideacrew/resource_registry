@@ -32,6 +32,7 @@ module Types
   NilOrString       = Types::Nil | Types::String
 
   StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
+  Bson                  = Types.Constructor(BSON::ObjectId) { |val| BSON::ObjectId val }
 
 
   Callable   = Types.Interface(:call)
