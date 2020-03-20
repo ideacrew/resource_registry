@@ -315,35 +315,40 @@ RSpec.describe ResourceRegistry::Registry do
 
 
     describe '#configuration methods' do
-      let(:name_val)    { :enroll }
-      let(:load_path)   { 'system/templates' }
-      let(:created_at)  { DateTime.now.freeze }
-
-      let(:register_meta) { false }
+      let(:name_val)        { :enroll }
+      let(:load_path)       { 'system/templates' }
+      let(:created_at)      { DateTime.now.freeze }
+      let(:register_meta)   { false }
 
       let(:config_params) { { name: name_val, load_path: load_path, created_at: created_at, register_meta: register_meta } }
 
-      describe '#configurations' do
+      let(:config_registry) { described_class.new }
 
-        it 'should return all registry configuration params' do
-          config_registry = described_class.new.configure do |conf|
-            conf.name       = name_val
-            conf.load_path  = load_path
-            conf.created_at = created_at
-          end
-          expect(config_registry.value!.configurations).to eq config_params
+      before do
+        config_registry.configure do |conf|
+          conf.name       = name_val
+          conf.load_path  = load_path
+          conf.created_at = created_at
         end
-
       end
 
-      describe '#confuration' do
-        it "should return named registry confuration params" do
-          config_registry = described_class.new.configure do |conf|
-            conf.name       = name_val
-            conf.load_path  = load_path
-            conf.created_at = created_at
-          end
-          expect(config_registry.value!.configuration(:name)).to eq name_val
+      describe '#configurations' do
+        it 'should return all registry configuration params' do
+          expect(config_registry.configurations).to eq config_params
+        end
+      end
+
+      describe '#configuration' do
+        let(:invalid_attribute)   { :not_a_confg_attribute }
+
+        it "should return value for the referenced registry configuration attribute" do
+          expect(config_registry.configuration(:name)).to eq name_val
+          expect(config_registry.configuration(:load_path)).to eq load_path
+          expect(config_registry.configuration(:created_at)).to eq created_at
+        end
+
+        it "should raise an error for an invalid registry configuration attribute key" do
+          expect{config_registry.configuration(invalid_attribute)}.to raise_error Dry::Container::Error
         end
 
       end

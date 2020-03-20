@@ -126,6 +126,11 @@
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>feature_index</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
+        <dt id="CONFIGURATION_NAMESPACE-constant" class="">CONFIGURATION_NAMESPACE =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>configuration</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
     </dl>
   
 
@@ -170,6 +175,54 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#configuration-instance_method" title="#configuration (instance method)">#<strong>configuration</strong>(key)  &#x21d2; Mixed </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Return the value for an individual configuration key.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#configurations-instance_method" title="#configurations (instance method)">#<strong>configurations</strong>  &#x21d2; Hash </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Produce a map of all configuration values stored in this registry.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#configure-instance_method" title="#configure (instance method)">#<strong>configure</strong> {|config| ... } &#x21d2; Object </a>
     
 
@@ -194,6 +247,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#feature%3F-instance_method" title="#feature? (instance method)">#<strong>feature?</strong>(key)  &#x21d2; true, false </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Indicates if a feature with a matching key is stored in the registry.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#feature_enabled%3F-instance_method" title="#feature_enabled? (instance method)">#<strong>feature_enabled?</strong>(key)  &#x21d2; true, false </a>
     
 
@@ -210,30 +287,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Indicates if a feature is enabled.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#feature_exist%3F-instance_method" title="#feature_exist? (instance method)">#<strong>feature_exist?</strong>(key)  &#x21d2; ResourceRegistry::Feature, false </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Indicates if a feature with a matching key is stored in the registry.</p>
 </div></span>
   
 </li>
@@ -394,20 +447,22 @@
       <pre class="lines">
 
 
-15
-16
 17
 18
 19
-20</pre>
+20
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='kw'>super</span><span class='lparen'>(</span><span class='rparen'>)</span>
 
-  <span class='ivar'>@features</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='ivar'>@configurations</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@features</span>       <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='ivar'>@features_stale</span> <span class='op'>=</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -437,7 +492,7 @@
   <div class="note notetag">
     <strong>Note:</strong>
     <div class='inline'>
-<p>This is syntactic sugar for <span class='object_link'><a href="#resolve_feature-instance_method" title="ResourceRegistry::Registry#resolve_feature (method)">#resolve_feature</a></span></p>
+<p>This is syntactic sugar for <span class='object_link'><a href="#resolve_feature-instance_method" title="ResourceRegistry::Registry#resolve_feature (method)">#resolve_feature</a></span>.  To maintain full container functionality, this method will first attempt to lookup a Feature that matches the key and if unsuccessful will directly resolve the key value</p>
 </div>
   </div>
 
@@ -504,6 +559,20 @@
       
     </li>
   
+    <li>
+      
+      
+        <span class='type'>(<tt>Dry::Container::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if key neither matches a feature nor any other key the registry</p>
+</div>
+      
+    </li>
+  
 </ul>
 
 </div><table class="source_code">
@@ -512,22 +581,162 @@
       <pre class="lines">
 
 
-67
-68
-69
-70
-71
-72
-73</pre>
+73
+74
+75
+76
+77</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 67</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>rescue</span> <span class='const'><span class='object_link'><a href="../ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html" title="ResourceRegistry::Error (module)">Error</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html#FeatureNotFoundError-constant" title="ResourceRegistry::Error::FeatureNotFoundError (constant)">FeatureNotFoundError</a></span></span>
+  <span class='kw'>super</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="configuration-instance_method">
+  
+    #<strong>configuration</strong>(key)  &#x21d2; <tt>Mixed</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Return the value for an individual configuration key</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Mixed</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>value of the configuration attribute</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Dry::Container::Error</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if key isn&#39;t a defined configuration attribute</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 109</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_configuration'>configuration</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#CONFIGURATION_NAMESPACE-constant" title="ResourceRegistry::Registry::CONFIGURATION_NAMESPACE (constant)">CONFIGURATION_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="configurations-instance_method">
+  
+    #<strong>configurations</strong>  &#x21d2; <tt>Hash</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Produce a map of all configuration values stored in this registry</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>map of configuration key/value pairs</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+115
+116
+117
+118
+119
+120
+121</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 115</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_configurations'>configurations</span>
+  <span class='kw'>return</span> <span class='ivar'>@configurations</span> <span class='kw'>if</span> <span class='ivar'>@configurations</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+  <span class='ivar'>@configurations</span> <span class='op'>=</span> <span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_list'>list</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
+    <span class='id identifier rubyid_list'>list</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_strip_namespace'>strip_namespace</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_key_in_namespace?'>key_in_namespace?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#CONFIGURATION_NAMESPACE-constant" title="ResourceRegistry::Registry::CONFIGURATION_NAMESPACE (constant)">CONFIGURATION_NAMESPACE</a></span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_list'>list</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -574,19 +783,114 @@
       <pre class="lines">
 
 
-23
-24
-25
 26
-27</pre>
+27
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_configure'>configure</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>OpenStruct</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
   <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
+
   <span class='const'><span class='object_link'><a href="../ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Operations.html" title="ResourceRegistry::Operations (module)">Operations</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Operations/Registries.html" title="ResourceRegistry::Operations::Registries (module)">Registries</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Operations/Registries/Configure.html" title="ResourceRegistry::Operations::Registries::Configure (class)">Configure</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="Operations/Registries/Configure.html#call-instance_method" title="ResourceRegistry::Operations::Registries::Configure#call (method)">call</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="feature?-instance_method">
+  
+    #<strong>feature?</strong>(key)  &#x21d2; <tt>true</tt>, <tt>false</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Indicates if a feature with a matching key is stored in the registry</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>key</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>unique identifier for the subject feature</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if feature is found in registry</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if key isn&#39;t found in registry</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+83
+84
+85</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 83</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_feature?'>feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -605,7 +909,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Indicates if a feature is enabled.  To be considered enabled the subject feature plus all its ancestor features must be in enabled state. Ancestor features are any  that are registered in this feature&#39;s namespace tree</p>
+<p>Indicates if a feature is enabled.  To be considered enabled the subject feature plus all its ancestor features must be in enabled state. Ancestor features are any that are registered in this feature&#39;s namespace tree</p>
 
 
   </div>
@@ -671,18 +975,18 @@
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113
-114
-115
-116</pre>
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 129</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_feature_enabled?'>feature_enabled?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_feature'>feature</span> <span class='op'>=</span> <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
@@ -690,101 +994,8 @@
 
   <span class='id identifier rubyid_namespaces'>namespaces</span> <span class='op'>=</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_namespaces'>namespaces</span><span class='period'>.</span><span class='id identifier rubyid_detect'>detect</span><span class='lparen'>(</span><span class='tlambda'>-&gt;</span> <span class='tlambeg'>{</span><span class='kw'>true</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ancestor_key'>ancestor_key</span><span class='op'>|</span>
-    <span class='id identifier rubyid_feature_exist?'>feature_exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_ancestor_key'>ancestor_key</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_ancestor_key'>ancestor_key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_disabled?'>disabled?</span> <span class='op'>:</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_feature?'>feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_ancestor_key'>ancestor_key</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_ancestor_key'>ancestor_key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_disabled?'>disabled?</span> <span class='op'>:</span> <span class='kw'>false</span>
   <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="feature_exist?-instance_method">
-  
-    #<strong>feature_exist?</strong>(key)  &#x21d2; <tt><span class='object_link'><a href="Feature.html" title="ResourceRegistry::Feature (class)">ResourceRegistry::Feature</a></span></tt>, <tt>false</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Indicates if a feature with a matching key is stored in the registry</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>key</span>
-      
-      
-        <span class='type'>(<tt>Symbol</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>unique identifier for the subject feature</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt><span class='object_link'><a href="Feature.html" title="ResourceRegistry::Feature (class)">ResourceRegistry::Feature</a></span></tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>if feature is found in registry</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>false</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>if key isn&#39;t found in registry</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-98
-99
-100</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 98</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_feature_exist?'>feature_exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span> <span class='op'>:</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -835,19 +1046,19 @@
       <pre class="lines">
 
 
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86</pre>
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 89</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_features'>features</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_features_stale?'>features_stale?</span>
@@ -908,12 +1119,12 @@
       <pre class="lines">
 
 
-90
-91
-92</pre>
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_features_by_namespace'>features_by_namespace</span><span class='lparen'>(</span><span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_list'>list</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='op'>|</span> <span class='id identifier rubyid_list'>list</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_strip_namespace'>strip_namespace</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='kw'>if</span> <span class='id identifier rubyid_key_in_namespace?'>key_in_namespace?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span><span class='semicolon'>;</span> <span class='id identifier rubyid_list'>list</span> <span class='rbrace'>}</span>
@@ -1001,7 +1212,7 @@
       
         &mdash;
         <div class='inline'>
-<p>if a feature is already registered under this key in the registry</p>
+<p>if this feature key is already registered under in the registry</p>
 </div>
       
     </li>
@@ -1014,10 +1225,6 @@
       <pre class="lines">
 
 
-34
-35
-36
-37
 38
 39
 40
@@ -1030,10 +1237,14 @@
 47
 48
 49
-50</pre>
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_register_feature'>register_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Feature.html" title="ResourceRegistry::Feature (class)">Feature</a></span></span><span class='rparen'>)</span>
@@ -1042,14 +1253,14 @@
 
   <span class='id identifier rubyid_feature'>feature</span> <span class='op'>=</span> <span class='id identifier rubyid_dsl_for'>dsl_for</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_feature_exist?'>feature_exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_feature?'>feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+    <span class='ivar'>@features_stale</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_proc'>proc</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html" title="ResourceRegistry::Error (module)">Error</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html#DuplicateFeatureError-constant" title="ResourceRegistry::Error::DuplicateFeatureError (constant)">DuplicateFeatureError</a></span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>feature already registered </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
 
-  <span class='ivar'>@features_stale</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='comment'># &quot;feature_index.greeter_feature_1&quot; =&gt; &quot;level_1.level_2.level_3.greeter_feature_1&quot;
-</span>  <span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_proc'>proc</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_feature'>feature</span><span class='rparen'>)</span>
   <span class='kw'>self</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1139,25 +1350,25 @@
       <pre class="lines">
 
 
-56
-57
-58
-59
 60
 61
 62
-63</pre>
+63
+64
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'lib/resource_registry/registry.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='kw'>unless</span> <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_feature?'>feature?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_feature'>feature</span> <span class='op'>=</span> <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_block_given?'>block_given?</span> <span class='op'>?</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='kw'>yield</span><span class='rparen'>)</span> <span class='op'>:</span> <span class='id identifier rubyid_feature'>feature</span>
+  <span class='kw'>else</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="../ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html" title="ResourceRegistry::Error (module)">Error</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Error.html#FeatureNotFoundError-constant" title="ResourceRegistry::Error::FeatureNotFoundError (constant)">FeatureNotFoundError</a></span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nothing registered with key </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_key'>key</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
-
-  <span class='id identifier rubyid_feature'>feature</span> <span class='op'>=</span> <span class='id identifier rubyid_resolve'>resolve</span><span class='lparen'>(</span><span class='id identifier rubyid_namespaced'>namespaced</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#FEATURE_INDEX_NAMESPACE-constant" title="ResourceRegistry::Registry::FEATURE_INDEX_NAMESPACE (constant)">FEATURE_INDEX_NAMESPACE</a></span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_block_given?'>block_given?</span> <span class='op'>?</span> <span class='id identifier rubyid_feature'>feature</span><span class='period'>.</span><span class='id identifier rubyid_item'>item</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='kw'>yield</span><span class='rparen'>)</span> <span class='op'>:</span> <span class='id identifier rubyid_feature'>feature</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1169,7 +1380,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Mar 19 17:34:27 2020 by
+  Generated on Fri Mar 20 15:15:14 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.6.3).
 </div>

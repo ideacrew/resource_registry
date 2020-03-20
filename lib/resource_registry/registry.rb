@@ -67,7 +67,9 @@ module ResourceRegistry
     end
 
     # (see #resolve_feature)
-    # @note This is syntactic sugar for {resolve_feature}
+    # @note This is syntactic sugar for {resolve_feature}.  To maintain full container functionality, this method
+    #   will first attempt to lookup a Feature that matches the key and if unsuccessful will directly resolve the key value 
+    # @raise [Dry::Container::Error] if neither a Feature nor other registry attribute matches the passed key
     def [](key, &block)
       resolve_feature(key, &block)
     rescue ResourceRegistry::Error::FeatureNotFoundError
@@ -101,12 +103,17 @@ module ResourceRegistry
       keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
     end
 
+    # Return the value for an individual configuration key
+    # @raise [Dry::Container::Error] if key isn't a defined configuration attribute
+    # @return [Mixed] value of the configuration attribute
     def configuration(key)
       resolve(namespaced(key, CONFIGURATION_NAMESPACE))
     end
 
+    # Produce a map of all configuration values stored in this registry
+    # @return [Hash] map of configuration key/value pairs
     def configurations
-      # return @configurations if @configurations.size > 0
+      return @configurations if @configurations.size > 0
       @configurations = keys.reduce({}) do |list, key|
         list.merge!(strip_namespace(key).to_sym => resolve(key)) if key_in_namespace?(key, CONFIGURATION_NAMESPACE)
         list
