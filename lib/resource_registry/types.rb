@@ -33,14 +33,12 @@ module Types
 
   StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
 
-
   Callable   = Types.Interface(:call)
 
   StrippedString  = String.constructor(&:strip)
   Duration        = Types.Constructor(ActiveSupport::Duration) {|val| ActiveSupport::Duration.build(val) }
   Path            = Types.Constructor(Pathname) {|val| val.is_a?(Pathname) ? val : Pathname.new(val) }
 
-  # 
   TypeContainer = Dry::Schema::TypeContainer.new
   TypeContainer.register('params.stripped_string', StrippedString)
   TypeContainer.register('params.duration', Duration)

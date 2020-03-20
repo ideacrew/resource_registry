@@ -29,14 +29,13 @@ module ResourceRegistry
 
         before(:value_coercer) do |result|
           result.to_h.merge({
+                              key: result[:key]&.to_sym,
                               meta: result[:meta]&.symbolize_keys,
                               settings: (result[:settings]&.map(&:deep_symbolize_keys) || []),
                               namespace: result[:namespace]&.map(&:to_sym)
-                            }
-                            )
+                            })
         end
       end
-
     end
   end
 end

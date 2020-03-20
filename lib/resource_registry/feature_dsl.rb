@@ -106,5 +106,11 @@ module ResourceRegistry
       @feature.meta.order
     end
 
+    def item
+      elements = @feature.item.split(/\./)
+      Module.const_get(elements[0]).send(elements[1])
+    rescue
+      @feature.item
+    end
   end
 end
