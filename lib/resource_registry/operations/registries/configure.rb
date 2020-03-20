@@ -6,7 +6,7 @@ module ResourceRegistry
 
       # Create a Feature
       class Configure
-        send(:include, Dry::Monads[:result, :do])
+        send(:include, ::Dry::Monads[:result, :do])
 
         def call(registry, config_params)
           config_values   = yield validate(config_params)

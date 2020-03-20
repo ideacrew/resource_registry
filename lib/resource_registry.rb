@@ -25,10 +25,4 @@ require 'resource_registry/registry'
 
 module ResourceRegistry
 
-  include Dry::Core::Constants
-
-  class << self
-
-
-  end
 end

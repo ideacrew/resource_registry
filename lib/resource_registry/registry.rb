@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'dry/container'
+require_relative 'operations/registries/load'
 require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
-require_relative 'operations/registries/load'
 
 module ResourceRegistry
 
@@ -10,12 +11,14 @@ module ResourceRegistry
   class Registry < Dry::Container
 
     FEATURE_INDEX_NAMESPACE = 'feature_index'.freeze
+    CONFIGURATION_NAMESPACE = 'configuration'.freeze
 
     # @return ResourceRegistry::Registry
     def initialize
       super()
 
-      @features = []
+      @configurations = {}
+      @features       = []
       @features_stale = true
     end
 
@@ -23,13 +26,14 @@ module ResourceRegistry
     def configure(&block)
       config = OpenStruct.new
       yield(config)
+
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
     end
 
     # Store a feature in the registry
     # @param feature [ResourceRegistry::Feature] The subject feature to be stored
     # @raise [ArgumentError] if the feature parameter isn't an instance of {ResourceRegistry::Feature}
-    # @raise [ResourceRegistry::Error::DuplicateFeatureError] if a feature is already registered under this key in the registry
+    # @raise [ResourceRegistry::Error::DuplicateFeatureError] if this feature key is already registered under in the registry
     # @return [ResourceRegistry::Registry]
     def register_feature(feature)
       if !feature.is_a?(ResourceRegistry::Feature)
@@ -38,14 +42,14 @@ module ResourceRegistry
 
       feature = dsl_for(feature)
 
-      if feature_exist?(feature.key)
+      if !feature?(feature.key)
+        @features_stale = true
+        register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
+        register(namespaced(feature.key, feature.namespace), feature)
+      else
         raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}"
       end
 
-      @features_stale = true
-      # "feature_index.greeter_feature_1" => "level_1.level_2.level_3.greeter_feature_1"
-      register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
-      register(namespaced(feature.key, feature.namespace), feature)
       self
     end
 
@@ -54,22 +58,28 @@ module ResourceRegistry
     # @raise [ResourceRegistry::Error::FeatureNotFoundError] if a feature with this key isn't found in the registry
     # @return [mixed] the value stored in Feature's item attribute
     def resolve_feature(key, &block)
-      unless key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
+      if feature?(key)
+        feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
+        block_given? ? feature.item.call(yield) : feature
+      else
         raise ResourceRegistry::Error::FeatureNotFoundError, "nothing registered with key #{key}"
       end
-
-      feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
-      block_given? ? feature.item.call(yield) : feature
     end
 
     # (see #resolve_feature)
     # @note This is syntactic sugar for {resolve_feature}
     def [](key, &block)
-      if key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
-        resolve_feature(key, &block)
-      else
-        resolve(key, &block)
-      end
+      resolve_feature(key, &block)
+    rescue ResourceRegistry::Error::FeatureNotFoundError
+      super
+    end
+
+    # Indicates if a feature with a matching key is stored in the registry
+    # @param key [Symbol] unique identifier for the subject feature
+    # @return [true] if feature is found in registry
+    # @return [false] if key isn't found in registry
+    def feature?(key)
+      key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
     end
 
     # Produce an enumerated list of all features stored in this registry
@@ -91,16 +101,20 @@ module ResourceRegistry
       keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
     end
 
-    # Indicates if a feature with a matching key is stored in the registry
-    # @param key [Symbol] unique identifier for the subject feature
-    # @return [ResourceRegistry::Feature] if feature is found in registry
-    # @return [false] if key isn't found in registry
-    def feature_exist?(key)
-      key?(namespaced(key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(key) : false
+    def configuration(key)
+      resolve(namespaced(key, CONFIGURATION_NAMESPACE))
+    end
+
+    def configurations
+      # return @configurations if @configurations.size > 0
+      @configurations = keys.reduce({}) do |list, key|
+        list.merge!(strip_namespace(key).to_sym => resolve(key)) if key_in_namespace?(key, CONFIGURATION_NAMESPACE)
+        list
+      end
     end
 
     # Indicates if a feature is enabled.  To be considered enabled the subject feature
-    # plus all its ancestor features must be in enabled state. Ancestor features are any 
+    # plus all its ancestor features must be in enabled state. Ancestor features are any
     # that are registered in this feature's namespace tree
     # @param key [Symbol] unique identifier for the subject feature
     # @return [true] if feature and all its ancestors are enabled
@@ -111,7 +125,7 @@ module ResourceRegistry
 
       namespaces = feature.namespace.split('.')
       namespaces.detect(-> {true}) do |ancestor_key|
-        feature_exist?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
+        feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
       end
     end
 
