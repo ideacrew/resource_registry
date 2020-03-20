@@ -13,20 +13,11 @@ module ResourceRegistry
 
     # @param [ResourceRegistry::Feature] feature Instance of a feature
     # @param [Hash] options Options passed through to feature enabled check
-    # @yield the block to evaulate to define the feature
+    # @yield the block to evaulate when calling the feature
     # @return [Mixed]
     def initialize(feature, options: {}, &block)
       @feature = feature
       @options = options
-
-      # super(feature)
-
-      # if block.arity.zero?
-      #   instance_eval(&block)
-      # else
-      #   yield self
-      # end
-
     end
 
     def key
@@ -39,7 +30,7 @@ module ResourceRegistry
     end
 
     # @!method enabled?
-    # Check if a feature is enabled
+    # Check if a feature is enabled.
     # @return [true] If feature is enabled
     # @return [false] If feature is not enabled
     def_delegator :@feature, :is_enabled, :enabled?

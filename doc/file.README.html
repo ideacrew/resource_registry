@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README.md
+  
+    &mdash; Documentation by YARD 0.9.24
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README.md</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'>
+<h1 id="label-ResourceRegistry">ResourceRegistry</h1>
+
+<p><a href="https://travis-ci.com/ideacrew/resource_registry"><img src="https://travis-ci.com/ideacrew/resource_registry.svg?branch=branch_0.7.0"></a></p>
+
+<p>ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration for a single codebase, supporting use cases such as:</p>
+<ul><li>
+<p>Customer-level preference profiles</p>
+</li><li>
+<p>Multitenancy</p>
+</li><li>
+<p>Access control based on privilidges and subscriptions</p>
+</li></ul>
+
+<p>ResourceRegistry is intended to address &#39;logic sprawl&#39; that can occur with minimally- or un-structured key/value system settings schemes. It offers an  alternative to code obfuscation issues that often pops up when using Rails Concerns.</p>
+
+<h2 id="label-Features">Features</h2>
+<ul><li>
+<p>Group associated system code and configuration settings as a Feature</p>
+</li><li>
+<p>Define a namespace taxonomy to associate and nest Features and dependencies</p>
+</li><li>
+<p>Enable/disable individual Features</p>
+</li><li>
+<p>Store metadata values for a Feature that support auto generation of a configuration UI</p>
+</li><li>
+<p>Access Features and their attribute values using a thread-safe key/value store</p>
+</li><li>
+<p>Use YAML files to seed Features and namespaces</p>
+</li></ul>
+
+<h2 id="label-Compatibility">Compatibility</h2>
+<ul><li>
+<p>Ruby 2.6</p>
+</li><li>
+<p>Rails 5.2.4</p>
+</li></ul>
+
+<h3 id="label-Installing+on+Rails">Installing on Rails</h3>
+
+<p>Add this line to your project&#39;s Gemfile:</p>
+
+<pre class="code ruby"><code class="ruby">  <span class='id identifier rubyid_gem'>gem</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>resource_registry</span><span class='tstring_end'>&#39;</span></span>
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre class="code ruby"><code class="ruby">  $ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre class="code ruby"><code class="ruby">  $ gem install resource_registry
+</code></pre>
+
+<p>In your project build the directory tree to house configuration files:</p>
+
+<pre class="code ruby"><code class="ruby">  $ mkdir -p ./system/boot &amp;&amp; mkdir -p ./system/config
+</code></pre>
+
+<p>Then, create Resource Registry&#39;s initializer file:</p>
+
+<pre class="code ruby"><code class="ruby">  $ touch ./config/initializers/resource_registry.rb
+</code></pre>
+
+<h2 id="label-Usage">Usage</h2>
+
+<p>ResourceRegistry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.</p>
+
+<h3 id="label-Features">Features</h3>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>resource_registry</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='comment'># Initialize registry
+</span><span class='id identifier rubyid_my_registry'>my_registry</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="ResourceRegistry/Registry.html" title="ResourceRegistry::Registry (class)">Registry</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="ResourceRegistry/Registry.html#initialize-instance_method" title="ResourceRegistry::Registry#initialize (method)">new</a></span></span>
+
+<span class='comment'># Register a Feature with an item attribute that is invoked when key is resolved
+</span><span class='id identifier rubyid_stringify'>stringify</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="ResourceRegistry/Feature.html" title="ResourceRegistry::Feature (class)">Feature</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>key:</span> <span class='symbol'>:stringify</span><span class='comma'>,</span> <span class='label'>item:</span> <span class='tlambda'>-&gt;</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span><span class='tlambeg'>{</span> <span class='id identifier rubyid_val'>val</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='label'>is_enabled:</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_my_registry'>my_registry</span><span class='period'>.</span><span class='id identifier rubyid_register_feature'>register_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_stringify'>stringify</span><span class='rparen'>)</span>
+
+<span class='comment'># Verify the Feature is registered and enabled
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='period'>.</span><span class='id identifier rubyid_feature_exist?'>feature_exist?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>stringify</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>             <span class='comment'># =&gt; true
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='period'>.</span><span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>stringify</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_enabled?'>enabled?</span>   <span class='comment'># =&gt; true
+</span>
+<span class='comment'># Use its key to resolve and invoke the Feature with argument passed as block
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='period'>.</span><span class='id identifier rubyid_resolve_feature'>resolve_feature</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>stringify</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='lbrace'>{</span><span class='symbol'>:my_symbol</span><span class='rbrace'>}</span> <span class='comment'># =&gt; &quot;my_symbol&quot;
+</span></code></pre>
+
+<h4 id="label-Detailed+Example">Detailed Example</h4>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_my_registry'>my_registry</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="ResourceRegistry/Registry.html" title="ResourceRegistry::Registry (class)">Registry</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="ResourceRegistry/Registry.html#initialize-instance_method" title="ResourceRegistry::Registry#initialize (method)">new</a></span></span>
+
+<span class='comment'># Executable code to associate with the Feature
+</span><span class='kw'>class</span> <span class='op'>::</span><span class='const'>Greeter</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hello </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+
+<span class='comment'># Specify the code to invoke when the registry resolves the Feature key
+</span><span class='id identifier rubyid_greeter_instance'>greeter_instance</span> <span class='op'>=</span> <span class='const'>Greeter</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>   
+
+<span class='comment'># Assign the Feature to a Taxonomy namespace 
+</span><span class='id identifier rubyid_ns'>ns</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='symbol'>:operations</span><span class='comma'>,</span> <span class='symbol'>:ai</span><span class='rbracket'>]</span>
+
+<span class='comment'># Associate a Setting key/value pair with the Feature
+</span><span class='id identifier rubyid_scope_setting'>scope_setting</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='label'>key:</span> <span class='symbol'>:scope</span><span class='comma'>,</span> <span class='label'>item:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>online</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span>
+ 
+
+<span class='comment'># Register a Feature with a namespace and settings
+</span><span class='id identifier rubyid_greeter'>greeter</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="ResourceRegistry.html" title="ResourceRegistry (module)">ResourceRegistry</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="ResourceRegistry/Feature.html" title="ResourceRegistry::Feature (class)">Feature</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>key:</span>       <span class='symbol'>:greeter</span><span class='comma'>,</span> 
+                                        <span class='label'>item:</span>      <span class='id identifier rubyid_greeter_instance'>greeter_instance</span><span class='comma'>,</span> 
+                                        <span class='label'>namespace:</span> <span class='id identifier rubyid_ns'>ns</span><span class='comma'>,</span> 
+                                        <span class='label'>settings:</span>  <span class='lbracket'>[</span><span class='id identifier rubyid_scope_setting'>scope_setting</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
+<span class='id identifier rubyid_my_registry'>my_registry</span><span class='period'>.</span><span class='id identifier rubyid_register_feature'>register_feature</span><span class='lparen'>(</span><span class='id identifier rubyid_greeter'>greeter</span><span class='rparen'>)</span>
+<span class='comment'># Use syntax shortcut to resolve the registered Feature
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='lbracket'>[</span><span class='symbol'>:greeter</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_namespace'>namespace</span>              <span class='comment'># =&gt; &quot;operations.ai&quot;
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='lbracket'>[</span><span class='symbol'>:greeter</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='lparen'>(</span><span class='symbol'>:scope</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span>  <span class='comment'># =&gt; {:key=&gt;:scope, :item=&gt;&quot;online&quot;}
+</span><span class='id identifier rubyid_my_registry'>my_registry</span><span class='lbracket'>[</span><span class='symbol'>:greeter</span><span class='rbracket'>]</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Dolly</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span>              <span class='comment'># =&gt; &quot;Hello Dolly&quot;
+</span></code></pre>
+
+<h3 id="label-Feature+Namepace">Feature Namepace</h3>
+
+<p>Features in turn may be structured into a system model Taxonomy that defines associations and dependencies between them.</p>
+
+<h2 id="label-Rails+Integration">Rails Integration</h2>
+
+<p>A registry is configured and loaded when your application starts. At runtime, a value may be accessed directly by referencing its key or indirectly using the registry&#39;s associated dependency injector. By default, the registry object is assigned to the constant: <code>Registry</code> (this setting may be changed in the initializer file).</p>
+
+<p>Here is an example of directly accessing a configuration setting using the <code>#resolve</code> method and the key ([]) shortcut:</p>
+
+<p>“`  Registry.resolve “enterprise.dchbx.shop_site.production.policies_url”  =&gt; “<a href="https://dchealthlink.com">dchealthlink.com</a>/”</p>
+
+<p><a href=":"enterprise.dchbx.shop_site.production.policies_url"">Registry</a>  =&gt; “<a href="https://dchealthlink.com">dchealthlink.com</a>/”  “`</p>
+
+<p>Configuration settings for a registry are accessed via <code>#config</code>:</p>
+
+<p><code>   Registry.config </code></p>
+
+<p>&lt;details&gt;&lt;summary&gt;Click for returned values&lt;/summary&gt;  &lt;p&gt;</p>
+
+<p><code>   =&gt; #&lt;#&lt;Class:0x00007f871d290968&gt;:0x00007f871d290710    @config=     {:registry=&gt;       #&lt;Dry::Container::Registry:0x00007f871e2018c0 @_mutex=#&lt;Thread::Mutex:0x00007f871e201898&gt;, @factory=#&lt;Dry::Container::Item::Factory:0x00007f86ddacb050&gt;&gt;,      :resolver=&gt;#&lt;Dry::Container::Resolver:0x00007f871e2016e0&gt;,      :namespace_separator=&gt;&quot;.&quot;,      :name=&gt;&quot;EdiApp&quot;,      :default_namespace=&gt;&quot;options&quot;,      :root=&gt;#&lt;Pathname:/Users/dthomas/Documents/dev/resource_registry/spec/rails_app&gt;,      :system_dir=&gt;&quot;system&quot;,      :registrations_dir=&gt;&quot;container&quot;,      :auto_register=&gt;[],      :loader=&gt;Dry::System::Loader,      :booter=&gt;Dry::System::Booter,      :auto_registrar=&gt;Dry::System::AutoRegistrar,      :manual_registrar=&gt;Dry::System::ManualRegistrar,      :importer=&gt;Dry::System::Importer,      :components=&gt;{}},    @defined=true,    @lock=#&lt;Thread::Mutex:0x00007f871d2906c0&gt;&gt; </code></p>
+
+<p>&lt;/p&gt;  &lt;/details&gt;</p>
+
+<p>Use the <code>#keys</code> method to list all key values in a registry:</p>
+
+<p><code>   Registry.keys </code></p>
+
+<p>&lt;details&gt;&lt;summary&gt;Click for returned values&lt;/summary&gt;  &lt;p&gt;</p>
+
+<p><code>   =&gt; [&quot;resource_registry.config.name&quot;,    &quot;resource_registry.config.default_namespace&quot;,    &quot;resource_registry.config.root&quot;,    &quot;resource_registry.config.system_dir&quot;,    &quot;resource_registry.load_paths&quot;,    &quot;enterprise.dchbx.shop_site.production.copyright_period_start&quot;,    &quot;enterprise.dchbx.shop_site.production.policies_url&quot;,    &quot;enterprise.dchbx.shop_site.production.faqs_url&quot;,    &quot;enterprise.dchbx.shop_site.production.help_url&quot;,    &quot;enterprise.dchbx.shop_site.production.business_resource_center_url&quot;,    &quot;enterprise.dchbx.shop_site.production.nondiscrimination_notice_url&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximumt&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_contribution_percent_minimum&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_dental_contribution_percent_minimumt&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_family_contribution_percent_minimum&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.binder_payment_due_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.binder_payment_due_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.binder_payment_due_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.binder_payment_due_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.binder_payment_due_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.open_enrollment_begin_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.open_enrollment_end_dom&quot;,    &quot;enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.binder_payment_due_dom&quot;] </code></p>
+
+<p>&lt;/p&gt;  &lt;/details&gt;</p>
+
+<h3 id="label-Dependency+Injection">Dependency Injection</h3>
+
+<p>By default, the dependency injector object associated with the Registry is assigned to the constant: <code>Registry.injector</code> (this setting may be changed in the initializer file).</p>
+
+<p>Resource Registry uses <a href="https://dry-rb.org/gems/dry-auto_inject/">dry-auto_inject</a> to support dependency injection. See documentation on the dry website for more information.</p>
+
+<h2 id="label-Configuration">Configuration</h2>
+
+<p>The initializer and configuration files manage the setup and loading process. The initializer file manages configuration options, including:</p>
+<ul><li>
+<p>Container boot configuration settings</p>
+</li><li>
+<p>Constant names for the registry and dependency injector</p>
+</li><li>
+<p>Setting value extensions and overrides</p>
+</li></ul>
+
+<p>An example initialization file:</p>
+
+<p>“`  # ./config/initializers/resource_registry.rb</p>
+
+<p>ResourceRegistry.configure do  {  application: {  config: {  name: “App Name”,  root: Rails.root,  system_dir: “system”,  },  load_paths: [&#39;system&#39;]  },  resource_registry: {  resolver: {  root: :enterprise,  tenant: :dchbx,  site: :primary,  env: :production,  application: :enroll  }  }  } end “`</p>
+
+<p>Configuration files are located in your project&#39;s <code>system/config</code> directory. All Yaml files in and below this directory are autoloaded during the boot process. Configuration settings may be organized into directories and files in any manner. Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.</p>
+
+<p>An example of a simple configuration file:  “`ruby  # ./system/config/enterprise.yml</p>
+
+<p>namespace:  key: :enterprise  settings:  - key: :tenant_keys  default: []  namespaces:  - key: :tenants  - key: :features  “`</p>
+
+<h2 id="label-Taxonomy">Taxonomy</h2>
+
+<p>Resource Registry classifies configuration settings into the following structure:</p>
+<ol><li>
+<p><strong>Enterprise:</strong> top level entry providing global information about the application solution and hosting infrastructure.</p>
+<ol><li>
+<p>Has one Registry (managed via Registry#config)</p>
+</li><li>
+<p>Has many Tenants</p>
+</li><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Tenant:</strong> unique customer or account within an Enterprise.</p>
+<ol><li>
+<p>Has many Sites</p>
+</li><li>
+<p>Has many Subscriptions</p>
+</li><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Site:</strong> a Tenant&#39;s deployment under a single domain name. For example, a Tenant may maintain separate sites for ACA Individual and SHOP markets</p>
+<ol><li>
+<p>Has many Environments</p>
+</li><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Environment:</strong> stages associated with code maturity in the Software Development Lifecycle. Enumerated values: :development, :test, :production</p>
+<ol><li>
+<p>Has many Features</p>
+</li><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Feature:</strong> a defined software component or function. Features may be nested, e.g.: “ACA SHOP Market” Feature may have an “Employer Attestation” Feature</p>
+<ol><li>
+<p>Has one Registry</p>
+</li><li>
+<p>Has many Features</p>
+</li><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Registry:</strong> a constrained list of configuration settings used to initialize a Registry or individual Feature</p>
+<ol><li>
+<p>Has many Options</p>
+</li></ol>
+</li><li>
+<p><strong>Option:</strong> registry and user-defined application configuration settings</p>
+<ol><li>
+<p>Has many Namespaces (aka Option)</p>
+</li><li>
+<p>Has many Settings</p>
+</li></ol>
+</li></ol>
+
+<p>## Defining Configuration Settings</p>
+
+<p>### UI-ready configuration settings</p>
+
+<h2 id="label-Credits">Credits</h2>
+
+<p>Based on <a href="https://dry-rb.org/gems/dry-system/">dry-system</a> and <a href="https://dry-rb.org/gems/dry-validation/1.0/">dry-validation</a> “`</p>
+
+<h2 id="label-Future+Features">Future Features</h2>
+<ul><li>
+<p>Subscription</p>
+</li><li>
+<p>Bootable infrastructure components</p>
+</li></ul>
+
+<h2 id="label-Development">Development</h2>
+
+<p>After checking out the repo, run <code>bin/setup</code> to install dependencies. Then, run <code>rake spec</code> to run the tests. You can also run <code>bin/console</code> for an interactive prompt that will allow you to experiment.</p>
+
+<p>To install this gem onto your local machine, run <code>bundle exec rake install</code>. To release a new version, update the version number in <code>version.rb</code>, and then run <code>bundle exec rake release</code>, which will create a git tag for the version, push git commits and tags, and push the <code>.gem</code> file to <a href="https://rubygems.org">rubygems.org</a>.</p>
+
+<h2 id="label-Contributing">Contributing</h2>
+
+<p>Bug reports and pull requests are welcome on GitHub at <a href="https://github.com/ideacrew/resource_registry">github.com/ideacrew/resource_registry</a>.</p>
+
+<h2 id="label-License">License</h2>
+
+<p>The gem is available as open source under the terms of the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Thu Mar 19 17:34:26 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.6.3).
+</div>
+
+    </div>
+  </body>
+</html>

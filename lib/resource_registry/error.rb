@@ -21,11 +21,8 @@ module ResourceRegistry
       include ErrorInitalizer
     end
 
+    FeatureNotFoundError      = Class.new(Error)
     DuplicateFeatureError     = Class.new(Error)
-    InvalidConfigurationError = Class.new(Error)
-    InvalidOptionHash         = Class.new(Error)
-    InvalidContractParams     = Class.new(Error)
     InitializationFileError   = Class.new(LoadException)
-    ContainerCreateError      = Class.new(LoadException)
   end
 end

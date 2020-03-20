@@ -11,9 +11,6 @@ module ResourceRegistry
 
     FEATURE_INDEX_NAMESPACE = 'feature_index'.freeze
 
-    # attr_accessor :name, :load_path, :created_at
-
-
     # @return ResourceRegistry::Registry
     def initialize
       super()
@@ -22,6 +19,7 @@ module ResourceRegistry
       @features_stale = true
     end
 
+    # Set options for this Registry. See {ResourceRegistry::Configuration} for configurable attributes
     def configure(&block)
       config = OpenStruct.new
       yield(config)
@@ -29,19 +27,19 @@ module ResourceRegistry
     end
 
     # Store a feature in the registry
-    # @param [ResourceRegistry::Feature] The subject feature to be stored
-    # @raise [ArgumentError] if the feature_entity parameter isn't an instance of {ResourceRegistry::Feature}
+    # @param feature [ResourceRegistry::Feature] The subject feature to be stored
+    # @raise [ArgumentError] if the feature parameter isn't an instance of {ResourceRegistry::Feature}
     # @raise [ResourceRegistry::Error::DuplicateFeatureError] if a feature is already registered under this key in the registry
     # @return [ResourceRegistry::Registry]
-    def register_feature(feature_entity)
-      if !feature_entity.is_a?(ResourceRegistry::Feature)
-        raise ArgumentError, "#{feature_entity} must be a ResourceRegistry::Feature"
+    def register_feature(feature)
+      if !feature.is_a?(ResourceRegistry::Feature)
+        raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature"
       end
 
-      feature = dsl_for(feature_entity)
+      feature = dsl_for(feature)
 
       if feature_exist?(feature.key)
-        raise ResourceRegistry::Error::DuplicateFeatureError, "#{feature.key.inspect} feature is already registered"
+        raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}"
       end
 
       @features_stale = true
@@ -52,13 +50,20 @@ module ResourceRegistry
     end
 
     # Look up a feature stored in the registry
-    # @param [Symbol] feature_key unique identifier for the subject feature
-    # @param [hash] options
-    def resolve_feature(feature_key, &block)
-      feature = resolve(namespaced(feature_key.to_s, FEATURE_INDEX_NAMESPACE), &block)
+    # @param key [Symbol] unique identifier for the subject feature
+    # @raise [ResourceRegistry::Error::FeatureNotFoundError] if a feature with this key isn't found in the registry
+    # @return [mixed] the value stored in Feature's item attribute
+    def resolve_feature(key, &block)
+      unless key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
+        raise ResourceRegistry::Error::FeatureNotFoundError, "nothing registered with key #{key}"
+      end
+
+      feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
       block_given? ? feature.item.call(yield) : feature
     end
 
+    # (see #resolve_feature)
+    # @note This is syntactic sugar for {resolve_feature}
     def [](key, &block)
       if key?(namespaced(key, FEATURE_INDEX_NAMESPACE))
         resolve_feature(key, &block)
@@ -80,12 +85,34 @@ module ResourceRegistry
       @features
     end
 
-    # Indicates if a feature with a matching feature_key is stored in the registry
-    # @param [Symbol] feature_key unique identifier for the subject feature
+    # Produce an enumerated list of all features stored in a specific namespace
+    # @return [Array<Symbol>] list of registered features in the referenced namespace
+    def features_by_namespace(namespace)
+      keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
+    end
+
+    # Indicates if a feature with a matching key is stored in the registry
+    # @param key [Symbol] unique identifier for the subject feature
     # @return [ResourceRegistry::Feature] if feature is found in registry
-    # @return [false] if feature_key isn't found in registry
-    def feature_exist?(feature_key)
-      key?(namespaced(feature_key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(feature_key) : false
+    # @return [false] if key isn't found in registry
+    def feature_exist?(key)
+      key?(namespaced(key, FEATURE_INDEX_NAMESPACE)) ? resolve_feature(key) : false
+    end
+
+    # Indicates if a feature is enabled.  To be considered enabled the subject feature
+    # plus all its ancestor features must be in enabled state. Ancestor features are any 
+    # that are registered in this feature's namespace tree
+    # @param key [Symbol] unique identifier for the subject feature
+    # @return [true] if feature and all its ancestors are enabled
+    # @return [false] if feature or one of its ancestors isn't enabled
+    def feature_enabled?(key)
+      feature = resolve_feature(key)
+      return false unless feature.enabled?
+
+      namespaces = feature.namespace.split('.')
+      namespaces.detect(-> {true}) do |ancestor_key|
+        feature_exist?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
+      end
     end
 
     private
@@ -98,34 +125,29 @@ module ResourceRegistry
       @features_stale
     end
 
-    def is_indexed_feature?(feature_key)
-      (/\A#{Regexp.escape(FEATURE_INDEX_NAMESPACE)}/ =~ feature_key.to_s) == 0
+    def is_indexed_feature?(key)
+      (/\A#{Regexp.escape(FEATURE_INDEX_NAMESPACE)}/ =~ key.to_s) == 0
     end
 
-    def strip_namespace(feature_key)
-      feature_key.to_s.split('.').last
+    def key_in_namespace?(key, namespace)
+      ((/\A#{Regexp.escape(namespace.to_s)}/ =~ key) == 0) && (key.delete_prefix(namespace + '.').count('.') == 0)
+    end
+
+    def parent_namespace(key)
+      parts = key.to_s.split('.')
+      parts[0..(parts.size - 2)].join('.')
+    end
+
+    def strip_namespace(key)
+      key.to_s.split('.').last
     end
 
     # Concatenate a namespace with a feature key
-    # @param [String] namespace
-    # @param [Symbol] feature_key
-    # @return [String] A key with namespace prepended key in dot notation
+    # @param key [String] the feature key value to concat
+    # @param namespace [String] the namespace value to concat in dot notation
+    # @return [String] the namespace prepended to key
     def namespaced(key, namespace = '')
       [namespace, key.to_s].join('.').to_s
-    end
-
-    def compose_configuration(conf_options)
-      configuration = create_configuration(conf_options)
-      assign_configuration(configuration)
-    end
-
-    def create_configuration(values)
-      result = ResourceRegistry::Operations::Configurations::Create.call(values)
-      result.success? ? result.value! : result.failure
-    end
-
-    def assign_configuration(configuration)
-      configuration.attributes.each_pair { |k, v| register(k, v) }
     end
 
   end

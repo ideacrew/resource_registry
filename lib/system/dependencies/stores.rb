@@ -26,7 +26,3 @@ Registry.namespace :"resource_registry.stores.container" do |container|
     ResourceRegistry::Stores::Container::Write.new
   end
 end
-
-
-
-end
