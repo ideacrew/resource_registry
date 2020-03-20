@@ -20,6 +20,8 @@ module ResourceRegistry
         private
 
         def transform(params)
+          # result = JSON.parse(ERB.new(JSON::dump(YAML.load(params))).result)
+
           result = YAML.load(ERB.new(params).result)
           Success(result || {})
 
