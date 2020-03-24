@@ -59,7 +59,12 @@ module ResourceRegistry
       end
 
       feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
-      block_given? ? feature.item.call(yield) : feature
+
+      if block_given?
+        feature.enabled? ? feature.item.call(yield) : Success(yield)
+      else
+        feature
+      end
     end
 
     # (see #resolve_feature)

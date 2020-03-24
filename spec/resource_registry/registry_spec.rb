@@ -135,6 +135,8 @@ RSpec.describe ResourceRegistry::Registry do
 
       context "given a key for a registered feature" do
         let(:block_text) { "Dolly" }
+        let(:is_enabled) { true }
+
         before { registry.register_feature(feature) }
 
         it "should resolve a feature key" do
