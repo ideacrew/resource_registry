@@ -28,6 +28,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Configure do
 
     it "should register configuration values onto registry" do
       result = subject.value!
+
       expect(result['configuration.name']).to eq config_params[:name]
       expect(result['configuration.load_path']).to eq config_params[:load_path]
       expect(result['configuration.register_meta']).to eq false

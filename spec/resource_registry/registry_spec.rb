@@ -100,7 +100,7 @@ RSpec.describe ResourceRegistry::Registry do
 
       context "passing a non-feature class argument" do
         let(:non_feature) { "feature poser" }
-     
+
         it "should raise an error" do
           expect{registry.register_feature(non_feature)}.to raise_error ArgumentError
         end
@@ -157,14 +157,14 @@ RSpec.describe ResourceRegistry::Registry do
       end
     end
 
-    describe '#feature_exist?' do
+    describe '#feature?' do
       before { registry.register_feature(feature) }
 
       context "given a registered feature key" do
         let(:feature_key) { key }
 
         it "should return true" do
-          expect(registry.feature_exist?(feature_key)).to be_truthy
+          expect(registry.feature?(feature_key)).to be_truthy
         end
       end
 
@@ -172,7 +172,7 @@ RSpec.describe ResourceRegistry::Registry do
         let(:feature_key) { :dummy_feature_key_name }
 
         it "should return false" do
-          expect(registry.feature_exist?(feature_key)).to be_falsey
+          expect(registry.feature?(feature_key)).to be_falsey
         end
       end
     end
@@ -315,5 +315,46 @@ RSpec.describe ResourceRegistry::Registry do
       end
     end
 
+
+    describe '#configuration methods' do
+      let(:name_val)        { :enroll }
+      let(:load_path)       { 'system/templates' }
+      let(:created_at)      { DateTime.now.freeze }
+      let(:register_meta)   { false }
+
+      let(:config_params) { { name: name_val, load_path: load_path, created_at: created_at, register_meta: register_meta } }
+
+      let(:config_registry) { described_class.new }
+
+      before do
+        config_registry.configure do |conf|
+          conf.name       = name_val
+          conf.load_path  = load_path
+          conf.created_at = created_at
+        end
+      end
+
+      describe '#configurations' do
+        it 'should return all registry configuration params' do
+          expect(config_registry.configurations).to eq config_params
+        end
+      end
+
+      describe '#configuration' do
+        let(:invalid_attribute)   { :not_a_confg_attribute }
+
+        it "should return value for the referenced registry configuration attribute" do
+          expect(config_registry.configuration(:name)).to eq name_val
+          expect(config_registry.configuration(:load_path)).to eq load_path
+          expect(config_registry.configuration(:created_at)).to eq created_at
+        end
+
+        it "should raise an error for an invalid registry configuration attribute key" do
+          expect{config_registry.configuration(invalid_attribute)}.to raise_error Dry::Container::Error
+        end
+
+      end
+    end
   end
+
 end
