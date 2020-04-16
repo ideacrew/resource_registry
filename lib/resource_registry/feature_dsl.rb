@@ -107,10 +107,20 @@ module ResourceRegistry
     end
 
     def item
+      date_range = scan_date_range(@feature.item)
+      return date_range if date_range
+
       elements = @feature.item.split(/\./)
       Module.const_get(elements[0]).send(elements[1])
     rescue
       @feature.item
+    end
+
+    private
+
+    def scan_date_range(value)
+      dates = value.scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
+      dates.present? ? Range.new(dates[0], dates[1]) : nil
     end
   end
 end
