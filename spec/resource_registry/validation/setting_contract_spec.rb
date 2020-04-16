@@ -56,8 +56,18 @@ RSpec.describe ResourceRegistry::Validation::SettingContract do
         expect(subject.call({key: key, item: item}).success?).to be_truthy
         expect(subject.call({key: key, item: item}).to_h[:key]).to be_a Symbol
       end
-
     end
 
+    context "and date range string passed as item" do
+      let(:key_string)  { "my_key" }
+      let(:params)      { { key: key_string, item: "2020-01-01..2020-01-31" } }
+
+      it "should coerce stringified key into symbol" do
+        result = subject.call(params)
+        expect(result.success?).to be_truthy
+        expect(result.to_h[:key]).to be_a Symbol
+        expect(result.to_h[:item]).to eq Date.new(2020,1,1)..Date.new(2020,1,31)
+      end
+    end
   end
 end

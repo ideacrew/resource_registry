@@ -27,26 +27,5 @@ module ResourceRegistry
     attribute :meta,    ResourceRegistry::Meta.optional.meta(omittable: true)
 
 
-    def item=(val)
-      date_range = scan_date_range(val)
-      val = date_range if date_range
-
-      super(val)
-    end
-
-    private
-
-    def scan_date_range(value)
-      dates = value.scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-
-      if dates.present?
-        dates = dates.collect{|str| parse_date(str) }
-        Range.new(*dates)
-      end
-    end
-
-    def parse_date(date)
-      Date.strptime(date, "%Y-%m-%d")
-    end
   end
 end
