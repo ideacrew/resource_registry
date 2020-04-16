@@ -22,14 +22,6 @@ module ResourceRegistry
 
         before(:value_coercer) do |result|
           result.to_h.merge!({meta: result[:meta].symbolize_keys}) if result[:meta].is_a? Hash
-
-          if result[:item].is_a? String
-            dates = result[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-            if dates.present?
-              dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
-              result.to_h.merge!({item: Range.new(*dates)})
-            end
-          end
         end
       end
 

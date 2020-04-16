@@ -83,9 +83,20 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
           expect(result.success?).to be_truthy
           expect(result.to_h).to eq required_attr_out
         end
-
       end
 
+      context "and date range string passed as setting item" do
+        let(:key_string)  { "my_feature" }
+        let(:settings)    { [{ key: 'effective_period', item: "2020-01-01..2020-01-31" }, { key: 'retries', item: 4 }] }
+
+        it "should coerce date range string to actual dates" do
+          result = subject.call(all_params)
+
+          expect(result.success?).to be_truthy
+          expect(result[:key]).to eq key
+          expect(result[:settings][0][:item]).to eq Date.new(2020,1,1)..Date.new(2020,1,31)
+        end
+      end
     end
   end
 end
