@@ -120,7 +120,15 @@ module ResourceRegistry
 
     def scan_date_range(value)
       dates = value.scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-      dates.present? ? Range.new(dates[0], dates[1]) : nil
+
+      if dates.present?
+        dates = dates.collect{|str| parse_date(str) }
+        Range.new(*dates)
+      end
+    end
+
+    def parse_date(date)
+      Date.strptime(date, "%Y-%m-%d")
     end
   end
 end
