@@ -69,7 +69,6 @@ module ResourceRegistry
       @feature.settings.detect { |setting| setting.key == id }
     end
 
-
     def label
       @feature.meta.label
     end
@@ -105,30 +104,12 @@ module ResourceRegistry
     def display_order
       @feature.meta.order
     end
-
+    
     def item
-      date_range = scan_date_range(@feature.item)
-      return date_range if date_range
-
       elements = @feature.item.split(/\./)
       Module.const_get(elements[0]).send(elements[1])
     rescue
       @feature.item
-    end
-
-    private
-
-    def scan_date_range(value)
-      dates = value.scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-
-      if dates.present?
-        dates = dates.collect{|str| parse_date(str) }
-        Range.new(*dates)
-      end
-    end
-
-    def parse_date(date)
-      Date.strptime(date, "%Y-%m-%d")
     end
   end
 end
