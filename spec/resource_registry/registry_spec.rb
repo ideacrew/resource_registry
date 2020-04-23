@@ -121,6 +121,17 @@ RSpec.describe ResourceRegistry::Registry do
           end
         end
       end
+
+      context "given feature with no namespace" do
+        let(:namespace) { [ ] }
+
+        it "should register feature under root" do
+          registry.register_feature(feature)
+
+          expect(registry.keys).to include "feature_index.#{feature.key}"
+          expect(registry.keys).to include feature.key.to_s
+        end
+      end
     end
 
     describe '#resolve_feature' do
