@@ -7,12 +7,12 @@ require "resource_registry/version"
 Gem::Specification.new do |spec|
   spec.name          = "resource_registry"
   spec.version       = ResourceRegistry::VERSION
-  spec.authors       = ["Dan Thomas"]
+  spec.authors       = ["Dan Thomas", "Raghuram Ghanjala"]
   spec.email         = ["dan@ideacrew.com"]
 
-  spec.summary       = "Configure and organize system settings in the form of Features}"
-  spec.description   = %q{Provides a Feature model to organize, set and retrieve application settings.  
-                            Features may be enabled/disabled, include setting attributes of any
+  spec.summary       = "Configure and organize system settings as Features}"
+  spec.description   = %q{Provides a Feature model to define, organize and retrieve application settings.  
+                            Features may be enabled/disabled, may include setting attributes of any
                             type and metadata settings designed to drive auto-display of confguration 
                             settings.
                           }
@@ -32,26 +32,19 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.5.1'
 
-  spec.add_dependency 'dry-monads',               '~> 1.2'
-  spec.add_dependency 'dry-matcher',              '~> 0.7'
   spec.add_dependency 'dry-validation',           '~> 1.2'
   spec.add_dependency 'dry-struct',               '~> 1.0'
-  spec.add_dependency 'dry-types',                '~> 1.0'
-  spec.add_dependency 'dry-configurable',         '0.9'
-
-  spec.add_dependency 'dry-container',            '~> 0.7'
+  spec.add_dependency 'dry-monads',               '~> 1.2'
+  spec.add_dependency 'dry-matcher',              '~> 0.7'
+  spec.add_dependency 'i18n',                     '~> 1.6'
   spec.add_dependency 'deep_merge',               '~> 1.2.1'
 
   # Dependency gems added for security purposes
-  spec.add_dependency 'nokogiri',                 '~> 1.10'
+  spec.add_dependency 'nokogiri',                 '>= 1.10.8'
   spec.add_dependency "rack",                     ">= 2.0.8"
   spec.add_dependency "loofah",                   ">= 2.3.1"
+  spec.add_development_dependency "actionview",   ">= 5.2.4.2"
   # end of dependency gem security updates
-
-  spec.add_dependency 'i18n',                     '~> 1.6'
-  spec.add_dependency 'ox',                       '~> 2.0'
-  spec.add_dependency 'bootsnap',                 '~> 1.0'
-  spec.add_dependency 'mime-types'
 
   spec.add_development_dependency "bundler",          "~> 2.0"
   spec.add_development_dependency 'rake',             '~> 12.0'
