@@ -17,7 +17,7 @@
   ResourceRegistry is intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes.  It offers an
   alternative to code obfuscation issues that often pops up when using Rails Concerns.
 
-## Features
+## Gem Features
 
   * Group associated system code and configuration settings as a Feature
   * Define a namespace taxonomy to associate and nest Features and dependencies
@@ -53,12 +53,48 @@
 
       $ touch ./config/initializers/resource_registry.rb
 
-## Usage
+## Feature
 
-  ResourceRegistry uses Features to group system functions and settings into distinct units. Features can be individually configured and enabled/disabled.  
+  ResourceRegistry uses a Feature to group related system functions and settings. Featurse are composed of the following high level attributes:
 
-### Features
+  * key [Symbol] 'key' of the Feature's key/value pair.  This is the Feature's identifier and must be unique
+  * item [Any] 'value' of the Feature's key/value pair.   May be a static value, proc, class instance and may include an options hash
+  * namespace [Array<Symbol>] an ordered list that supports optional taxonomy for relationships between Features
+  * is_enabled [Boolean] indicator whether the Feature is accessible in the current configuration
+  * settings [Array<Hash>] a list of key/item pairs associated with the Feature
+  * meta [Hash] a set of attributes to store configuration values and drive their presentation in User Interface
 
+  Here is an example Feature definition in YAML format.  Note the settings ```effective_period``` value is an expression:
+
+``` ruby
+  - namespace:
+    - :enroll_app
+    - :aca_shop_market
+    - :benefit_market_catalog
+    - :catalog_2019
+    - :contribution_model_criteria
+    features:
+      - key: :initial_sponsor_jan_default_2019
+        item: :contribution_model_criterion
+        is_enabled: true
+        settings:
+          - key: :contribution_model_key
+            item: :zero_percent_sponsor_fixed_percent_contribution_model
+          - key: :benefit_application_kind
+            item: :initial
+          - key: :effective_period
+            item: <%= Date.new(2019,1,1)..Date.new(2019,1,31) %>
+          - key: :order
+            item: 1
+          - key: :default
+            item: false
+          - key: :renewal_criterion_key
+            item: :initial_sponsor_jan_default
+```
+
+  ### Registering Features 
+
+  Features are most useful when they're loaded into a registry for runtime access.  For example:
 
 ``` ruby
 require 'resource_registry'
@@ -71,14 +107,14 @@ stringify = ResourceRegistry::Feature.new(key: :stringify, item: ->(val){ val.to
 my_registry.register_feature(stringify)
 
 # Verify the Feature is registered and enabled
-my_registry.feature_exist?('stringify')             # => true
+my_registry.feature?('stringify')             # => true
 my_registry.resolve_feature('stringify').enabled?   # => true
 
 # Use its key to resolve and invoke the Feature with argument passed as block
 my_registry.resolve_feature('stringify') {:my_symbol} # => "my_symbol"
 ```
 
-#### Detailed Example
+### Detailed Example
 ```ruby
 my_registry = ResourceRegistry::Registry.new
 
@@ -90,7 +126,7 @@ class ::Greeter
 end
 
 # Specify the code to invoke when the registry resolves the Feature key
-greeter_instance = Greeter.new   
+greeter_instance = Greeter.new
 
 # Assign the Feature to a Taxonomy namespace 
 ns = [:operations, :ai]
@@ -99,205 +135,64 @@ ns = [:operations, :ai]
 scope_setting = {key: :scope, item: "online"}
  
 
-# Register a Feature with a namespace and settings
+# Define a Feature with a namespace and settings
 greeter = ResourceRegistry::Feature.new(key:       :greeter, 
                                         item:      greeter_instance, 
                                         namespace: ns, 
                                         settings:  [scope_setting])
 
+# Add Feature to the Registry
 my_registry.register_feature(greeter)
-# Use syntax shortcut to resolve the registered Feature
+
+# Resolve Feature attributes using its key (use syntax shortcut)
 my_registry[:greeter].namespace              # => "operations.ai"
 my_registry[:greeter].settings(:scope).to_h  # => {:key=>:scope, :item=>"online"}
 my_registry[:greeter] {"Dolly"}              # => "Hello Dolly"
 ```
 
-### Feature Namepace
+### Namepace
 
-  Features in turn may be structured into a system model Taxonomy that defines associations and dependencies between them.
+  Use the optional Feature#namespace attribute to organize Features.  Namespaces support enable you to define a structure to group Features into a logical structure or taxonomy that can help with code clarity.  For example:
 
+``` ruby
+  my_species = ResourceRegistry::Feature.new( key:      :species, 
+                                              item:     :Operations::Species::Create.new,
+                                              is_enabled: true,
+                                              namespace: [:kingdom, :phylum, :class, :order, :family, :genus])
+  my_registry.register_feature(my_species)
+```
+
+Namespaced Features respect their anscesters with regard to code access.  For instance ```Feature#enabled?``` will check not only the referenced Feature, but traverse all ancestors in its namespace.  If any of the referenced Feature's anscestors is disabled, then the referenced Feature is considered disabled -- regardless of whether ```is_enabled``` is set to ```true``` or ```false```.
+
+For instance, extending the ```species``` Feature example above:
+
+``` ruby
+  my_phylum = ResourceRegistry::Feature.new(key:      :phylum, 
+                                            item:     :Operations::Phylum::Create.new,
+                                            is_enabled: false,
+                                            namespace: [:kingdom])
+  my_registry.register_feature(my_phylum)
+```
+
+Here the ```my_registry[:my_phylum].is_enabled? == false```.  As it's a namespace ancestor to the ```my_registry[:species]```, ```my_registry[:species].is_enabled? == false``` also.
+
+Namespaces serve another purpose: enabling auto-generation of Admin UI configuration settings.  This is a future function that uses Namespace in combination with Meta attributes to build the UI forms.
 
 ## Rails Integration
 
-  A registry is configured and loaded when your application starts.  At runtime, a value may be accessed directly by referencing its key or indirectly using the registry's associated dependency injector.  By default, the registry object is assigned to the constant: ```Registry``` (this setting may be changed in the initializer file). 
-
-  Here is an example of directly accessing a configuration setting using the ```#resolve``` method and the key ([]) shortcut:
-
-  ```
-  Registry.resolve "enterprise.dchbx.shop_site.production.policies_url"
-  => "https://dchealthlink.com/"
-
-  Registry[:"enterprise.dchbx.shop_site.production.policies_url"]
-  => "https://dchealthlink.com/"
-  ```
-
-  Configuration settings for a registry are accessed via ```#config```:
-
-  ```
-  Registry.config
-  ```
-
-  <details><summary>Click for returned values</summary>
-  <p>
-
-  ```
-  => #<#<Class:0x00007f871d290968>:0x00007f871d290710
-   @config=
-    {:registry=>
-      #<Dry::Container::Registry:0x00007f871e2018c0 @_mutex=#<Thread::Mutex:0x00007f871e201898>, @factory=#<Dry::Container::Item::Factory:0x00007f86ddacb050>>,
-     :resolver=>#<Dry::Container::Resolver:0x00007f871e2016e0>,
-     :namespace_separator=>".",
-     :name=>"EdiApp",
-     :default_namespace=>"options",
-     :root=>#<Pathname:/Users/dthomas/Documents/dev/resource_registry/spec/rails_app>,
-     :system_dir=>"system",
-     :registrations_dir=>"container",
-     :auto_register=>[],
-     :loader=>Dry::System::Loader,
-     :booter=>Dry::System::Booter,
-     :auto_registrar=>Dry::System::AutoRegistrar,
-     :manual_registrar=>Dry::System::ManualRegistrar,
-     :importer=>Dry::System::Importer,
-     :components=>{}},
-   @defined=true,
-   @lock=#<Thread::Mutex:0x00007f871d2906c0>>
-  ```
-
-  </p>
-  </details>
-
-  Use the ```#keys``` method to list all key values in a registry:
-
-  ```
-  Registry.keys
-  ```
-
-  <details><summary>Click for returned values</summary>
-  <p>
-
-  ```
-  => ["resource_registry.config.name",
-   "resource_registry.config.default_namespace",
-   "resource_registry.config.root",
-   "resource_registry.config.system_dir",
-   "resource_registry.load_paths",
-   "enterprise.dchbx.shop_site.production.copyright_period_start",
-   "enterprise.dchbx.shop_site.production.policies_url",
-   "enterprise.dchbx.shop_site.production.faqs_url",
-   "enterprise.dchbx.shop_site.production.help_url",
-   "enterprise.dchbx.shop_site.production.business_resource_center_url",
-   "enterprise.dchbx.shop_site.production.nondiscrimination_notice_url",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.small_market_employee_count_maximumt",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_contribution_percent_minimum",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_dental_contribution_percent_minimumt",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.employer_family_contribution_percent_minimum",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_1.binder_payment_due_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2017.month_2.binder_payment_due_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_1.binder_payment_due_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2018.month_2.binder_payment_due_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_1.binder_payment_due_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.open_enrollment_begin_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.open_enrollment_end_dom",
-   "enterprise.dchbx.shop_site.production.enroll_app.aca_shop_market.benefit_market_catalog_2019.month_2.binder_payment_due_dom"]
-  ```
-
-  </p>
-  </details>
-
-### Dependency Injection
-  By default, the dependency injector object associated with the Registry is assigned to the constant: ```Registry.injector``` (this setting may be changed in the initializer file). 
-
-  Resource Registry uses [dry-auto_inject](https://dry-rb.org/gems/dry-auto_inject/) to support dependency injection.  See documentation on the dry website for more information.
-
+  A registry is configured and loaded when your application starts.  
 
 ## Configuration
 
-  The initializer and configuration files manage the setup and loading process. The initializer file manages configuration options, including:
-
-  * Container boot configuration settings
-  * Constant names for the registry and dependency injector
-  * Setting value extensions and overrides 
-
-  An example initialization file:
-
-  ```
-  # ./config/initializers/resource_registry.rb
-
-ResourceRegistry.configure do 
-  {
-    application: {
-      config: {
-        name: "App Name",
-        root: Rails.root,
-        system_dir: "system",
-      },
-      load_paths: ['system']
-    },
-    resource_registry: {
-      resolver: {
-        root: :enterprise,
-        tenant: :dchbx,
-        site: :primary,
-        env: :production,
-        application: :enroll
-      }
-    }
-  }
-end
-```
+  The initializer and configuration files manage the setup and loading process. 
 
   Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
 
   An example of a simple configuration file:
   ```ruby
-  # ./system/config/enterprise.yml
+# ./system/config/enterprise.yml
 
-  namespace: 
-    key: :enterprise
-    settings:
-      - key: :tenant_keys
-        default: []
-    namespaces:
-      - key: :tenants
-      - key: :features
   ```
-
-## Taxonomy
-  Resource Registry classifies configuration settings into the following structure:
-
-  1. **Enterprise:** top level entry providing global information about the application solution and hosting infrastructure. 
-     1. Has one Registry (managed via Registry#config)
-     1. Has many Tenants
-     1. Has many Options
-  1. **Tenant:** unique customer or account within an Enterprise.  
-     1. Has many Sites
-     1. Has many Subscriptions
-     1. Has many Options
-  1. **Site:** a Tenant's deployment under a single domain name. For example, a Tenant may maintain separate sites for ACA Individual and SHOP markets
-     1. Has many Environments
-     1. Has many Options
-  1. **Environment:** stages associated with code maturity in the Software Development Lifecycle.  Enumerated values: :development, :test, :production
-     1. Has many Features
-     1. Has many Options
-  1. **Feature:** a defined software component or function.  Features may be nested, e.g.: "ACA SHOP Market" Feature may have an "Employer Attestation" Feature
-     1. Has one Registry
-     1. Has many Features
-     1. Has many Options
-  1. **Registry:** a constrained list of configuration settings used to initialize a Registry or individual Feature
-     1. Has many Options
-  1. **Option:** registry and user-defined application configuration settings
-     1. Has many Namespaces (aka Option)
-     1. Has many Settings
 
   ## Defining Configuration Settings 
 
@@ -308,6 +203,7 @@ end
 
 ## Future Features
 
+  * Taxonomy: support namespace structures and validations
   * Subscription
   * Bootable infrastructure components
 
