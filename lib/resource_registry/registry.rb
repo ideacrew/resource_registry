@@ -44,6 +44,7 @@ module ResourceRegistry
 
       if !feature?(feature.key)
         @features_stale = true
+
         register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
         register(namespaced(feature.key, feature.namespace), feature)
       else
@@ -173,7 +174,7 @@ module ResourceRegistry
     # @param namespace [String] the namespace value to concat in dot notation
     # @return [String] the namespace prepended to key
     def namespaced(key, namespace = '')
-      [namespace, key.to_s].join('.').to_s
+      namespace.present? ? [namespace, key.to_s].join('.') : key.to_s
     end
 
   end

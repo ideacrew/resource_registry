@@ -29,6 +29,7 @@ module ResourceRegistry
 
         before(:value_coercer) do |result|
 
+
           settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
             setting.tap do |setting|
               if setting[:item].is_a? String
@@ -45,7 +46,7 @@ module ResourceRegistry
                               key: result[:key]&.to_sym,
                               meta: result[:meta]&.symbolize_keys,
                               settings: settings || [],
-                              namespace: result[:namespace]&.map(&:to_sym)
+                              namespace: (result[:namespace] || []).map(&:to_sym)
                             })
         end
       end

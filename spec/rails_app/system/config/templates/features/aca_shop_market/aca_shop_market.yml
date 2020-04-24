@@ -86,14 +86,9 @@ registry:
           is_visible: true
     # Employer SIC Feature settngs.  
     # Only accessed if enabled in catalog settings [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :catalog_2020, :use_employer_sic] == true
+  - features:
     - key: :employer_sic
       is_enabled: false
-      namespace:
-        - :features
-        - :enroll_app
-        - :aca_shop_market
-        - :benefit_market_catalog
-        - :employer_sic
       meta:
         label: Employer SIC
         is_required: false
