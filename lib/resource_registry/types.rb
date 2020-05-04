@@ -18,7 +18,7 @@ module Types
   CallableDate      = Types::Date.default { Date.today }
   CallableDateTime  = Types::DateTime.default { DateTime.now }
 
-  RequiredSymbol    = Types::Strict::Symbol.constrained(min_size: 2)
+  RequiredSymbol    = Types::Strict::Symbol
   RequiredString    = Types::Strict::String.constrained(min_size: 1)
 
   HashOrNil         = Types::Hash | Types::Nil
