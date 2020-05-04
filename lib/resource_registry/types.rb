@@ -8,7 +8,7 @@ module Types
   send(:include, Dry.Types())
   include Dry::Logic
 
-  Uri               = Types.Constructor(::URI) { |val| ::URI.parse(val) }
+  Uri               = Types.Constructor(::URI) { |val| (val.is_a? URI) ? val : ::URI.parse(val) }
   Url               = Uri
 
   Environment       = Types::Coercible::Symbol.default(:production).enum(:development, :test, :production)

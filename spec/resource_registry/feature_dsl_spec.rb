@@ -15,7 +15,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:key)         { :greeter_feature }
   let(:namespace)   { [:level_1, :level_2, :level_3 ]}
   let(:is_enabled)  { false }
-  let(:item)        { Greeter.new }
+  let(:item)        { Greeter.method(:new) }
   let(:options)     { { name: "Dolly" } }
 
   let(:default)     { 42 }
@@ -23,7 +23,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:type)        { :integer }
   let(:meta)        { { label: label, default: default, type: type } }
 
-  let(:settings)    { [{ key: :service, item: "weather/forcast" }, { key: :retries, item: 4 }] }
+  let(:settings)    { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
 
   let(:min_feature_hash)  { {
