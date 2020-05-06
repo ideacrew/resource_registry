@@ -12,7 +12,7 @@ RSpec.describe ::Types do
     subject(:type) { Types::Duration }
 
     it 'responds_to Rails Duration method' do
-      expect(type[rails_6_month_duration]).to respond_to :from_now
+      expect(type[{months: 6}]).to respond_to :from_now
     end
 
     it 'definition supports callable (proc) interface' do
@@ -20,7 +20,7 @@ RSpec.describe ::Types do
     end
 
     it 'coerces to a Rails Duration' do
-      expect(type[3.days]).to eql(rails_3_day_duration)
+      expect(type[{days: 3}]).to eq rails_3_day_duration
     end
   end
 

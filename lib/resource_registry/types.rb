@@ -36,7 +36,8 @@ module Types
   Callable   = Types.Interface(:call)
 
   StrippedString  = String.constructor(&:strip)
-  Duration        = Types.Constructor(ActiveSupport::Duration) {|val| ActiveSupport::Duration.build(val) }
+  Duration        = Types.Constructor(ActiveSupport::Duration) {|val| parts = val.shift; ActiveSupport::Duration.send(parts[0], parts[1]) }
+
   Path            = Types.Constructor(Pathname) {|val| val.is_a?(Pathname) ? val : Pathname.new(val) }
 
   TypeContainer = Dry::Schema::TypeContainer.new

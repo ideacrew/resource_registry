@@ -89,11 +89,12 @@ registry:
   - features:
     - key: :employer_sic
       is_enabled: false
-      meta:
-        label: Employer SIC
-        is_required: false
-        is_visible: true
-        type: :string
-        default: 637
-
-        
+      settings:
+      - key: :effective_period
+        item: {hours: -15}
+        meta:
+          label: Effective Period
+          is_required: false
+          is_visible: true
+          type: :duration
+          default: {hours: 5}
