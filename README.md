@@ -3,10 +3,8 @@
 # @title README.md
 # @author Dan Thomas
 -->
-
-# ResourceRegistry
-
-[![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=branch_0.7.0)](https://travis-ci.com/ideacrew/resource_registry)
+  # ResourceRegistry
+  [![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=master)](https://travis-ci.com/ideacrew/resource_registry)
 
   ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration for a single codebase, supporting use cases such as: 
 
