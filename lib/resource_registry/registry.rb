@@ -103,6 +103,18 @@ module ResourceRegistry
       @features
     end
 
+    def namespaces
+      return @namespaces if defined? @namespaces
+      
+      @namespaces = features.collect{|feature_key| self[feature_key].feature.namespace}.uniq
+    end
+
+    def nested_namespaces
+      return @nested_namespaces if defined? @nested_namespaces
+      
+      @nested_namespaces = namespaces.reduce({}) {|nested_hash, namespace_arr| nested_hash.deep_merge(namespace_to_hash(namespace_arr)) }
+    end
+
     # Produce an enumerated list of all features stored in a specific namespace
     # @return [Array<Symbol>] list of registered features in the referenced namespace
     def features_by_namespace(namespace)
@@ -177,5 +189,14 @@ module ResourceRegistry
       namespace.present? ? [namespace, key.to_s].join('.') : key.to_s
     end
 
+    def namespace_to_hash(namespace_arr)
+      namespace_hash = {}
+      # key = namespace_arr.shift
+      # namespace_hash[key] = (namespace_arr.size > 0 ? namespace_to_hash(namespace_arr) : nil)
+
+      key = namespace_arr[0]
+      namespace_hash[key] = (namespace_arr[1..-1].size > 0 ? namespace_to_hash(namespace_arr[1..-1]) : nil)
+      namespace_hash
+    end
   end
 end
