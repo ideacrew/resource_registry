@@ -309,8 +309,9 @@ module RegistryViewControls
       namespaces.each do |namespace|
 
         content += tag.div(class: 'tab-pane fade', id: namespace[-1].to_s, role: 'tabpanel', 'aria-labelledby': "list-#{namespace[-1]}-list") do
-          namespace[-1].to_s
-          # feature_registry.features_by_namespace(namespace)
+          feature_registry.features_by_namespace(namespace).collect do |feature|
+            render_feature(feature) if feature.meta.is_visible
+          end.compact.join('').html_safe
         end
       end
 
