@@ -312,7 +312,7 @@ module RegistryViewControls
   def list_tab_panels(features, feature_registry, options = {})
     tag.div(class: "tab-content", id: "nav-tabContent") do 
       content = ''
-
+      if false
       features.each do |feature_key|
         content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
           # feature = feature_registry[feature_key]
@@ -333,6 +333,7 @@ module RegistryViewControls
           end
         end
       end
+    end
 
       content.html_safe
     end
