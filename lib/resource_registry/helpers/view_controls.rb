@@ -314,20 +314,19 @@ module RegistryViewControls
       content = ''
       
       features.each do |feature_key|
-        content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
-          # feature = feature_registry[feature_key]
-          feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
-
-          form_for(feature, as: 'feature', url: configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
-            form.hidden_field(:key) +
-            form.hidden_field(:is_enabled) +
-            render_feature(feature, form) +
-            tag.div(class: 'row mt-3') do 
-              tag.div(class: 'col-4') do
-                form.submit(class: 'btn btn-primary')
-              end +
-              tag.div(class: 'col-6') do
-                tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
+        if feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
+          content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
+            form_for(feature, as: 'feature', url: configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
+              form.hidden_field(:key) +
+              form.hidden_field(:is_enabled) +
+              render_feature(feature, form) +
+              tag.div(class: 'row mt-3') do 
+                tag.div(class: 'col-4') do
+                  form.submit(class: 'btn btn-primary')
+                end +
+                tag.div(class: 'col-6') do
+                  tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
+                end
               end
             end
           end
