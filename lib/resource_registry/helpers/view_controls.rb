@@ -1,24 +1,27 @@
 module RegistryViewControls
 
 
-  def render_feature(feature, form)
+  def render_feature(feature, form = nil)
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
-
-
     tag.div(class: 'card') do
       tag.div(class: 'card-header') do
-        tag.h4 feature.meta.label 
+        tag.h4 feature.key.to_s.titleize 
       end +
-      tag.div(class: 'card-body') do
-        feature.settings.collect do |setting|
-          build_option_field(setting, form) if setting.meta.is_visible
-        end.compact.join('').html_safe
+      tag.div(class: 'card-body row') do
+        tag.div(class: 'col-6') do
+          content = ''
+          content += build_option_field(feature, form) if feature.meta.content_type.to_s != 'legend'
+
+          (content + feature.settings.collect do |setting|
+            build_option_field(setting, form) if setting.meta
+          end.compact.join('')).html_safe
+        end
       end
     end
   end
 
   def build_option_field(option, form)
-    type = option.meta.type
+    type = option.meta.content_type&.to_sym
 
     input_control = case type
     when :swatch
@@ -59,7 +62,7 @@ module RegistryViewControls
       option_list += tag.option(choice.values.first)
     end
 
-    tag.select(option_list, id: id, class: "form-control", name: "#{form.object_name}[#{id}]")
+    tag.select(option_list, id: id, class: "form-control", name: "#{form&.object_name}[#{id}]")
   end
 
   def select_dropdown(input_id, list, show_default=false, selected=nil)
@@ -104,14 +107,13 @@ module RegistryViewControls
 
   def input_radio_control(setting, form)
     meta = setting.meta
-    name        = setting[:key].to_s
-    # input_value = setting[:value] || setting[:default]
-    input_value = setting.item || meta.default
+    input_value = setting.item || meta&.default
     aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
-
+    
     meta.enum.collect do |choice|
+      choice = eval(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: "radio", name: form.object_name.to_s + "[#{name}]", value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
+        tag.div(tag.div(tag.input(nil, type: "radio", name: form&.object_name.to_s + "[settings][#{setting.key}]", value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
           tag.input(nil, type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
       end
     end.join('').html_safe
@@ -135,7 +137,7 @@ module RegistryViewControls
       tag.span('Upload', class: "input-group-text", id: id)
     end +
     tag.div(class: "custom-file") do
-      tag.input(nil, type: "file", id: id, name: form.object_name.to_s + "[value]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
+      tag.input(nil, type: "file", id: id, name: form&.object_name.to_s + "[#{setting.key}]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
         tag.label('Choose File', for: id, value: label, class: "custom-file-label")
     end
 
@@ -158,13 +160,13 @@ module RegistryViewControls
     id = setting[:key].to_s
 
     meta = setting[:meta]
-    input_value = meta.value || meta.default
+    input_value = setting.item || meta.default
     aria_describedby = id
 
     # if meta[:attribute]
-    #   tag.input(nil, type: "text", value: input_value, id: id, name: form.object_name.to_s + "[#{id}]",class: "form-control", required: true)
+    #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
-      tag.input(nil, type: "text", value: input_value, id: id, name: form.object_name.to_s + "[value]",class: "form-control", required: true)
+      tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true)
     # end
   end
 
@@ -176,9 +178,9 @@ module RegistryViewControls
     aria_describedby = id
 
     # if setting[:attribute]
-      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
+      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
     # else
-    #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
+    #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
   end
 
@@ -190,9 +192,9 @@ module RegistryViewControls
     aria_describedby = id
 
     # if setting[:attribute]
-      tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
+      tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
     # else
-    #   tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
+    #   tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
   end
 
@@ -210,7 +212,7 @@ module RegistryViewControls
     meta = setting[:meta]
     color = meta.value || meta.default
 
-    tag.input(nil, type: "text", value: color, id: id, name: form.object_name.to_s + "[value]",class: "js-color-swatch form-control") +
+    tag.input(nil, type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]",class: "js-color-swatch form-control") +
       tag.div(tag.button(type: "button", id: id, class: "btn", value: "", style: "background-color: #{color}"), class: "input-group-append")
   end
 
@@ -224,7 +226,7 @@ module RegistryViewControls
     aria_map    = { label: "Amount (to the nearest dollar)"}
 
     tag.div(tag.span('$', class: "input-group-text"), class: "input-group-prepend") +
-      tag.input(nil, type: "text", value: input_value, id: id, name: form.object_name.to_s + "[#{id}]", class: "form-control", aria: { map: aria_map }) +
+      tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]", class: "form-control", aria: { map: aria_map }) +
       tag.div(tag.span('.00', class: "input-group-text"), class: "input-group-append")
   end
 
@@ -278,40 +280,57 @@ module RegistryViewControls
 	  end
 	end
 
-  def list_group_menu(nested_namespaces, options = {})
+  def list_group_menu(nested_namespaces = nil, features = nil, options = {})
     content = ''
     tag.div({class: "list-group", id: "list-tab", role: "tablist"}.merge(options)) do
 
-      nested_namespaces.each do |namespace, children|
-
-        if children.present?
-          content += tag.a(href: "##{namespace}", class: "list-group-item list-group-item-action border-0", 'data-toggle': 'collapse', role: 'tab', id: "list-#{namespace}-list", 'aria-controls': namespace.to_s) do
-            namespace.to_s.titleize
-          end
-
-          content += tag.span('data-toggle': 'list', style: 'background-color: #fff') do
-            list_group_menu(children, {class: "list-group collapse ml-3", id: namespace.to_s})
-          end
-        else
-          content += tag.a(href: "##{namespace}", class: "list-group-item list-group-item-action border-0", 'data-toggle': 'list', role: 'tab', id: "list-#{namespace}-list", 'aria-controls': namespace.to_s) do
-            namespace.to_s.titleize
+        if features
+          features.each do |feature|
+            content += tag.a(href: "##{feature}", class: "list-group-item list-group-item-action border-0", 'data-toggle': 'list', role: 'tab', id: "list-#{feature}-list", 'aria-controls': feature.to_s) do
+              feature.to_s.titleize
+            end.html_safe
           end
         end
-      end
 
-      content.html_safe
-    end
+        if nested_namespaces
+          nested_namespaces.each do |namespace, children|
+
+            content += tag.a(href: "##{namespace}-group", class: "list-group-item list-group-item-action border-0", 'data-toggle': 'collapse', role: 'tab', id: "list-#{namespace}-list", 'aria-controls': namespace.to_s) do
+              "+ #{namespace.to_s.titleize}"
+            end
+
+            content += tag.span('data-toggle': 'list') do
+              list_group_menu(children[:namespaces], children[:features], {class: "list-group collapse ml-4", id: "#{namespace}-group"})
+            end
+          end
+        end
+
+        content.html_safe
+      end
   end
 
-  def list_tab_panels(namespaces)
+  def list_tab_panels(features, feature_registry, options = {})
     tag.div(class: "tab-content", id: "nav-tabContent") do 
       content = ''
-      namespaces.each do |namespace|
 
-        content += tag.div(class: 'tab-pane fade', id: namespace[-1].to_s, role: 'tabpanel', 'aria-labelledby': "list-#{namespace[-1]}-list") do
-          feature_registry.features_by_namespace(namespace).collect do |feature|
-            render_feature(feature) if feature.meta.is_visible
-          end.compact.join('').html_safe
+      features.each do |feature_key|
+        content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
+          # feature = feature_registry[feature_key]
+          feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
+
+          form_for(feature, as: 'feature', url: configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
+            form.hidden_field(:key) +
+            form.hidden_field(:is_enabled) +
+            render_feature(feature, form) +
+            tag.div(class: 'row mt-3') do 
+              tag.div(class: 'col-4') do
+                form.submit(class: 'btn btn-primary')
+              end +
+              tag.div(class: 'col-6') do
+                tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
+              end
+            end
+          end
         end
       end
 

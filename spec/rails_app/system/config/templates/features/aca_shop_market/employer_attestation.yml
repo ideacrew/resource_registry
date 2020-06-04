@@ -12,7 +12,7 @@ registry:
       meta:
         label: Employer Attestation Feature
         description: Workflow for documenting and verifying employer eligibility to sponsor group benefits
-        type: :boolean
+        content_type: :boolean
         default: false
         is_required: false
         is_visible: true

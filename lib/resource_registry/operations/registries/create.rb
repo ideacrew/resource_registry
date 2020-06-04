@@ -69,7 +69,15 @@ module ResourceRegistry
         end
 
         def register(features, registry)
-          features.each {|feature| registry.register_feature(feature) }
+          features.each do |feature|
+            if defined? Rails
+              if ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).blank?
+                ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
+              end
+            end
+            
+            registry.register_feature(feature)
+          end
           
           Success(registry)
         end

@@ -109,16 +109,35 @@ module ResourceRegistry
       @namespaces = features.collect{|feature_key| self[feature_key].feature.namespace}.uniq
     end
 
+    def namespace_features_hash
+      dotted_namespaces = namespaces.collect{|ns| ns.map(&:to_s).join('.')}
+
+      dotted_namespaces.inject({}) do |data, namespace|
+        features = visible_features_by_namespace(namespace)
+        data[namespace] = features if features.present?
+        data
+      end
+    end
+
     def nested_namespaces
       return @nested_namespaces if defined? @nested_namespaces
-      
-      @nested_namespaces = namespaces.reduce({}) {|nested_hash, namespace_arr| nested_hash.deep_merge(namespace_to_hash(namespace_arr)) }
+
+      @nested_namespaces = namespace_features_hash.reduce({}) do |data, (namespace, features)|
+        data.deep_merge(namespace_to_hash(namespace.split('.'), features))
+      end
     end
 
     # Produce an enumerated list of all features stored in a specific namespace
     # @return [Array<Symbol>] list of registered features in the referenced namespace
     def features_by_namespace(namespace)
       keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
+    end
+
+    # Produce an enumerated list of all visible features stored in a specific namespace
+    # @return [Array<Symbol>] list of registered visible features in the referenced namespace
+    def visible_features_by_namespace(namespace)
+      feature_keys = features_by_namespace(namespace)
+      feature_keys.select{|feature_key| resolve_feature(feature_key)&.meta&.is_visible }
     end
 
     # Return the value for an individual configuration key
@@ -189,14 +208,22 @@ module ResourceRegistry
       namespace.present? ? [namespace, key.to_s].join('.') : key.to_s
     end
 
-    def namespace_to_hash(namespace_arr)
+    def namespace_to_hash(namespace_arr, features)
       namespace_hash = {}
-      # key = namespace_arr.shift
-      # namespace_hash[key] = (namespace_arr.size > 0 ? namespace_to_hash(namespace_arr) : nil)
 
       key = namespace_arr[0]
-      namespace_hash[key] = (namespace_arr[1..-1].size > 0 ? namespace_to_hash(namespace_arr[1..-1]) : nil)
+      namespace_hash[key] = (namespace_arr[1..-1].size > 0 ? {namespaces: namespace_to_hash(namespace_arr[1..-1], features)} : {features: features})
       namespace_hash
     end
+
+    # def namespace_to_hash(namespace_arr)
+    #   namespace_hash = {}
+    #   # key = namespace_arr.shift
+    #   # namespace_hash[key] = (namespace_arr.size > 0 ? namespace_to_hash(namespace_arr) : nil)
+
+    #   key = namespace_arr[0]
+    #   namespace_hash[key] = (namespace_arr[1..-1].size > 0 ? namespace_to_hash(namespace_arr[1..-1]) : nil)
+    #   namespace_hash
+    # end
   end
 end

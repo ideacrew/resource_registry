@@ -10,7 +10,7 @@ registry:
         is_enabled: true
         meta:
           label: Catalog 2020
-          type: :string
+          content_type: :string
           description: Products and configuration for 2020 SHOP Enrollment
           default: 2020 benefit market catalog
           is_required: false
@@ -21,7 +21,7 @@ registry:
             meta:
               label: Maximum employee count
               description: Employer eligibility limit for maximum number of employees 
-              type: :integer
+              content_type: :integer
               default: 50
               is_required: true
               is_visible: true
@@ -30,7 +30,7 @@ registry:
             meta:
               label: 'use employer attestation'
               description: 
-              type: :boolean
+              content_type: :boolean
               default: false
               is_required: true
               is_visible: true
@@ -39,7 +39,7 @@ registry:
             meta:
               label: 'use employer sic code'
               description: 
-              type: :boolean
+              content_type: :boolean
               default: false
               is_required: true
               is_visible: true    
@@ -48,7 +48,7 @@ registry:
             meta:
               label: 'application period'
               description: 
-              type: :range
+              content_type: :range
               default: Date.new(2019,1,1)..Date.new(2019,12,31)
               is_required: true
               is_visible: true
@@ -57,7 +57,7 @@ registry:
             meta:
               label: 'application inverval kind'
               description:
-              type: :enumerated_hash_array
+              content_type: :enumerated_hash_array
               default: { monthly: "Monthly" }
               enum:  [
                         { monthly: "Monthly" },
@@ -75,7 +75,7 @@ registry:
             meta:
               label: 'probation period kinds'
               description: 
-              type: :enumerated_hash_array
+              content_type: :enumerated_hash_array
               default:  [
                           { paper_and_electronic: "Paper and Electronic" },
                           { paper_only: "Paper only" },
@@ -95,7 +95,7 @@ registry:
             meta:
               label: 'open enrollment period length maxiumum'
               description: 
-              type: :months
+              content_type: :months
               default: 2
               is_required: true
               is_visible: true
@@ -104,7 +104,7 @@ registry:
             meta:
               label: 'open enrollment period length days minimum'
               description: 
-              type: :days
+              content_type: :days
               default: 5
               is_required: true
               is_visible: true

@@ -15,7 +15,7 @@ RSpec.describe ResourceRegistry::Setting do
   let(:key)     { :my_key }
   let(:item)    { Greeter.new }
   let(:options) { { name: "Dolly" } }
-  let(:meta)    { { label: "label", default: 42, type: :integer } }
+  let(:meta)    { { label: "label", default: 42, content_type: :integer } }
 
   let(:required_params) { { key: key, item: item } }
   let(:optional_params) { { meta: meta, options: options } }

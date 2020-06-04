@@ -13,7 +13,7 @@ RSpec.describe ResourceRegistry::Meta do
   let(:is_required) { false }
   let(:is_visible)  { false }
 
-  let(:required_params)   { { label: label, type: type, default: default, } }
+  let(:required_params)   { { label: label, content_type: type, default: default, } }
   let(:optional_params)   { {
                               value: value,
                               description: description,

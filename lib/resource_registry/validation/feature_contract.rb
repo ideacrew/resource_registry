@@ -31,7 +31,7 @@ module ResourceRegistry
 
           settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
             setting.tap do |setting|
-              if setting[:meta] && setting[:meta][:type] == :duration
+              if setting[:meta] && setting[:meta][:content_type] == :duration
                 setting[:item] = Types::Duration[setting[:item]]
               elsif setting[:item].is_a? String
                 dates = setting[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten

@@ -15,7 +15,7 @@ module ResourceRegistry
     # @!attribute [r] type
     # The data input kind to render on the form
     # @return [String]
-    attribute :type,        Types::Symbol.optional.meta(omittable: true)
+    attribute :content_type,        Types::Symbol.optional.meta(omittable: true)
 
     # @!attribute [r] default
     # The system-assigned value for this configuration setting.  Used when a user-assigned value

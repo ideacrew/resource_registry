@@ -6,7 +6,7 @@ registry:
       is_enabled: false
       meta:
         label: Enable ACA SHOP Market
-        type: :boolean
+        content_type: :boolean
         default: true
         value: true
         description: ACA Small Business Health Options (SHOP) Portal
@@ -18,7 +18,7 @@ registry:
         meta:
           label: Earliest Enrollment Date
           description: Maximum period prior to effective date that a group member may enroll
-          type: :duration
+          content_type: :duration
           default: { days: -30 }
           is_required: true
           is_visible: true
@@ -27,7 +27,7 @@ registry:
         meta: 
           label: Retroactive Enrollment Period
           description: Maximum period after coverage effective date that a group member may be retroactively enrolled
-          type: :duration
+          content_type: :duration
           default: { days: 30 }
           is_required: true
           is_visible: true
@@ -36,7 +36,7 @@ registry:
         meta:
           label: Retroactive Enrollment Period After Roster Correction
           description: Maximum period after roster correction that a group member may be retroactively enrolled (from date of correction)
-          type: :duration
+          content_type: :duration
           default: { days: 30 }
           is_required: true
           is_visible: true
@@ -45,7 +45,7 @@ registry:
         meta:
           label: Retroactive Termination Period
           description: Maximum period that coverage may be retroactively terminated
-          type: :duration
+          content_type: :duration
           default: { days: -60 }
           is_required: true
           is_visible: true
@@ -63,7 +63,7 @@ registry:
         meta:
           label: Maximum Enrollment Period
           description: Maximum period following termination that a group member may enroll in COBRA coverage
-          type: :duration
+          content_type: :duration
           default: { months: 6 }
           is_required: true
           is_visible: true
@@ -75,7 +75,7 @@ registry:
         meta:
           label: Contact Preferences
           description: 
-          type: :enumerated_hash
+          content_type: :enumerated_hash
           default: { paper_and_electronic: "Paper and Electronic" }
           enum:   [
                       { paper_and_electronic: "Paper and Electronic" },
@@ -96,5 +96,5 @@ registry:
           label: Effective Period
           is_required: false
           is_visible: true
-          type: :duration
+          content_type: :duration
           default: {hours: 5}

@@ -10,7 +10,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
     let(:is_enabled)  { false }
     let(:item)        { ->(val){ val.to_sym } }
     let(:options)     { { name: "Dolly" } }
-    let(:meta)        { { label: "label", default: 42, type: :integer } }
+    let(:meta)        { { label: "label", default: 42, content_type: :integer } }
     let(:settings)    { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
     let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled, item: item } }

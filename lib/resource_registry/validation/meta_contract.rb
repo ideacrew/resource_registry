@@ -9,7 +9,7 @@ module ResourceRegistry
       # @!method call(opts)
       # @param [Hash] opts the parameters to validate using this contract
       # @option opts [String] :label required
-      # @option opts [Symbol] :type required
+      # @option opts [Symbol] :content_type required
       # @option opts [Any] :default required
       # @option opts [Any] :value optional
       # @option opts [String] :description optional
@@ -20,7 +20,7 @@ module ResourceRegistry
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
         required(:label).value(:string)
-        required(:type).value(:symbol)
+        required(:content_type).value(:symbol)
         required(:default).value(:any)
         optional(:value).maybe(:any)
         optional(:description).maybe(:string)
