@@ -8,7 +8,7 @@ require 'rubygems/dependency_installer'
 
 installer = Gem::DependencyInstaller.new
 
-if gem_available?('activerecord') && false
+if gem_available?('activerecord')
   installer.install 'activerecord'
   
   require 'resource_registry/models/active_record/feature'

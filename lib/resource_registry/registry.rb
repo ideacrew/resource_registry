@@ -13,6 +13,8 @@ module ResourceRegistry
     FEATURE_INDEX_NAMESPACE = 'feature_index'.freeze
     CONFIGURATION_NAMESPACE = 'configuration'.freeze
 
+    attr_accessor :db_connection
+
     # @return ResourceRegistry::Registry
     def initialize
       super()
