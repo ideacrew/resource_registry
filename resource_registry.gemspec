@@ -58,7 +58,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler",          "~> 2.0"
   spec.add_development_dependency 'rake',             '~> 12.0'
   spec.add_development_dependency 'rspec',            '~> 3.9'
-  spec.add_development_dependency 'rspec-rails',      '~> 3.9'
+  spec.add_development_dependency 'rspec-rails',      '~> 4.0'
   spec.add_development_dependency 'mongoid',          '~> 6.0'
   spec.add_development_dependency 'activesupport',    '~> 5.2.4'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
