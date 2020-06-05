@@ -167,7 +167,7 @@ module RegistryViewControls
     id = setting[:key].to_s
 
     meta = setting[:meta]
-    input_value = setting.item || meta.default
+    input_value = setting.item || meta&.default
     aria_describedby = id
 
     # if meta[:attribute]
