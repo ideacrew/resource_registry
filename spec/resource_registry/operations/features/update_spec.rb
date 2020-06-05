@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Operations::Features::Update do
   include RegistryDataSeed
 
-  subject { described_class.new.call({'feature' => new_params, 'registry' => registry}) }
+  subject { described_class.new.call({feature: new_params, registry: registry}) }
 
   context 'When valid feature hash passed' do
 
