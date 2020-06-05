@@ -3,29 +3,29 @@
 require "spec_helper"
 require 'resource_registry/types'
 
-RSpec.describe ResourceRegistry::Types do
+RSpec.describe ::Types do
 
   let(:rails_6_month_duration)   { ActiveSupport::Duration.build(6.months) }
   let(:rails_3_day_duration)     { ActiveSupport::Duration.build(3.days) }
 
   describe "Types::Duration" do
-    subject(:type) { ResourceRegistry::Types::Duration }
+    subject(:type) { Types::Duration }
 
     it 'responds_to Rails Duration method' do
-      expect(type[rails_6_month_duration]).to respond_to :from_now
+      expect(type[{months: 6}]).to respond_to :from_now
     end
 
     it 'definition supports callable (proc) interface' do
-      expect(ResourceRegistry::Types::Callable.valid?(type)).to be_truthy
+      expect(Types::Callable.valid?(type)).to be_truthy
     end
 
     it 'coerces to a Rails Duration' do
-      expect(type[3.days]).to eql(rails_3_day_duration)
+      expect(type[{days: 3}]).to eq rails_3_day_duration
     end
   end
 
   describe "Types::Environments" do
-    subject(:type)          { ResourceRegistry::Types::Environment }
+    subject(:type)          { Types::Environment }
     let(:valid_key)         { :production }
     let(:valid_key_string)  { "development" }
     let(:invalid_key)       { :silly }

@@ -82,6 +82,9 @@ namespaces:
                                                 - key: small_market_employee_count_maximumt
                                                   type: :integer
                                                   default: 50
+                                                - key: transmit_monthly_employers
+                                                  type: :boolean
+                                                  default: false
                                                 - key: employer_contribution_percent_minimum
                                                   type: :integer
                                                   default: 50    
@@ -203,8 +206,8 @@ namespaces:
                                 - key: nondiscrimination_notice_url
                                   type: :string
                                   default: "https://www.dchealthlink.com/nondiscrimination"
-              - key: :individual_site
-                settings:
-                  - key: :url
-                    type: URI
-                    default: https://individual.openhbx.org
+              # - key: :individual_site
+              #   settings:
+              #     - key: :url
+              #       type: URI
+              #       default: https://individual.openhbx.org

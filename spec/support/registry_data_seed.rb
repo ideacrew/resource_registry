@@ -19,8 +19,16 @@ module RegistryDataSeed
     Pathname.pwd.join('spec', 'db', 'seedfiles', 'client', 'enterprise.yml')
   end
 
+  def features_folder_path
+    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features')
+  end
+
   def configuration_file_path
     Pathname.pwd.join('spec', 'db', 'seedfiles', 'config', 'config.yml')
+  end
+
+  def feature_template_path
+    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features','aca_shop_market', 'aca_shop_market.yml')
   end
 
   def option_files_dir
@@ -40,7 +48,8 @@ module RegistryDataSeed
           site: :shop_site,
           env: :production,
           application: :enroll_app
-        }
+        },
+        load_application_settings: true
       }
     }
   end
@@ -66,11 +75,11 @@ module RegistryDataSeed
     options
   end
 
-  def initialize_registry
-    ResourceRegistry.configure do
-      override_config
-    end
-  end
+  # def initialize_registry
+  #   ResourceRegistry.configure do
+  #     override_config
+  #   end
+  # end
 
   def load_dependencies
     dir = Pathname.pwd.join('lib', 'system', 'dependencies')
@@ -82,6 +91,12 @@ module RegistryDataSeed
     initialize_registry
     path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
     ResourceRegistry::Registries::Transactions::LoadApplicationConfiguration.new.call(path)
-    load_dependencies
+    # load_dependencies
   end
+
+  # def create_registry
+  #   initialize_registry
+  #   path = Pathname.pwd.join('lib', 'system', 'config', 'configuration_options.yml')
+  #   ResourceRegistry::Registries::Transactions::Create.new.call(path)
+  # end
 end

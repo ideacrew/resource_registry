@@ -7,13 +7,14 @@ require "resource_registry/version"
 Gem::Specification.new do |spec|
   spec.name          = "resource_registry"
   spec.version       = ResourceRegistry::VERSION
-  spec.authors       = ["Dan Thomas"]
+  spec.authors       = ["Dan Thomas", "Raghuram Ghanjala"]
   spec.email         = ["dan@ideacrew.com"]
 
-  spec.summary       = "Configure access to component features and custom behaviors on a multi-tenant basis}"
-  spec.description   = %q{Provides ability to define and access multiple customer settings in the same instance,
-                            supporting thread-safe configurations that enable/disable access to features and dynamic
-                            changes to settings using a syntax that avoids inline conditionals.
+  spec.summary       = "Configure and organize system settings as Features}"
+  spec.description   = %q{Provides a Feature model to define, organize and retrieve application settings.  
+                            Features may be enabled/disabled, may include setting attributes of any
+                            type and metadata settings designed to drive auto-display of confguration 
+                            settings.
                           }
   spec.homepage      = "https://github.com/ideacrew/resource_registry"
   spec.license       = "MIT"
@@ -29,37 +30,42 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = '>= 2.5.0'
+  spec.required_ruby_version = '>= 2.5.1'
 
-  spec.add_dependency 'dry-monads',               '~> 1.2'
-  spec.add_dependency 'dry-system',               '~> 0.12'
-  spec.add_dependency 'dry-equalizer',            '~> 0.2'
-  spec.add_dependency 'dry-matcher',              '~> 0.7'
   spec.add_dependency 'dry-validation',           '~> 1.2'
-  spec.add_dependency 'dry-core',                 '~> 0.4'
   spec.add_dependency 'dry-struct',               '~> 1.0'
   spec.add_dependency 'dry-types',                '~> 1.0'
-  spec.add_dependency 'dry-inflector',            '~> 0.1'
-  spec.add_dependency 'dry-container',            '~> 0.7'
-  spec.add_dependency 'dry-auto_inject',          '~> 0.6'
-  # spec.add_dependency 'dry-configurable',         '~> 0.8'
-  spec.add_dependency 'dry-transaction',          '~> 0.13'
-  spec.add_dependency 'dry-initializer',          '~> 3.0'
+  spec.add_dependency 'dry-configurable',         '0.9'
 
-  spec.add_dependency 'i18n',                     '~> 1.6'
+  spec.add_dependency 'dry-container',            '~> 0.7'
+  spec.add_dependency 'deep_merge',               '>= 1.0.0'
+
+  # Dependency gems added for security purposes
+  spec.add_dependency 'nokogiri',                 ">= 1.9.1"
+  spec.add_dependency "rack",                     ">= 1.6.13"
+  spec.add_dependency 'dry-monads',               '~> 1.2'
+  spec.add_dependency 'dry-matcher',              '~> 0.7'
+
+  spec.add_dependency "loofah",                   ">= 2.3.1"
+  spec.add_development_dependency "actionview",   ">= 5.2.4.2"
+  # end of dependency gem security updates
+
+  spec.add_dependency 'i18n',                     '>= 0.7.0'
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'bootsnap',                 '~> 1.0'
   spec.add_dependency 'mime-types'
 
-
-  spec.add_development_dependency "bundler",      "~> 2.0"
-  spec.add_development_dependency 'rake',         '~> 12.0'
-  spec.add_development_dependency 'rspec',        '~> 3.0'
-  spec.add_development_dependency 'rspec-rails',  '~> 3.0'
-  spec.add_development_dependency 'mongoid',      '~> 7.0'
-  spec.add_development_dependency 'activesupport','~> 5.2.3'
+  spec.add_development_dependency "bundler",          "~> 2.0"
+  spec.add_development_dependency 'rake',             '~> 12.0'
+  spec.add_development_dependency 'rspec',            '~> 3.9'
+  spec.add_development_dependency 'rspec-rails',      '~> 3.9'
+  spec.add_development_dependency 'mongoid',          '~> 6.0'
+  spec.add_development_dependency 'activesupport',    '~> 5.2.4'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
   spec.add_development_dependency "database_cleaner", '~> 1.7'
   spec.add_development_dependency "timecop",          '~> 0.9'
+  spec.add_development_dependency "rubocop",          '~> 0.74.0'
+  spec.add_development_dependency "yard",         "~> 0.9"
+  spec.add_development_dependency 'pry-byebug'
 
 end

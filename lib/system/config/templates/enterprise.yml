@@ -1,0 +1,38 @@
+---
+namespace: 
+  path: []
+  features:
+  - key: :enterprise
+    is_enabled: true
+    meta:
+      label: Enterprise 
+      description: Information about the organization hosting this system
+      type: boolean
+      is_required: true
+      is_visible: true
+    settings:
+    - key: :key
+      value: nil
+      meta:
+        label: Organization ID
+        type: :symbol
+        description: "Unique identifier for your organization. Short names such as acronyms are best. Case insensitive and must start with a letter (not number) and not contain any special characters (!@#$%^&*+-:;[]<>?.,)"
+        is_required: true
+        is_visible: true
+    - key: owner_account
+      value: nil
+      is_enabled: true
+      meta:
+        label: Owner Account
+        type: :string
+        description: User account with administrative authority over this system
+        is_required: true
+        is_visible: true
+    - key: :organization_name
+      value: nil
+      meta:
+        label: Organization name
+        description: Title for organization adminstering this system
+        type: :symbol
+        is_required: true
+        is_visible: true

@@ -1,0 +1,18 @@
+# Employer Attestation Feature settngs
+# Only accessed if enabled in catalog settings [:features, :enroll_app, :aca_shop_market, :benefit_market_catalog, :catalog_2020, :use_employer_attestation_required
+registry:
+  - features:
+    - key: :employer_attestation
+      is_enabled: false
+      namespace:
+        - :features
+        - :enroll_app
+        - :aca_shop_market
+        - :benefit_market_catalog
+      meta:
+        label: Employer Attestation Feature
+        description: Workflow for documenting and verifying employer eligibility to sponsor group benefits
+        type: :boolean
+        default: false
+        is_required: false
+        is_visible: true

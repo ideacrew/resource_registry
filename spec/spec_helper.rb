@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
+require 'resource_registry'
+require 'pry'
 
 # Custom matcher for dry-validation schema specs
 require "support/matchers/match_schema"
@@ -10,20 +12,17 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   SimpleCov.start {add_filter '/spec/' }
 end
 
-require 'dry/container/stub'
+# require 'dry/container/stub'
 require "timecop"
 
-require "dry/validation"
-require "dry/container"
-require "dry/transaction"
-require "dry/transaction/operation"
-require "active_support/all"
 
-require 'support/dry_types'
+# require 'support/dry_types'
 require 'support/registry_data_seed'
-require 'resource_registry.rb'
+# require 'resource_registry.rb'
 # ENV["RAILS_ENV"] = "test"
 
+# Bring in the Rails test harness
+require "active_support/all"
 SPEC_ROOT = Pathname(__FILE__).dirname
 Dir[SPEC_ROOT.join("rails_app/*.rb").to_s].each(&method(:require))
 

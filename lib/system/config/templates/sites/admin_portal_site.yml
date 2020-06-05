@@ -1,0 +1,14 @@
+---
+namespaces:
+  path: [:enterprise, :sites]
+  features:
+  - key: :admin_portal
+    is_enabled: true
+    meta:
+      label: Administrative Portal 
+      description: Web portal for system configuration
+      is_required: true
+      is_visible: true
+    settings:
+    - key: :environment
+      value: :production

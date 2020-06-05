@@ -4,8 +4,11 @@ Dry::Validation.load_extensions(:monads)
 
 module ResourceRegistry
   module Validation
+
+    # Configuration values and shared rules and macros for domain model validation contracts
     class ApplicationContract < Dry::Validation::Contract
       config.messages.default_locale = :en
+
       # config.messages.backend = :i18n
       # config.messages.default_locale - default I18n-compatible locale identifier
       # config.messages.backend - the localization backend to use. Supported values are: :yaml and :i18n
@@ -13,50 +16,56 @@ module ResourceRegistry
       # config.messages.top_namespace - the key in the locale files under which messages are defined, by default it's dry_validation
       # config.messages.namespace - custom messages namespace for a contract class. Use this to differentiate common messages
 
-      StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
+      # Process validation contracts in a standard manner
+      # @param evaluator [Dry::Validation::Contract::Evaluator]
+      def apply_contract_for(evaluator)
+        return {} unless evaluator.key && evaluator.value
 
-      def validate_nested_contract(contract_constant, params)
-        result = contract_constant.call(params)
-        unpack_result(result)
+        rule_keys = evaluator.key.path.keys
+        contract_klass = create_contract_klass(rule_keys)
+        result = contract_klass.new.call(evaluator.value)
+
+        (result && result.failure?) ? { text: "invalid #{rule_keys[0]}", error: result.errors.to_h } : {}
       end
 
-      def parse_message_path(path = [])
-        if path.length == 1
-          path.first.to_sym
-        else
-          path.reduce([]) { |list, val| list << val.to_s }.join('.').to_sym
+      # Construct a fully namespaced constant for contract based on naming conventions
+      # @param [Dry::Validation::Contract::RuleKeys] rule_keys 
+      def create_contract_klass(rule_keys)
+        klass_parts = rule_keys[0].to_s.split('_')
+        module_name = klass_parts.reduce([]) { |memo, word| memo << word.capitalize }.join
+        klass_name  = module_name.chomp('s')
+
+        full_klass_name = ["ResourceRegistry", module_name, "Validation", klass_name + "Contract"].join('::')
+        ::Kernel.const_get(full_klass_name)
+      end
+
+      # @!macro ruleeach
+      #   Validates a nested array of $0 params
+      #   @!method rule(settings)
+      rule(:settings).each do
+        if key? && value
+          result = ResourceRegistry::Validation::SettingContract.new.call(value)
+          # Use dry-validation metadata error form to pass error hash along with text to calling service
+          key.failure(text: "invalid settings", error: result.errors.to_h) if result && result.failure?
         end
       end
 
-      def unpack_result(result)
-        if result && result.failure?
-          message_list = result.errors.messages.reduce([]) do |list, message|
-            message_key = parse_message_path(message.path)
-            list << { message_key => [{path: message.path.to_s}, {input: message.input.to_s }, { text: message.text.to_s }] }
-          end
+      # @!macro [attach] rulemacro
+      #   Validates a nested hash of $1 params
+      #   @!method $0($1)
+      #   @param [Symbol] $1 key
+      #   @return [Dry::Monads::Result::Success] if nested $1 params pass validation
+      #   @return [Dry::Monads::Result::Failure] if nested $1 params fail validation      
+      rule(:meta) do
+        if key? && value
+          result = ResourceRegistry::Validation::MetaContract.new.call(value)
+
+          # Use dry-validation error form to pass error hash along with text to calling service
+          # self.result.to_h.merge!({meta: result.to_h})
+          key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
         end
-        message_list ||= []
       end
 
-      rule(:features).each do
-        errors = validate_nested_contract(ResourceRegistry::Features::Validation::FeatureContract, value)
-        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      end
-
-      rule(:options).each do
-        errors = validate_nested_contract(ResourceRegistry::Options::Validation::OptionContract, value)
-        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      end
-
-      rule(:namespaces).each do
-        errors = validate_nested_contract(ResourceRegistry::Options::Validation::OptionContract, value)
-        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      end
-
-      rule(:tenants).each do
-        errors = validate_nested_contract(ResourceRegistry::Tenants::Validation::TenantContract, value)
-        key.failure("validation failed: #{errors.flatten}") unless errors.empty?
-      end
     end
   end
 end

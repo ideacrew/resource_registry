@@ -2,6 +2,19 @@
 
 require 'resource_registry/serializers'
 
+Registry.namespace :"resource_registry.serializers.yaml" do
+
+  register :serialize do
+    ResourceRegistry::Serializers::Yaml::Serialize.new
+  end
+
+  register :deserialize do
+    ResourceRegistry::Serializers::Yaml::Deerialize.new
+  end
+
+end
+
+
 Registry.namespace :"resource_registry.serializers" do
 
   register :parse_yaml do
