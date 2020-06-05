@@ -10,7 +10,7 @@ module RegistryViewControls
       tag.div(class: 'card-body row') do
         tag.div(class: 'col-6') do
           content = ''
-          content += build_option_field(feature, form) if feature.meta.content_type.to_s != 'legend'
+          content += build_option_field(feature, form) if !['legend'].include?(feature.meta.content_type.to_s)
 
           (content + feature.settings.collect do |setting|
             build_option_field(setting, form) if setting.meta

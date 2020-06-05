@@ -32,14 +32,21 @@ module ResourceRegistry
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
     end
 
+    def swap_feature(feature)
+      self._container.delete("feature_index.#{feature.key}")
+      self._container.delete(namespaced(feature.key, feature.namespace))
+      register_feature(feature)
+      @features_stale = false
+    end
+
     # Store a feature in the registry
     # @param feature [ResourceRegistry::Feature] The subject feature to be stored
     # @raise [ArgumentError] if the feature parameter isn't an instance of {ResourceRegistry::Feature}
     # @raise [ResourceRegistry::Error::DuplicateFeatureError] if this feature key is already registered under in the registry
     # @return [ResourceRegistry::Registry]
     def register_feature(feature)
-      if !feature.is_a?(ResourceRegistry::Feature)
-        raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature"
+      if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
+        raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL"
       end
 
       feature = dsl_for(feature)

@@ -6,7 +6,7 @@ require_relative 'operations/features/create'
 require_relative 'operations/features/configure'
 require_relative 'operations/features/disable'
 require_relative 'operations/features/enable'
-require_relative 'operations/features/update' if defined? Rails
+require_relative 'operations/features/update'
 
 module ResourceRegistry
 
