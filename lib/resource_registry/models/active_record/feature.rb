@@ -19,6 +19,10 @@ module ResourceRegistry
       	  settings.build(setting_hash)
         end
       end
+
+      def setting(key)
+      	settings.detect{|setting| setting.key.to_s == key.to_s}
+      end
     end
   end
 end

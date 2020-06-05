@@ -5,7 +5,7 @@ module RegistryViewControls
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
     tag.div(class: 'card') do
       tag.div(class: 'card-header') do
-        tag.h4 feature.key.to_s.titleize 
+        tag.h4 (feature.setting(:label)&.item || feature.key.to_s.titleize)
       end +
       tag.div(class: 'card-body row') do
         tag.div(class: 'col-6') do
@@ -110,10 +110,17 @@ module RegistryViewControls
     input_value = setting.item || meta&.default
     aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
     
+    if setting.is_a?(ResourceRegistry::Setting)
+      element_name = form&.object_name.to_s + "[settings][#{setting.key}]"
+    else
+      element_name = form&.object_name.to_s + "[is_enabled]"
+      input_value  = setting.is_enabled 
+    end
+
     meta.enum.collect do |choice|
       choice = eval(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: "radio", name: form&.object_name.to_s + "[settings][#{setting.key}]", value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
+        tag.div(tag.div(tag.input(nil, type: "radio", name: element_name, value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
           tag.input(nil, type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
       end
     end.join('').html_safe
@@ -286,8 +293,10 @@ module RegistryViewControls
 
         if features
           features.each do |feature|
+            feature_rec = ResourceRegistry::ActiveRecord::Feature.where(key: feature).first
+
             content += tag.a(href: "##{feature}", class: "list-group-item list-group-item-action border-0", 'data-toggle': 'list', role: 'tab', id: "list-#{feature}-list", 'aria-controls': feature.to_s) do
-              feature.to_s.titleize
+              feature_rec&.setting(:label)&.item || feature.to_s.titleize
             end.html_safe
           end
         end
@@ -318,7 +327,6 @@ module RegistryViewControls
           content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
             form_for(feature, as: 'feature', url: configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
               form.hidden_field(:key) +
-              form.hidden_field(:is_enabled) +
               render_feature(feature, form) +
               tag.div(class: 'row mt-3') do 
                 tag.div(class: 'col-4') do
