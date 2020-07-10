@@ -28,6 +28,11 @@ require 'resource_registry/helpers/view_controls'
 module ResourceRegistry
   # :nodoc:
   class Railtie < Rails::Railtie
+
+    rake_tasks do
+      load 'resource_registry/tasks/purge.rake'
+    end
+
     
     initializer 'resource_registry.helper' do |_app|
       ActionView::Base.send :include, RegistryViewControls
