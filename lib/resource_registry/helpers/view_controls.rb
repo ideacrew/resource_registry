@@ -34,20 +34,24 @@ module RegistryViewControls
       input_file_control(option, form)
     when :radio_select
       input_radio_control(option, form)
+    when :checkbox_select
+      input_checkbox_control(option, form)
     when :select
       select_control(option, form)
     when :number
       input_number_control(option, form)
     when :email
       input_email_control(option, form)
+    when :date
+      input_date_control(option, form)
     when :currency
       input_currency_control(option, form)
     else
       input_text_control(option, form)
     end
 
-    if type == :radio_select
-      radio_form_group(option, input_control)
+    if type == :radio_select || type == :checkbox_select
+      custom_form_group(option, input_control)
     else
       form_group(option, input_control)
     end
@@ -57,16 +61,17 @@ module RegistryViewControls
     id = setting[:key].to_s
     selected_option = "Choose..."
     meta = setting[:meta]
-    options = meta.value || meta.default
+    # options = meta.value || meta.default
 
     aria_describedby = id
 
-    option_list = tag.option(selected_option, selected: true)
+    value = value_for(setting, form)
+    option_list = tag.option(selected_option, selected: (value.blank? ? true : false))
     meta.enum.each do |choice|
-      option_list += tag.option(choice.values.first)
+      option_list += tag.option(choice.first[1], selected: (choice.first[0].to_s == value.to_s), value: choice.first[0])
     end
 
-    tag.select(option_list, id: id, class: "form-control", name: "#{form&.object_name}[#{id}]")
+    tag.select(option_list, id: id, class: "form-control", name: form&.object_name.to_s + "[settings][#{id}]")
   end
 
   def select_dropdown(input_id, list, show_default=false, selected=nil)
@@ -111,7 +116,7 @@ module RegistryViewControls
 
   def input_radio_control(setting, form)
     meta = setting.meta
-    input_value = setting.item || meta&.default
+    input_value = value_for(setting, form) || setting.item || meta&.default
     aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
     
     if setting.is_a?(ResourceRegistry::Setting)
@@ -126,6 +131,22 @@ module RegistryViewControls
       input_group do
         tag.div(tag.div(tag.input(nil, type: "radio", name: element_name, value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
           tag.input(nil, type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
+      end
+    end.join('').html_safe
+  end
+
+  def input_checkbox_control(setting, form)
+    meta = setting.meta
+    input_value = value_for(setting, form) || setting.item || meta&.default
+    aria_label  = 'Checkbox button for following text input'
+
+    element_name = form&.object_name.to_s + "[settings][#{setting.key}][]"
+
+    meta.enum.collect do |choice|
+      choice = eval(choice) if choice.is_a?(String)
+      input_group do
+        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: element_name, value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+          tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
     end.join('').html_safe
   end
@@ -167,11 +188,19 @@ module RegistryViewControls
     tag.div(yield, class: "input-group")
   end
 
+  def value_for(setting, form)
+    if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
+      form.object.settings.where(key: setting.key).first&.item
+    else
+      form.object.send(setting.key)
+    end
+  end
+
   def input_text_control(setting, form)
     id = setting[:key].to_s
 
     meta = setting[:meta]
-    input_value = setting.item || meta&.default
+    input_value = value_for(setting, form) || setting.item || meta&.default
     aria_describedby = id
 
     # if meta[:attribute]
@@ -181,10 +210,20 @@ module RegistryViewControls
     # end
   end
 
+  def input_date_control(setting, form)
+    id = setting[:key].to_s
+
+    meta = setting[:meta]
+    input_value = value_for(setting, form) || setting.item || meta&.default
+    aria_describedby = id
+
+    tag.input(nil, type: "date", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true)
+  end
+
   def input_number_control(setting, form)
     id = setting[:key].to_s
     meta = setting[:meta]
-    input_value = meta.value || meta.default
+    input_value = value_for(setting, form) || meta.value || meta.default
     # input_value = setting[:value] || setting[:default]
     aria_describedby = id
 
@@ -275,13 +314,13 @@ module RegistryViewControls
     end
   end
 
-	def radio_form_group(setting, control)
+	def custom_form_group(setting, control)
 	  id          = setting[:key].to_s
 	  # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
 	  help_id     = id + 'HelpBlock'
 	  help_text   = setting.meta.description
-	  aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
+	  aria_label  = "#{setting.meta.content_type.to_s.humanize} button for following text input" #setting[:aria_label] || "Radio button for following text input"
 
 	  tag.div(class: "form-group") do
 	    tag.label(for: id, value: label, aria: { label: aria_label }) do
