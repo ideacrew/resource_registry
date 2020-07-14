@@ -189,11 +189,13 @@ module RegistryViewControls
   end
 
   def value_for(setting, form)
-    if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
+    value = if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
       form.object.settings.where(key: setting.key).first&.item
     else
       form.object.send(setting.key)
     end
+
+    value.is_a?(Date) ? value.to_s(:db) : value
   end
 
   def input_text_control(setting, form)
