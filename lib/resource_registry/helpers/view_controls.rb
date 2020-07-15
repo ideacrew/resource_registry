@@ -61,17 +61,16 @@ module RegistryViewControls
     id = setting[:key].to_s
     selected_option = "Choose..."
     meta = setting[:meta]
-    # options = meta.value || meta.default
 
     aria_describedby = id
 
-    value = value_for(setting, form)
+    value = value_for(setting, form) || setting.item || meta&.default
     option_list = tag.option(selected_option, selected: (value.blank? ? true : false))
     meta.enum.each do |choice|
       option_list += tag.option(choice.first[1], selected: (choice.first[0].to_s == value.to_s), value: choice.first[0])
     end
 
-    tag.select(option_list, id: id, class: "form-control", name: form&.object_name.to_s + "[settings][#{id}]")
+    tag.select(option_list, id: id, class: "form-control", name: input_name_for(setting, form))
   end
 
   def select_dropdown(input_id, list, show_default=false, selected=nil)
@@ -120,7 +119,7 @@ module RegistryViewControls
     aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
     
     if setting.is_a?(ResourceRegistry::Setting)
-      element_name = form&.object_name.to_s + "[settings][#{setting.key}]"
+      element_name = input_name_for(setting, form)
     else
       element_name = form&.object_name.to_s + "[is_enabled]"
       input_value  = setting.is_enabled 
@@ -140,12 +139,10 @@ module RegistryViewControls
     input_value = value_for(setting, form) || setting.item || meta&.default
     aria_label  = 'Checkbox button for following text input'
 
-    element_name = form&.object_name.to_s + "[settings][#{setting.key}][]"
-
     meta.enum.collect do |choice|
       choice = eval(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: element_name, value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
           tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
     end.join('').html_safe
@@ -195,7 +192,17 @@ module RegistryViewControls
       form.object.send(setting.key)
     end
 
-    value.is_a?(Date) ? value.to_s(:db) : value
+    value = value.to_s(:db) if value.is_a?(Date)
+    value = value.to_s if value.is_a?(FalseClass)
+    value
+  end
+
+  def input_name_for(setting, form)
+    if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
+      form&.object_name.to_s + "[settings][#{setting.key}]"
+    else
+      form&.object_name.to_s + "[#{setting.key}]"
+    end
   end
 
   def input_text_control(setting, form)
@@ -208,7 +215,7 @@ module RegistryViewControls
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
-      tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true)
+      tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true)
     # end
   end
 
@@ -219,7 +226,7 @@ module RegistryViewControls
     input_value = value_for(setting, form) || setting.item || meta&.default
     aria_describedby = id
 
-    tag.input(nil, type: "date", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true)
+    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true)
   end
 
   def input_number_control(setting, form)
@@ -230,7 +237,7 @@ module RegistryViewControls
     aria_describedby = id
 
     # if setting[:attribute]
-      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true, oninput: "check(this)")
+      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true, oninput: "check(this)")
     # else
     #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
@@ -244,7 +251,7 @@ module RegistryViewControls
     aria_describedby = id
 
     # if setting[:attribute]
-      tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
+      tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true, oninput: "check(this)")
     # else
     #   tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
@@ -278,7 +285,7 @@ module RegistryViewControls
     aria_map    = { label: "Amount (to the nearest dollar)"}
 
     tag.div(tag.span('$', class: "input-group-text"), class: "input-group-prepend") +
-      tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]", class: "form-control", aria: { map: aria_map }) +
+      tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", aria: { map: aria_map }) +
       tag.div(tag.span('.00', class: "input-group-text"), class: "input-group-append")
   end
 
