@@ -230,7 +230,7 @@ module RegistryViewControls
     aria_describedby = id
 
     # if setting[:attribute]
-      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true, oninput: "check(this)")
+      tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[settings][#{setting.key}]",class: "form-control", required: true, oninput: "check(this)")
     # else
     #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
