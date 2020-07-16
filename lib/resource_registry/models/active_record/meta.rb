@@ -8,7 +8,7 @@ module ResourceRegistry
 
 
       def to_h
-      	attributes.merge({'content_type' => content_type.to_sym})
+      	attributes.merge({'content_type' => content_type&.to_sym})
       end
     end
   end

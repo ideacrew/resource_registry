@@ -76,7 +76,8 @@ module ResourceRegistry
               if feature_record.blank?
                 ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
               else
-                feature = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h).success
+                result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
+                feature = result.success if result.success?
               end
             end
             
