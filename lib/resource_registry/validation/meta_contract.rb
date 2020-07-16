@@ -24,7 +24,7 @@ module ResourceRegistry
         required(:default).value(:any)
         optional(:value).maybe(:any)
         optional(:description).maybe(:string)
-        optional(:enum).array(:hash)
+        optional(:enum).maybe(:array)
         optional(:is_required).maybe(:bool)
         optional(:is_visible).maybe(:bool)
       end

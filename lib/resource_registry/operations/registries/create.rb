@@ -71,8 +71,12 @@ module ResourceRegistry
         def register(features, registry)
           features.each do |feature|
             if defined?(Rails) && registry.db_connection&.table_exists?(:resource_registry_features)
-              if ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).blank?
+              feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
+
+              if feature_record.blank?
                 ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
+              else
+                feature = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h).success
               end
             end
             

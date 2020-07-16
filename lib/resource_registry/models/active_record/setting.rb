@@ -11,7 +11,22 @@ module ResourceRegistry
 
 
       def meta=(attrs)
-      	build_meta(attrs)
+      	build_meta(attrs) if attrs.present?
+      end
+
+      def item_value
+        return eval(item) if item.present? && item.scan(/\{|\[/).any?
+        item
+      rescue NameError
+        item
+      end
+
+      def to_h
+        attributes.merge({
+          'key' => key.to_sym,
+          'meta' => meta&.to_h,
+          'item'=> item_value
+        })
       end
     end
   end

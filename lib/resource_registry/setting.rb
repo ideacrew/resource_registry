@@ -8,7 +8,7 @@ module ResourceRegistry
     # @!attribute [r] key
     # ID for this setting
     # @return [Symbol]
-    attribute :key,     Types::RequiredSymbol
+    attribute :key,     Types::Symbol.meta(omittable: false)
 
     # @!attribute [r] item
     # The value for this setting

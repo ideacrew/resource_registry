@@ -122,7 +122,8 @@ module RegistryViewControls
       element_name = input_name_for(setting, form)
     else
       element_name = form&.object_name.to_s + "[is_enabled]"
-      input_value  = setting.is_enabled 
+      input_value  = form.object&.is_enabled
+      input_value  = setting.is_enabled if input_value.blank?
     end
 
     meta.enum.collect do |choice|
