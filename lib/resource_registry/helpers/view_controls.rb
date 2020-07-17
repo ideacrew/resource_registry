@@ -193,7 +193,6 @@ module RegistryViewControls
       form.object.send(setting.key)
     end
 
-    value = value.to_s(:db) if value.is_a?(Date)
     value = value.to_s if value.is_a?(FalseClass)
     value
   end
@@ -223,8 +222,12 @@ module RegistryViewControls
   def input_date_control(setting, form)
     id = setting[:key].to_s
 
+    date_value = value_for(setting, form)
+    date_value = date_value.to_date if date_value.is_a?(Time)
+    date_value = date_value.to_s(:db) if date_value.is_a?(Date)
+
     meta = setting[:meta]
-    input_value = value_for(setting, form) || setting.item || meta&.default
+    input_value = date_value || setting.item || meta&.default
     aria_describedby = id
 
     tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true)
