@@ -34,8 +34,8 @@ module ResourceRegistry
       def to_h
         attributes.merge({
           'meta' => meta&.to_h,
-          'settings' => settings.map(&:to_h),
-          'item' => item_value
+          'item'=> item_value,
+          'settings' => settings.map(&:to_h)
         })
       end
     end

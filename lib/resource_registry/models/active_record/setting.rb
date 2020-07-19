@@ -16,6 +16,13 @@ module ResourceRegistry
 
       def item_value
         return eval(item) if item.present? && item.scan(/\{|\[/).any?
+
+        if meta.present?
+          return item.to_i if meta.content_type.to_sym == :number
+          return item.to_f if meta.content_type.to_sym == :currency
+          return item.to_sym if meta.content_type.to_sym == :symbol
+        end
+
         item
       rescue NameError
         item
@@ -23,9 +30,9 @@ module ResourceRegistry
 
       def to_h
         attributes.merge({
-          'key' => key.to_sym,
+          'key'  => key.to_sym,
           'meta' => meta&.to_h,
-          'item'=> item_value
+          'item' => item_value
         })
       end
     end
