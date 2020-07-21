@@ -28,18 +28,20 @@ module ResourceRegistry
       	settings.detect{|setting| setting.key.to_s == key.to_s}
       end
 
-      def item_value
-        return nil if self.item.nil?
-        value = YAML.parse(self.item)
+      def item
+        value = super
+        return nil if value.nil?
+
+        value = YAML.parse(value)
         value.respond_to?(:transform) ? value.transform : value
       rescue Psych::SyntaxError
-        item
+        super
       end
 
       def to_h
         attributes.merge({
+          'item' => item,
           'meta' => meta&.to_h,
-          'item'=> item_value,
           'settings' => settings.map(&:to_h)
         })
       end

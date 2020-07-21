@@ -17,19 +17,21 @@ module ResourceRegistry
         super(val.to_yaml)
       end
 
-      def item_value
-        return nil if self.item.nil?
-        value = YAML.parse(self.item)
+      def item
+        value = super
+        return nil if value.nil?
+
+        value = YAML.parse(value)
         value.respond_to?(:transform) ? value.transform : value
       rescue Psych::SyntaxError
-        item
+        super
       end
 
       def to_h
         attributes.merge({
           'key'  => key.to_sym,
-          'meta' => meta&.to_h,
-          'item' => item_value
+          'item' => item,
+          'meta' => meta&.to_h
         })
       end
     end
