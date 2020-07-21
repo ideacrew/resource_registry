@@ -20,14 +20,19 @@ module ResourceRegistry
         end
       end
 
+      def item=(val)
+        super(val.to_yaml)
+      end
+
       def setting(key)
       	settings.detect{|setting| setting.key.to_s == key.to_s}
       end
 
       def item_value
-        return eval(item) if item.present? && item.scan(/\{|\[/).any?
-        item
-      rescue NameError
+        return nil if self.item.nil?
+        value = YAML.parse(self.item)
+        value.respond_to?(:transform) ? value.transform : value
+      rescue Psych::SyntaxError
         item
       end
 

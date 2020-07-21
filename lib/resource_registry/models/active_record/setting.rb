@@ -9,22 +9,19 @@ module ResourceRegistry
 
       accepts_nested_attributes_for :meta
 
-
       def meta=(attrs)
       	build_meta(attrs) if attrs.present?
       end
 
+      def item=(val)
+        super(val.to_yaml)
+      end
+
       def item_value
-        return eval(item) if item.present? && item.scan(/\{|\[/).any?
-
-        if meta.present?
-          return item.to_i if meta.content_type.to_sym == :number
-          return item.to_f if meta.content_type.to_sym == :currency
-          return item.to_sym if meta.content_type.to_sym == :symbol
-        end
-
-        item
-      rescue NameError
+        return nil if self.item.nil?
+        value = YAML.parse(self.item)
+        value.respond_to?(:transform) ? value.transform : value
+      rescue Psych::SyntaxError
         item
       end
 
