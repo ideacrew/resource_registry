@@ -230,7 +230,9 @@ module RegistryViewControls
     input_value = date_value || setting.item || meta&.default
     aria_describedby = id
 
-    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true)
+    is_required = meta&.is_required == false ? meta.is_required : true
+
+    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: is_required)
   end
 
   def input_number_control(setting, form)
