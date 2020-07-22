@@ -139,11 +139,11 @@ module RegistryViewControls
     meta = setting.meta
     input_value = value_for(setting, form) || setting.item || meta&.default
     aria_label  = 'Checkbox button for following text input'
-
+    is_required = meta&.is_required == false ? meta.is_required : true
     meta.enum.collect do |choice|
       choice = eval(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: is_required), class: 'input-group-text'), class: 'input-group-prepend') +
           tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
     end.join('').html_safe
@@ -211,11 +211,11 @@ module RegistryViewControls
     meta = setting[:meta]
     input_value = value_for(setting, form) || setting.item || meta&.default
     aria_describedby = id
-
+    is_required = meta&.is_required == false ? meta.is_required : true
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
-      tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true)
+      tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: is_required)
     # end
   end
 
