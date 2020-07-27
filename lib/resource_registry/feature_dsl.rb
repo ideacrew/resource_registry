@@ -107,7 +107,12 @@ module ResourceRegistry
     
     def item
       elements = @feature.item.split(/\./)
-      Module.const_get(elements[0]).send(elements[1])
+
+      if defined? Rails
+        elements[0].constantize.send(elements[1])
+      else
+        Module.const_get(elements[0]).send(elements[1])
+      end
     rescue
       @feature.item
     end
