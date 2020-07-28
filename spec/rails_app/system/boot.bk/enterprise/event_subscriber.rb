@@ -16,5 +16,4 @@ RailsApp::Registry.boot(:event_subscriber) do |registry|
 
   stop do
   end
-
 end

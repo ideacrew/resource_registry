@@ -2,7 +2,6 @@
 
 module ResourceRegistry
   module Entities
-
     # The Enterprise is the top-level namespace for a single domain.  A domain includes tenant organizations
     # along with their respective sites, environments, features and settings
     class Enterprise < Dry::Struct
@@ -33,12 +32,12 @@ module ResourceRegistry
       # @!attribute [r] tenants
       # Tenant organizations supported by this domain (optional)
       # @return [Array<ResourceRegistry::Entities::Tenant>]
-      attribute :tenants,                 Types::Array.of(ResourceRegistry::Entities::Tenant).meta(omittable: true) 
+      attribute :tenants,                 Types::Array.of(ResourceRegistry::Entities::Tenant).meta(omittable: true)
 
       # @!attribute [r] options
       # Enterprise-level settings (optional)
       # @return [Array<ResourceRegistry::Entities::Option>]
-      attribute :meta,                    Types::Array.of(ResourceRegistry::Entities::Meta).meta(omittable: true) 
+      attribute :meta,                    Types::Array.of(ResourceRegistry::Entities::Meta).meta(omittable: true)
 
     end
   end

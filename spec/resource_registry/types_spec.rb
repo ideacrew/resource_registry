@@ -44,4 +44,3 @@ RSpec.describe ::Types do
 
   end
 end
-

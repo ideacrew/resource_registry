@@ -9,9 +9,9 @@ module ResourceRegistry
         def call(config_file, container_constant_name)
           registry = yield create_registry(config_file)
 
-          container          = yield create_container(registry)
-          container_constant = yield persist_container(container, container_constant_name)
-          
+          container = yield create_container(registry)
+          yield persist_container(container, container_constant_name)
+
           Success(container)
         end
 
@@ -31,7 +31,7 @@ module ResourceRegistry
 
         def persist_container(container, const_name)
           container = ResourceRegistry::Stores::Container::Persist.new(registry)
-          
+
           Success(container)
         end
       end

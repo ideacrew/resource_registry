@@ -7,7 +7,7 @@ RSpec.describe ResourceRegistry::Setting do
   before do
     class ::Greeter
       def call(params)
-        return "Hello #{params[:name]}"
+        "Hello #{params[:name]}"
       end
     end
   end
@@ -66,5 +66,4 @@ RSpec.describe ResourceRegistry::Setting do
       expect(setting[:item].call(setting[:options])).to eq greet_message
     end
   end
-  
 end

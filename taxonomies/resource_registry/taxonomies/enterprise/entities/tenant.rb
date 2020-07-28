@@ -2,7 +2,6 @@
 
 module ResourceRegistry
   module Entities
-
     class Tenant < Dry::Struct
 
       # @!attribute [r] key

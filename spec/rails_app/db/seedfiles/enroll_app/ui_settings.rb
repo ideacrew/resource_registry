@@ -11,5 +11,5 @@ Repo.namespace("#{TopNamespaceName}.ui") do
   register :help_url
   register :faqs_url
   register :logo_filename
-  register :copyright_period_start, { type: :string, default: "::TimeKeeper.date_of_record.year" } #{ |vals| vals[:default] }
+  register :copyright_period_start, type: :string, default: "::TimeKeeper.date_of_record.year" #{ |vals| vals[:default] }
 end

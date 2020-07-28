@@ -14,16 +14,16 @@ RSpec.describe ResourceRegistry::Configuration do
   let(:load_path)         { 'stores' }
   let(:settings)          { [{ key: :service, item: "weather/forcast" }, { key: :retries, item: 4 }] }
 
-  let(:required_params) { { name: name, root: root, created_at: created_at, register_meta: register_meta, } }
-  let(:optional_params) {
+  let(:required_params) { { name: name, root: root, created_at: created_at, register_meta: register_meta } }
+  let(:optional_params) do
     {
-      system_dir:         system_dir,
-      default_namespace:  default_namespace,
+      system_dir: system_dir,
+      default_namespace: default_namespace,
       # auto_register:      auto_register,
-      load_path:          load_path,
+      load_path: load_path
       # settings:           settings,
     }
-  }
+  end
 
   let(:all_params)      { required_params.merge(optional_params) }
 

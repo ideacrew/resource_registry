@@ -8,7 +8,7 @@ RSpec.describe ResourceRegistry::Entities::Registry do
   subject { described_class.new(params) }
 
   context 'when valid registry hash passed' do
-    let(:params) {
+    let(:params) do
       {
         config: {
           name: "EdiApp",
@@ -19,7 +19,7 @@ RSpec.describe ResourceRegistry::Entities::Registry do
         },
         load_paths: ['system']
       }
-    }
+    end
 
     it 'should build registry object' do
       expect(subject).to be_instance_of(described_class)

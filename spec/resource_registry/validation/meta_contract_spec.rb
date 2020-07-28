@@ -13,19 +13,20 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
   let(:is_required) { false }
   let(:is_visible)  { false }
 
-  let(:required_params)   { { label: label, content_type: type, default: default, } }
-  let(:optional_params)   { {
-                              value: value,
-                              description: description,
-                              enum: enum,
-                              is_required: is_required,
-                              is_visible: is_visible,
-                            }
-                            }
-  let(:all_params)        { required_params.merge(optional_params) }                            
+  let(:required_params)   { { label: label, content_type: type, default: default} }
+  let(:optional_params) do
+    {
+      value: value,
+      description: description,
+      enum: enum,
+      is_required: is_required,
+      is_visible: is_visible
+    }
+  end
+  let(:all_params)        { required_params.merge(optional_params) }
 
   context "Validation with invalid input" do
-    let (:required_params_error) { {:default=>["is missing"], :label=>["is missing"], :content_type=>["is missing"]} }
+    let(:required_params_error) { { :default => ["is missing"], :label => ["is missing"], :content_type => ["is missing"] } }
 
     context "Given hash params are empty" do
 

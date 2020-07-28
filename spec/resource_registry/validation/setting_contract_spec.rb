@@ -20,13 +20,13 @@ RSpec.describe ResourceRegistry::Validation::SettingContract do
     end
 
     context "and :key parameter only" do
-      it { expect(subject.call({key: key}).success?).to be_falsey }
-      it { expect(subject.call({key: key}).error?(:item)).to be_truthy }
+      it { expect(subject.call(key: key).success?).to be_falsey }
+      it { expect(subject.call(key: key).error?(:item)).to be_truthy }
     end
 
     context "and :item parameter only" do
-      it { expect(subject.call({item: item}).success?).to be_falsey }
-      it { expect(subject.call({item: item}).error?(:key)).to be_truthy }
+      it { expect(subject.call(item: item).success?).to be_falsey }
+      it { expect(subject.call(item: item).error?(:key)).to be_truthy }
     end
 
     context "and :meta params are invalid" do
@@ -53,8 +53,8 @@ RSpec.describe ResourceRegistry::Validation::SettingContract do
       let(:params)      { { key: key_string, item: item } }
 
       it "should coerce stringified key into symbol" do
-        expect(subject.call({key: key, item: item}).success?).to be_truthy
-        expect(subject.call({key: key, item: item}).to_h[:key]).to be_a Symbol
+        expect(subject.call(key: key, item: item).success?).to be_truthy
+        expect(subject.call(key: key, item: item).to_h[:key]).to be_a Symbol
       end
     end
   end

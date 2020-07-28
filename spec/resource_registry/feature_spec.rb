@@ -7,13 +7,13 @@ RSpec.describe ResourceRegistry::Feature do
   before do
     class ::Greeter
       def call(params)
-        return "Hello #{params[:name]}"
+        "Hello #{params[:name]}"
       end
     end
   end
 
   let(:key)         { :greeter_feature }
-  let(:namespace)   { [:level_1, :level_2, :level_3 ]}
+  let(:namespace)   { [:level_1,:level_2,:level_3]}
   let(:is_enabled)  { false }
   let(:item)        { Greeter.new }
   let(:options)     { { name: "Dolly" } }
@@ -54,8 +54,8 @@ RSpec.describe ResourceRegistry::Feature do
 
     context "Given nil for item attribute" do
       let(:nil_item)   { nil }
-      let(:params)     { required_params.select { |k,v| k != :item }.merge({item: nil_item}) }
-      let(:attr_out)   { required_attr_out.merge({item: nil}) }
+      let(:params)     { required_params.reject { |k,v| k == :item }.merge(item: nil_item) }
+      let(:attr_out)   { required_attr_out.merge(item: nil) }
 
       it "should pass validation" do
         expect(described_class.new(params)).to be_a ResourceRegistry::Feature
