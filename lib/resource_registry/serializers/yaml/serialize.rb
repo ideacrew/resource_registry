@@ -4,13 +4,12 @@ require 'yaml'
 module ResourceRegistry
   module Serializers
     module Yaml
-
       # Transform a Hash into YAML-formatted String
       class Serialize
         send(:include, Dry::Monads[:result, :do])
 
         # @param [Hash] params Hash to be transformed into YAML String
-        # @return [String] parsed values wrapped in Dry::Monads::Result object 
+        # @return [String] parsed values wrapped in Dry::Monads::Result object
         def call(params)
           values = yield transform(params)
           Success(values)

@@ -9,7 +9,7 @@ module ResourceRegistry
       field :options,     type: Array
       field :item,        type: String
 
-      embeds_one  :meta, class_name: 'ResourceRegistry::Mongoid::Meta'
+      embeds_one :meta, class_name: 'ResourceRegistry::Mongoid::Meta'
 
     end
   end

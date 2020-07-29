@@ -12,8 +12,8 @@ module Types
   Url               = Uri
 
   Environment       = Types::Coercible::Symbol.default(:production).enum(:development, :test, :production)
-  Serializers       = Types::String.default('yaml_serializer'.freeze).enum('yaml_serializer', 'xml_serializer')
-  Stores            = Types::String.default('file_store'.freeze).enum('file_store')
+  Serializers       = Types::String.default('yaml_serializer').enum('yaml_serializer', 'xml_serializer')
+  Stores            = Types::String.default('file_store').enum('file_store')
 
   CallableDate      = Types::Date.default { Date.today }
   CallableDateTime  = Types::DateTime.default { DateTime.now }
@@ -33,7 +33,7 @@ module Types
 
   StrictSymbolizingHash = Types::Hash.schema({}).strict.with_key_transform(&:to_sym)
 
-  Callable   = Types.Interface(:call)
+  Callable = Types.Interface(:call)
 
   StrippedString  = String.constructor(&:strip)
   Duration        = Types.Constructor(ActiveSupport::Duration) {|val| parts = val.shift; ActiveSupport::Duration.send(parts[0], parts[1]) }
@@ -45,5 +45,4 @@ module Types
   TypeContainer.register('params.duration', Duration)
   TypeContainer.register('params.path', Path)
   # Dry::Schema::Params.config.types << TypeContainer
-  
 end

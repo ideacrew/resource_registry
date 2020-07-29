@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Stores
     module Container
-
       class Read
         send(:include, Dry::Monads[:result, :do])
 

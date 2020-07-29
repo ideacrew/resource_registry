@@ -16,7 +16,7 @@ if gem_available?('mongoid')
   # require 'resource_registry/models/mongoid/meta'
 else
   installer.install 'activerecord'
-  
+
   require 'resource_registry/models/active_record/feature'
   require 'resource_registry/models/active_record/setting'
   require 'resource_registry/models/active_record/meta'
@@ -33,14 +33,9 @@ module ResourceRegistry
       load 'resource_registry/tasks/purge.rake'
     end
 
-    
+
     initializer 'resource_registry.helper' do |_app|
       ActionView::Base.send :include, RegistryViewControls
     end
   end
 end
-
-
-
-
-

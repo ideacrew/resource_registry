@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ResourceRegistry
   module ActiveRecord
     class Setting < ::ActiveRecord::Base
@@ -10,7 +11,7 @@ module ResourceRegistry
       accepts_nested_attributes_for :meta
 
       def meta=(attrs)
-      	build_meta(attrs) if attrs.present?
+        build_meta(attrs) if attrs.present?
       end
 
       def item=(val)
@@ -28,11 +29,13 @@ module ResourceRegistry
       end
 
       def to_h
-        attributes.merge({
-          'key'  => key.to_sym,
-          'item' => item,
-          'meta' => meta&.to_h
-        })
+        attributes.merge(
+          {
+            'key' => key.to_sym,
+            'item' => item,
+            'meta' => meta&.to_h
+          }
+        )
       end
     end
   end

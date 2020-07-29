@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :resource_registry do
 
   task :purge => :environment do

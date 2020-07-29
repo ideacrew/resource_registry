@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ResourceRegistry
   module Mongoid
     class Feature
@@ -16,4 +17,3 @@ module ResourceRegistry
     end
   end
 end
-

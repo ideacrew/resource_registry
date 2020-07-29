@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Features
-
       # Disable a Feature
       # @param [Symbol] name Name of feature to disable
       # @param [Hash] options Options passed through to feature disable call

@@ -54,7 +54,7 @@ RSpec.describe ResourceRegistry::Feature do
 
     context "Given nil for item attribute" do
       let(:nil_item)   { nil }
-      let(:params)     { required_params.reject { |k,v| k == :item }.merge(item: nil_item) }
+      let(:params)     { required_params.reject { |k,_v| k == :item }.merge(item: nil_item) }
       let(:attr_out)   { required_attr_out.merge(item: nil) }
 
       it "should pass validation" do

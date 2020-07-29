@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Features
-
       # Create a Feature
       class Update
         send(:include, Dry::Monads[:result, :do])
@@ -14,7 +13,7 @@ module ResourceRegistry
           feature_params = yield build_params(params[:feature].to_h)
           feature_entity = yield create_entity(feature_params)
           feature        = yield update_model(feature_entity)
-          registry       = yield update_registry(feature_entity, registry)
+          yield update_registry(feature_entity, registry)
 
           Success(feature)
         end
@@ -40,9 +39,9 @@ module ResourceRegistry
 
         def update_model(feature_entity)
           if defined?(Rails)
-          
+
             feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_entity.key).first
-            
+
             feature_entity.settings.each do |setting_entity|
               feature.update(is_enabled: feature_entity.is_enabled)
               setting = feature.settings.where(key: setting_entity.key).first
@@ -61,10 +60,7 @@ module ResourceRegistry
 
           new_feature.settings.each do |setting|
             registered_feature_hash[:settings].each do |setting_hash|
-
-              if setting.key == setting_hash[:key]
-                setting_hash[:item] = setting.item
-              end
+              setting_hash[:item] = setting.item if setting.key == setting_hash[:key]
             end
           end
 

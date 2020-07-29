@@ -2,7 +2,6 @@
 
 module ResourceRegistry
   module Validation
-
     # Schema and validation rules for the {ResourceRegistry::Feature} domain model
     class FeatureContract < ResourceRegistry::Validation::ApplicationContract
 
@@ -43,12 +42,12 @@ module ResourceRegistry
             end
           end
 
-          result.to_h.merge({
-                              key: result[:key]&.to_sym,
-                              meta: result[:meta]&.symbolize_keys,
-                              settings: settings || [],
-                              namespace: (result[:namespace] || []).map(&:to_sym)
-                            })
+          result.to_h.merge(
+                             key: result[:key]&.to_sym,
+                             meta: result[:meta]&.symbolize_keys,
+                             settings: settings || [],
+                             namespace: (result[:namespace] || []).map(&:to_sym)
+                           )
         end
       end
     end

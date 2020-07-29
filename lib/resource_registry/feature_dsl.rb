@@ -3,7 +3,6 @@
 require 'forwardable'
 
 module ResourceRegistry
-
   # @api private
   # Domain-Specific Language (DSL) for defining {ResourceRegistry::Feature} objects
   class FeatureDSL
@@ -15,7 +14,7 @@ module ResourceRegistry
     # @param [Hash] options Options passed through to feature enabled check
     # @yield the block to evaulate when calling the feature
     # @return [Mixed]
-    def initialize(feature, options: {}, &block)
+    def initialize(feature, options: {}, &_block)
       @feature = feature
       @options = options
     end
@@ -56,14 +55,12 @@ module ResourceRegistry
     # @return [Array<Setting>] all settings for the feature
     def settings(id = nil)
       return [] unless @feature.settings
-      id == nil ? @feature.settings : setting(id)
+      id.nil? ? @feature.settings : setting(id)
     end
 
     # @return [Setting] referenced setting for the feature
     def setting(id)
-      if !id.is_a?(String) && !id.is_a?(Symbol)
-        raise ArgumentError, "#{id} must be a String or Symbol"
-      end
+      raise ArgumentError, "#{id} must be a String or Symbol" if !id.is_a?(String) && !id.is_a?(Symbol)
 
       id = id.to_sym
       @feature.settings.detect { |setting| setting.key == id }
@@ -104,16 +101,16 @@ module ResourceRegistry
     def display_order
       @feature.meta.order
     end
-    
+
     def item
-      elements = @feature.item.split(/\./)
+      elements = @feature.item.to_s.split(/\./)
 
       if defined? Rails
         elements[0].constantize.send(elements[1])
       else
         Module.const_get(elements[0]).send(elements[1])
       end
-    rescue
+    rescue NameError
       @feature.item
     end
   end

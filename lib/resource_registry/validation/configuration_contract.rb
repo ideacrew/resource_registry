@@ -2,7 +2,6 @@
 
 module ResourceRegistry
   module Validation
-
     # Schema and validation rules for the {ResourceRegistry::Configuration} domain model
     class ConfigurationContract < ResourceRegistry::Validation::ApplicationContract
 

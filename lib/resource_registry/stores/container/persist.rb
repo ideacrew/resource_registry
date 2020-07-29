@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Stores
     module Container
-
       # Instantiate a new Dry::Container object
       class Persist
         send(:include, Dry::Monads[:result, :do])
@@ -30,7 +29,7 @@ module ResourceRegistry
 
           Success(Kernel.const_get(constant_name))
         end
-      
+
         def finalize(container)
           finalized_container = container.finalize!
 

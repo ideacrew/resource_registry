@@ -6,12 +6,11 @@ require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
 
 module ResourceRegistry
-
   # Registries are containers for storing and accessing an application's {ResourceRegistry::Feature} and setting values
   class Registry < Dry::Container
 
-    FEATURE_INDEX_NAMESPACE = 'feature_index'.freeze
-    CONFIGURATION_NAMESPACE = 'configuration'.freeze
+    FEATURE_INDEX_NAMESPACE = 'feature_index'
+    CONFIGURATION_NAMESPACE = 'configuration'
 
     attr_accessor :db_connection
 
@@ -45,20 +44,15 @@ module ResourceRegistry
     # @raise [ResourceRegistry::Error::DuplicateFeatureError] if this feature key is already registered under in the registry
     # @return [ResourceRegistry::Registry]
     def register_feature(feature)
-      if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
-        raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL"
-      end
+      raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL" if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
 
       feature = dsl_for(feature)
 
-      if !feature?(feature.key)
-        @features_stale = true
+      raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}" if feature?(feature.key)
+      @features_stale = true
 
-        register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
-        register(namespaced(feature.key, feature.namespace), feature)
-      else
-        raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}"
-      end
+      register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
+      register(namespaced(feature.key, feature.namespace), feature)
 
       self
     end
@@ -68,16 +62,13 @@ module ResourceRegistry
     # @raise [ResourceRegistry::Error::FeatureNotFoundError] if a feature with this key isn't found in the registry
     # @return [mixed] the value stored in Feature's item attribute
     def resolve_feature(key, &block)
-      if feature?(key)
-        feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
+      raise ResourceRegistry::Error::FeatureNotFoundError, "nothing registered with key #{key}" unless feature?(key)
+      feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
 
-        if block_given?
-          feature.enabled? ? feature.item.call(yield) : Success(yield)
-        else
-          feature
-        end
+      if block_given?
+        feature.enabled? ? feature.item.call(yield) : Success(yield)
       else
-        raise ResourceRegistry::Error::FeatureNotFoundError, "nothing registered with key #{key}"
+        feature
       end
     end
 
@@ -114,7 +105,6 @@ module ResourceRegistry
 
     def namespaces
       return @namespaces if defined? @namespaces
-      
       @namespaces = features.collect{|feature_key| self[feature_key].feature.namespace}.uniq
     end
 
@@ -159,7 +149,7 @@ module ResourceRegistry
     # Produce a map of all configuration values stored in this registry
     # @return [Hash] map of configuration key/value pairs
     def configurations
-      return @configurations if @configurations.size > 0
+      return @configurations unless @configurations.empty?
       @configurations = keys.reduce({}) do |list, key|
         list.merge!(strip_namespace(key).to_sym => resolve(key)) if key_in_namespace?(key, CONFIGURATION_NAMESPACE)
         list
@@ -221,7 +211,7 @@ module ResourceRegistry
       namespace_hash = {}
 
       key = namespace_arr[0]
-      namespace_hash[key] = (namespace_arr[1..-1].size > 0 ? {namespaces: namespace_to_hash(namespace_arr[1..-1], features)} : {features: features})
+      namespace_hash[key] = (!namespace_arr[1..-1].empty? ? {namespaces: namespace_to_hash(namespace_arr[1..-1], features)} : {features: features})
       namespace_hash
     end
 

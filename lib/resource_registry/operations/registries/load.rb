@@ -4,7 +4,6 @@ require 'dry/monads'
 module ResourceRegistry
   module Operations
     module Registries
-
       # Create a Feature
       class Load
         send(:include, Dry::Monads[:result, :do])
