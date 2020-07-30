@@ -63,7 +63,9 @@ module ResourceRegistry
       raise ArgumentError, "#{id} must be a String or Symbol" if !id.is_a?(String) && !id.is_a?(Symbol)
 
       id = id.to_sym
-      @feature.settings.detect { |setting| setting.key == id }
+      setting = @feature.settings.detect { |setting| setting.key == id }
+      return ResourceRegistry::SettingDSL.new(setting) if setting
+      setting
     end
 
     def label
@@ -102,8 +104,17 @@ module ResourceRegistry
       @feature.meta.order
     end
 
+    # registry[:feature_key]
+    # registry.resolve(:feature_key)
     def item
-      elements = @feature.item.to_s.split(/\./)
+      value = @feature.item.to_s
+
+      if matched = value.match(/^registry\[(.*)\]$/) || matched = value.match(/^registry.resolve_feature\((.*)\)$/)
+        feature_key = matched[-1].gsub(':', '')
+        return registry[feature_key]
+      end
+
+      elements = value.split(/\./)
 
       if defined? Rails
         elements[0].constantize.send(elements[1])
@@ -112,6 +123,14 @@ module ResourceRegistry
       end
     rescue NameError
       @feature.item
+    end
+
+    def registry
+      return @registry if defined? @registry
+
+      if defined? Rails
+        @registry = "#{Rails.application.class.module_parent_name}Registry".constantize
+      end
     end
   end
 end
