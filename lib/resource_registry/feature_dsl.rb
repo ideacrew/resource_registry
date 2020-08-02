@@ -107,14 +107,17 @@ module ResourceRegistry
     # registry[:feature_key]
     # registry.resolve(:feature_key)
     def item
-      value = @feature.item.to_s
+      value = @feature.item
 
-      if matched = value.match(/^registry\[(.*)\]$/) || matched = value.match(/^registry.resolve_feature\((.*)\)$/)
-        feature_key = matched[-1].gsub(':', '')
-        return registry[feature_key]
+      if value.is_a?(Array)
+        elements = value.collect{|element| identify_feature(element) }.compact
+        return elements if elements.any?
       end
 
-      elements = value.split(/\./)
+      feature_value = identify_feature(value)
+      return feature_value if feature_value
+
+      elements = value.to_s.split(/\./)
 
       if defined? Rails
         elements[0].constantize.send(elements[1])
@@ -123,6 +126,14 @@ module ResourceRegistry
       end
     rescue NameError
       @feature.item
+    end
+
+    def identify_feature(value)
+      if matched = value.to_s.match(/^registry\[(.*)\]$/) || matched = value.to_s.match(/^registry.resolve_feature\((.*)\)$/)
+        feature_key = matched[-1].gsub(':', '')
+        return registry[feature_key]
+      end
+      nil
     end
 
     def registry
