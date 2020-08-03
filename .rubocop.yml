@@ -1,5 +1,7 @@
 # This yaml describes our current checks.
 #   Any checks marked "# TODO: RWC" are "re-enable when corrected.RWC" are "re-enable when corrected.
+AllCops:
+  TargetRubyVersion: 2.5
 
 Layout/CommentIndentation:
   Enabled: true
@@ -23,10 +25,6 @@ Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
 Layout/FirstArrayElementIndentation:
-  Enabled: false
-
-# Re-enable once other problems are solved
-Layout/SpaceAfterComma:
   Enabled: false
 
 Layout/SpaceBeforeBlockBraces:
@@ -86,8 +84,10 @@ Style/AndOr:
 Style/BlockComments:
   Enabled: false
 
-# We will want to turn this back on or customize it more fully
 Style/Documentation:
+  Enabled: false
+
+Style/BracesAroundHashParameters:
   Enabled: false
 
 Style/EachWithObject:
