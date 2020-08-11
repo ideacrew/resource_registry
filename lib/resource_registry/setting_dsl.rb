@@ -68,6 +68,7 @@ module ResourceRegistry
     # registry.resolve(:feature_key)
     def item
       value = @setting.item
+      value = process_procs(value)
 
       if value.is_a?(Array)
         elements = value.collect{|element| identify_feature(element) }.compact
@@ -77,7 +78,8 @@ module ResourceRegistry
       feature_value = identify_feature(value)
       return feature_value if feature_value
 
-      elements = value.to_s.split(/\./)
+      return value unless value.is_a?(String)
+      elements = value.split(/\./)
 
       if defined? Rails
         elements[0].constantize.send(elements[1])
@@ -93,7 +95,20 @@ module ResourceRegistry
         feature_key = matched[-1].gsub(':', '')
         return registry[feature_key]
       end
+
       nil
+    end
+
+    def process_procs(value)
+      if value.is_a?(Array)
+        value.collect{|element| process_procs(element) }.compact
+      elsif value.is_a?(Hash)
+        value.inject({}) {|data, (k, v)| data[k] = process_procs(v); data}
+      elsif value.is_a?(String) && value.match?(/Proc.new/)
+        eval(value).call
+      else
+        value
+      end
     end
 
     def registry
