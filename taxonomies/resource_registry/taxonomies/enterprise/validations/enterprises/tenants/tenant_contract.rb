@@ -72,7 +72,7 @@ module ResourceRegistry
             end
           end
 
-          key.failure("validation failed: #{validation_errors.flatten}") if validation_errors.size > 0
+          key.failure("validation failed: #{validation_errors.flatten}") unless validation_errors.empty?
         end
 
       end

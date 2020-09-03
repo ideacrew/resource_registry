@@ -209,10 +209,11 @@ module RegistryViewControls
     input_value = value_for(setting, form) || setting.item || meta&.default
     # aria_describedby = id
     is_required = meta&.is_required == false ? meta.is_required : true
+    placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
-    tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: is_required)
+    tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: is_required)
     # end
   end
 
@@ -229,7 +230,7 @@ module RegistryViewControls
 
     is_required = meta&.is_required == false ? meta.is_required : true
 
-    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: is_required)
+    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form), placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
   end
 
   def input_number_control(setting, form)
@@ -238,9 +239,10 @@ module RegistryViewControls
     input_value = value_for(setting, form) || meta.value || meta.default
     # input_value = setting[:value] || setting[:default]
     # aria_describedby = id
+    placeholder = "Enter #{meta[:label]}".gsub('*','')  if meta[:description].blank?
 
     # if setting[:attribute]
-    tag.input(nil, type: "number", step: "any", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true, oninput: "check(this)")
+    tag.input(nil, type: "number", step: "any", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: true, oninput: "check(this)")
     # else
     #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
