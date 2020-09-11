@@ -6,11 +6,11 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
   describe "Feature core parameters" do
     let(:key)         { :my_feature }
-    let(:namespace)   { [:level_1, :level_2, :level_3 ]}
+    let(:namespace)   { [:level_1, :level_2, :level_3]}
     let(:is_enabled)  { false }
     let(:item)        { ->(val){ val.to_sym } }
     let(:options)     { { name: "Dolly" } }
-    let(:meta)        { { label: "label", default: 42, type: :integer } }
+    let(:meta)        { { label: "label", default: 42, content_type: :integer } }
     let(:settings)    { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
     let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled, item: item } }
@@ -74,7 +74,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
       end
 
       context "and passing namespace values in as strings" do
-        let(:namespace_strings)   { namespace.map(&:to_s ) }
+        let(:namespace_strings)   { namespace.map(&:to_s) }
         let(:params)              { { key: key, namespace: namespace_strings, is_enabled: is_enabled, item: item } }
 
         it "should coerce stringified key into symbol" do

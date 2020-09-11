@@ -7,13 +7,13 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   before do
     class ::Greeter
       def call(params)
-        return "Hello #{params[:name]}"
+        "Hello #{params[:name]}"
       end
     end
   end
 
   let(:key)         { :greeter_feature }
-  let(:namespace)   { [:level_1, :level_2, :level_3 ]}
+  let(:namespace)   { [:level_1, :level_2, :level_3]}
   let(:is_enabled)  { false }
   let(:item)        { Greeter.method(:new) }
   let(:options)     { { name: "Dolly" } }
@@ -26,26 +26,28 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:settings)    { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
 
-  let(:min_feature_hash)  { {
-                          key: key,
-                          namespace: namespace,
-                          is_enabled: is_enabled,
-                          item: item,
-                        }
-                        }
-                        
-  let(:feature_hash)  { {
-                          key: key,
-                          namespace: namespace,
-                          is_enabled: is_enabled,
-                          item: item,
-                          options: options,
-                          meta: meta,
-                          settings: settings,
-                        }
-                        }
+  let(:min_feature_hash) do
+    {
+      key: key,
+      namespace: namespace,
+      is_enabled: is_enabled,
+      item: item
+    }
+  end
 
-  let(:feature)     { ResourceRegistry::Feature.new(feature_hash) }
+  let(:feature_hash) do
+    {
+      key: key,
+      namespace: namespace,
+      is_enabled: is_enabled,
+      item: item,
+      options: options,
+      meta: meta,
+      settings: settings
+    }
+  end
+
+  let(:feature) { ResourceRegistry::Feature.new(feature_hash) }
 
 
   describe "initialize" do
@@ -88,11 +90,11 @@ RSpec.describe ResourceRegistry::FeatureDSL do
       end
 
       context "and settings are present" do
-        let(:settings_entities)  {
+        let(:settings_entities) do
           settings.reduce([]) do |list, setting|
             list << ResourceRegistry::Setting.new(setting)
           end
-        }
+        end
 
         it "correctly returns all settings for a feature" do
           expect(dsl.settings).to eq settings_entities

@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Stores
     module File
-
       # Open and read contents of a file
       class Read
         send(:include, Dry::Monads[:result, :do])

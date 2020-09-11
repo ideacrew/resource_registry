@@ -9,5 +9,4 @@ RailsApp::Registry.boot(:logger) do |registry|
       registry[:message_service_pool].command(logger)[:initialize_service]
     end
   end
-
 end

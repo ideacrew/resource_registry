@@ -33,4 +33,3 @@ module ResourceRegistry
     end
   end
 end
-

@@ -9,13 +9,13 @@ RSpec.describe ResourceRegistry::Operations::Registries::Configure do
 
   context 'When valid feature hash passed' do
 
-    let(:config_params) {
+    let(:config_params) do
       {
         name: :enroll,
         load_path: 'system/templates',
         created_at: DateTime.now
       }
-    }
+    end
 
     let(:registry) { ResourceRegistry::Registry.new }
 

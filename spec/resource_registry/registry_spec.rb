@@ -10,13 +10,14 @@ RSpec.describe ResourceRegistry::Registry do
   let(:created_at)    { DateTime.now }
   let(:register_meta) { false }
 
-  let(:configuration) { {
-                          name: name,
-                          root: root,
-                          created_at: created_at,
-                          register_meta: register_meta
-                        }
-                        }
+  let(:configuration) do
+    {
+      name: name,
+      root: root,
+      created_at: created_at,
+      register_meta: register_meta
+    }
+  end
 
   let(:options)       { { configuration: configuration } }
   # let(:params)        { { key: key, options: options } }
@@ -53,13 +54,13 @@ RSpec.describe ResourceRegistry::Registry do
     before do
       class ::Greeter
         def call(params)
-          return "Hello #{params}"
+          "Hello #{params}"
         end
       end
     end
 
     let(:key)               { :greeter_feature }
-    let(:namespace)         { [:level_1, :level_2, :level_3 ]}
+    let(:namespace)         { [:level_1, :level_2, :level_3]}
     let(:namespace_str)     { 'level_1.level_2.level_3'}
     let(:namespace_key)     { namespace_str + '.' + key.to_s }
     let(:is_enabled)        { false }
@@ -74,25 +75,28 @@ RSpec.describe ResourceRegistry::Registry do
     let(:is_required) { false }
     let(:is_visible)  { false }
 
-    let(:meta)        { { label: label,
-                          type: type,
-                          default: default,
-                          value: value,
-                          description: description,
-                          enum: enum,
-                          is_required: is_required,
-                          is_visible: is_visible,
-                          }
-                        }
+    let(:meta) do
+      {
+        label: label,
+        type: type,
+        default: default,
+        value: value,
+        description: description,
+        enum: enum,
+        is_required: is_required,
+        is_visible: is_visible
+      }
+    end
 
-    let(:feature_hash)  { {
-                            key: key,
-                            namespace: namespace,
-                            is_enabled: is_enabled,
-                            item: item,
-                            meta: meta,
-                          }
-                          }
+    let(:feature_hash) do
+      {
+        key: key,
+        namespace: namespace,
+        is_enabled: is_enabled,
+        item: item,
+        meta: meta
+      }
+    end
     let(:feature)       { ResourceRegistry::Feature.new(feature_hash) }
     let(:registry)      { described_class.new }
 
@@ -123,7 +127,7 @@ RSpec.describe ResourceRegistry::Registry do
       end
 
       context "given feature with no namespace" do
-        let(:namespace) { [ ] }
+        let(:namespace) { [] }
 
         it "should register feature under root" do
           registry.register_feature(feature)
@@ -192,7 +196,7 @@ RSpec.describe ResourceRegistry::Registry do
       let(:key_names) { (1..5).to_a.reduce([]) { |list, val| list << "greeter_feature_#{val}".to_sym } }
 
       before do
-        key_names.each do | key_name |
+        key_names.each do |key_name|
           feature_hash.merge!(key: key_name)
           feature = ResourceRegistry::Feature.new(feature_hash)
           registry.register_feature(feature)
@@ -219,15 +223,18 @@ RSpec.describe ResourceRegistry::Registry do
       end
 
       context "Given an enabled feature with all ancestors enabled" do
-        let(:boat)      { ResourceRegistry::Feature.new(key: :boat,
-                                                        namespace: [:vessel],
-                                                        is_enabled: true,
-                                                        ) }
+        let(:boat) do
+          ResourceRegistry::Feature.new(key: :boat,
+                                        namespace: [:vessel],
+                                        is_enabled: true)
+        end
 
-        let(:sailboat)  { ResourceRegistry::Feature.new(key: :sailboat,
-                                                        namespace: [:vessel, :boat],
-                                                        is_enabled: true,
-                                                        ) }
+        let(:sailboat) do
+          ResourceRegistry::Feature.new(key: :sailboat,
+                                        namespace: [:vessel, :boat],
+                                        is_enabled: true)
+        end
+
         before do
           registry.register_feature(boat)
           registry.register_feature(sailboat)
@@ -244,10 +251,11 @@ RSpec.describe ResourceRegistry::Registry do
 
 
         context "and an enabled feature with a break in ancestor namespace" do
-          let(:canoe)   { ResourceRegistry::Feature.new(key: :canoe,
-                                                        namespace: [:vessel, :boat, :paddleboat],
-                                                        is_enabled: false,
-                                                        ) }
+          let(:canoe) do
+            ResourceRegistry::Feature.new(key: :canoe,
+                                          namespace: [:vessel, :boat, :paddleboat],
+                                          is_enabled: false)
+          end
           before { registry.register_feature(canoe) }
 
           it "the child feature should be enabled" do
@@ -258,21 +266,23 @@ RSpec.describe ResourceRegistry::Registry do
       end
 
       context "Given an ancestor feature is disabled" do
-        let(:powerboat)   { ResourceRegistry::Feature.new(key: :powerboat,
-                                                          namespace: [:vessel, :boat],
-                                                          is_enabled: false,
-                                                          ) }
+        let(:powerboat) do
+          ResourceRegistry::Feature.new(key: :powerboat,
+                                        namespace: [:vessel, :boat],
+                                        is_enabled: false)
+        end
 
         context "and a child of that feature is enabled" do
-          let(:trawler)   { ResourceRegistry::Feature.new(key: :trawler,
-                                                          namespace: [:vessel, :boat, :powerboat],
-                                                          is_enabled: true,
-                                                          ) }
+          let(:trawler) do
+            ResourceRegistry::Feature.new(key: :trawler,
+                                          namespace: [:vessel, :boat, :powerboat],
+                                          is_enabled: true)
+          end
 
-          before {
+          before do
             registry.register_feature(powerboat)
             registry.register_feature(trawler)
-          }
+          end
 
           it "the child feature should be disabled" do
             expect(registry.feature_enabled?(:trawler)).to be_truthy

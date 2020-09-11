@@ -6,34 +6,34 @@ RSpec.describe ResourceRegistry::Operations::Enterprises::Create do
 
   subject { described_class.new.call(enterprise_hash) }
 
-    let(:enterprise_hash) do
-      {
-        enterprise: {
-          :tenants =>
-           [{ 
-              :key => :dchbx,
-              :organization_name => "DC Health Benefit Exchange Authority",
-              :owner_account_name => "admin@hbx_org.com",
-              :sites =>
-               [{:key => :shop_site,
-                 :url => "https://shop.openhbx.org",
-                 :title => "ACA SHOP market",
-                 :description => "shop market",
-                 :environments =>
-                  [{:key => environment,
-                    :features =>
-                     [{:key => :enroll_app,
-                       :parent_key => :enroll_app,
-                       :is_required => false,
-                       :is_enabled => false,
-                       :alt_key => "ea",
-                       :title => "Enroll Application Component",
-                       :description => "A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits"}]
-                  }]}]
-            }]
-        }
+  let(:enterprise_hash) do
+    {
+      enterprise: {
+        :tenants => [
+          {
+            :key => :dchbx,
+            :organization_name => "DC Health Benefit Exchange Authority",
+            :owner_account_name => "admin@hbx_org.com",
+            :sites =>
+            [{:key => :shop_site,
+              :url => "https://shop.openhbx.org",
+              :title => "ACA SHOP market",
+              :description => "shop market",
+              :environments =>
+              [{:key => environment,
+                :features =>
+                [{:key => :enroll_app,
+                  :parent_key => :enroll_app,
+                  :is_required => false,
+                  :is_enabled => false,
+                  :alt_key => "ea",
+                  :title => "Enroll Application Component",
+                  :description => "A streamlined, end-to-end technology for employers, employees and individuals to sponsor, shop and enroll in insurance benefits"}]}]}]
+          }
+        ]
       }
-    end
+    }
+  end
 
   context 'when enterpise hash is valid' do
     let(:environment) { :production }
@@ -44,7 +44,7 @@ RSpec.describe ResourceRegistry::Operations::Enterprises::Create do
     end
   end
 
-  context 'when enterpise hash invalid' do 
+  context 'when enterpise hash invalid' do
     let(:environment) { :preprod }
 
     it 'should fail with validation error' do

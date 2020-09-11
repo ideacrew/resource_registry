@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Features
-
       # Create a Feature
       class Create
         send(:include, Dry::Monads[:result, :do])

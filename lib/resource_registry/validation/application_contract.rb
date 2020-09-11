@@ -4,7 +4,6 @@ Dry::Validation.load_extensions(:monads)
 
 module ResourceRegistry
   module Validation
-
     # Configuration values and shared rules and macros for domain model validation contracts
     class ApplicationContract < Dry::Validation::Contract
       config.messages.default_locale = :en
@@ -29,7 +28,7 @@ module ResourceRegistry
       end
 
       # Construct a fully namespaced constant for contract based on naming conventions
-      # @param [Dry::Validation::Contract::RuleKeys] rule_keys 
+      # @param [Dry::Validation::Contract::RuleKeys] rule_keys
       def create_contract_klass(rule_keys)
         klass_parts = rule_keys[0].to_s.split('_')
         module_name = klass_parts.reduce([]) { |memo, word| memo << word.capitalize }.join
@@ -55,7 +54,7 @@ module ResourceRegistry
       #   @!method $0($1)
       #   @param [Symbol] $1 key
       #   @return [Dry::Monads::Result::Success] if nested $1 params pass validation
-      #   @return [Dry::Monads::Result::Failure] if nested $1 params fail validation      
+      #   @return [Dry::Monads::Result::Failure] if nested $1 params fail validation
       rule(:meta) do
         if key? && value
           result = ResourceRegistry::Validation::MetaContract.new.call(value)

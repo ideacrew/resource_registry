@@ -12,12 +12,9 @@ Repo = ResourceRegistry::Container
 # binding.pry
 
 boot_keys.each do |key|
-  glob_pattern = File.join('.', 'spec', 'db', 'seedfiles', 'enroll_app', "#{key.to_s}_settings.rb")
+  glob_pattern = File.join('.', 'spec', 'db', 'seedfiles', 'enroll_app', "#{key}_settings.rb")
   Dir.glob(glob_pattern).each { |file| require file }
 end
 
 Repo
 # repo.merge(site_repo, namespace: TopNamespaceName)
-
-
-

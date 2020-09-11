@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 # require 'dry/system/stubs'
 require 'resource_registry' unless defined?(ResourceRegistry::CoreContainer)
@@ -19,7 +20,6 @@ RSpec.describe ResourceRegistry do
     let(:injector_constant) { ResourceRegistry::CoreInject }
 
     it "should do somethiing!" do
-      binding.pry
     end
 
     it { expect(subject).to respond_to(:boot, :config) }

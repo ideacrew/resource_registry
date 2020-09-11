@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'deep_merge'
 
+require 'deep_merge'
 module ResourceRegistry
   module Stores
     module Operations
@@ -14,7 +14,7 @@ module ResourceRegistry
               input.to_h,
               ResourceRegistry::AppSettings,
               merge_hash_arrays: true,
-              merge_nil_values:  true,
+              merge_nil_values: true
             )
           else
             ResourceRegistry.const_set('AppSettings', input.to_h)

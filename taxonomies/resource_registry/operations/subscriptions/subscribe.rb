@@ -12,11 +12,8 @@ module ResourceRegistry
       end
 
       def call(params)
-        if validator.validate(params)
-          repository.register(params)
-        else
-          nil
-        end
+        return repository.register(params) if validator.validate(params)
+        nil
       end
 
       def self.build

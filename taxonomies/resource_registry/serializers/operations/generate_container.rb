@@ -9,7 +9,7 @@ module ResourceRegistry
 
         def call(input)
           container = construct_container(input)
-          
+
           Success(container)
         end
 
@@ -35,10 +35,8 @@ module ResourceRegistry
 
               if value.is_a?(Array) && is_an_entity?(value[0])
                 value.each{|val| construct_container(val, resolved_ns) }
-              else
-                if [:is_required, :is_enabled, :title, :description].include?(key)
-                  resolved_ns.register(key, value)
-                end
+              elsif [:is_required, :is_enabled, :title, :description].include?(key)
+                resolved_ns.register(key, value)
               end
             end
           end

@@ -14,16 +14,16 @@ RSpec.describe ResourceRegistry::Validation::ConfigurationContract do
   let(:load_path)         { 'stores' }
   let(:settings)          { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
-  let(:required_params) { { name: name, root: root, created_at: created_at, register_meta: register_meta, } }
-  let(:optional_params) {
+  let(:required_params) { { name: name, root: root, created_at: created_at, register_meta: register_meta } }
+  let(:optional_params) do
     {
-      system_dir:         system_dir,
-      default_namespace:  default_namespace,
-      auto_register:      auto_register,
-      load_path:          load_path,
-      settings:           settings,
+      system_dir: system_dir,
+      default_namespace: default_namespace,
+      auto_register: auto_register,
+      load_path: load_path,
+      settings: settings
     }
-  }
+  end
 
   let(:all_params)      { required_params.merge(optional_params) }
 
@@ -79,7 +79,7 @@ RSpec.describe ResourceRegistry::Validation::ConfigurationContract do
   describe "root attribute coercion and validation" do
     context "root is passed as a String" do
       let(:root_string)   { './lib' }
-      let(:params)        { required_params.merge({root: root_string}) }
+      let(:params)        { required_params.merge(root: root_string) }
 
       it "should coerce the :root value to a Pathname" do
         result = subject.call(params)
@@ -92,8 +92,8 @@ RSpec.describe ResourceRegistry::Validation::ConfigurationContract do
     context "root path doesn't exist" do
       let(:root_string)     { './zzzzzzzz' }
       let(:invalid_path)    { Pathname.new(root_string) }
-      let(:invalid_params)  { required_params.merge({root: root_string}) }
-      let(:error_hash)      { {:root=>["pathname not found: ./zzzzzzzz"]} }
+      let(:invalid_params)  { required_params.merge(root: root_string) }
+      let(:error_hash)      { {:root => ["pathname not found: ./zzzzzzzz"]} }
 
       it "should fail validation" do
         expect{invalid_path.realpath}.to raise_error Errno::ENOENT

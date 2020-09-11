@@ -2,7 +2,6 @@
 
 module ResourceRegistry
   module Validation
-
     # Schema and validation rules for the {ResourceRegistry::Feature} domain model
     class FeatureContract < ResourceRegistry::Validation::ApplicationContract
 
@@ -31,7 +30,7 @@ module ResourceRegistry
 
           settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
             setting.tap do |setting|
-              if setting[:meta] && setting[:meta][:type] == :duration
+              if setting[:meta] && setting[:meta][:content_type] == :duration
                 setting[:item] = Types::Duration[setting[:item]]
               elsif setting[:item].is_a? String
                 dates = setting[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
@@ -43,12 +42,12 @@ module ResourceRegistry
             end
           end
 
-          result.to_h.merge({
-                              key: result[:key]&.to_sym,
-                              meta: result[:meta]&.symbolize_keys,
-                              settings: settings || [],
-                              namespace: (result[:namespace] || []).map(&:to_sym)
-                            })
+          result.to_h.merge(
+                             key: result[:key]&.to_sym,
+                             meta: result[:meta]&.symbolize_keys,
+                             settings: settings || [],
+                             namespace: (result[:namespace] || []).map(&:to_sym)
+                           )
         end
       end
     end

@@ -2,9 +2,8 @@
 
 module ResourceRegistry
   module Entities
-
     # The Dry::Container's reserved configuration namespace structure
-    # Used when initilizing a new container instance. 
+    # Used when initilizing a new container instance.
     # @see ResourceRegistry::Stores::Container::Create
     class Registry < Dry::Struct
 

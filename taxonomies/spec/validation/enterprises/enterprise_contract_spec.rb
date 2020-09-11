@@ -55,14 +55,14 @@ RSpec.describe ResourceRegistry::Validation::Enterprises::EnterpriseContract do
         let(:all_params_and_nested_invalid_tenants) { all_params.merge(nested_invalid_tenants) }
 
         let(:error_key)     { :tenants }
-        let(:error_message) { {:key=>["is missing"]} }
+        let(:error_message) { {:key => ["is missing"]} }
 
         it "shouild fail validation" do
           result = subject.call(all_params_and_nested_invalid_tenants)
 
           expect(result.failure?).to be_truthy
           expect(result.errors.to_h.keys).to eq [error_key]
-          expect(result.errors.to_h[error_key].values.flatten.first[:error]).to eq error_message 
+          expect(result.errors.to_h[error_key].values.flatten.first[:error]).to eq error_message
         end
       end
     end

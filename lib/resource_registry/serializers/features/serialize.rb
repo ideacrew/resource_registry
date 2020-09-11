@@ -3,13 +3,12 @@
 module ResourceRegistry
   module Serializers
     module Features
-
       # Transform a Hash into YAML-formatted String
       class Serialize
         send(:include, Dry::Monads[:result, :do])
 
         # @param [Hash] params Hash to be transformed into YAML String
-        # @return [String] parsed values wrapped in Dry::Monads::Result object 
+        # @return [String] parsed values wrapped in Dry::Monads::Result object
         def call(params)
           features = yield transform(params)
 
@@ -32,10 +31,9 @@ module ResourceRegistry
           end
 
           Success(features)
-
-          rescue Exception => e
-            raise "Error occurred while serializing #{params}. " \
-                  "Error: #{e.message}"
+        rescue Exception => e
+          raise "Error occurred while serializing #{params}. " \
+                "Error: #{e.message}"
         end
       end
     end

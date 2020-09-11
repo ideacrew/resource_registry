@@ -38,8 +38,6 @@ module ResourceRegistry
           Success(values)
         end
 
-        private
-
         def validate(input)
           result = super
 

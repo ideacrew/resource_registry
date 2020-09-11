@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Registries
-
       # Create a Feature
       class Configure
         send(:include, ::Dry::Monads[:result, :do])
@@ -46,7 +45,6 @@ module ResourceRegistry
         end
 
         def load_features(registry)
-
           if load_path_given?(registry)
             result = ResourceRegistry::Operations::Registries::Load.new.call(registry: registry)
             result.success? ? Success(result.value!) : Failure(result.to_h[:errors])

@@ -22,7 +22,7 @@ RSpec.describe ResourceRegistry::Stores::File::Read do
 
   context 'When a non-existent file name is passed' do
     let(:invalid_file)  { "zzz/zzz/zzz" }
-    let(:no_file_error) { ["No such file or directory", {:params=>"zzz/zzz/zzz"}] }
+    let(:no_file_error) { ["No such file or directory", {:params => "zzz/zzz/zzz"}] }
 
     it "the file should not exist" do
       expect(::File.exist?(invalid_file)).to be_falsey

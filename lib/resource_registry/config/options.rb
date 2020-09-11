@@ -1,12 +1,10 @@
-# frozen_string_literal: true
 # encoding: utf-8
+# frozen_string_literal: true
 
 module ResourceRegistry
   module Config
-
     # Encapsulates logic for setting options.
     module Options
-
       # Get the defaults or initialize a new empty hash.
       #
       # @example Get the defaults.
@@ -71,13 +69,12 @@ module ResourceRegistry
       #
       # @return [ Integer ] The log level.
       def log_level
-        if level = settings[:log_level]
-          unless level.is_a?(Integer)
-            level = level.upcase.to_s
-            level = "Logger::#{level}".constantize
-          end
-          level
+        return unless level = settings[:log_level]
+        unless level.is_a?(Integer)
+          level = level.upcase.to_s
+          level = "Logger::#{level}".constantize
         end
+        level
       end
     end
   end

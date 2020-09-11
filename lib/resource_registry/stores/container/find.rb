@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Stores
     module Container
-
       class Find
         send(:include, Dry::Monads[:result, :do])
 

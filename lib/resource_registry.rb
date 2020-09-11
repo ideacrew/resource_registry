@@ -15,6 +15,7 @@ require 'resource_registry/types'
 require 'resource_registry/stores'
 require 'resource_registry/serializers'
 require 'resource_registry/validation/application_contract'
+require 'resource_registry/railtie' if defined? Rails
 
 require 'resource_registry/meta'
 require 'resource_registry/setting'

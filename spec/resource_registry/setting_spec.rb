@@ -7,7 +7,7 @@ RSpec.describe ResourceRegistry::Setting do
   before do
     class ::Greeter
       def call(params)
-        return "Hello #{params[:name]}"
+        "Hello #{params[:name]}"
       end
     end
   end
@@ -15,7 +15,7 @@ RSpec.describe ResourceRegistry::Setting do
   let(:key)     { :my_key }
   let(:item)    { Greeter.new }
   let(:options) { { name: "Dolly" } }
-  let(:meta)    { { label: "label", default: 42, type: :integer } }
+  let(:meta)    { { label: "label", default: 42, content_type: :integer } }
 
   let(:required_params) { { key: key, item: item } }
   let(:optional_params) { { meta: meta, options: options } }
@@ -66,5 +66,4 @@ RSpec.describe ResourceRegistry::Setting do
       expect(setting[:item].call(setting[:options])).to eq greet_message
     end
   end
-  
 end

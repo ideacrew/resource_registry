@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Stores
     module Container
-
       # Instantiate a new Dry::Container object
       class Build
         send(:include, Dry::Monads[:result, :do])
@@ -24,7 +23,7 @@ module ResourceRegistry
         end
 
         def configure(container, params)
-          params[:config].each_pair do |key, value|
+          params[:config].each_pair do |_key, value|
             container.config[:key] = value
           end
 

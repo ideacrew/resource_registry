@@ -8,7 +8,7 @@ module ResourceRegistry
     # @!attribute [r] key
     # ID for this setting
     # @return [Symbol]
-    attribute :key,     Types::RequiredSymbol
+    attribute :key,     Types::Symbol.meta(omittable: false)
 
     # @!attribute [r] item
     # The value for this setting
@@ -16,12 +16,12 @@ module ResourceRegistry
     attribute :item,    Types::Any.meta(omittable: false)
 
     # @!attribute [r] options
-    # Options passed through for this setting 
+    # Options passed through for this setting
     # @return [Hash]
     attribute :options, Types::Any.optional.meta(omittable: true)
 
     # @!attribute [r] meta
-    # Configuration settings and attributes that support presenting and updating 
+    # Configuration settings and attributes that support presenting and updating
     # their values in the User Interface
     # @return [ResourceRegistry::Meta]
     attribute :meta,    ResourceRegistry::Meta.optional.meta(omittable: true)

@@ -17,13 +17,13 @@ RSpec.describe ResourceRegistry::Serializers::Operations::GenerateContainer do
 
     let(:expected_keys) do
       [
-       "enterprise.tenants.dchbx.sites.shop_site.url",
-       "enterprise.tenants.dchbx.sites.shop_site.description",
-       "enterprise.tenants.dchbx.sites.individual_site.url",
-       "enterprise.tenants.dchbx.owner_account_name",
-       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_contribution_percent_minimum",
-       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_dental_contribution_percent_minimumt",
-       "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_family_contribution_percent_minimum"
+        "enterprise.tenants.dchbx.sites.shop_site.url",
+        "enterprise.tenants.dchbx.sites.shop_site.description",
+        "enterprise.tenants.dchbx.sites.individual_site.url",
+        "enterprise.tenants.dchbx.owner_account_name",
+        "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_contribution_percent_minimum",
+        "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_dental_contribution_percent_minimumt",
+        "enterprise.tenants.dchbx.sites.shop_site.environments.production.features.enroll_app.features.aca_shop_market.options.employer_family_contribution_percent_minimum"
       ]
     end
 

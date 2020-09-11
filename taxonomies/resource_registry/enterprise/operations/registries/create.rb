@@ -7,16 +7,15 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do])
 
         def call(config_file)
-          container = Class.new(Dry::System::Container)
-          
+          # container = Class.new(Dry::System::Container)
+
           file_path     = yield verify_file(config_file)
           yaml_params   = yield read_file(file_path)
           config_params = yield parse(yaml_params)
-          
+
           config_values = yield validate(config_params)
-          registry      = yield create_registry(config_values)
-                        
-          Success(container_constant)
+          registry = yield create_registry(config_values)
+          Success(registry)
         end
 
         private
@@ -41,7 +40,7 @@ module ResourceRegistry
         end
 
         # We need container configuration values
-        # additional keys 
+        # additional keys
         # load dependencies
         # Create the container
         # Set the Injector and the Constant

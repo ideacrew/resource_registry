@@ -6,10 +6,10 @@ require_relative 'operations/features/create'
 require_relative 'operations/features/configure'
 require_relative 'operations/features/disable'
 require_relative 'operations/features/enable'
+require_relative 'operations/features/update'
 
 module ResourceRegistry
-
-  # Define a Feature together with its settings, code hook for dependency injection, and configuration UI attributes 
+  # Define a Feature together with its settings, code hook for dependency injection, and configuration UI attributes
   #
   # @example Define the feature
   #   Feature.new(key: :greeter, item: proc { |name| "Hello #{name}!" })
@@ -55,4 +55,3 @@ module ResourceRegistry
 
   end
 end
-

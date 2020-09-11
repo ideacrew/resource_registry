@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Registries
-
       # Create a Feature
       class Create
         send(:include, Dry::Monads[:result, :do])
@@ -14,11 +13,11 @@ module ResourceRegistry
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
           container       = yield register(features, registry)
-          
+
           Success(container)
         end
 
-        private 
+        private
 
         def read(path)
           file_io = ResourceRegistry::Stores::File::Read.new.call(path)
@@ -53,7 +52,7 @@ module ResourceRegistry
         def create(feature_hashes)
           features = feature_hashes.collect do |feature_hash|
             feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
-            
+
             if feature.success?
               feature.value!
             else
@@ -62,15 +61,27 @@ module ResourceRegistry
           end
 
           Success(features)
-
-          rescue Exception => e
-            raise "Error occurred while creating features using #{feature_hashes}. " \
+        rescue Exception => e
+          raise "Error occurred while creating features using #{feature_hashes}. " \
                   "Error: #{e.message}"
         end
 
         def register(features, registry)
-          features.each {|feature| registry.register_feature(feature) }
-          
+          features.each do |feature|
+            if defined?(Rails) && registry.db_connection&.table_exists?(:resource_registry_features)
+              feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
+
+              if feature_record.blank?
+                ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
+              else
+                result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
+                feature = result.success if result.success?
+              end
+            end
+
+            registry.register_feature(feature)
+          end
+
           Success(registry)
         end
       end
