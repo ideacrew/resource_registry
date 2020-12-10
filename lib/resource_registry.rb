@@ -17,8 +17,10 @@ require 'resource_registry/serializers'
 require 'resource_registry/validation/application_contract'
 require 'resource_registry/railtie' if defined? Rails
 
+require 'resource_registry/rgl'
 require 'resource_registry/meta'
 require 'resource_registry/setting'
+require 'resource_registry/namespace'
 require 'resource_registry/feature'
 require 'resource_registry/feature_dsl'
 require 'resource_registry/configuration'

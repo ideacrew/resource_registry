@@ -54,6 +54,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'bootsnap',                 '~> 1.0'
   spec.add_dependency 'mime-types'
+  spec.add_dependency 'pry-byebug'
+  spec.add_dependency 'rgl'#,                      '~> 0.5.6'
 
   spec.add_development_dependency "bundler",          "~> 2.0"
   spec.add_development_dependency 'rake',             '~> 12.0'
@@ -66,6 +68,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "timecop",          '~> 0.9'
   spec.add_development_dependency "rubocop",          '~> 0.74.0'
   spec.add_development_dependency "yard",         "~> 0.9"
-  spec.add_development_dependency 'pry-byebug'
 
 end
