@@ -29,5 +29,9 @@ module ResourceRegistry
     attribute :meta,        ResourceRegistry::Meta.default(Hash.new.freeze).meta(omittable: true)
 
     attribute :feature_keys,    Types::Array.of(Types::RequiredSymbol).default([].freeze).meta(omittable: true)
+
+    attribute :features,    Types::Array.of(::ResourceRegistry::Feature).meta(omittable: true)
+
+    attribute :namespaces,  Types::Array.of(::ResourceRegistry::Namespace).meta(omittable: true)
   end
 end

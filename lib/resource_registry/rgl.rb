@@ -11,15 +11,18 @@ module RGL
     end
 
     def to_h(vertex)
-      [vertex].inject({}) do |dict, vertex|
+      namespace_dict = [vertex].inject({}) do |dict, vertex|
         dict = vertex.to_h
-        dict[:features] = dict[:feature_keys].collect{|key| EnrollRegistry[key].feature.to_h.slice(:key, :item, :meta)}
+        dict[:features] = dict[:feature_keys].collect{|key| EnrollRegistry[key].feature.to_h.except(:settings)}
         dict[:namespaces] = self.adjacent_vertices(vertex).collect{|adjacent_vertex| self.to_h(adjacent_vertex)}
-        dict.except(:feature_keys)
+        attrs_to_skip = [:feature_keys]
+        attrs_to_skip << :meta if dict[:meta].empty?
+        dict.except(*attrs_to_skip)
       end
 
-      # call namespace contract
-      # return valid hash
+      result = ResourceRegistry::Validation::NamespaceContract.new.call(namespace_dict)
+      raise "Unable to construct graph due to #{result.errors.to_h}" unless result.success?
+      result.to_h
     end
 
     def to_ul(vertex, options = {})
@@ -40,7 +43,7 @@ module RGL
             end.html_safe
           end
         end
-        content.html_safe
+        content
       end
     end
 
