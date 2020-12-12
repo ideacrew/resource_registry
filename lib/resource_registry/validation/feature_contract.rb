@@ -18,16 +18,14 @@ module ResourceRegistry
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
         required(:key).value(:symbol)
-        required(:namespace).maybe(:array)
+        required(:namespace_path).maybe(:hash)
         required(:is_enabled).value(:bool)
         optional(:item).value(:any)
         optional(:options).maybe(:hash)
-
         optional(:meta).maybe(:hash)
         optional(:settings).array(:hash)
 
         before(:value_coercer) do |result|
-
           settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
             setting.tap do |setting|
               if setting[:meta] && setting[:meta][:content_type] == :duration
@@ -45,9 +43,25 @@ module ResourceRegistry
           result.to_h.merge(
                              key: result[:key]&.to_sym,
                              meta: result[:meta]&.symbolize_keys,
-                             settings: settings || [],
-                             namespace: (result[:namespace] || []).map(&:to_sym)
+                             namespace_path: result[:namespace_path].deep_symbolize_keys,
+                             settings: settings || []
                            )
+        end
+      end
+
+      # @!macro [attach] rulemacro
+      #   Validates a nested hash of $1 params
+      #   @!method $0($1)
+      #   @param [Symbol] $1 key
+      #   @return [Dry::Monads::Result::Success] if nested $1 params pass validation
+      #   @return [Dry::Monads::Result::Failure] if nested $1 params fail validation
+      rule(:namespace_path) do
+        if key? && value
+          result = ResourceRegistry::Validation::NamespacePathContract.new.call(value)
+
+          # Use dry-validation error form to pass error hash along with text to calling service
+          # self.result.to_h.merge!({meta: result.to_h})
+          key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
         end
       end
     end

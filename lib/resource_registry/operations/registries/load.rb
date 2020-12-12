@@ -10,23 +10,49 @@ module ResourceRegistry
 
         def call(registry:)
           paths    = yield list_paths(load_path_for(registry))
-          result   = yield load(paths, registry)
+          values   = yield load(paths, registry)
+          entities = yield merge_namespaces(values[:namespace_list])
+          registry = yield register_graph(entities, values[:registry])
 
-          Success(result)
+          Success(registry)
         end
 
         private
 
         def list_paths(load_path)
           paths = ResourceRegistry::Stores::File::ListPath.new.call(load_path)
-
           Success(paths)
         end
 
         def load(paths, registry)
+          namespaces_list = []
+
           paths.value!.each do |path|
-            ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
+            result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
+            if result.success?
+              namespaces_list << result.success[:namespace_list]
+            end
           end
+
+          Success({registry: registry, namespace_list: namespaces_list.flatten})
+        end
+
+        def merge_namespaces(namespace_list)
+          namespaces = namespace_list.reduce({}) do |namespaces, ns|
+            if namespaces[ns[:key]]
+              namespaces[ns[:key]][:feature_keys] += ns[:feature_keys]
+            else
+              namespaces[ns[:key]] = ns
+            end
+            namespaces
+          end
+
+          Success(namespaces.values)
+        end
+
+        def register_graph(entities, registry)
+          graph = ResourceRegistry::Operations::Graphs::Create.new.call(entities, registry)
+          registry.register_graph(graph.value!)
 
           Success(registry)
         end

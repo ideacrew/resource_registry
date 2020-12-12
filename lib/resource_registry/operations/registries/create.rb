@@ -5,16 +5,16 @@ module ResourceRegistry
     module Registries
       # Create a Feature
       class Create
-        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:result, :do, :try])
 
         def call(path:, registry:)
           file_io         = yield read(path)
           params          = yield deserialize(file_io)
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
-          container       = yield register(features, registry)
+          values          = yield register_features(features, registry)
 
-          Success(container)
+          Success(values)
         end
 
         private
@@ -50,39 +50,46 @@ module ResourceRegistry
         end
 
         def create(feature_hashes)
-          features = feature_hashes.collect do |feature_hash|
-            feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
-
-            if feature.success?
-              feature.value!
-            else
-              raise "Failed to create feature with #{feature.failure.errors.inspect}"
+          Try {
+            feature_hashes.collect do |feature_hash|
+              result = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
+              return result if result.failure?
+              result.value!
             end
-          end
-
-          Success(features)
-        rescue Exception => e
-          raise "Error occurred while creating features using #{feature_hashes}. " \
-                  "Error: #{e.message}"
+          }.to_result
         end
 
-        def register(features, registry)
+        def register_features(features, registry)
+          namespaces = []
           features.each do |feature|
-            if defined?(Rails) && registry.db_connection&.table_exists?(:resource_registry_features)
-              feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
-
-              if feature_record.blank?
-                ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
-              else
-                result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
-                feature = result.success if result.success?
-              end
-            end
-
+            persist_to_rdbms(feature, registry)
             registry.register_feature(feature)
+            namespaces << feature_to_namespace(feature) if feature.namespace_path.meta&.content_type.to_s == 'nav'
           end
 
-          Success(registry)
+          Success({namespace_list: namespaces, registry: registry})
+        end
+
+        def feature_to_namespace(feature)
+          {
+            key: feature.namespace_path.path.map(&:to_s).join('_'),
+            path: feature.namespace_path.path,
+            feature_keys: [feature.key],
+            meta: feature.namespace_path.meta.to_h
+          }
+        end
+
+        def persist_to_rdbms(feature, registry)
+          if defined?(Rails) && registry.db_connection&.table_exists?(:resource_registry_features)
+            feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
+
+            if feature_record.blank?
+              ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
+            else
+              result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
+              feature = result.success if result.success? # TODO: Verify Failure Scenario
+            end
+          end
         end
       end
     end
