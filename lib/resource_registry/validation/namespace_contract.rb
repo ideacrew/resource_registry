@@ -22,10 +22,6 @@ module ResourceRegistry
         optional(:feature_keys).array(:symbol)
         optional(:features).array(:hash)
         optional(:namespaces).array(:hash)
-
-        # before(:value_coercer) do |result|
-        #   result.to_h.merge!(meta: result[:meta].symbolize_keys) if result[:meta].is_a? Hash
-        # end
       end
 
       rule(:features).each do

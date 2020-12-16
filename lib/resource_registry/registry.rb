@@ -31,6 +31,10 @@ module ResourceRegistry
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
     end
 
+    def navigation(options = {})
+      ::ResourceRegistry::Navigation.new(self, options)
+    end
+
     def swap_feature(feature)
       self._container.delete("feature_index.#{feature.key}")
       self._container.delete(namespaced(feature.key, feature.namespace))
@@ -55,6 +59,11 @@ module ResourceRegistry
       register(namespaced(feature.key, feature.namespace), feature)
 
       self
+    end
+
+    def register_graph(graph)
+      self._container.delete('feature_graph') if key?('feature_graph')
+      register('feature_graph', graph)
     end
 
     # Look up a feature stored in the registry

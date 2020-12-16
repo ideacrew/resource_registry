@@ -7,7 +7,6 @@ require 'dry/monads'
 require 'dry/monads/do'
 require 'dry-struct'
 
-
 require 'resource_registry/version'
 require 'resource_registry/error'
 
@@ -17,6 +16,7 @@ require 'resource_registry/serializers'
 require 'resource_registry/validation/application_contract'
 require 'resource_registry/railtie' if defined? Rails
 
+require 'resource_registry/navigation'
 require 'resource_registry/rgl'
 require 'resource_registry/meta'
 require 'resource_registry/setting'
@@ -29,4 +29,11 @@ require 'resource_registry/registry'
 
 module ResourceRegistry
 
+  def self.logger
+    @@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+  end
+
+  def self.logger=(logger)
+    @@logger = logger
+  end
 end

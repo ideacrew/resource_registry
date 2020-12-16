@@ -40,6 +40,17 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
           expect(result.errors.first.text).to eq error_message
         end
       end
+
+      context 'namespace missing' do
+        let(:invalid_params) { required_params.merge(namespace: nil) }
+
+        it "should should fail validation" do
+          result = subject.call(invalid_params)
+
+          expect(result.success?).to be_falsey
+          expect(result.errors[:namespace]).to eq ["size cannot be less than 1"]
+        end
+      end
     end
 
     context "Given valid parameters" do

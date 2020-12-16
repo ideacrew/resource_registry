@@ -89,6 +89,10 @@ registry:
   - features:
     - key: :employer_sic
       is_enabled: false
+      namespace:
+        - :features
+        - :enroll_app
+        - :aca_shop_market
       settings:
       - key: :effective_period
         item: {hours: -15}

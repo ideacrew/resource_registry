@@ -6,14 +6,13 @@ require 'rgl/implicit'
 module ResourceRegistry
   module Operations
     module Graphs
-      # Create a Feature
       class Create
         send(:include, Dry::Monads[:result, :do])
 
         def call(namespaces, registry)
-          graph = yield create(namespaces, registry)
-          # yield validate(graph)
-          Success(graph)
+          graph  = yield create(namespaces, registry)
+          result = yield validate(graph)
+          Success(result)
         end
 
         private
@@ -33,18 +32,28 @@ module ResourceRegistry
             end
           end
 
-          # validate graph
-
           Success(graph)
         end
 
         def validate(graph)
-          # graph.acyclic? && directed?
-          # return error message with cycles when acyclic failed
+          if graph.directed? && graph.cycles.empty?
+            Success(graph)
+          else
+            errors = []
+            errors << 'Graph is not a directed graph' unless graph.directed?
+            errors << "Graph has cycles: #{print_cycles(graph)}" if graph.cycles.present?
+
+            Failure(errors)
+          end
+        end
+
+        def print_cycles(graph)
+          graph.cycles.collect do |cycle|
+            cycle.inject([]) {|vertices, vertex| vertices << {namespace: vertex.path, features: vertex.feature_keys}}
+          end
         end
 
         # TODO: Output graph when its successful dotted graph in console/log
-
         def namespace_to_vertices(namespace)
           paths = namespace[:path].dup
           vertex_path = []

@@ -52,7 +52,12 @@ module ResourceRegistry
 
         def register_graph(entities, registry)
           graph = ResourceRegistry::Operations::Graphs::Create.new.call(entities, registry)
-          registry.register_graph(graph.value!)
+
+          if graph.success?
+            registry.register_graph(graph.value!)
+          else
+            ResourceRegistry.logger.error(graph.failure)
+          end
 
           Success(registry)
         end
