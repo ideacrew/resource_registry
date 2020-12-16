@@ -37,7 +37,7 @@ module ResourceRegistry
 
     def swap_feature(feature)
       self._container.delete("feature_index.#{feature.key}")
-      self._container.delete(namespaced(feature.key, feature.namespace))
+      self._container.delete(namespaced(feature.key, feature.namespace_path.path))
       register_feature(feature)
       @features_stale = false
     end

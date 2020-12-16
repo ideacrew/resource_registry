@@ -20,6 +20,7 @@ RSpec.describe ResourceRegistry::Operations::Features::Update do
       {
         :key => :aca_shop_market,
         :is_enabled => true,
+        :namespace_path => {:path=>[:features, :enroll_app]},
         :settings => [
           { enroll_prior_to_effective_on_max: { days: 10 } },
           { enroll_after_effective_on_max: { days: 60 } },

@@ -24,7 +24,7 @@ module ResourceRegistry
     # @!attribute [r] namespace (optional)
     # The registry namespace where this item is stored
     # @return [Symbol]
-    attribute :namespace_path,  ::ResourceRegistry::NamespacePath.optional.meta(omittable: false)
+    attribute :namespace_path,  ::ResourceRegistry::NamespacePath.meta(omittable: false)
 
     # @!attribute [r] is_enabled  (required)
     # Availability state of this Feature in the application: either enabled or disabled

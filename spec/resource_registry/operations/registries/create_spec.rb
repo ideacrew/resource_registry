@@ -14,7 +14,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Success
-      expect(subject.value!).to be_a ResourceRegistry::Registry
+      expect(subject.value![:registry]).to be_a ResourceRegistry::Registry
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Failure
-      expect(subject.failure.errors[:namespace_path]).to eq ["size cannot be less than 1"]
+      expect(subject.failure.errors[:namespace_path]).to eq [{:text=>"invalid meta", :error=>{:path=>["must be an array"]}}]
     end
   end
 end

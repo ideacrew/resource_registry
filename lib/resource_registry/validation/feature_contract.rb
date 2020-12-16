@@ -39,7 +39,7 @@ module ResourceRegistry
               end
             end
           end
-
+          result[:namespace_path][:path] = result[:namespace_path][:path].map(&:to_sym) if result[:namespace_path] && result[:namespace_path][:path]
           result.to_h.merge(
                              key: result[:key]&.to_sym,
                              meta: result[:meta]&.symbolize_keys,

@@ -18,7 +18,9 @@ module ResourceRegistry
         private
 
         def construct(params)
-          params['namespace_path'] =  params['namespace'].is_a?(Hash) ? params.delete('namespace') : {path: params.delete('namespace')}
+          if params[:namespace_path].blank?
+            params['namespace_path'] =  params['namespace'].is_a?(Hash) ? params.delete('namespace') : {path: params.delete('namespace')}
+          end
           Success(params)
         end
 

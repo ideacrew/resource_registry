@@ -38,7 +38,7 @@ module ResourceRegistry
         end
 
         def update_model(feature_entity)
-          if defined?(Rails)
+          if defined?(Rails) && defined? ResourceRegistry::ActiveRecord
 
             feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_entity.key).first
 
