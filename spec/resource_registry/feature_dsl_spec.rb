@@ -13,7 +13,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   end
 
   let(:key)         { :greeter_feature }
-  let(:namespace)   { [:level_1, :level_2, :level_3]}
+  let(:namespace)   { {path: [:level_1, :level_2, :level_3]} }
   let(:is_enabled)  { false }
   let(:item)        { Greeter.method(:new) }
   let(:options)     { { name: "Dolly" } }
@@ -29,7 +29,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:min_feature_hash) do
     {
       key: key,
-      namespace: namespace,
+      namespace_path: namespace,
       is_enabled: is_enabled,
       item: item
     }
@@ -38,7 +38,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:feature_hash) do
     {
       key: key,
-      namespace: namespace,
+      namespace_path: namespace,
       is_enabled: is_enabled,
       item: item,
       options: options,

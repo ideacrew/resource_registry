@@ -13,14 +13,14 @@ RSpec.describe ResourceRegistry::Feature do
   end
 
   let(:key)         { :greeter_feature }
-  let(:namespace)   { [:level_1,:level_2,:level_3]}
+  let(:namespace)   { {path: [:level_1,:level_2,:level_3]} }
   let(:is_enabled)  { false }
   let(:item)        { Greeter.new }
   let(:options)     { { name: "Dolly" } }
   let(:meta)        { { label: "label", default: 42, content_type: :integer } }
   let(:settings)    { [{ key: :service, item: "weather/forcast" }, { key: :retries, item: 4 }] }
 
-  let(:required_params) { { key: key, namespace: namespace, is_enabled: is_enabled, item: item } }
+  let(:required_params) { { key: key, namespace_path: namespace, is_enabled: is_enabled, item: item } }
   let(:optional_params) { { options: options, meta: meta, settings: settings } }
   let(:all_params)      { required_params.merge(optional_params) }
 

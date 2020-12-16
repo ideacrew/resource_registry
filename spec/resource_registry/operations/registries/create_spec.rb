@@ -25,7 +25,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Failure
-      expect(subject.failure.errors[:namespace]).to eq ["size cannot be less than 1"]
+      expect(subject.failure.errors[:namespace_path]).to eq ["size cannot be less than 1"]
     end
   end
 end

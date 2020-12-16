@@ -1,3 +1,5 @@
+require 'action_view'
+
 module ResourceRegistry
   class Navigation
     include ActionView::Helpers::TagHelper

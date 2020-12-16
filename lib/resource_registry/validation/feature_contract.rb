@@ -18,7 +18,7 @@ module ResourceRegistry
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
         required(:key).value(:symbol)
-        required(:namespace_path).maybe(:hash)
+        required(:namespace_path).value(:hash)
         required(:is_enabled).value(:bool)
         optional(:item).value(:any)
         optional(:options).maybe(:hash)
@@ -43,7 +43,7 @@ module ResourceRegistry
           result.to_h.merge(
                              key: result[:key]&.to_sym,
                              meta: result[:meta]&.symbolize_keys,
-                             namespace_path: result[:namespace_path].deep_symbolize_keys,
+                             namespace_path: result[:namespace_path]&.deep_symbolize_keys,
                              settings: settings || []
                            )
         end
