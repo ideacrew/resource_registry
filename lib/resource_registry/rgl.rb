@@ -15,11 +15,9 @@ module RGL
     end
 
     def vertices_for(options)
-      if ResourceRegistry::Navigation::NAMESPACE_OPTION_DEFAULTS == options
-        trees
-      elsif !options[:include_no_features_defined]
-        trees_with_features
-      end
+      return options[:starting_namespaces]if options[:starting_namespaces].present?
+      return trees_with_features unless options[:include_no_features_defined]
+      trees
     end
   end
 end

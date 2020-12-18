@@ -3,11 +3,11 @@
 module ResourceRegistry
   module Mongoid
     class Meta
-      include Mongoid::Document
-      include Mongoid::Timestamps
+      include ::Mongoid::Document
+      include ::Mongoid::Timestamps
 
       field :label,         type: String
-      field :type,          type: Symbol
+      field :content_type,  type: Symbol
       field :default,       type: String
       field :value,         type: String
       field :description,   type: String

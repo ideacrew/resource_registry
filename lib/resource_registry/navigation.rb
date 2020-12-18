@@ -7,7 +7,7 @@ module ResourceRegistry
 
     TAG_OPTION_DEFAULTS = {
 														ul: {
-														  options: {class: 'nav flex-column flex-nowrap overflow-hidden'}
+														  options: {class: 'nav flex-column flex-nowrap overflow-auto'}
 														},
 														nested_ul: {
 															options: {class: 'flex-column nav pl-4'}
@@ -20,7 +20,7 @@ module ResourceRegistry
 														    options: {class: 'nav-link collapsed text-truncate', 'data-toggle': 'collapse'},
 														  },
 														  feature_link: {
-														    options: {'data-remote': true}
+														    options: {class: 'nav-link', 'data-remote': true}
 														  }
 														}
 													}
@@ -115,7 +115,9 @@ module ResourceRegistry
     end
 
     def feature_nav_link(element)
-      tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: element[:item])) do
+      feature_url = element[:item] if element[:item].to_s.match?(/^\/.*$/)
+      feature_url ||= ('/exchanges/hbx_profiles/edit_feature?feature_key=' + element[:key].to_s)
+      tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: feature_url)) do
         tag.span do
           element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
         end

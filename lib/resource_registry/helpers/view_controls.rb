@@ -4,28 +4,27 @@ module RegistryViewControls
   def render_feature(feature, form = nil)
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
     tag.div(class: 'card') do
-      tag.div(class: 'card-header') do
+      content = tag.div(class: 'card-header') do
         tag.h4(feature.setting(:label)&.item || feature.key.to_s.titleize)
-      end +
-        tag.div(class: 'card-body row') do
-          tag.div(class: 'col-6') do
-            content = if ['legend'].include?(feature.meta.content_type.to_s)
-                        form.hidden_field(:is_enabled)
-                      else
-                        build_option_field(feature, form)
-                      end
-
-            (content + feature.settings.collect do |setting|
-              build_option_field(setting, form) if setting.meta
-            end.compact.join('')).html_safe
-          end
-        end
+      end
+      content += tag.div(class: 'card-body') do
+                   # tag.div do
+                     content = if ['legend'].include?(feature.meta.content_type.to_s)
+                                 form.hidden_field(:is_enabled)
+                               else
+                                 build_option_field(feature, form)
+                               end
+                     (content + feature.settings.collect do |setting|
+                       build_option_field(setting, form).html_safe if setting.meta
+                     end.compact.join.html_safe)
+                   # end
+                 end
+      content.html_safe
     end
   end
 
   def build_option_field(option, form)
     type = option.meta.content_type&.to_sym
-
     input_control = case type
                     when :swatch
                       input_swatch_control(option, form)
@@ -207,12 +206,15 @@ module RegistryViewControls
 
     meta = setting[:meta]
     input_value = value_for(setting, form) || setting.item || meta&.default
+
     # aria_describedby = id
-    is_required = meta&.is_required == false ? meta.is_required : true
+
+    is_required = meta[:is_required] == false ? meta[:is_required] : true
     placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
+
     tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: is_required)
     # end
   end
@@ -375,15 +377,20 @@ module RegistryViewControls
     end
   end
 
-  def list_tab_panels(features, _feature_registry, _options = {})
-    tag.div(class: "tab-content", id: "nav-tabContent") do
+  def list_tab_panels(features, feature_registry, _options = {})
+    # tag.div(class: "tab-content", id: "nav-tabContent") do
       content = ''
 
       features.each do |feature_key|
-        feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
+        feature = if defined? Rails
+           find_feature(feature_key)
+        else
+          feature_registry[feature_key].feature
+        end
+
         next if feature.blank?
-        content += tag.div(class: 'tab-pane fade', id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
-          form_for(feature, as: 'feature', url: configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
+        content += tag.div(id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
+          form_for(feature, as: 'feature', url: configuration_update_exchanges_hbx_profiles_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
             form.hidden_field(:key) +
               render_feature(feature, form) +
               tag.div(class: 'row mt-3') do
@@ -399,6 +406,14 @@ module RegistryViewControls
       end
 
       content.html_safe
+    # end
+  end
+
+  def find_feature(feature_key)
+    if defined? ResourceRegistry::Mongoid
+      ResourceRegistry::Mongoid::Feature.where(key: feature_key).first
+    else
+      ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
     end
   end
 end
