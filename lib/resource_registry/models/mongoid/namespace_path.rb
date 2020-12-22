@@ -7,7 +7,13 @@ module ResourceRegistry
       include ::Mongoid::Timestamps
 
       field :path,   type: Array
-      embeds_one  :meta, class_name: '::ResourceRegistry::Mongoid::Meta'
+
+      embeds_one :meta, as: :metable, class_name: '::ResourceRegistry::Mongoid::Meta', cascade_callbacks: true
+      embedded_in :feature, class_name: '::ResourceRegistry::Mongoid::Feature'
+
+      def dotted_path
+      	path.map(&:to_s).join('.')
+      end
     end
   end
 end

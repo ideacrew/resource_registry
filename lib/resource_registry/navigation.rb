@@ -116,7 +116,7 @@ module ResourceRegistry
 
     def feature_nav_link(element)
       feature_url = element[:item] if element[:item].to_s.match?(/^\/.*$/)
-      feature_url ||= ('/exchanges/hbx_profiles/edit_feature?feature_key=' + element[:key].to_s)
+      feature_url ||= ('/exchanges/configurations/' + element[:key].to_s + '/edit')
       tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: feature_url)) do
         tag.span do
           element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]

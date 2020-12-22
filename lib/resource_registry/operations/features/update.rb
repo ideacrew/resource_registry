@@ -22,6 +22,7 @@ module ResourceRegistry
 
         def build_params(params)
           feature_params = params.deep_symbolize_keys
+          feature_params[:namespace_path] = {path: params.delete(:namespace).split('.')}
           feature_params[:settings] = feature_params[:settings].collect do |setting_hash|
             if setting_hash.is_a?(Hash)
               {key: setting_hash.keys[0], item: setting_hash.values[0]}
@@ -38,20 +39,28 @@ module ResourceRegistry
         end
 
         def update_model(feature_entity)
-          if defined?(Rails) && defined? ResourceRegistry::ActiveRecord
-
-            feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature_entity.key).first
+          if defined?(Rails)
+            feature = model_class.where(key: feature_entity.key).first
+            feature.is_enabled = feature_entity.is_enabled
 
             feature_entity.settings.each do |setting_entity|
-              feature.update(is_enabled: feature_entity.is_enabled)
-              setting = feature.settings.where(key: setting_entity.key).first
-              setting.update(item: setting_entity.item)
+              if setting = feature.settings.detect{|setting| setting.key == setting_entity.key}
+                setting.item = setting_entity.item
+              else
+                feature.settings.build(setting_entity.to_h)
+              end
             end
+            feature.save
 
             Success(feature)
           else
             Success(feature_entity)
           end
+        end
+
+        def model_class
+          return ResourceRegistry::Mongoid::Feature if defined? ResourceRegistry::Mongoid
+          ResourceRegistry::ActiveRecord::Feature
         end
 
         def update_registry(new_feature, registry)

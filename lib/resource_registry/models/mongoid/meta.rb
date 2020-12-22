@@ -15,6 +15,7 @@ module ResourceRegistry
       field :is_required,   type: Boolean
       field :is_visible,    type: Boolean
 
+      embedded_in :metable, polymorphic: true
     end
   end
 end

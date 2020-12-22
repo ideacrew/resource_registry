@@ -9,7 +9,9 @@ module ResourceRegistry
       field :options,     type: Array
       field :item,        type: String
 
-      embeds_one :meta, class_name: '::ResourceRegistry::Mongoid::Meta'
+      embeds_one :meta, as: :metable, class_name: '::ResourceRegistry::Mongoid::Meta', cascade_callbacks: true
+      embedded_in :feature, class_name: '::ResourceRegistry::Mongoid::Feature'
+
     end
   end
 end

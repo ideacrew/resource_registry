@@ -10,7 +10,8 @@ module RegistryViewControls
       content += tag.div(class: 'card-body') do
                    # tag.div do
                      content = if ['legend'].include?(feature.meta.content_type.to_s)
-                                 form.hidden_field(:is_enabled)
+                                 form.hidden_field(:is_enabled) +
+                                 form.hidden_field(:namespace, value: feature.namespace_path.dotted_path)
                                else
                                  build_option_field(feature, form)
                                end
@@ -390,7 +391,7 @@ module RegistryViewControls
 
         next if feature.blank?
         content += tag.div(id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
-          form_for(feature, as: 'feature', url: configuration_update_exchanges_hbx_profiles_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
+          form_for(feature, as: 'feature', url: exchanges_configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
             form.hidden_field(:key) +
               render_feature(feature, form) +
               tag.div(class: 'row mt-3') do

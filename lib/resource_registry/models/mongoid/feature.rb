@@ -10,9 +10,9 @@ module ResourceRegistry
       field :is_enabled,  type: Boolean
       field :item,        type: String
 
-      embeds_one  :namespace_path, class_name: '::ResourceRegistry::Mongoid::NamespacePath'
-      embeds_one  :meta, class_name: '::ResourceRegistry::Mongoid::Meta'
-      embeds_many :settings, class_name: '::ResourceRegistry::Mongoid::Setting'
+      embeds_one :meta, as: :metable, class_name: '::ResourceRegistry::Mongoid::Meta', cascade_callbacks: true
+      embeds_one :namespace_path, class_name: '::ResourceRegistry::Mongoid::NamespacePath', cascade_callbacks: true
+      embeds_many :settings, class_name: '::ResourceRegistry::Mongoid::Setting', cascade_callbacks: true
 
       def setting(key)
         settings.detect{|setting| setting.key.to_s == key.to_s}

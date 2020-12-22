@@ -89,8 +89,8 @@ module ResourceRegistry
 
         def persist_to_mongodb(feature, registry)
           feature_record = ResourceRegistry::Mongoid::Feature.where(key: feature.key).first
-          feature_record&.delete
-          ResourceRegistry::Mongoid::Feature.new(feature.to_h).save
+          # feature_record&.delete
+          ResourceRegistry::Mongoid::Feature.new(feature.to_h).save unless feature_record
 
           # if feature_record.blank?
           #   ResourceRegistry::Mongoid::Feature.new(feature.to_h).save
