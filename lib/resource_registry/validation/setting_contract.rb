@@ -19,8 +19,18 @@ module ResourceRegistry
         optional(:options).maybe(:hash)
         optional(:meta).maybe(:hash)
 
-        before(:value_coercer) do |result|
-          result.to_h.merge!(meta: result[:meta].symbolize_keys) if result[:meta].is_a? Hash
+        before(:value_coercer) do |setting|
+          item = if setting[:meta] && setting[:meta][:content_type] == :duration
+            Types::Duration[setting[:item]]
+          elsif setting[:item].is_a? String
+            dates = setting[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
+            if dates.present?
+              dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
+              Range.new(*dates)
+            end
+          end
+
+          setting.to_h.merge(item: item) if item
         end
       end
 

@@ -43,6 +43,8 @@ module ResourceRegistry
             ResourceRegistry::Stores::Mongoid::Update.new.call(feature_entity)
           elsif defined? ResourceRegistry::ActiveRecord
             ResourceRegistry::Stores::ActiveRecord::Update.new.call(feature_entity)
+          else
+            Success(true)
           end
         end
 

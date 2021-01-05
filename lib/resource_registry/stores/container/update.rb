@@ -18,7 +18,7 @@ module ResourceRegistry
 
         private
 
-        def update(container, new_feature)
+        def update(new_feature, container)
           registered_feature_hash = container[new_feature.key].feature.to_h
           registered_feature_hash[:is_enabled] = new_feature.is_enabled
 

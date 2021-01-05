@@ -64,7 +64,8 @@ module ResourceRegistry
           features.each do |feature|
             persist_to_dbms(feature, registry) if defined? Rails
             registry.register_feature(feature)
-            namespaces << feature_to_namespace(feature) if %w[feature_list nav].include?(feature.namespace_path.meta&.content_type.to_s) && feature.meta&.label.present?
+            namespace_meta = feature.namespace_path.meta
+            namespaces << feature_to_namespace(feature) if namespace_meta.present? && [:feature_list, :nav].include?(namespace_meta.content_type)
           end
 
           Success({namespace_list: namespaces, registry: registry})
@@ -82,8 +83,8 @@ module ResourceRegistry
         def persist_to_dbms(feature, registry)
           if defined?(ResourceRegistry::Mongoid)
             ResourceRegistry::Stores::Mongoid::Persist.new.call(feature, registry)
-          else
-            # ResourceRegistry::Stores::ActiveRecord::Persist.new.call(feature, registry)
+          elsif defined? ResourceRegistry::ActiveRecord
+            ResourceRegistry::Stores::ActiveRecord::Persist.new.call(feature, registry)
           end
         end
       end

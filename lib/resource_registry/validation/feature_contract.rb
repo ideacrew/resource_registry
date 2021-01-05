@@ -24,29 +24,6 @@ module ResourceRegistry
         optional(:options).maybe(:hash)
         optional(:meta).maybe(:hash)
         optional(:settings).array(:hash)
-
-        before(:value_coercer) do |result|
-          settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
-            setting.tap do |setting|
-              if setting[:meta] && setting[:meta][:content_type] == :duration
-                setting[:item] = Types::Duration[setting[:item]]
-              elsif setting[:item].is_a? String
-                dates = setting[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-                if dates.present?
-                  dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
-                  setting[:item] = Range.new(*dates)
-                end
-              end
-            end
-          end
-          result[:namespace_path][:path] = result[:namespace_path][:path].map(&:to_sym) if result[:namespace_path] && result[:namespace_path][:path]
-          result.to_h.merge(
-                             key: result[:key]&.to_sym,
-                             meta: result[:meta]&.symbolize_keys,
-                             namespace_path: result[:namespace_path]&.deep_symbolize_keys,
-                             settings: settings || []
-                           )
-        end
       end
 
       # @!macro [attach] rulemacro
@@ -58,10 +35,12 @@ module ResourceRegistry
       rule(:namespace_path) do
         if key? && value
           result = ResourceRegistry::Validation::NamespacePathContract.new.call(value)
-
-          # Use dry-validation error form to pass error hash along with text to calling service
-          # self.result.to_h.merge!({meta: result.to_h})
-          key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
+          if result.failure?
+            # Use dry-validation error form to pass error hash along with text to calling service
+            key.failure(text: "invalid meta", error: result.errors.to_h)
+          else
+            values.merge!(namespace_path: result.to_h)
+          end
         end
       end
     end
