@@ -64,7 +64,7 @@ module ResourceRegistry
           features.each do |feature|
             persist_to_dbms(feature, registry) if defined? Rails
             registry.register_feature(feature)
-            namespaces << feature_to_namespace(feature) if feature.namespace_path.meta&.content_type.to_s == 'nav' && feature.meta&.label.present?
+            namespaces << feature_to_namespace(feature) if %w[feature_list nav].include?(feature.namespace_path.meta&.content_type.to_s) && feature.meta&.label.present?
           end
 
           Success({namespace_list: namespaces, registry: registry})
@@ -81,36 +81,9 @@ module ResourceRegistry
 
         def persist_to_dbms(feature, registry)
           if defined?(ResourceRegistry::Mongoid)
-            persist_to_mongodb(feature, registry)
+            ResourceRegistry::Stores::Mongoid::Persist.new.call(feature, registry)
           else
-            persist_to_rdbms(feature, registry)
-          end
-        end
-
-        def persist_to_mongodb(feature, registry)
-          feature_record = ResourceRegistry::Mongoid::Feature.where(key: feature.key).first
-          # feature_record&.delete
-          ResourceRegistry::Mongoid::Feature.new(feature.to_h).save unless feature_record
-
-          # if feature_record.blank?
-          #   ResourceRegistry::Mongoid::Feature.new(feature.to_h).save
-          # else
-          #   feature_record.update_attributes(feature.to_h)
-          # #   # result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
-          # #   # feature = result.success if result.success? # TODO: Verify Failure Scenario
-          # end
-        end
-
-        def persist_to_rdbms(feature, registry)
-          if registry.db_connection&.table_exists?(:resource_registry_features)
-            feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
-
-            if feature_record.blank?
-              ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
-            else
-              result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
-              feature = result.success if result.success? # TODO: Verify Failure Scenario
-            end
+            # ResourceRegistry::Stores::ActiveRecord::Persist.new.call(feature, registry)
           end
         end
       end

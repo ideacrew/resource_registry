@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resource_registry (0.7.0)
+    resource_registry (0.9.0)
       bootsnap (~> 1.0)
       deep_merge (>= 1.0.0)
       dry-configurable (= 0.9)
@@ -16,7 +16,9 @@ PATH
       mime-types
       nokogiri (>= 1.9.1)
       ox (~> 2.0)
+      pry-byebug
       rack (>= 1.6.13)
+      rgl
 
 GEM
   remote: https://rubygems.org/
@@ -107,6 +109,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     jaro_winkler (1.5.4)
+    lazy_priority_queue (0.1.1)
     loofah (2.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -150,6 +153,9 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
     rake (12.3.3)
+    rgl (0.5.2)
+      lazy_priority_queue (~> 0.1.0)
+      stream (~> 0.5.0)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -183,6 +189,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.2)
+    stream (0.5)
     thor (1.0.1)
     thread_safe (0.3.6)
     timecop (0.9.1)
@@ -200,7 +207,6 @@ DEPENDENCIES
   bundler (~> 2.0)
   database_cleaner (~> 1.7)
   mongoid (~> 6.0)
-  pry-byebug
   rake (~> 12.0)
   resource_registry!
   rspec (~> 3.9)

@@ -32,6 +32,7 @@ module ResourceRegistry
     NAMESPACE_OPTION_DEFAULTS = {
                                   include_all_disabled_features: true,
                                   include_no_features_defined: true,
+                                  active_item: [:aca_shop, :benefit_market_catalogs, :catalog_2019], # TODO
                                   starting_namespaces: [] # start vertices for graph
                                 }
 
@@ -74,7 +75,6 @@ module ResourceRegistry
         attrs_to_skip << :meta if dict[:meta].empty?
         dict.except(*attrs_to_skip)
       end
-      
       result = ResourceRegistry::Validation::NamespaceContract.new.call(namespace_dict)
       raise "Unable to construct graph due to #{result.errors.to_h}" unless result.success?
       result.to_h
@@ -107,9 +107,18 @@ module ResourceRegistry
     end
 
     def namespace_nav_link(element)
-      tag.a(options[:tag_options][:a][:namespace_link][:options].merge(href: "#nav_#{element[:key]}", 'data-target': "#nav_#{element[:key]}")) do
-        tag.span do
-          element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
+      if element[:meta].blank? || element[:meta][:content_type] == :nav
+        tag.a(options[:tag_options][:a][:namespace_link][:options].merge(href: "#nav_#{element[:key]}", 'data-target': "#nav_#{element[:key]}")) do
+          tag.span do
+            element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
+          end
+        end
+      else
+        namespace_url = "/exchanges/configurations/#{element[:features].first[:key]}/namespace_edit"
+        tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: namespace_url)) do
+          tag.span do
+            element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
+          end
         end
       end
     end

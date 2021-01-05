@@ -1,27 +1,18 @@
 # frozen_string_literal: true
 
 module RegistryViewControls
+
   def render_feature(feature, form = nil)
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
-    tag.div(class: 'card') do
-      content = tag.div(class: 'card-header') do
-        tag.h4(feature.setting(:label)&.item || feature.key.to_s.titleize)
-      end
-      content += tag.div(class: 'card-body') do
-                   # tag.div do
-                     content = if ['legend'].include?(feature.meta.content_type.to_s)
-                                 form.hidden_field(:is_enabled) +
-                                 form.hidden_field(:namespace, value: feature.namespace_path.dotted_path)
-                               else
-                                 build_option_field(feature, form)
-                               end
-                     (content + feature.settings.collect do |setting|
-                       build_option_field(setting, form).html_safe if setting.meta
-                     end.compact.join.html_safe)
-                   # end
-                 end
-      content.html_safe
-    end
+    content = if ['legend'].include?(feature.meta.content_type.to_s)
+                form.hidden_field(:is_enabled) +
+                form.hidden_field(:namespace, value: feature.namespace_path.dotted_path)
+              else
+                build_option_field(feature, form)
+              end
+
+    content += feature.settings.collect{|setting| build_option_field(setting, form).html_safe if setting.meta}.compact.join.html_safe
+    content.html_safe
   end
 
   def build_option_field(option, form)
@@ -45,15 +36,41 @@ module RegistryViewControls
                       input_date_control(option, form)
                     when :currency
                       input_currency_control(option, form)
+                    when :toggle_enabled
+                      toggle_enabled_control(option, form)
+                    when :slider_switch
+                      slider_switch_control(option, form)
                     else
                       input_text_control(option, form)
                     end
+                    # else :text_field
+                    #   input_text_control(option, form)
+                    # else
+                    #   # :dan_check_box
+                    #   # find dan_check_box_control helper
+                    #   # else
+                    #   # custom_helper #catch_all for custom types
+                    # end
 
     if [:radio_select, :checkbox_select].include?(type)
       custom_form_group(option, input_control)
     else
+      return input_control if type == :toggle_enabled
       form_group(option, input_control)
     end
+  end
+
+  def toggle_enabled_control(option, form)
+    tag.div(class: "form-group") do
+      tag.label(for: option.key.to_s, value: option.key.to_s.titleize, class: 'pr-2') do
+        option.key.to_s.titleize
+      end +
+        tag.input(nil, id: 'featureToggle', type: "checkbox", checked: option.is_enabled, data: {toggle: 'toggle', style: 'ios'})
+    end
+  end
+
+  def slider_switch_control(option, form)
+
   end
 
   def select_control(setting, form)
@@ -379,35 +396,35 @@ module RegistryViewControls
   end
 
   def list_tab_panels(features, feature_registry, _options = {})
-    # tag.div(class: "tab-content", id: "nav-tabContent") do
-      content = ''
+    tag.div(class: 'card') do
+      # content = tag.div(class: 'card-header') do
+      #   tag.h4(feature.setting(:label)&.item || feature.key.to_s.titleize)
+      # end
 
-      features.each do |feature_key|
-        feature = if defined? Rails
-           find_feature(feature_key)
-        else
-          feature_registry[feature_key].feature
-        end
+      content = tag.div(class: 'card-body') do
+        feature_content = ''
+        features.each do |feature_key|
+          feature = defined?(Rails) ? find_feature(feature_key) : feature_registry[feature_key].feature
+          next if feature.blank?
 
-        next if feature.blank?
-        content += tag.div(id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
-          form_for(feature, as: 'feature', url: exchanges_configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
-            form.hidden_field(:key) +
-              render_feature(feature, form) +
-              tag.div(class: 'row mt-3') do
-                tag.div(class: 'col-4') do
-                  form.submit(class: 'btn btn-primary')
-                end +
-                  tag.div(class: 'col-6') do
-                    tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
-                  end
-              end
+          feature_content += tag.div(id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
+            form_for(feature, as: 'feature', url: exchanges_configuration_path(feature), method: :patch, remote: true, authenticity_token: true) do |form|
+              form.hidden_field(:key) +
+                render_feature(feature, form) +
+                tag.div(class: 'row mt-3') do
+                  # tag.div(class: 'col-4') do
+                  #   form.submit(class: 'btn btn-primary')
+                  # end +
+                    tag.div(class: 'col-6') do
+                      tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
+                    end
+                end
+            end
           end
         end
-      end
-
-      content.html_safe
-    # end
+        feature_content.html_safe
+      end.html_safe
+    end
   end
 
   def find_feature(feature_key)
