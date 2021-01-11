@@ -12,9 +12,10 @@ module ResourceRegistry
           params          = yield deserialize(file_io)
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
-          values          = yield register_features(features, registry)
+          registry        = yield save_and_register_feature(features, registry)
+          namespaces      = yield build_namespaces(features)
 
-          Success(values)
+          Success(namespace_list: namespaces, registry: registry)
         end
 
         private
@@ -59,33 +60,22 @@ module ResourceRegistry
           }.to_result
         end
 
-        def register_features(features, registry)
-          namespaces = []
+        def save_and_register_feature(features, registry)
           features.each do |feature|
-            persist_to_dbms(feature, registry) if defined? Rails
+            ResourceRegistry::Stores.persist(feature) if defined? Rails
             registry.register_feature(feature)
-            namespace_meta = feature.namespace_path.meta
-            namespaces << feature_to_namespace(feature) if namespace_meta.present? && [:feature_list, :nav].include?(namespace_meta.content_type)
           end
 
-          Success({namespace_list: namespaces, registry: registry})
+          Success(registry)
         end
 
-        def feature_to_namespace(feature)
-          {
-            key: feature.namespace_path.path.map(&:to_s).join('_'),
-            path: feature.namespace_path.path,
-            feature_keys: [feature.key],
-            meta: feature.namespace_path.meta.to_h
-          }
-        end
-
-        def persist_to_dbms(feature, registry)
-          if defined?(ResourceRegistry::Mongoid)
-            ResourceRegistry::Stores::Mongoid::Persist.new.call(feature, registry)
-          elsif defined? ResourceRegistry::ActiveRecord
-            ResourceRegistry::Stores::ActiveRecord::Persist.new.call(feature, registry)
-          end
+        def build_namespaces(features)
+          Try {
+            features.collect do |feature|
+              namespace = ResourceRegistry::Operations::Namespaces::Build.new.call(feature)
+              namespace.success if namespace.success?
+            end.compact
+          }.to_result
         end
       end
     end

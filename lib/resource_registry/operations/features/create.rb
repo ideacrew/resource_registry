@@ -8,9 +8,9 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do])
 
         def call(params)
-          feature_params = yield construct(params)
-          feature_values = yield validate(feature_params)
-          feature        = yield create(feature_values)
+          params  = yield construct(params)
+          values  = yield validate(params)
+          feature = yield create(values)
 
           Success(feature)
         end
@@ -21,6 +21,7 @@ module ResourceRegistry
           if params[:namespace_path].blank?
             params['namespace_path'] =  params['namespace'].is_a?(Hash) ? params.delete('namespace') : {path: params.delete('namespace')}
           end
+
           Success(params)
         end
 
@@ -28,8 +29,9 @@ module ResourceRegistry
           ResourceRegistry::Validation::FeatureContract.new.call(params)
         end
 
-        def create(feature_values)
-          feature = ResourceRegistry::Feature.new(feature_values.to_h)
+        def create(values)
+          feature = ResourceRegistry::Feature.new(values.to_h)
+
           Success(feature)
         end
       end

@@ -55,7 +55,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
     context "Given valid parameters" do
       # let(:required_attr_defaults)  { {meta: nil, settings: []} }
-      let(:required_attr_defaults)  { {} }
+      let(:required_attr_defaults)  { {meta: nil} }
       let(:required_attr_out)     { required_params.merge(required_attr_defaults) }
 
       context "and required parameters only" do

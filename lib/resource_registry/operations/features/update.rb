@@ -11,9 +11,9 @@ module ResourceRegistry
           registry = params[:registry]
 
           feature_params  = yield build_params(params[:feature].to_h)
-          feature_entity  = yield create_entity(feature_params)
-          feature         = yield update_model(feature_entity) if defined? Rails
-          updated_feature = yield update_registry(feature_entity, registry)
+          entity          = yield create_entity(feature_params)
+          feature         = yield save_record(entity) if defined? Rails
+          updated_feature = yield update_registry(entity, registry)
 
           Success(feature)
         end
@@ -38,18 +38,12 @@ module ResourceRegistry
           ResourceRegistry::Operations::Features::Create.new.call(params)
         end
 
-        def update_model(feature_entity)
-          if defined? ResourceRegistry::Mongoid
-            ResourceRegistry::Stores::Mongoid::Update.new.call(feature_entity)
-          elsif defined? ResourceRegistry::ActiveRecord
-            ResourceRegistry::Stores::ActiveRecord::Update.new.call(feature_entity)
-          else
-            Success(true)
-          end
+        def save_record(entity)
+          ResourceRegistry::Stores.persist(entity) || Success(entity)
         end
 
-        def update_registry(feature_entity, registry)
-          ResourceRegistry::Stores::Container::Update.new.call(feature_entity, registry)
+        def update_registry(entity, registry)
+          ResourceRegistry::Stores::Container::Update.new.call(entity, registry)
         end
       end
     end

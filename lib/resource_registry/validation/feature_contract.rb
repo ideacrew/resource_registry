@@ -24,6 +24,10 @@ module ResourceRegistry
         optional(:options).maybe(:hash)
         optional(:meta).maybe(:hash)
         optional(:settings).array(:hash)
+
+        before(:value_coercer) do |feature|
+          feature.to_h.merge(meta: nil) if feature[:meta].blank?
+        end
       end
 
       # @!macro [attach] rulemacro

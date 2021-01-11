@@ -55,7 +55,7 @@ module RegistryViewControls
     if [:radio_select, :checkbox_select].include?(type)
       custom_form_group(option, input_control)
     else
-      return input_control if type == :toggle_enabled
+      return input_control if [:toggle_enabled, :slider_switch].include?(type)
       form_group(option, input_control)
     end
   end
@@ -70,7 +70,19 @@ module RegistryViewControls
   end
 
   def slider_switch_control(option, form)
+    meta = option.meta
+    # input_value = value_for(option, form) || option.item || meta&.default
 
+    tag.div(class: "form-group") do
+      tag.label(for: option.key.to_s, value: option.key.to_s.titleize, class: 'pr-2') do
+        option.key.to_s.titleize
+      end +
+      tag.input(nil, id: 'settingToggle', type: "checkbox", name: input_name_for(option, form), checked: true, data: {toggle: 'toggle', style: 'ios'}) +
+      tag.label(class: 'pl-2') { meta&.label } +
+      tag.a(class: "btn btn-secondary ml-4", role: "button", href: '#') do
+        "Configure #{meta.value_hash['key'].to_s.titleize}"
+      end
+    end
   end
 
   def select_control(setting, form)

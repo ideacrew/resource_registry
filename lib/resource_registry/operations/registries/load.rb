@@ -29,12 +29,10 @@ module ResourceRegistry
 
           paths.value!.each do |path|
             result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
-            if result.success?
-              namespaces_list << result.success[:namespace_list]
-            end
+            namespaces_list << result.success[:namespace_list] if result.success?
           end
 
-          Success({registry: registry, namespace_list: namespaces_list.flatten})
+          Success(registry: registry, namespace_list: namespaces_list.flatten)
         end
 
         def merge_namespaces(namespace_list)

@@ -16,6 +16,14 @@ module ResourceRegistry
       field :is_visible,    type: Boolean
 
       embedded_in :metable, polymorphic: true
+
+      def value_hash
+        JSON.parse(value)
+      end
+
+      def value=(val)
+        super(val.to_json)
+      end
     end
   end
 end
