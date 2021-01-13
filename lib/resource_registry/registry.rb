@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/container'
+require 'dry/monads'
 require_relative 'operations/registries/load'
 require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
@@ -8,6 +9,7 @@ require_relative 'operations/registries/create'
 module ResourceRegistry
   # Registries are containers for storing and accessing an application's {ResourceRegistry::Feature} and setting values
   class Registry < Dry::Container
+    include Dry::Monads[:result]
 
     FEATURE_INDEX_NAMESPACE = 'feature_index'
     CONFIGURATION_NAMESPACE = 'configuration'
@@ -66,7 +68,7 @@ module ResourceRegistry
       feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
 
       if block_given?
-        feature.enabled? ? feature.item.call(yield) : Success(yield)
+        feature.enabled? ? feature.item.call(yield) : Failure("Feature: #{key} is disabled.")
       else
         feature
       end
