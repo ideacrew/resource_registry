@@ -4,18 +4,43 @@ module RegistryViewControls
 
   def render_feature(feature, form = nil)
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
-    content = if ['legend'].include?(feature.meta.content_type.to_s)
-                form.hidden_field(:is_enabled) +
+    return render_attributes_feature(feature, form) if feature.meta.content_type == :model_attributes
+    content = form.hidden_field(:is_enabled)
+    content += if ['legend'].include?(feature.meta.content_type.to_s)
                 form.hidden_field(:namespace, value: feature.namespace_path.dotted_path)
               else
                 build_option_field(feature, form)
               end
-
     content += feature.settings.collect{|setting| build_option_field(setting, form).html_safe if setting.meta}.compact.join.html_safe
     content.html_safe
   end
 
-  def build_option_field(option, form)
+  def render_attributes_feature(feature, form)
+    item = JSON.parse(feature.item)
+    model_klass = item['class_name'].constantize
+
+    record = if item['scope'].present?
+      model_klass.send(item['scope']['name'], *item['scope']['arguments'])
+    elsif item['where'].present?
+      criteria = item['where']['arguments']
+      model_klass.where(criteria)
+    end
+
+    content = form.hidden_field(:is_enabled) +
+                form.hidden_field(:namespace, value: feature.namespace_path.path.map(&:to_s).join('.'))
+
+
+    feature.settings.each_with_index do |setting, index|
+      next unless setting.meta
+      content += form.fields_for :settings, setting, {index: index} do |setting_form|
+        build_option_field(setting, setting_form, {record: record})
+      end
+    end
+
+    content.html_safe
+  end
+
+  def build_option_field(option, form, attrs = {})
     type = option.meta.content_type&.to_sym
     input_control = case type
                     when :swatch
@@ -36,12 +61,12 @@ module RegistryViewControls
                       input_date_control(option, form)
                     when :currency
                       input_currency_control(option, form)
-                    when :toggle_enabled
-                      toggle_enabled_control(option, form)
+                    when :feature_enabled
+                      feature_enabled_control(option, form)
                     when :slider_switch
                       slider_switch_control(option, form)
                     else
-                      input_text_control(option, form)
+                      input_text_control(option, form, attrs)
                     end
                     # else :text_field
                     #   input_text_control(option, form)
@@ -55,35 +80,64 @@ module RegistryViewControls
     if [:radio_select, :checkbox_select].include?(type)
       custom_form_group(option, input_control)
     else
-      return input_control if [:toggle_enabled, :slider_switch].include?(type)
+      return input_control if [:feature_enabled, :slider_switch].include?(type)
       form_group(option, input_control)
     end
   end
 
-  def toggle_enabled_control(option, form)
+  def feature_enabled_control(option, form)
     tag.div(class: "form-group") do
-      tag.label(for: option.key.to_s, value: option.key.to_s.titleize, class: 'pr-2') do
-        option.key.to_s.titleize
-      end +
-        tag.input(nil, id: 'featureToggle', type: "checkbox", checked: option.is_enabled, data: {toggle: 'toggle', style: 'ios'})
+      content  = option.key.to_s.titleize
+      content += tag.label(class: 'switch') do
+        tag.input(type: 'hidden', value: option.key, name: 'feature_key') +
+        tag.input(type: "checkbox", checked: option.is_enabled) +
+        tag.span(class: "slider")
+      end
+
+      content += tag.div(class: "spinner-border d-none text-success", role: "status") do
+        tag.span(class: "sr-only") do
+          "Loading..."
+        end
+      end
+
+      content.html_safe
     end
   end
 
   def slider_switch_control(option, form)
-    meta = option.meta
-    # input_value = value_for(option, form) || option.item || meta&.default
-
     tag.div(class: "form-group") do
-      tag.label(for: option.key.to_s, value: option.key.to_s.titleize, class: 'pr-2') do
-        option.key.to_s.titleize
-      end +
-      tag.input(nil, id: 'settingToggle', type: "checkbox", name: input_name_for(option, form), checked: true, data: {toggle: 'toggle', style: 'ios'}) +
-      tag.label(class: 'pl-2') { meta&.label } +
-      tag.a(class: "btn btn-secondary ml-4", role: "button", href: '#') do
-        "Configure #{meta.value_hash['key'].to_s.titleize}"
+      content  = option.key.to_s.titleize
+      content += tag.label(class: 'switch') do
+        tag.input(type: 'hidden', value: option.key, name: 'feature_key') +
+        tag.input(type: "checkbox", checked: option.item) +
+        tag.span(class: "slider")
       end
+
+      # content += tag.div(class: "spinner-border d-none text-success", role: "status") do
+      #   tag.span(class: "sr-only") do
+      #     "Loading..."
+      #   end
+      # end
+
+      content.html_safe
     end
   end
+
+  # def slider_switch_control(option, form)
+  #   meta = option.meta
+  #   # input_value = value_for(option, form) || option.item || meta&.default
+
+  #   tag.div(class: "form-group") do
+  #     tag.label(for: option.key.to_s, value: option.key.to_s.titleize, class: 'pr-2') do
+  #       option.key.to_s.titleize
+  #     end +
+  #     tag.input(nil, id: 'settingToggle', type: "checkbox", name: input_name_for(option, form), checked: true, data: {toggle: 'toggle', style: 'ios'}) +
+  #     tag.label(class: 'pl-2') { meta&.label } +
+  #     tag.a(class: "btn btn-secondary ml-4", role: "button", href: '#') do
+  #       "Configure #{meta.value_hash['key'].to_s.titleize}"
+  #     end
+  #   end
+  # end
 
   def select_control(setting, form)
     id = setting[:key].to_s
@@ -212,7 +266,12 @@ module RegistryViewControls
     tag.div(yield, class: "input-group")
   end
 
-  def value_for(setting, form)
+  def value_for(setting, form, options = {})
+    if options[:record].present?
+      item = JSON.parse(setting.item)
+      return options[:record].send(item['attribute'])
+    end
+
     value = if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
               form.object.settings.where(key: setting.key).first&.item
             else
@@ -225,17 +284,21 @@ module RegistryViewControls
 
   def input_name_for(setting, form)
     if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
-      form&.object_name.to_s + "[settings][#{setting.key}]"
+      if form.index.present?
+        form&.object_name.to_s + "[#{form.index}][#{setting.key}]"
+      else
+        form&.object_name.to_s + "[settings][#{setting.key}]"
+      end
     else
       form&.object_name.to_s + "[#{setting.key}]"
     end
   end
 
-  def input_text_control(setting, form)
+  def input_text_control(setting, form, options = {})
     id = setting[:key].to_s
 
     meta = setting[:meta]
-    input_value = value_for(setting, form) || setting.item || meta&.default
+    input_value = value_for(setting, form, options) || setting.item || meta&.default
 
     # aria_describedby = id
 
@@ -424,9 +487,9 @@ module RegistryViewControls
               form.hidden_field(:key) +
                 render_feature(feature, form) +
                 tag.div(class: 'row mt-3') do
-                  # tag.div(class: 'col-4') do
-                  #   form.submit(class: 'btn btn-primary')
-                  # end +
+                  tag.div(class: 'col-4') do
+                    form.submit(class: 'btn btn-primary')
+                  end +
                     tag.div(class: 'col-6') do
                       tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
                     end
@@ -439,11 +502,62 @@ module RegistryViewControls
     end
   end
 
-  def find_feature(feature_key)
-    if defined? ResourceRegistry::Mongoid
-      ResourceRegistry::Mongoid::Feature.where(key: feature_key).first
-    else
-      ResourceRegistry::ActiveRecord::Feature.where(key: feature_key).first
+  def feature_panel(feature_key, feature_registry, _options = {})
+    tag.div(class: 'card') do
+      content = tag.div(class: 'card-body') do
+        feature = defined?(Rails) ? find_feature(feature_key) : feature_registry[feature_key].feature
+        next if feature.blank?
+        tag.div(id: feature_key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature_key}-list") do
+          form_for(feature, as: 'feature', url: update_feature_exchanges_configuration_path(feature), method: :post, remote: true, authenticity_token: true) do |form|
+            form.hidden_field(:key) +
+              render_feature(feature, form) +
+              tag.div(class: 'row mt-3') do
+                tag.div(class: 'col-4') do
+                  form.submit(class: 'btn btn-primary')
+                end +
+                  tag.div(class: 'col-6') do
+                    tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
+                  end
+              end
+          end
+        end.html_safe
+      end
     end
+  end
+
+  def namespace_panel(namespace, feature_registry, _options = {})
+    tag.div(class: 'card') do
+      tag.div(class: 'card-body') do
+        form_for(namespace, as: 'namespace', url: update_namespace_exchanges_configurations_path, method: :post, remote: true, authenticity_token: true) do |form|
+          namespace_content = form.hidden_field(:path, value: namespace.path.map(&:to_s).join('.'))
+
+          namespace.features.each_with_index do |feature, index|
+            namespace_content += form.fields_for :features, feature, {index: index} do |feature_form|
+              tag.div(id: feature.key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature.key}-list") do
+                feature_form.hidden_field(:key) +
+                render_feature(feature, feature_form)
+              end
+            end
+          end
+
+          namespace_content += tag.div(class: 'row mt-3') do
+              tag.div(class: 'col-4') do
+                form.submit(class: 'btn btn-primary')
+              end +
+              tag.div(class: 'col-6') do
+                tag.div(class: 'flash-message', id: namespace.path.map(&:to_s).join('-') + '-alert')
+              end
+            end
+
+          namespace_content.html_safe
+        end
+      end.html_safe
+    end
+  end
+
+  def find_feature(feature_key)
+    feature_class = ResourceRegistry::Stores.feature_model
+    return unless feature_class
+    feature_class.where(key: feature_key).first
   end
 end

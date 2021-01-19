@@ -10,7 +10,7 @@ module ResourceRegistry
 
         def call(registry:)
           paths    = yield list_paths(load_path_for(registry))
-          values   = yield load(paths, registry)
+          values   = yield load_features(paths, registry)
           entities = yield merge_namespaces(values[:namespace_list])
           registry = yield register_graph(entities, values[:registry])
 
@@ -24,7 +24,7 @@ module ResourceRegistry
           Success(paths)
         end
 
-        def load(paths, registry)
+        def load_features(paths, registry)
           namespaces_list = []
 
           paths.value!.each do |path|

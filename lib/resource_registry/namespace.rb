@@ -3,6 +3,8 @@
 require_relative 'validation/namespace_contract'
 require_relative 'operations/namespaces/build'
 require_relative 'operations/namespaces/create'
+require_relative 'operations/namespaces/form'
+require_relative 'operations/namespaces/update_features'
 require_relative 'operations/graphs/create'
 
 module ResourceRegistry
@@ -42,5 +44,10 @@ module ResourceRegistry
     # Namespaces that are nested under this namespace
     # @return [Array<ResourceRegistry::Namespace>]
     attribute :namespaces,  Types::Array.of(::ResourceRegistry::Namespace).meta(omittable: true)
+
+
+    def persisted?
+        false
+    end
   end
 end

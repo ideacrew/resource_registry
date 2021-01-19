@@ -12,6 +12,13 @@ module ResourceRegistry
       embeds_one :meta, as: :metable, class_name: '::ResourceRegistry::Mongoid::Meta', cascade_callbacks: true
       embedded_in :feature, class_name: '::ResourceRegistry::Mongoid::Feature'
 
+      def item
+        JSON.parse(super) if super.present?
+      end
+
+      def item=(value)
+        write_attribute(:item, value.to_json)
+      end
     end
   end
 end

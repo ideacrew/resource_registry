@@ -50,6 +50,7 @@ module ResourceRegistry
               end
             end
             feature.save
+            feature
           }.to_result
         end
       end

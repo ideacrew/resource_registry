@@ -2,6 +2,7 @@
 require 'dry/monads'
 require 'rgl/adjacency'
 require 'rgl/implicit'
+require 'digest/md5'
 
 module ResourceRegistry
   module Operations

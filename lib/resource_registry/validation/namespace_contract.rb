@@ -20,14 +20,24 @@ module ResourceRegistry
         required(:path).array(:symbol)
         optional(:meta).maybe(:hash)
         optional(:feature_keys).array(:symbol)
-        optional(:features).array(:hash)
+        optional(:features).value(:array)
         optional(:namespaces).array(:hash)
       end
 
-      rule(:features).each do
+      rule(:features) do
         if key? && value
-          result = ResourceRegistry::Validation::FeatureContract.new.call(value)
-          key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
+          return if value.any?{|feature| feature.is_a?(ResourceRegistry::Feature)}
+          feature_results = value.inject([]) do |results, feature_hash|
+            result = ResourceRegistry::Validation::FeatureContract.new.call(feature_hash)
+
+            if result.failure?
+              key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
+            else
+              results << result.to_h
+            end
+          end
+
+          values.merge!(features: feature_results)
         end
       end
 

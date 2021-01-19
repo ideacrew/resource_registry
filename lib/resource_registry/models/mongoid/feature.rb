@@ -17,6 +17,14 @@ module ResourceRegistry
       def setting(key)
         settings.detect{|setting| setting.key.to_s == key.to_s}
       end
+
+      def item
+        JSON.parse(super) if super.present?
+      end
+
+      def item=(value)
+        write_attribute(:item, value.to_json)
+      end
     end
   end
 end
