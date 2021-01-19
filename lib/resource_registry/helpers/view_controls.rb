@@ -273,7 +273,7 @@ module RegistryViewControls
     end
 
     value = if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
-              form.object.settings.where(key: setting.key).first&.item
+              form.object.settings.detect{|s| s.key == setting.key}&.item
             else
               form.object.send(setting.key)
             end
@@ -513,7 +513,7 @@ module RegistryViewControls
               render_feature(feature, form) +
               tag.div(class: 'row mt-3') do
                 tag.div(class: 'col-4') do
-                  form.submit(class: 'btn btn-primary')
+                  form.submit('Update', class: 'btn btn-primary')
                 end +
                   tag.div(class: 'col-6') do
                     tag.div(class: 'flash-message', id: feature_key.to_s + '-alert')
@@ -542,7 +542,7 @@ module RegistryViewControls
 
           namespace_content += tag.div(class: 'row mt-3') do
               tag.div(class: 'col-4') do
-                form.submit(class: 'btn btn-primary')
+                form.submit('Update', class: 'btn btn-primary')
               end +
               tag.div(class: 'col-6') do
                 tag.div(class: 'flash-message', id: namespace.path.map(&:to_s).join('-') + '-alert')
