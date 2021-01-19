@@ -1,0 +1,273 @@
+---
+registry:
+  - namespace:
+      - :enterprise
+    meta:
+      label: Enterprise
+      description: Organizations that share hosting services under this Enterprise and their top level configurations
+    features:
+      - key: :enterprise_owner_accounts
+        item: []
+        is_enabled: true
+        meta:
+          label: Enterprise Owner Accounts
+          description: A list of accounts with enterprise admininstrator priviliges
+          content_type: :array_of_accounts
+          is_required: true
+          is_visible: true
+      - key: :enterprise_profile
+        is_enabled: true
+        settings:
+          - key: :enterprise_organization_name
+            item: nil
+            meta:
+              label: Enterprise Organization Name
+              description: Name of organization hosting this system instance
+              content_type: :string
+              is_required: false
+              is_visible: true
+            settings:
+              - key: :technical_contact
+                item:
+                  name: nil
+                  email: nil
+                  phone: nil
+                meta:
+                  label: Technical Contact
+                  content_type: :contact
+                  description: Contact information for person who can assist with system technical issues
+                  is_required: false
+                  is_visible: true
+              - key: :operational_contact
+                item:
+                  name: nil
+                  email: nil
+                  phone: nil
+                meta:
+                  label: Operational Contact
+                  content_type: :contact
+                  description: Contact information for person who can assist with system operational issues
+                  is_required: false
+                  is_visible: true
+          - key: :is_multitenant
+            item: false
+            meta:
+              label: Multitenant?
+              description: Is this Enterprise instance hosting services shared between multiple customers?
+              content_type: :boolean
+              default: false
+              is_required: true
+              is_visible: true
+  - namespace:
+      - :enterprise
+      - :tenants
+    meta:
+      label: Tenants
+      description: Organizations that share hosting services under this Enterprise and their top level configurations
+    features:
+      - key: :dchbx_tenant
+        item: :dchbx
+        is_enabled: true
+        meta:
+          label: Tenant Key
+          description: A short, unique identifier for this tenant.  Lower case letters only.  May not start with a number.
+          content_type: :symbol
+          is_required: true
+          is_visible: true
+        settings:
+          - key: :start_at
+            item: nil
+            meta:
+              label: Start At
+              Description: Date when this organization's account first activated
+              content_type: :date_time
+              is_required: false
+              is_visible: true
+          - key: :expire_at
+            item: nil
+  - namespace:
+      - :enterprise
+      - :subscriptions
+      - :dchbx
+    meta:
+      label: Tenant Subscriptions
+      description: Software products authorized for each Tenant
+    features:
+      - key: :enroll_app
+        item: nil
+        is_enabled: true
+        settings:
+          - key: :validator_id
+            item: nil
+          - key: :subscribed_at
+            item: nil
+          - key: :unsubscribed_at
+            item: nil
+  - namespace:
+      - :dchbx
+    meta:
+      label: DC HealthLink Tenant
+      description: Tenants manage features under their own namespace key
+    features:
+      - key: :dchbx_owner_accounts
+        item: []
+        is_enabled: true
+        meta:
+          label: Owner Accounts
+          description: A list of accounts with admininstrator priviliges
+          content_type: :array_of_accounts
+          is_required: true
+          is_visible: true
+      - key: :dchbx_profile
+        is_enabled: true
+        settings:
+          - key: :dchbx_organization_name
+            item: "DC HealthLink"
+            meta:
+              label: Organization Name
+              description: Name of organization hosting this system instance
+              content_type: :string
+              is_required: false
+              is_visible: true
+            settings:
+              - key: :technical_contact
+                item:
+                  name: nil
+                  email: nil
+                  phone: nil
+                meta:
+                  label: Technical Contact
+                  content_type: :contact
+                  description: Contact information for person who can assist with system technical issues
+                  is_required: false
+                  is_visible: true
+              - key: :operational_contact
+                item:
+                  name: nil
+                  email: nil
+                  phone: nil
+                meta:
+                  label: Operational Contact
+                  content_type: :contact
+                  description: Contact information for person who can assist with system operational issues
+                  is_required: false
+                  is_visible: true
+      - key: :dchbx_profile
+        is_enabled: true
+        settings:
+      - key: :dchbx_organization_name
+        item: "DC HealthLink"
+        meta:
+          label: Enterprise Organization Name
+          description: Name of organization hosting this site
+          content_type: :string
+          is_required: false
+          is_visible: true
+  - namespace:
+      - :dchbx
+      - :enroll_app
+    features:
+      - key: :aca_shop_market
+        is_enabled: true
+      - key: :aca_individual_market
+        is_enabled: true
+      - key: :congressional_market
+        is_enabled: true
+  - namespace:
+      - :dchbx
+      - :enroll_app
+      - :site
+      - :brand
+    features:
+      - key: logo
+        is_enabled: true
+        meta:
+          type: :base_64
+          description: Organization logo image that will appear on the portal page. For best results, use .png or .jpg 160h x 160w pixel image.
+      - key: fav_icon
+        is_enabled: true
+        meta:
+          type: :base_64
+          description: Favorite icon is a 16x16 pixel image that will appear on the web browser tab, bookmarks, history, etc.. For best results, use .png or .jpg image 160h x 160w
+      - key: heading_typeface
+        item: https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
+        is_enabled: true
+        meta:
+          type: :url
+          default: https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
+          description: Google offers an extensive catalog of open source fonts that may be used with the Tool.  See https://fonts.google.com/
+      - key: body_typeface
+        item: https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
+        is_enabled: true
+        meta:
+          type: :url
+          default: https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
+          description: Google offers an extensive catalog of open source fonts that may be used with the Tool.  See https://fonts.google.com/
+      - key: color_pallette
+        is_enabled: true
+        settings:
+          - key: :primary_color
+            meta:
+              type: :swatch
+              default: "#007bff"
+          - key: :secondary_color
+            meta:
+              type: :swatch
+              default: "#6c757d"
+          - key: :success_color
+            meta:
+              type: :swatch
+              default: "#28a745"
+          - key: :danger_color
+            meta:
+              type: :swatch
+              default: "#dc3545"
+          - key: :warning_color
+            meta:
+              type: :swatch
+              default: "#ffc107"
+          - key: :info_color
+            meta:
+              type: :swatch
+              default: "#17a2b8"
+  - namespace:
+      - :dchbx
+      - :enroll_app
+      - :site
+      - :urls
+    features:
+      - key: :policies_url
+        item: "https://dchealthlink.com/"
+        is_enabled: true
+        meta:
+          content_type: :url
+          is_required: false
+          is_visible: true
+      - key: :faqs_url
+        item: "https://www.dchealthlink.com/Frequently-Asked-Questions"
+        is_enabled: true
+        meta:
+          content_type: :url
+          is_required: false
+          is_visible: true
+      - key: :help_url
+        item: "https://www.dchealthlink.com/help"
+        is_enabled: true
+        meta:
+          content_type: :url
+          is_required: false
+          is_visible: true
+      - key: :nondiscrimination_notice_url
+        item: "https://www.dchealthlink.com/nondiscrimination"
+        is_enabled: true
+        meta:
+          content_type: :url
+          is_required: false
+          is_visible: true
+      - key: :business_resource_center_url
+        item: "https://dchealthlink.com/smallbusiness/"
+        is_enabled: true
+        meta:
+          content_type: :url
+          is_required: false
+          is_visible: true
