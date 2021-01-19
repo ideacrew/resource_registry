@@ -26,18 +26,19 @@ module ResourceRegistry
 
       rule(:features) do
         if key? && value
-          return if value.any?{|feature| feature.is_a?(ResourceRegistry::Feature)}
-          feature_results = value.inject([]) do |results, feature_hash|
-            result = ResourceRegistry::Validation::FeatureContract.new.call(feature_hash)
+          if value.none?{|feature| feature.is_a?(ResourceRegistry::Feature)}
+            feature_results = value.inject([]) do |results, feature_hash|
+              result = ResourceRegistry::Validation::FeatureContract.new.call(feature_hash)
 
-            if result.failure?
-              key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
-            else
-              results << result.to_h
+              if result.failure?
+                key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
+              else
+                results << result.to_h
+              end
             end
-          end
 
-          values.merge!(features: feature_results)
+            values.merge!(features: feature_results)
+          end
         end
       end
 
