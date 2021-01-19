@@ -14,7 +14,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Success
-      expect(subject.value![:registry]).to be_a ResourceRegistry::Registry
+      expect(subject.value!).to include(a_kind_of ResourceRegistry::Feature)
     end
   end
 

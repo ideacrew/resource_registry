@@ -12,10 +12,9 @@ module ResourceRegistry
           params          = yield deserialize(file_io)
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
-          registry        = yield save_and_register_feature(features, registry)
-          namespaces      = yield build_namespaces(features)
+          registry        = yield persist(features, registry)
 
-          Success(namespace_list: namespaces, registry: registry)
+          Success(features)
         end
 
         private
@@ -60,22 +59,13 @@ module ResourceRegistry
           }.to_result
         end
 
-        def save_and_register_feature(features, registry)
+        def persist(features, registry)
           features.each do |feature|
             ResourceRegistry::Stores.persist(feature) if defined? Rails
             registry.register_feature(feature)
           end
 
           Success(registry)
-        end
-
-        def build_namespaces(features)
-          Try {
-            features.collect do |feature|
-              namespace = ResourceRegistry::Operations::Namespaces::Build.new.call(feature)
-              namespace.success if namespace.success?
-            end.compact
-          }.to_result
         end
       end
     end
