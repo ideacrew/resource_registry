@@ -100,25 +100,17 @@ module ResourceRegistry
 
     def content_to_expand(element)
       tag.div(class: 'collapse', id: "nav_#{element[:key]}", 'aria-expanded': 'false') do
-        (element[:features] + element[:namespaces]).reduce('') do |list, child_ele|
+        nav_features = element[:features].select{|feature| feature[:meta][:content_type] == :nav}
+        (nav_features + element[:namespaces]).reduce('') do |list, child_ele|
           list += to_ul(child_ele, true)
         end.html_safe
       end
     end
 
     def namespace_nav_link(element)
-      if element[:meta].blank? || element[:meta][:content_type] == :nav
-        tag.a(options[:tag_options][:a][:namespace_link][:options].merge(href: "#nav_#{element[:key]}", 'data-target': "#nav_#{element[:key]}")) do
-          tag.span do
-            element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
-          end
-        end
-      else
-        namespace_url = "/exchanges/configurations/#{element[:features].first[:key]}/namespace_edit"
-        tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: namespace_url)) do
-          tag.span do
-            element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
-          end
+      tag.a(options[:tag_options][:a][:namespace_link][:options].merge(id: 'namespace-link', href: "#nav_#{element[:key]}", data: {target: "#nav_#{element[:key]}", feature: element[:features][0]&.[](:key)})) do
+        tag.span do
+          element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
         end
       end
     end
