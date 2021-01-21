@@ -327,8 +327,13 @@ module InputControls
     tag.div(yield, class: "input-group")
   end
 
+  def info_tooltip(title)
+    tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: title) do
+    end
+  end
+
   # Build a general-purpose form group wrapper around the supplied input control
-  def form_group(setting, control, options = {horizontal: true})
+  def form_group(setting, control, options = {horizontal: true, tooltip: true, title: 'test description'})
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
@@ -346,7 +351,10 @@ module InputControls
               label
             end
           end +
-          tag.div(class: 'col col-sm-12 col-md-6') do
+          tag.div(class: 'col col-sm-12 col-md-1') do
+            info_tooltip(options[:title]) if options[:tooltip]
+          end +
+          tag.div(class: 'col col-sm-12 col-md-5') do
             input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
           end
         end
