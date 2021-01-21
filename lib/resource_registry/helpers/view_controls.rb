@@ -181,29 +181,34 @@ module RegistryViewControls
     features = option.item.collect{|key| find_feature(key)}
      
     features.collect do |feature|
-      feature.settings.collect do |setting|
-        section_name = setting.meta&.label || setting.key.to_s.titleize
-        tag.div(class: 'mt-5') do 
-          tag.div(class: 'row') do
-            tag.div(class: 'col-md-8') do
-              tag.strong do
-                section_name
-              end
-            end +
-            tag.div(class: 'offset-md-6') do
-              tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
-                tag.span do
-                  "View #{section_name}"
-                end 
-              end
-            end +
-            tag.div(class: 'col-md-8') do
-              tag.ul(class: 'list-unstyled ml-2') do
-                setting.item.collect{|value| tag.li{ value.to_s.titleize }}.join.html_safe
+      tag.div(class: 'mt-3') do
+        tag.h4 do
+          feature.meta.label
+        end +
+        feature.settings.collect do |setting|
+          section_name = setting.meta&.label || setting.key.to_s.titleize
+          tag.div(class: 'mt-3') do
+            tag.div(class: 'row') do
+              tag.div(class: 'col-md-4') do
+                tag.strong do
+                  section_name
+                end
+              end +
+              tag.div(class: 'col-md-4') do
+                tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
+                  tag.span do
+                    "View #{section_name}"
+                  end
+                end
+              end +
+              tag.div(class: 'col-md-6') do
+                tag.ul(class: 'list-group list-group-flush ml-2') do
+                  setting.item.collect{|value| tag.li(class: 'list-group-item'){ value.to_s.titleize }}.join.html_safe
+                end
               end
             end
           end
-        end
+        end.join.html_safe
       end
     end.join.html_safe
   end
