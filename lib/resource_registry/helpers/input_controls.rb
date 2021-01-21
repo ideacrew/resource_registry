@@ -328,7 +328,7 @@ module InputControls
   end
 
   # Build a general-purpose form group wrapper around the supplied input control
-  def form_group(setting, control)
+  def form_group(setting, control, options = {horizontal: true})
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
@@ -339,10 +339,23 @@ module InputControls
     aria_label  = "Radio button for following text input" #setting[:aria_label] || "Radio button for following text input"
 
     tag.div(class: "form-group") do
-      tag.label(for: id, value: label, aria: { label: aria_label }) do
-        label
-      end +
-        input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
+      if options[:horizontal]
+        tag.div(class: 'row') do
+          tag.div(class: 'col col-sm-12 col-md-4') do
+            tag.label(for: id, value: label, aria: { label: aria_label }) do
+              label
+            end
+          end +
+          tag.div(class: 'col col-sm-12 col-md-6') do
+            input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
+          end
+        end
+      else
+        tag.label(for: id, value: label, aria: { label: aria_label }) do
+          label
+        end +
+          input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
+      end
     end
   end
 
