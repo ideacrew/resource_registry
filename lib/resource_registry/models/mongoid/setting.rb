@@ -14,6 +14,8 @@ module ResourceRegistry
 
       def item
         JSON.parse(super) if super.present?
+      rescue JSON::ParserError
+        super
       end
 
       def item=(value)
