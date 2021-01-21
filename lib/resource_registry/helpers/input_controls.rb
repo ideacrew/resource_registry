@@ -208,7 +208,7 @@ module InputControls
     # aria_describedby = id
 
     is_required = meta[:is_required] == false ? meta[:is_required] : true
-    placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
+    # placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
