@@ -134,13 +134,12 @@ module RegistryViewControls
     tag.div(class: 'card') do
       tag.div(class: 'card-body') do
         feature  = get_feature(feature_key, registry)
-
         if feature.present?
           features = [feature]
-          if feature.item == 'features_display'
+          if feature[:item] == 'features_display'
             feature_group_display(feature)
           else
-            if feature.item == 'feature_collection'
+            if feature[:item] == 'feature_collection'
               features_setting = feature.settings.detect{|setting| setting.meta&.content_type.to_s == 'feature_list_panel'}
               feature_keys = features_setting.item
               features = feature_keys.collect{|key| get_feature(key, registry)}
