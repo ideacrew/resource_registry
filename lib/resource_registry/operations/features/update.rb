@@ -10,10 +10,10 @@ module ResourceRegistry
         def call(params)
           feature_params  = yield build_params(params[:feature].to_h, params[:registry])
           entity          = yield create_entity(feature_params)
-          feature         = yield save_record(entity) if defined? Rails
+          feature         = yield save_record(entity, params[:registry], params[:filter]) if defined? Rails
           updated_feature = yield update_registry(entity, params[:registry])
 
-          Success(feature || entity)
+          Success(entity)
         end
 
         private
@@ -47,11 +47,12 @@ module ResourceRegistry
           ResourceRegistry::Operations::Features::Create.new.call(params)
         end
 
-        def save_record(entity)
-          ResourceRegistry::Stores.persist(entity) || Success(entity)
+        def save_record(entity, registry, filter_params = nil)
+          ResourceRegistry::Stores.persist(entity, registry, {filter: filter_params}) || Success(entity)
         end
 
         def update_registry(entity, registry)
+          return Success(entity) if registry[entity.key].meta&.content_type == :model_attributes
           ResourceRegistry::Stores::Container::Update.new.call(entity, registry)
         end
       end

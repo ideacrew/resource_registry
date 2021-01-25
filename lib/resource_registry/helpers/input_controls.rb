@@ -208,7 +208,7 @@ module InputControls
     # aria_describedby = id
 
     is_required = meta[:is_required] == false ? meta[:is_required] : true
-    # placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
+    placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
@@ -296,7 +296,7 @@ module InputControls
 
   def value_for(setting, form, options = {})
     if options[:record].present?
-      item = JSON.parse(setting.item)
+      item = setting_value(setting)
       options[:record].send(item['attribute'])
     else
       value = if form.object.class.to_s.match(/^ResourceRegistry.*/).present?
@@ -327,13 +327,8 @@ module InputControls
     tag.div(yield, class: "input-group")
   end
 
-  def info_tooltip(title)
-    tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: title) do
-    end
-  end
-
   # Build a general-purpose form group wrapper around the supplied input control
-  def form_group(setting, control, options = {horizontal: true, tooltip: true, title: 'test description'})
+  def form_group(setting, control, options = {horizontal: true, tooltip: true})
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
@@ -352,7 +347,7 @@ module InputControls
             end
           end +
           tag.div(class: 'col col-sm-12 col-md-1') do
-            info_tooltip(options[:title]) if options[:tooltip]
+            tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description) if options[:tooltip]
           end +
           tag.div(class: 'col col-sm-12 col-md-5') do
             input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
@@ -393,5 +388,13 @@ module InputControls
 
     input_control = input_text_control(setting, form)
     form_group(setting, input_control)
+  end
+
+  def setting_value(setting)
+    if setting && setting.is_a?(ResourceRegistry::Setting)
+      JSON.parse(setting.item)
+    else
+      setting&.item
+    end
   end
 end

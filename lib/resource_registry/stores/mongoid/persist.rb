@@ -10,26 +10,30 @@ module ResourceRegistry
         # @param [ResourceRegistry::Entities::Registry] container the container instance to which the constant will be assigned
         # @param [String] constant_name the name to assign to the container and its associated dependency injector
         # @return [Dry::Container] A non-finalized Dry::Container with associated configuration values wrapped in Dry::Monads::Result
-        def call(entity)
-          feature = yield find(entity)
-          feature = yield persist(entity, feature) 
+        def call(entity, registry, params = {})
+          record = yield find(entity, registry, params[:filter])
+          record = yield persist(entity, record)
           
-          Success(feature)
+          Success(record)
         end
 
         private
 
-        def find(entity)
-          feature = ResourceRegistry::Mongoid::Feature.where(key: entity.key).first
-          
-          Success(feature)
+        def find(entity, registry, filter_params =  nil)
+          record = if filter_params
+            registry[entity.key]{ filter_params }.success[:record]
+          else
+            ResourceRegistry::Mongoid::Feature.where(key: entity.key).first
+          end
+
+          Success(record)
         end
 
-        def persist(entity, feature)
-          if feature.blank?
+        def persist(entity, record)
+          if record.blank?
             create(entity)
           else
-            update(entity, feature)
+            update(entity, record)
           end
         end
 
@@ -39,18 +43,26 @@ module ResourceRegistry
           }.to_result
         end
 
-        def update(entity, feature)
+        def update(entity, record)
           Try {
-            feature.is_enabled = entity.is_enabled
-            entity.settings.each do |setting_entity|
-              if setting = feature.settings.detect{|setting| setting.key == setting_entity.key}
-                setting.item = setting_entity.item
-              else
-                feature.settings.build(setting_entity.to_h)
+            if record.class.to_s.match?(/ResourceRegistry/)
+              record.is_enabled = entity.is_enabled
+              entity.settings.each do |setting_entity|
+                if setting = record.settings.detect{|setting| setting.key == setting_entity.key}
+                  setting.item = setting_entity.item
+                else
+                  record.settings.build(setting_entity.to_h)
+                end
               end
+            else
+              attributes = entity.settings.reduce({}) do |attrs, setting|
+                attrs[setting.key] = setting.item
+                attrs
+              end
+              record.assign_attributes(attributes)
             end
-            feature.save
-            feature
+            record.save(validate: false)
+            record
           }.to_result
         end
       end
