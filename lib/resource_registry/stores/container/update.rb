@@ -22,10 +22,10 @@ module ResourceRegistry
           registered_feature_hash = container[new_feature.key].feature.to_h
           registered_feature_hash[:is_enabled] = new_feature.is_enabled
 
-          new_feature.settings.each do |setting|
-            registered_feature_hash[:settings].each do |setting_hash|
-              setting_hash[:item] = setting.item if setting.key == setting_hash[:key]
-            end
+          registered_feature_hash[:settings] = registered_feature_hash[:settings].collect do |setting_hash|
+            new_setting = new_feature.settings.detect{|setting| setting.key == setting_hash[:key]}
+            setting_hash[:item] = new_setting.item if new_setting
+            setting_hash
           end
 
           updated_feature = ResourceRegistry::Operations::Features::Create.new.call(registered_feature_hash).value!

@@ -61,7 +61,7 @@ module ResourceRegistry
 
         def persist(features, registry)
           features.each do |feature|
-            ResourceRegistry::Stores.persist(feature) if defined? Rails
+            ResourceRegistry::Stores.persist(feature, registry) if defined? Rails
             registry.register_feature(feature)
           end
 

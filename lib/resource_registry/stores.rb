@@ -13,10 +13,10 @@ module ResourceRegistry
   module Stores
     class << self
 
-      def persist(entity)
+      def persist(entity, registry, params = {})
         return unless store_namespace
 
-        "#{store_namespace}::Persist".constantize.new.call(entity)
+        "#{store_namespace}::Persist".constantize.new.call(entity, registry, params)
       end
 
       def find(feature_key)
