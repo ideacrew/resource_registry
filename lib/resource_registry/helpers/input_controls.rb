@@ -19,6 +19,8 @@ module InputControls
                       input_email_control(option, form)
                     when :date
                       input_date_control(option, form)
+                    when :date_range
+                      input_date_range_control(option, form)
                     when :currency
                       input_currency_control(option, form)
                     when :feature_enabled
@@ -228,10 +230,34 @@ module InputControls
     input_value = date_value || setting.item || meta&.default
     # aria_describedby = id
 
-    is_required = meta&.is_required == false ? meta.is_required : true
+    is_required = meta[:is_required] == false ? meta[:is_required] : true
 
     tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form), placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
   end
+
+
+  def input_date_range_control(setting, form)
+    meta = setting[:meta]
+
+    date_bounds = setting.item.split('..').collect do |date_str|
+      if date_str.match?(/\d{4}-\d{2}-\d{2}/)
+        date_str
+      else
+        date = Date.strptime(date_str, "%m/%d/%Y")
+        date.to_s(:db)
+      end
+    end
+
+    is_required = meta[:is_required] == false ? meta[:is_required] : true
+
+    from_input_name = form&.object_name.to_s + "[settings][#{setting.key}][begin]"
+    to_input_name = form&.object_name.to_s + "[settings][#{setting.key}][end]"
+
+    tag.input(nil, type: "date", value: date_bounds[0], id: from_input_name, name: from_input_name, placeholder: "mm/dd/yyyy", class: "form-control", required: is_required) +
+    tag.div(class: 'input-group-addon') { 'to' } +
+    tag.input(nil, type: "date", value: date_bounds[1], id: to_input_name, name: to_input_name, placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
+  end
+
 
   def input_number_control(setting, form)
     id = setting[:key].to_s
@@ -349,7 +375,7 @@ module InputControls
           tag.div(class: 'col col-sm-12 col-md-1') do
             tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description) if options[:tooltip]
           end +
-          tag.div(class: 'col col-sm-12 col-md-5') do
+          tag.div(class: 'col col-sm-12 col-md-7') do
             input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
           end
         end

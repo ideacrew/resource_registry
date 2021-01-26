@@ -153,7 +153,7 @@ module RegistryViewControls
 
       namespace_content += tag.div(class: 'row mt-3') do
           tag.div(class: 'col-4') do
-            form.submit('Update', class: 'btn btn-primary')
+            form.submit('Save', class: 'btn btn-primary')
           end +
           tag.div(class: 'col-6') do
             tag.div(class: 'flash-message', id: namespace.path.map(&:to_s).join('-') + '-alert')
@@ -178,7 +178,7 @@ module RegistryViewControls
             if feature.item == 'feature_collection'
               features_setting = feature.settings.detect{|setting| setting.meta&.content_type.to_s == 'feature_list_panel'}
               feature_keys = features_setting.item
-              features = feature_keys.collect{|key| get_feature(key, registry)}
+              features = feature_keys.collect{|key| get_feature(key, registry)}.compact
             end
             features.collect{|feature| construct_feature_form(feature, registry)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
           end
@@ -198,7 +198,7 @@ module RegistryViewControls
             render_feature(feature, form, registry) +
             tag.div(class: 'row mt-3') do
               tag.div(class: 'col-4') do
-                form.submit('Update', class: 'btn btn-primary')
+                form.submit('Save', class: 'btn btn-primary')
               end +
                 tag.div(class: 'col-6') do
                   tag.div(class: 'flash-message', id: feature.key.to_s + '-alert')

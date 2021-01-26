@@ -28,6 +28,9 @@ module ResourceRegistry
               dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
               Range.new(*dates)
             end
+          elsif setting[:item].is_a?(Hash) && setting[:item][:begin] && setting[:item][:end]
+            dates = [setting[:item][:begin], setting[:item][:end]].collect{|str| Date.strptime(str, "%Y-%m-%d") }
+            Range.new(*dates)
           end
 
           setting.to_h.merge(item: item) if item
