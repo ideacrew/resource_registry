@@ -80,16 +80,17 @@ module InputControls
   end
 
   def select_control(setting, form)
-    id = setting[:key].to_s
+    id = setting.key.to_s
     selected_option = "Choose..."
-    meta = setting[:meta]
+    meta = setting.meta
 
     # aria_describedby = id
 
     value = value_for(setting, form) || setting.item || meta&.default
     option_list = tag.option(selected_option, selected: (value.blank? ? true : false))
     meta.enum.each do |choice|
-      option_list += tag.option(choice.first[1], selected: (choice.first[0].to_s == value.to_s), value: choice.first[0])
+      choice = choice.first if choice.is_a?(Hash)
+      option_list += tag.option(choice[1].to_s, selected: (choice[0].to_s == value.to_s), value: choice[0].to_s)
     end
 
     tag.select(option_list, id: id, class: "form-control", name: input_name_for(setting, form))
@@ -376,7 +377,7 @@ module InputControls
             tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description) if options[:tooltip]
           end +
           tag.div(class: 'col col-sm-12 col-md-7') do
-            input_group { control } + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
+            input_group { control }# + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
           end
         end
       else

@@ -110,7 +110,8 @@ module ResourceRegistry
     def namespace_nav_link(element)
       tag.a(options[:tag_options][:a][:namespace_link][:options].merge(id: 'namespace-link', href: "#nav_#{element[:key]}", data: {target: "#nav_#{element[:key]}", feature: element[:features][0]&.[](:key)})) do
         tag.span do
-          element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
+          link_title(element)
+          # element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
         end
       end
     end
@@ -120,8 +121,17 @@ module ResourceRegistry
       feature_url ||= ('/exchanges/configurations/' + element[:key].to_s + '/edit')
       tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: feature_url)) do
         tag.span do
-          element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
+          link_title(element)
+          # element[:namespaces] ? element[:path].last.to_s.titleize : element[:meta][:label]
         end
+      end
+    end
+
+    def link_title(element)
+      if element[:meta]
+        element[:meta][:label]
+      else
+        element[:path].last.to_s.titleize
       end
     end
   end
