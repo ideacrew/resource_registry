@@ -62,7 +62,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mongoid',          '~> 6.0'
   spec.add_development_dependency 'activesupport',    '~> 5.2.4'
   spec.add_development_dependency "simplecov" #,  '~> 1.0'
-  spec.add_development_dependency "database_cleaner", '~> 1.7'
+  spec.add_development_dependency "database_cleaner", '~> 2.0'
   spec.add_development_dependency "timecop",          '~> 0.9'
   spec.add_development_dependency "rubocop",          '~> 0.74.0'
   spec.add_development_dependency "yard",         "~> 0.9"
