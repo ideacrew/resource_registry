@@ -35,6 +35,10 @@ module RegistryDataSeed
     Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features','aca_shop_market', 'aca_shop_market.yml')
   end
 
+  def feature_group_template_path
+    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features','aca_shop_market', 'feature_group.yml')
+  end
+
   def option_files_dir
     Pathname.pwd.join('spec', 'db', 'seedfiles', 'client')
   end

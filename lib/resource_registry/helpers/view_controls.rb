@@ -180,21 +180,32 @@ module RegistryViewControls
               feature_keys = features_setting.item
               features = feature_keys.collect{|key| get_feature(key, registry)}.compact
             end
-            features.collect{|feature| construct_feature_form(feature, registry)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
+            features.collect{|feature| construct_feature_form(feature, registry, options)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
           end
         end
       end
     end
   end
 
-  def construct_feature_form(feature, registry)
+  def construct_feature_form(feature, registry, options = {})
+    if options[:action_params]
+      clone_action = options[:action_params][:action].to_s == 'clone'
+    end
+
+    submit_path = if clone_action
+      clone_feature_exchanges_configuration_path(feature.key)
+    else
+      update_feature_exchanges_configuration_path(feature.key)
+    end
+
     tag.div(id: feature.key.to_s, 'aria-labelledby': "list-#{feature.key}-list", class: 'card border-0') do
       tag.div(class: 'card-body') do
         tag.div(class: 'card-title h6 font-weight-bold mb-4') do
           feature.meta.label
         end +
-        form_for(feature, as: 'feature', url: update_feature_exchanges_configuration_path(feature.key), method: :post, remote: true, authenticity_token: true) do |form|
+        form_for(feature, as: 'feature', url: submit_path, method: :post, remote: true, authenticity_token: true) do |form|
           form.hidden_field(:key) +
+          (clone_action ? hidden_field_tag('feature[target_feature]', options[:action_params][:key]) : '') +
             render_feature(feature, form, registry) +
             tag.div(class: 'row mt-3') do
               tag.div(class: 'col-4') do
@@ -212,20 +223,37 @@ module RegistryViewControls
   def feature_group_display(feature)
     tag.div(id: feature.key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature.key}-list") do
       feature.settings.collect do |setting|
-        feature_group_control(setting).html_safe if setting.meta && setting.meta.content_type.to_s == 'feature_group'
+        feature_group_control(feature, setting).html_safe if setting.meta && setting.meta.content_type.to_s == 'feature_group'
       end.compact.join.html_safe
     end.html_safe
   end
 
-  def feature_group_control(option)
+  def feature_group_control(source_feature, option)
     features = option.item.collect{|key| find_feature(key)}
-     
     features.collect do |feature|
       tag.div(class: 'mt-3') do
-        tag.h4 do
-          feature.meta.label
+        tag.div(class: 'row') do
+          tag.div(class: 'col-md-6') do
+            tag.h4 do
+              feature.meta.label
+            end
+          end +
+          tag.div(class: 'col-md-6') do
+            action_setting = feature.settings.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
+            if action_setting
+              form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
+                hidden_field_tag('feature[action]', 'clone') +
+                hidden_field_tag('feature[key]', feature.key) +
+                f.submit('Clone', class: 'btn btn-link')
+              end.html_safe
+              # tag.a(href: action_setting.item + "?", data: {remote: true}) do
+              #   tag.span { "Clone" }
+              # end
+            end
+          end
         end +
         feature.settings.collect do |setting|
+          next if setting.meta.content_type.to_s == 'feature_action'
           section_name = setting.meta&.label || setting.key.to_s.titleize
           tag.div(class: 'mt-3') do
             tag.div(class: 'row') do
@@ -248,7 +276,7 @@ module RegistryViewControls
               end
             end
           end
-        end.join.html_safe
+        end.compact.join.html_safe
       end
     end.join.html_safe
   end
