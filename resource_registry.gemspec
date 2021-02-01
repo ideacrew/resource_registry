@@ -45,14 +45,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'i18n',                     '>= 0.7.0'
   spec.add_dependency 'ox',                       '~> 2.0'
   spec.add_dependency 'loofah',                   '>= 2.3.1'
-  spec.add_dependency 'nokogiri',                 '>= 1.9.1'
-  spec.add_dependency 'rack',                     '>= 1.6.13'
+  spec.add_dependency 'nokogiri',                 '>= 1.11.1'
+  spec.add_dependency 'rack',                     '>= 2.2.3'
 
   spec.add_dependency 'mime-types'
   spec.add_dependency 'rgl'#,                      '~> 0.5.6'
 
-  spec.add_development_dependency "actionview",       '>= 5.2.4.2'
-  spec.add_development_dependency 'activesupport',    '~> 5.2.4'
+  spec.add_development_dependency "actionview",       '>= 5.2.4.3'
+  spec.add_development_dependency 'activesupport',    '~> 5.2.4.3'
   spec.add_development_dependency 'bootsnap',         '~> 1.0'
   spec.add_development_dependency 'bundler',          '~> 2.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.7'
