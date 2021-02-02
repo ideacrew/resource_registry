@@ -43,7 +43,28 @@ module InputControls
       custom_form_group(option, input_control)
     else
       return input_control if [:feature_enabled, :slider_switch].include?(type)
-      form_group(option, input_control)
+      form_group(option, input_control, attrs)
+    end
+  end
+
+  def input_filter_control(form, feature, data)
+    filter_setting = feature.settings.detect{|s| s.key == :filter_params}
+    filter_params = setting_value(filter_setting)
+
+    option_list = tag.option(filter_setting.meta.label)
+    data[:calender_years].collect do |choice|
+      option_list += tag.option(choice, selected: (choice == data[:catalog_year]), value: choice)
+    end
+
+    tag.div(class: 'row mb-4') do
+      tag.div(class: 'col-4') do
+        content = filter_params['criteria'].reduce([]) do |strs, (attr, value)|
+          strs << tag.input(type: 'hidden', id: "filter_#{attr}", name: "filter[#{attr}]", value: value)
+        end.join
+        content += tag.input(type: 'hidden', id: :target_feature, name: :target_feature, value: feature.key.to_s)
+        content += tag.select(option_list, id: filter_params['name'], class: "form-control feature-filter", name: "filter[#{filter_params['name']}]")
+        content.html_safe
+      end
     end
   end
 
@@ -88,9 +109,13 @@ module InputControls
 
     value = value_for(setting, form) || setting.item || meta&.default
     option_list = tag.option(selected_option, selected: (value.blank? ? true : false))
-    meta.enum.each do |choice|
-      choice = choice.first if choice.is_a?(Hash)
-      option_list += tag.option(choice[1].to_s, selected: (choice[0].to_s == value.to_s), value: choice[0].to_s)
+
+    choices = meta.enum
+    choices = meta.enum.constantize if choices.is_a?(String)
+
+    choices.each do |choice|
+      choice = choice.is_a?(Hash) ? choice.first : [choice.to_s, choice.to_s.humanize]
+      option_list += tag.option(choice[1], selected: (choice[0]== value.to_s), value: choice[0])
     end
 
     tag.select(option_list, id: id, class: "form-control", name: input_name_for(setting, form))
@@ -355,7 +380,7 @@ module InputControls
   end
 
   # Build a general-purpose form group wrapper around the supplied input control
-  def form_group(setting, control, options = {horizontal: true, tooltip: true})
+  def form_group(setting, control, options = {})
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
@@ -374,7 +399,7 @@ module InputControls
             end
           end +
           tag.div(class: 'col col-sm-12 col-md-1') do
-            tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description) if options[:tooltip]
+            tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description)
           end +
           tag.div(class: 'col col-sm-12 col-md-7') do
             input_group { control }# + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
@@ -418,7 +443,7 @@ module InputControls
   end
 
   def setting_value(setting)
-    if setting && setting.is_a?(ResourceRegistry::Setting)
+    if setting.is_a?(ResourceRegistry::Setting) && setting.item&.is_a?(String)
       JSON.parse(setting.item)
     else
       setting&.item

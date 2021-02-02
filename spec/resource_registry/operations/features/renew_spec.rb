@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ResourceRegistry::Operations::Features::Clone do
+RSpec.describe ResourceRegistry::Operations::Features::Renew do
   include RegistryDataSeed
 
   subject { described_class.new.call(params) }

@@ -3,7 +3,7 @@
 require_relative 'validation/feature_contract'
 
 require_relative 'operations/features/create'
-require_relative 'operations/features/clone'
+require_relative 'operations/features/renew'
 require_relative 'operations/features/configure'
 require_relative 'operations/features/disable'
 require_relative 'operations/features/enable'

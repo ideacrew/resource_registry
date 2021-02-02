@@ -4,7 +4,7 @@ module ResourceRegistry
   module Operations
     module Features
       # Create a Feature
-      class Clone
+      class Renew
         send(:include, Dry::Monads[:result, :do, :try])
 
         attr_reader :original_year, :new_calender_year
@@ -87,6 +87,10 @@ module ResourceRegistry
 
           if value.is_a?(Symbol)
             value.to_s.gsub(original_year, new_calender_year).to_sym
+          elsif value.is_a?(Range) && value.min.is_a?(Date)
+            Range.new(value.min.next_year, value.max.next_year)
+          elsif value.is_a?(Date)
+            value.next_year
           elsif value.is_a?(String)
             value.gsub(original_year, new_calender_year)
           else

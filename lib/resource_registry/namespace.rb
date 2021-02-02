@@ -5,6 +5,7 @@ require_relative 'operations/namespaces/build'
 require_relative 'operations/namespaces/create'
 require_relative 'operations/namespaces/form'
 require_relative 'operations/namespaces/update_features'
+require_relative 'operations/namespaces/list_features'
 require_relative 'operations/graphs/create'
 
 module ResourceRegistry

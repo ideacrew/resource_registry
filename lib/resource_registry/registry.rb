@@ -36,8 +36,9 @@ module ResourceRegistry
     end
 
     def swap_feature(feature)
+      feature = dsl_for(feature)
       self._container.delete("feature_index.#{feature.key}")
-      self._container.delete(namespaced(feature.key, feature.namespace_path.path))
+      self._container.delete(namespaced(feature.key, feature.namespace))
       register_feature(feature)
       @features_stale = false
     end
@@ -50,7 +51,7 @@ module ResourceRegistry
     def register_feature(feature)
       raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL" if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
 
-      feature = dsl_for(feature)
+      feature = dsl_for(feature) unless feature.is_a?(ResourceRegistry::FeatureDSL)
 
       raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}" if feature?(feature.key)
       @features_stale = true
@@ -114,7 +115,7 @@ module ResourceRegistry
 
     def namespaces
       return @namespaces if defined? @namespaces
-      @namespaces = features.collect{|feature_key| self[feature_key].feature.namespace}.uniq
+      @namespaces = features.collect{|feature_key| self[feature_key].namespace}.uniq
     end
 
     def namespace_features_hash

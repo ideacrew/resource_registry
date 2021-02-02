@@ -11,7 +11,7 @@ module ResourceRegistry
       field :default,       type: String
       field :value,         type: String
       field :description,   type: String
-      field :enum,          type: Array
+      field :enum,          type: String
       field :is_required,   type: Boolean
       field :is_visible,    type: Boolean
 
@@ -23,6 +23,16 @@ module ResourceRegistry
 
       def value=(val)
         super(val.to_json)
+      end
+
+      def enum=(val)
+        super(val.to_json)
+      end
+
+      def enum
+        JSON.parse(super) if super.present?
+      rescue JSON::ParserError
+        super
       end
     end
   end
