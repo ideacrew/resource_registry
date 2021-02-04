@@ -9,7 +9,8 @@ module ResourceRegistry
 
         def call(params)
           feature_params  = yield build_params(params[:feature].to_h, params[:registry])
-          entity          = yield create_entity(feature_params)
+          feature_values  = yield validate(feature_params, params[:registry])
+          entity          = yield create_entity(feature_values)
           feature         = yield save_record(entity, params[:registry], params[:filter]) if defined? Rails
           updated_feature = yield update_registry(entity, params[:registry])
 
@@ -43,8 +44,28 @@ module ResourceRegistry
           Success(feature_params)
         end
 
-        def create_entity(params)
-          ResourceRegistry::Operations::Features::Create.new.call(params)
+        def validate(feature_params, registry)
+          date_range_settings = registry[feature_params[:key]].settings.select{|s| s.meta && s.meta.content_type == :date_range}
+
+          if date_range_settings.present?
+            feature_params[:settings].each do |setting_hash|
+              if date_range_setting = date_range_settings.detect{|s| s.key == setting_hash[:key].to_sym}
+                expected_year = date_range_setting.item.min.year
+
+                date_begin = Date.strptime(setting_hash[:item][:begin], "%Y-%m-%d")
+                date_end = Date.strptime(setting_hash[:item][:end], "%Y-%m-%d")
+
+                return Failure("#{setting_hash[:key].to_s.humanize} should be with in calender year.") unless (date_begin.year == expected_year && date_end.year == expected_year)
+                return Failure("#{setting_hash[:key].to_s.humanize} invalid date range selected.") unless date_end > date_begin
+              end
+            end
+          end
+
+          Success(feature_params)
+        end
+
+        def create_entity(feature_values)
+          ResourceRegistry::Operations::Features::Create.new.call(feature_values)
         end
 
         def save_record(entity, registry, filter_params = nil)

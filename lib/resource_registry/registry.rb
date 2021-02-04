@@ -114,7 +114,6 @@ module ResourceRegistry
     end
 
     def namespaces
-      return @namespaces if defined? @namespaces
       @namespaces = features.collect{|feature_key| self[feature_key].namespace}.uniq
     end
 

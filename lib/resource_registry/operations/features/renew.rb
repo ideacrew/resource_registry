@@ -23,7 +23,7 @@ module ResourceRegistry
         def extract_options(params, registry)
           feature_for_clone = registry[params[:target_feature]]
           related_features = feature_for_clone.feature.settings.collect do |setting|
-            setting.item if setting.meta && setting.meta.content_type == :feature_list_panel
+            get_features(setting.item) if setting.meta && setting.meta.content_type == :feature_list_panel
           end.compact.flatten
 
           features = []
@@ -36,6 +36,12 @@ module ResourceRegistry
           }
 
           Success(options)
+        end
+
+        def get_features(item)
+          return item unless item['operation'].present?
+          elements = item['operation'].split(/\./)
+          elements[0].constantize.send(elements[1]).call(item['params'].symbolize_keys).success
         end
 
         def construct_params(options)
