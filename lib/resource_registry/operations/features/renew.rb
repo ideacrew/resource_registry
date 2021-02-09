@@ -21,14 +21,14 @@ module ResourceRegistry
         private
 
         def extract_options(params, registry)
-          feature_for_clone = registry[params[:target_feature]]
-          related_features = feature_for_clone.feature.settings.collect do |setting|
+          features = []
+          features << registry[params[:target_feature]].feature
+
+          related_features = features[0].settings.collect do |setting|
             get_features(setting.item) if setting.meta && setting.meta.content_type == :feature_list_panel
           end.compact.flatten
 
-          features = []
-          features << feature_for_clone.feature
-          features += related_features.collect{|key| registry[key].feature}
+          features += related_features.collect{|feature| registry[feature.key].feature}
 
           options = {
             features: features,
@@ -94,14 +94,18 @@ module ResourceRegistry
           if value.is_a?(Symbol)
             value.to_s.gsub(original_year, new_calender_year).to_sym
           elsif value.is_a?(Range) && value.min.is_a?(Date)
-            Range.new(value.min.next_year, value.max.next_year)
+            Range.new(new_date(value.begin), new_date(value.end))
           elsif value.is_a?(Date)
             value.next_year
-          elsif value.is_a?(String)
-            value.gsub(original_year, new_calender_year)
+          elsif value.is_a?(String) || value.to_s.match(/^\d+$/)
+            value.to_s.gsub(original_year, new_calender_year)
           else
             value
           end
+        end
+
+        def new_date(ref_date)
+          Date.new(new_calender_year.to_i, ref_date.month, ref_date.day)
         end
       end
     end

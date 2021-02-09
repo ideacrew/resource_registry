@@ -24,7 +24,6 @@ module RegistryViewControls
   def render_model_settings(feature, form, registry, options)
     query_setting = feature.settings.detect{|setting| setting.key == :model_query_params}
     query_params = setting_value(query_setting)
-
     result = @filter_result
     result = registry[feature.key]{ query_params || {}}.success unless result
     filter_setting = feature.settings.detect{|s| s.key == :filter_params}
@@ -96,15 +95,7 @@ module RegistryViewControls
           else
             if feature.item == 'feature_collection'
               setting = feature.settings.detect{|setting| setting.meta&.content_type.to_s == 'feature_list_panel'}
-
-              feature_list = if setting.item.is_a?(Hash) && setting.item['operation']
-                elements = setting.item['operation'].split(/\./)
-                elements[0].constantize.send(elements[1]).call(setting.item['params'].symbolize_keys).success
-              else
-                setting.item
-              end
-
-              features = feature_list.collect{|key| get_feature(key, registry)}.compact
+              features = setting_value(setting)
             end
             features.collect{|feature| construct_feature_form(feature, registry, options)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
           end
@@ -150,7 +141,7 @@ module RegistryViewControls
     tag.div(id: feature.key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature.key}-list") do
       feature.settings.collect do |setting|
         if setting.meta&.content_type.to_s == 'feature_group'
-          features = registry.features_by_namespace(setting.item).collect{|key| find_feature(key)}
+          features = setting_value(setting)
           feature_group_control(features, registry).html_safe
         end
       end.compact.join.html_safe
@@ -161,6 +152,8 @@ module RegistryViewControls
     features = features.select{|feature| feature.meta.present? && feature.meta.content_type.to_s != 'feature_action' }
 
     features.collect do |feature|
+      settings_with_meta = feature.settings.select{|s| s.meta.present?}
+
       tag.div(class: 'mt-3') do
         tag.div(class: 'row') do
           tag.div(class: 'col-md-6') do
@@ -169,7 +162,7 @@ module RegistryViewControls
             end
           end +
           tag.div(class: 'col-md-6') do
-            action_setting = feature.settings.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
+            action_setting = settings_with_meta.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
             if action_setting
               form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
                 hidden_field_tag('feature[action]', 'renew') +
@@ -179,7 +172,7 @@ module RegistryViewControls
             end
           end
         end +
-        feature.settings.collect do |setting|
+        settings_with_meta.collect do |setting|
           next if setting.meta.content_type.to_s == 'feature_action'
           section_name = setting.meta&.label || setting.key.to_s.titleize
           tag.div(class: 'mt-3') do
@@ -198,14 +191,8 @@ module RegistryViewControls
               end +
               tag.div(class: 'col-md-6') do
                 tag.ul(class: 'list-group list-group-flush ml-2') do
-                  feature_list = if setting.item.is_a?(Hash) && setting.item['operation']
-                    elements = setting.item['operation'].split(/\./)
-                    elements[0].constantize.send(elements[1]).call(setting.item['params'].symbolize_keys).success
-                  else
-                    setting.item
-                  end
-
-                  feature_list.collect{|value| tag.li(class: 'list-group-item'){ value.to_s.titleize }}.join.html_safe
+                  feature_list = setting_value(setting)
+                  feature_list.collect{|feature| tag.li(class: 'list-group-item'){ feature.key.to_s.titleize }}.join.html_safe
                 end
               end
             end
@@ -223,5 +210,20 @@ module RegistryViewControls
     feature_class = ResourceRegistry::Stores.feature_model
     return unless feature_class
     feature_class.where(key: feature_key).first
+  end
+
+  def setting_value(setting)
+    value = if setting.is_a?(ResourceRegistry::Setting)
+      JSON.parse(setting.item)
+    else
+      setting.item
+    end
+
+    if value.is_a?(Hash) && value['operation']
+      elements = value['operation'].split(/\./)
+      elements[0].constantize.send(elements[1]).call(value['params'].symbolize_keys).success
+    else
+      value
+    end
   end
 end
