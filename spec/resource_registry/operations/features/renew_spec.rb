@@ -23,6 +23,8 @@ RSpec.describe ResourceRegistry::Operations::Features::Renew do
     }
     
     it "should return success with hash output" do
+      stub_const("EnrollRegistry", registry)
+
       expect(subject).to be_a Dry::Monads::Result::Success
       expect(registry[:health_product_package_2022]).to be_truthy
     end

@@ -38,18 +38,11 @@ module ResourceRegistry
           Success(options)
         end
 
-        def get_features(item)
-          return item unless item['operation'].present?
-          elements = item['operation'].split(/\./)
-          elements[0].constantize.send(elements[1]).call(item['params'].symbolize_keys).success
-        end
-
         def construct_params(options)
           @original_year = options[:features][0].key.to_s.scan(/\d{4}/)[0]
           @new_calender_year = options[:calender_year]
-          features_params = options[:features].collect do |feature|
-            serialize_hash(feature.to_h)
-          end
+          features_params = options[:features].collect{|feature| serialize_hash(feature.to_h)}
+
           Success(features_params)
         end
 
@@ -70,6 +63,12 @@ module ResourceRegistry
           end
 
           Success(registry)
+        end
+
+        def get_features(item)
+          return item unless (item.is_a?(Hash) && item['operation'].present?)
+          elements = item['operation'].split(/\./)
+          elements[0].constantize.send(elements[1]).call(item['params'].symbolize_keys).success
         end
 
         def serialize_hash(attributes)

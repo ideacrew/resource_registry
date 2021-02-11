@@ -9,23 +9,18 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::ListFeatures do
 
   context 'When valid feature hash passed' do
 
-    let!(:registry) { ResourceRegistry::Registry.new }
-    let(:register) { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_group_template_path, registry: registry) }
-
-    let!(:test_registry) do
-      register
-      ::ResourceRegistry::TestRegistry = registry
-    end
-
+    let(:registry) { ResourceRegistry::Registry.new }
+    let(:register)  { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_group_template_path, registry: registry) }
     let(:namespace) {"enroll_app.aca_shop_market.benefit_market_catalog.catalog_2021.contribution_model_criteria"}
+    let(:params)    { {namespace: namespace, registry: 'EnrollRegistry'} }
 
-    let(:params) {
-      {namespace: namespace, registry: 'ResourceRegistry::TestRegistry'}
-    }
+    before { register }
 
-    it "should return success with hash output" do
+    it "should return success with features" do
+      stub_const("EnrollRegistry", registry)
+
       expect(subject).to be_a Dry::Monads::Result::Success
-      expect(subject.success).to eq registry.features_by_namespace(namespace)
+      expect(subject.success.map(&:key)).to eq registry.features_by_namespace(namespace)
     end
   end
 end

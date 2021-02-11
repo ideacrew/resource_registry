@@ -40,7 +40,8 @@ module ResourceRegistry
         end
 
         def find_features(feature_keys, values)
-          features = feature_keys.collect {|key| ResourceRegistry::Stores.feature_model.where(key: key).first }.compact
+          feature_model = ResourceRegistry::Stores.feature_model
+          features = feature_keys.collect{|key| feature_model.present? ? feature_model.where(key: key).first : values[:registry][key].feature }.compact
 
           if values[:order]
             features_for_sort = features.select{|f| f.settings.any?{|s| s.key == values[:order].to_sym && s.item}}

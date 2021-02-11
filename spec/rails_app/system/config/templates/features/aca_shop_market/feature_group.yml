@@ -70,24 +70,26 @@ registry:
           is_required: true
           is_visible: true
         settings:
+          - key: :calender_year
+            item: 2021
           - key: :contribution_models
             item:
-              - :initial_sponsor_jan_default_2021
-              - :initial_sponsor_default_2021
-              - :renewal_sponsor_jan_default_2021
-              - :renewal_sponsor_default_2021
+              operation: ResourceRegistry::Operations::Namespaces::ListFeatures.new
+              params:
+                namespace: "enroll_app.aca_shop_market.benefit_market_catalog.catalog_2021.contribution_model_criteria"
+                registry: EnrollRegistry
             meta:
               label: Contribution Models
               content_type: :feature_list_panel
               description: Contribution Models
               is_required: false
               is_visible: true
-          - key: :clone
-            item: "/exchanges/configurations/shop_product_package_clone/edit"
+          - key: :renew
+            item: "/exchanges/configurations/shop_product_package_renew/edit"
             meta:
-              label: Clone Product Package
+              label: Renew Product Package
               content_type: :feature_action
-              description: Clone Product Packages for the given calender year
+              description: Renew Product Packages for the given calender year
               is_required: false
               is_visible: true
       - key: :health_product_package_2020
@@ -101,12 +103,14 @@ registry:
           is_required: true
           is_visible: true
         settings:
+          - key: :calender_year
+            item: 2020
           - key: :contribution_models
             item:
-              - :initial_sponsor_jan_default_2020
-              - :initial_sponsor_default_2020
-              - :renewal_sponsor_jan_default_2020
-              - :renewal_sponsor_default_2020
+              operation: ResourceRegistry::Operations::Namespaces::ListFeatures.new
+              params:
+                namespace: "enroll_app.aca_shop_market.benefit_market_catalog.catalog_2020.contribution_model_criteria"
+                registry: EnrollRegistry
             meta:
               label: Contribution Models
               content_type: :feature_list_panel
