@@ -24,9 +24,6 @@ Layout/ExtraSpacing:
 Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
-Layout/FirstArrayElementIndentation:
-  Enabled: false
-
 Layout/SpaceBeforeBlockBraces:
   Enabled: false
 
@@ -34,9 +31,6 @@ Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
 Layout/SpaceInsideBlockBraces:
-  Enabled: false
-
-Layout/TrailingEmptyLines:
   Enabled: false
 
 Layout/IndentationWidth:
