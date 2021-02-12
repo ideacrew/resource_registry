@@ -1,5 +1,7 @@
-module InputControls
+# frozen_string_literal: true
 
+# Helper methods to render setting input fields
+module InputControls
   def build_option_field(option, form, attrs = {})
     type = option.meta.content_type&.to_sym
     input_control = case type
@@ -47,7 +49,7 @@ module InputControls
     end
   end
 
-  def input_filter_control(form, feature, data)
+  def input_filter_control(_form, feature, data)
     filter_setting = feature.settings.detect{|s| s.key == :filter_params}
     filter_params = setting_value(filter_setting)
 
@@ -68,13 +70,13 @@ module InputControls
     end
   end
 
-  def feature_enabled_control(option, form)
+  def feature_enabled_control(option, _form)
     tag.div(class: "form-group") do
       content  = option.key.to_s.titleize
       content += tag.label(class: 'switch') do
         tag.input(type: 'hidden', value: option.key, name: 'feature_key') +
-        tag.input(type: "checkbox", checked: option.is_enabled) +
-        tag.span(class: "slider")
+          tag.input(type: "checkbox", checked: option.is_enabled) +
+          tag.span(class: "slider")
       end
 
       content += tag.div(class: "spinner-border d-none text-success", role: "status") do
@@ -87,13 +89,13 @@ module InputControls
     end
   end
 
-  def slider_switch_control(option, form)
+  def slider_switch_control(option, _form)
     tag.div(class: "form-group") do
       content  = option.key.to_s.titleize
       content += tag.label(class: 'switch') do
         tag.input(type: 'hidden', value: option.key, name: 'feature_key') +
-        tag.input(type: "checkbox", checked: option.item) +
-        tag.span(class: "slider")
+          tag.input(type: "checkbox", checked: option.item) +
+          tag.span(class: "slider")
       end
 
       content.html_safe
@@ -115,14 +117,14 @@ module InputControls
 
     choices.each do |choice|
       choice = choice.is_a?(Hash) ? choice.first : [choice.to_s, choice.to_s.humanize]
-      option_list += tag.option(choice[1], selected: (choice[0]== value.to_s), value: choice[0])
+      option_list += tag.option(choice[1], selected: (choice[0] == value.to_s), value: choice[0])
     end
 
     tag.select(option_list, id: id, class: "form-control", name: input_name_for(setting, form))
   end
 
   def select_dropdown(input_id, list, show_default = false, selected = nil)
-    name = (input_id.to_s.scan(/supported_languages/).present? ? input_id : 'admin[' + input_id.to_s + ']')
+    name = (input_id.to_s.scan(/supported_languages/).present? ? input_id : "admin[#{input_id}]")
 
     return unless list.is_a? Array
     content_tag(:select, class: "form-control", id: input_id, name: name, required: true) do
@@ -154,7 +156,7 @@ module InputControls
       tag.span('Upload', class: "input-group-text", id: id)
     end +
       tag.div(class: "custom-file") do
-        tag.input(nil, type: "file", id: id, name: id + "[value]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
+        tag.input(nil, type: "file", id: id, name: "#{id}[value]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
           tag.label('Choose File', for: id, value: label, class: "custom-file-label")
       end
   end
@@ -167,7 +169,7 @@ module InputControls
     if setting.is_a?(ResourceRegistry::Setting)
       element_name = input_name_for(setting, form)
     else
-      element_name = form&.object_name.to_s + "[is_enabled]"
+      element_name = "#{form&.object_name}[is_enabled]"
       input_value  = form.object&.is_enabled
       input_value  = setting.is_enabled if input_value.blank?
     end
@@ -178,7 +180,7 @@ module InputControls
         tag.div(tag.div(tag.input(nil, type: "radio", name: element_name, value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
           tag.input(nil, type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
       end
-    end.join('').html_safe
+    end.join.html_safe
   end
 
   def input_checkbox_control(setting, form)
@@ -188,10 +190,11 @@ module InputControls
     meta.enum.collect do |choice|
       choice = send(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'),
+                class: 'input-group-prepend') +
           tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
-    end.join('').html_safe
+    end.join.html_safe
   end
 
   def input_file_control(setting, form)
@@ -216,15 +219,12 @@ module InputControls
           tag.label('Choose File', for: id, value: label, class: "custom-file-label")
       end
 
-    control =
-      tag.div(class: "col-2") do
-        preview
-      end +
+    tag.div(class: "col-2") do
+      preview
+    end +
       tag.div(class: 'input-group') do
         control_inputs
       end
-
-    control
   end
 
   def input_text_control(setting, form, options = {})
@@ -261,7 +261,6 @@ module InputControls
     tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form), placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
   end
 
-
   def input_date_range_control(setting, form)
     meta = setting[:meta]
 
@@ -280,10 +279,9 @@ module InputControls
     to_input_name = form&.object_name.to_s + "[settings][#{setting.key}][end]"
 
     tag.input(nil, type: "date", value: date_bounds[0], id: from_input_name, name: from_input_name, placeholder: "mm/dd/yyyy", class: "form-control", required: is_required) +
-    tag.div(class: 'input-group-addon') { 'to' } +
-    tag.input(nil, type: "date", value: date_bounds[1], id: to_input_name, name: to_input_name, placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
+      tag.div(class: 'input-group-addon') { 'to' } +
+      tag.input(nil, type: "date", value: date_bounds[1], id: to_input_name, name: to_input_name, placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
   end
-
 
   def input_number_control(setting, form)
     id = setting[:key].to_s
@@ -328,7 +326,7 @@ module InputControls
     meta = setting[:meta]
     color = meta.value || meta.default
 
-    tag.input(nil, type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]",class: "js-color-swatch form-control") +
+    tag.input(nil, type: "text", value: color, id: id, name: "#{form&.object_name}[value]",class: "js-color-swatch form-control") +
       tag.div(tag.button(type: "button", id: id, class: "btn", value: "", style: "background-color: #{color}"), class: "input-group-append")
   end
 
@@ -384,7 +382,7 @@ module InputControls
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
-    help_id     = id + 'HelpBlock'
+    help_id     = "#{id}HelpBlock"
     # help_text   = setting[:description]
     # aria_label  = setting[:aria_label] || "Radio button for following text input"
     help_text   = setting.meta.description
@@ -398,12 +396,12 @@ module InputControls
               label
             end
           end +
-          tag.div(class: 'col col-sm-12 col-md-1') do
-            tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description)
-          end +
-          tag.div(class: 'col col-sm-12 col-md-7') do
-            input_group { control }# + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
-          end
+            tag.div(class: 'col col-sm-12 col-md-1') do
+              tag.i(class: 'fas fa-info-circle', rel: 'tooltip', title: setting.meta.description)
+            end +
+            tag.div(class: 'col col-sm-12 col-md-7') do
+              input_group { control } # + tag.small(help_text, id: help_id, class: ['form-text', 'text-muted'])
+            end
         end
       else
         tag.label(for: id, value: label, aria: { label: aria_label }) do
@@ -418,7 +416,7 @@ module InputControls
     id          = setting[:key].to_s
     # label       = setting[:title] || id.titleize
     label       = setting.meta.label || id.titleize
-    help_id     = id + 'HelpBlock'
+    help_id     = "#{id}HelpBlock"
     help_text   = setting.meta.description
     aria_label  = "#{setting.meta.content_type.to_s.humanize} button for following text input" #setting[:aria_label] || "Radio button for following text input"
 
@@ -443,7 +441,7 @@ module InputControls
   end
 
   def setting_value(setting)
-    if setting.is_a?(ResourceRegistry::Setting) && setting.item&.is_a?(String)
+    if setting.is_a?(ResourceRegistry::Setting) && setting.item.is_a?(String)
       JSON.parse(setting.item)
     else
       setting&.item

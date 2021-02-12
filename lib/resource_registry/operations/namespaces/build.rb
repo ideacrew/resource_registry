@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require 'dry/monads'
 
 module ResourceRegistry
   module Operations
     module Namespaces
+      # This would construct namespace hash from feature when feature meta, namespace content_type validations are successful
       class Build
         send(:include, Dry::Monads[:result, :do])
 
@@ -31,13 +33,13 @@ module ResourceRegistry
 
         def build(feature)
           namespace_path = feature.namespace_path
-          
+
           Success({
-            key: namespace_path.path.map(&:to_s).join('_'),
-            path: namespace_path.path,
-            feature_keys: [feature.key],
-            meta: namespace_path.meta.to_h
-          })
+                    key: namespace_path.path.map(&:to_s).join('_'),
+                    path: namespace_path.path,
+                    feature_keys: [feature.key],
+                    meta: namespace_path.meta.to_h
+                  })
         end
       end
     end

@@ -17,10 +17,10 @@ module ResourceRegistry
 
         private
 
-        def persist(feature_entity)
+        def persist(_feature_entity)
           # if registry.db_connection&.table_exists?(:resource_registry_features)
           feature = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
-          feature = ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save unless feature
+          feature ||= ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
           # else
           #   result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
           #   feature = result.success if result.success? # TODO: Verify Failure Scenario

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'dry/monads'
 
 module ResourceRegistry
@@ -27,14 +28,14 @@ module ResourceRegistry
         end
 
         def load_features(paths, registry)
-          Try {
+          Try do
             paths = paths.value!
             paths.reduce([]) do |features, path|
               result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
               features << result.success if result.success?
               features
             end.flatten
-          }.to_result
+          end.to_result
         end
 
         def serialize_namespaces(features)

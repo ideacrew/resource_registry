@@ -13,7 +13,7 @@ module ResourceRegistry
         def call(entity, registry, params = {})
           record = yield find(entity, registry, params[:filter])
           record = yield persist(entity, record)
-          
+
           Success(record)
         end
 
@@ -21,10 +21,10 @@ module ResourceRegistry
 
         def find(entity, registry, filter_params =  nil)
           record = if filter_params
-            registry[entity.key]{ filter_params }.success[:record]
-          else
-            ResourceRegistry::Mongoid::Feature.where(key: entity.key).first
-          end
+                     registry[entity.key]{ filter_params }.success[:record]
+                   else
+                     ResourceRegistry::Mongoid::Feature.where(key: entity.key).first
+                   end
 
           Success(record)
         end
@@ -38,17 +38,17 @@ module ResourceRegistry
         end
 
         def create(entity)
-          Try {
+          Try do
             ResourceRegistry::Mongoid::Feature.new(entity.to_h).save
-          }.to_result
+          end.to_result
         end
 
         def update(entity, record)
-          Try {
+          Try do
             if record.class.to_s.match?(/ResourceRegistry/)
               record.is_enabled = entity.is_enabled
               entity.settings.each do |setting_entity|
-                if setting = record.settings.detect{|setting| setting.key == setting_entity.key}
+                if (setting = record.settings.detect{|s| s.key == setting_entity.key})
                   setting.item = setting_entity.item
                 else
                   record.settings.build(setting_entity.to_h)
@@ -63,7 +63,7 @@ module ResourceRegistry
             end
             record.save(validate: false)
             record
-          }.to_result
+          end.to_result
         end
       end
     end

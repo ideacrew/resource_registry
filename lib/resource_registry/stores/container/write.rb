@@ -17,11 +17,9 @@ module ResourceRegistry
 
         private
 
-        def find_or_create_namespace(namespace)
-        end
+        def find_or_create_namespace(namespace); end
 
-        def write(container, keys)
-        end
+        def write(container, keys); end
 
       end
     end

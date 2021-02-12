@@ -22,7 +22,7 @@ module ResourceRegistry
           feature.is_enabled = feature_entity.is_enabled
 
           feature_entity.settings.each do |setting_entity|
-            if setting = feature.settings.detect{|setting| setting.key == setting_entity.key}
+            if (setting = feature.settings.detect{|s| s.key == setting_entity.key})
               setting.item = setting_entity.item
             else
               feature.settings.build(setting_entity.to_h)

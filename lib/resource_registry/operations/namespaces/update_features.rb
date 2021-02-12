@@ -3,6 +3,7 @@
 module ResourceRegistry
   module Operations
     module Namespaces
+      # Update features with incoming parameters
       class UpdateFeatures
         send(:include, Dry::Monads[:result, :do])
 

@@ -13,7 +13,7 @@ module ResourceRegistry
           options  = yield extract_options(params, registry)
           params   = yield construct_params(options)
           features = yield create(params)
-          registry = yield persist(features, registry)
+          yield persist(features, registry)
 
           Success(features)
         end
@@ -47,13 +47,13 @@ module ResourceRegistry
         end
 
         def create(feature_hashes)
-          Try {
+          Try do
             feature_hashes.collect do |feature_hash|
               result = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
               return result if result.failure?
               result.value!
             end
-          }.to_result
+          end.to_result
         end
 
         def persist(features, registry)
@@ -66,22 +66,23 @@ module ResourceRegistry
         end
 
         def get_features(item)
-          return item unless (item.is_a?(Hash) && item['operation'].present?)
+          return item unless item.is_a?(Hash) && item['operation'].present?
           elements = item['operation'].split(/\./)
           elements[0].constantize.send(elements[1]).call(item['params'].symbolize_keys).success
         end
 
         def serialize_hash(attributes)
           attributes.reduce({}) do |values, (key, value)|
-            values[key] = if value.is_a?(Hash)
-              serialize_hash(value)
-            elsif value.is_a?(Array)
-              value.collect do |element|
-                element.is_a?(Hash) ? serialize_hash(element) : serialize_text(element)
-              end
-            else
-              serialize_text(value)
-            end
+            values[key] = case value
+                          when Hash
+                            serialize_hash(value)
+                          when Array
+                            value.collect do |element|
+                              element.is_a?(Hash) ? serialize_hash(element) : serialize_text(element)
+                            end
+                          else
+                            serialize_text(value)
+                          end
 
             values
           end

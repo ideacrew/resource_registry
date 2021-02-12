@@ -8,7 +8,7 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do])
 
         def call(dir)
-          paths = ::Dir[::File.join(dir, '**', '*') ].reject { |p| ::File.directory? p }
+          paths = ::Dir[::File.join(dir, '**', '*')].reject { |p| ::File.directory? p }
           Success(paths)
         end
       end

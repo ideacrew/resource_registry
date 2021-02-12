@@ -25,27 +25,25 @@ module ResourceRegistry
       end
 
       rule(:features) do
-        if key? && value
-          if value.none?{|feature| feature.is_a?(ResourceRegistry::Feature)}
-            feature_results = value.inject([]) do |results, feature_hash|
-              result = ResourceRegistry::Validation::FeatureContract.new.call(feature_hash)
+        if key? && value && value.none?{|feature| feature.is_a?(ResourceRegistry::Feature)}
+          feature_results = value.inject([]) do |results, feature_hash|
+            result = ResourceRegistry::Validation::FeatureContract.new.call(feature_hash)
 
-              if result.failure?
-                key.failure(text: "invalid feature", error: result.errors.to_h) if result && result.failure?
-              else
-                results << result.to_h
-              end
+            if result.failure?
+              key.failure(text: "invalid feature", error: result.errors.to_h) if result&.failure?
+            else
+              results << result.to_h
             end
-
-            values.merge!(features: feature_results)
           end
+
+          values.merge!(features: feature_results)
         end
       end
 
       rule(:namespaces).each do
         if key? && value
           result = ResourceRegistry::Validation::NamespaceContract.new.call(value)
-          key.failure(text: "invalid namespace", error: result.errors.to_h) if result && result.failure?
+          key.failure(text: "invalid namespace", error: result.errors.to_h) if result&.failure?
         end
       end
     end

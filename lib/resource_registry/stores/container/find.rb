@@ -6,8 +6,7 @@ module ResourceRegistry
       class Find
         send(:include, Dry::Monads[:result, :do])
 
-        def call(params = {})
-        end
+        def call(params = {}); end
 
       end
     end

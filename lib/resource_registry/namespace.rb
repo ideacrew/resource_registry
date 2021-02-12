@@ -28,7 +28,7 @@ module ResourceRegistry
     # @!attribute [r] meta (optional)
     # Configuration settings and attributes that support presenting and updating their values in the User Interface
     # @return [ResourceRegistry::Meta]
-    attribute :meta,        ResourceRegistry::Meta.default(Hash.new.freeze).meta(omittable: true)
+    attribute :meta,        ResourceRegistry::Meta.default({}.freeze).meta(omittable: true)
 
     # @!attribute [r] feature_keys (optional)
     # Key references to the features under this namespace
@@ -48,7 +48,7 @@ module ResourceRegistry
 
 
     def persisted?
-        false
+      false
     end
   end
 end

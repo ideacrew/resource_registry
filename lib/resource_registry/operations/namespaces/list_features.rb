@@ -25,10 +25,10 @@ module ResourceRegistry
           return Failure("Unable to find namespace #{params[:namespace]} under #{params[:registry]}.") unless registry.namespaces.include?(params[:namespace])
 
           Success({
-            namespace: params[:namespace],
-            registry: registry,
-            order: params[:order]
-          })
+                    namespace: params[:namespace],
+                    registry: registry,
+                    order: params[:order]
+                  })
         end
 
         def list_features(values)

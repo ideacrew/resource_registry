@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Namespaces
-
       # Create a Namespace
       class Create
         send(:include, Dry::Monads[:result, :do])

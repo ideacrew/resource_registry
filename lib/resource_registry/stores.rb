@@ -8,8 +8,8 @@ require_relative 'stores/mongoid/persist'
 require_relative 'stores/active_record/find'
 require_relative 'stores/active_record/update'
 
-
 module ResourceRegistry
+  # This module will provide interface for DB stores
   module Stores
     class << self
 

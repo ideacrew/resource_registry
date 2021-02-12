@@ -19,25 +19,25 @@ module ResourceRegistry
         private
 
         def build(features, namespace_types)
-          Try {
+          Try do
             features.collect do |feature|
               namespace = ResourceRegistry::Operations::Namespaces::Build.new.call(feature, namespace_types)
               namespace.success if namespace.success?
             end.compact
-          }.to_result
+          end.to_result
         end
 
         def merge(namespaces)
-          Try {
-          	namespaces.reduce({}) do |namespaces, ns|
-	            if namespaces[ns[:key]]
-	              namespaces[ns[:key]][:feature_keys] += ns[:feature_keys]
-	            else
-	              namespaces[ns[:key]] = ns
-	            end
-	            namespaces
-	          end
-          }.to_result
+          Try do
+            namespaces.reduce({}) do |data, ns|
+              if data[ns[:key]]
+                data[ns[:key]][:feature_keys] += ns[:feature_keys]
+              else
+                data[ns[:key]] = ns
+              end
+              data
+            end
+          end.to_result
         end
       end
     end

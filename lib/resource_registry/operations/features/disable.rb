@@ -13,7 +13,6 @@ module ResourceRegistry
         def call(name:, options: {})
           feature(name).disable(args)
         end
-
       end
     end
   end

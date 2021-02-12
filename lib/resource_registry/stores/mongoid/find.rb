@@ -11,7 +11,7 @@ module ResourceRegistry
         # @return [Dry::Container] A non-finalized Dry::Container with associated configuration values wrapped in Dry::Monads::Result
         def call(key)
           feature = yield find(key)
-          
+
           Success(feature)
         end
 
@@ -19,7 +19,7 @@ module ResourceRegistry
 
         def find(key)
           feature = ResourceRegistry::Mongoid::Feature.where(key: key).first
-          
+
           Success(feature)
         end
       end

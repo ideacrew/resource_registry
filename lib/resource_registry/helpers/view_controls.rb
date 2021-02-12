@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'input_controls'
-
+# Helper methods to render interface from features/settings
 module RegistryViewControls
   include ::InputControls
 
@@ -25,7 +25,7 @@ module RegistryViewControls
     query_setting = feature.settings.detect{|setting| setting.key == :model_query_params}
     query_params = setting_value(query_setting)
     result = @filter_result
-    result = registry[feature.key]{ query_params || {}}.success unless result
+    result ||= registry[feature.key]{ query_params || {}}.success
     filter_setting = feature.settings.detect{|s| s.key == :filter_params}
 
     content = ''
@@ -45,7 +45,7 @@ module RegistryViewControls
 
   def namespace_panel(namespace, feature_registry, options = {})
     tag.div(class: 'card') do
-      tag.div(class: 'card-body') do        
+      tag.div(class: 'card-body') do
         if namespace.features.any?{|f| f.meta.content_type == :model_attributes}
           namespace.features.collect{|feature| construct_feature_form(feature, feature_registry, options)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
         else
@@ -55,7 +55,7 @@ module RegistryViewControls
     end
   end
 
-  def construct_namespace_form(namespace, registry, options)
+  def construct_namespace_form(namespace, _registry, options)
     form_for(namespace, as: 'namespace', url: update_namespace_exchanges_configurations_path, method: :post, remote: true, authenticity_token: true) do |form|
       namespace_content = form.hidden_field(:path, value: namespace.path.map(&:to_s).join('.'))
 
@@ -63,24 +63,24 @@ module RegistryViewControls
         namespace_content += form.fields_for :features, feature, {index: index} do |feature_form|
           tag.div(id: feature.key.to_s, role: 'tabpanel', 'aria-labelledby': "list-#{feature.key}-list", class: 'mt-2') do
             feature_form.hidden_field(:key) +
-            render_settings(feature, feature_form, feature_registry, options)
+              render_settings(feature, feature_form, feature_registry, options)
           end
         end
       end
 
       namespace_content += tag.div(class: 'row mt-3') do
-          tag.div(class: 'col-4') do
-            form.submit('Save', class: 'btn btn-primary')
-          end +
+        tag.div(class: 'col-4') do
+          form.submit('Save', class: 'btn btn-primary')
+        end +
           tag.div(class: 'col-6') do
-            tag.div(class: 'flash-message', id: namespace.path.map(&:to_s).join('-') + '-alert')
+            tag.div(class: 'flash-message', id: "#{namespace.path.map(&:to_s).join('-')}-alert")
           end
-        end
+      end
 
       namespace_content.html_safe
     end
   end
-  
+
   def feature_panel(feature_key, registry, options = {})
     @filter_result = options[:filter_result]
     @horizontal = true if options[:horizontal]
@@ -94,10 +94,10 @@ module RegistryViewControls
             feature_group_display(feature, registry)
           else
             if feature.item == 'feature_collection'
-              setting = feature.settings.detect{|setting| setting.meta&.content_type.to_s == 'feature_list_panel'}
-              features = setting_value(setting)
+              list_panel_setting = feature.settings.detect{|setting| setting.meta&.content_type.to_s == 'feature_list_panel'}
+              features = setting_value(list_panel_setting)
             end
-            features.collect{|feature| construct_feature_form(feature, registry, options)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
+            features.collect{|f| construct_feature_form(f, registry, options)}.join(tag.hr(class: 'mt-2 mb-3')).html_safe
           end
         end
       end
@@ -105,34 +105,32 @@ module RegistryViewControls
   end
 
   def construct_feature_form(feature, registry, options)
-    if options[:action_params]
-      renew_action = options[:action_params][:action].to_s == 'renew'
-    end
+    renew_action = options[:action_params][:action].to_s == 'renew' if options[:action_params]
 
     submit_path = if renew_action
-      renew_feature_exchanges_configuration_path(feature.key)
-    else
-      update_feature_exchanges_configuration_path(feature.key)
-    end
+                    renew_feature_exchanges_configuration_path(feature.key)
+                  else
+                    update_feature_exchanges_configuration_path(feature.key)
+                  end
 
     tag.div(id: feature.key.to_s, 'aria-labelledby': "list-#{feature.key}-list", class: 'card border-0') do
       tag.div(class: 'card-body') do
         tag.div(class: 'card-title h6 font-weight-bold mb-4') do
-          feature.meta&.label  || feature.key.to_s.titleize
+          feature.meta&.label || feature.key.to_s.titleize
         end +
-        form_for(feature, as: 'feature', url: submit_path, method: :post, remote: true, authenticity_token: true) do |form|
-          form.hidden_field(:key) +
-          (renew_action ? hidden_field_tag('feature[target_feature]', options[:action_params][:key]) : '') +
-            render_settings(feature, form, registry, options) +
-            tag.div(class: 'row mt-3') do
-              tag.div(class: 'col-4') do
-                form.submit('Save', class: 'btn btn-primary')
-              end +
-                tag.div(class: 'col-6') do
-                  tag.div(class: 'flash-message', id: feature.key.to_s + '-alert')
-                end
-            end
-        end
+          form_for(feature, as: 'feature', url: submit_path, method: :post, remote: true, authenticity_token: true) do |form|
+            form.hidden_field(:key) +
+              (renew_action ? hidden_field_tag('feature[target_feature]', options[:action_params][:key]) : '') +
+              render_settings(feature, form, registry, options) +
+              tag.div(class: 'row mt-3') do
+                tag.div(class: 'col-4') do
+                  form.submit('Save', class: 'btn btn-primary')
+                end +
+                  tag.div(class: 'col-6') do
+                    tag.div(class: 'flash-message', id: "#{feature.key}-alert")
+                  end
+              end
+          end
       end
     end
   end
@@ -148,7 +146,7 @@ module RegistryViewControls
     end
   end
 
-  def feature_group_control(features, registry)
+  def feature_group_control(features, _registry)
     features = features.select{|feature| feature.meta.present? && feature.meta.content_type.to_s != 'feature_action' }
 
     features.collect do |feature|
@@ -158,46 +156,46 @@ module RegistryViewControls
         tag.div(class: 'row') do
           tag.div(class: 'col-md-6') do
             tag.h4 do
-              feature.meta&.label  || feature.key.to_s.titleize
+              feature.meta&.label || feature.key.to_s.titleize
             end
           end +
-          tag.div(class: 'col-md-6') do
-            action_setting = settings_with_meta.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
-            if action_setting
-              form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
-                hidden_field_tag('feature[action]', 'renew') +
-                hidden_field_tag('feature[key]', feature.key) +
-                f.submit(action_setting.key.to_s.titleize, class: 'btn btn-link')
-              end.html_safe
-            end
-          end
-        end +
-        settings_with_meta.collect do |setting|
-          next if setting.meta.content_type.to_s == 'feature_action'
-          section_name = setting.meta&.label || setting.key.to_s.titleize
-          tag.div(class: 'mt-3') do
-            tag.div(class: 'row') do
-              tag.div(class: 'col-md-4') do
-                tag.strong do
-                  section_name
-                end
-              end +
-              tag.div(class: 'col-md-4') do
-                tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
-                  tag.span do
-                    "View #{section_name}"
-                  end
-                end
-              end +
-              tag.div(class: 'col-md-6') do
-                tag.ul(class: 'list-group list-group-flush ml-2') do
-                  feature_list = setting_value(setting)
-                  feature_list.collect{|feature| tag.li(class: 'list-group-item'){ feature.key.to_s.titleize }}.join.html_safe
-                end
+            tag.div(class: 'col-md-6') do
+              action_setting = settings_with_meta.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
+              if action_setting
+                form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
+                  hidden_field_tag('feature[action]', 'renew') +
+                    hidden_field_tag('feature[key]', feature.key) +
+                    f.submit(action_setting.key.to_s.titleize, class: 'btn btn-link')
+                end.html_safe
               end
             end
-          end
-        end.compact.join.html_safe
+        end +
+          settings_with_meta.collect do |setting|
+            next if setting.meta.content_type.to_s == 'feature_action'
+            section_name = setting.meta&.label || setting.key.to_s.titleize
+            tag.div(class: 'mt-3') do
+              tag.div(class: 'row') do
+                tag.div(class: 'col-md-4') do
+                  tag.strong do
+                    section_name
+                  end
+                end +
+                  tag.div(class: 'col-md-4') do
+                    tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
+                      tag.span do
+                        "View #{section_name}"
+                      end
+                    end
+                  end +
+                  tag.div(class: 'col-md-6') do
+                    tag.ul(class: 'list-group list-group-flush ml-2') do
+                      feature_list = setting_value(setting)
+                      feature_list.collect{|f| tag.li(class: 'list-group-item'){ f.key.to_s.titleize }}.join.html_safe
+                    end
+                  end
+              end
+            end
+          end.compact.join.html_safe
       end
     end.join
   end
@@ -214,10 +212,10 @@ module RegistryViewControls
 
   def setting_value(setting)
     value = if setting.is_a?(ResourceRegistry::Setting)
-      JSON.parse(setting.item)
-    else
-      setting.item
-    end
+              JSON.parse(setting.item)
+            else
+              setting.item
+            end
 
     if value.is_a?(Hash) && value['operation']
       elements = value['operation'].split(/\./)

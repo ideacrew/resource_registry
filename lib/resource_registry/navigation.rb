@@ -1,46 +1,48 @@
-require 'action_view'
+# frozen_string_literal: true
 
+require 'action_view'
 module ResourceRegistry
+  # This would render navigation menu from registerd namespaces and features
   class Navigation
     include ActionView::Helpers::TagHelper
     include ActionView::Context
 
     TAG_OPTION_DEFAULTS = {
-														ul: {
-														  options: {class: 'nav flex-column flex-nowrap overflow-auto'}
-														},
-														nested_ul: {
-															options: {class: 'flex-column nav pl-4'}
-														},
-														li: {
-															options: {class: 'nav-item'}
-														},
-														a: {
-														  namespace_link: {
-														    options: {class: 'nav-link collapsed text-truncate', 'data-toggle': 'collapse'},
-														  },
-														  feature_link: {
-														    options: {class: 'nav-link', 'data-remote': true}
-														  }
-														}
-													}
+      ul: {
+        options: {class: 'nav flex-column flex-nowrap overflow-auto'}
+      },
+      nested_ul: {
+        options: {class: 'flex-column nav pl-4'}
+      },
+      li: {
+        options: {class: 'nav-item'}
+      },
+      a: {
+        namespace_link: {
+          options: {class: 'nav-link collapsed text-truncate', 'data-toggle': 'collapse'}
+        },
+        feature_link: {
+          options: {class: 'nav-link', 'data-remote': true}
+        }
+      }
+    }.freeze
 
     AUTHORIZATION_DEFAULTS = {
-                               authorization_defaults: {}
-                             }
+      authorization_defaults: {}
+    }.freeze
 
     NAMESPACE_OPTION_DEFAULTS = {
-                                  include_all_disabled_features: true,
-                                  include_no_features_defined: true,
-                                  active_item: [:aca_shop, :benefit_market_catalogs, :catalog_2019], # TODO
-                                  starting_namespaces: [] # start vertices for graph
-                                }
+      include_all_disabled_features: true,
+      include_no_features_defined: true,
+      active_item: [:aca_shop, :benefit_market_catalogs, :catalog_2019], # TODO
+      starting_namespaces: [] # start vertices for graph
+    }.freeze
 
     OPTION_DEFAULTS = {
-                        tag_options: TAG_OPTION_DEFAULTS,
-                        authorization_options: AUTHORIZATION_DEFAULTS,
-                        namespace_options: NAMESPACE_OPTION_DEFAULTS
-                      }
+      tag_options: TAG_OPTION_DEFAULTS,
+      authorization_options: AUTHORIZATION_DEFAULTS,
+      namespace_options: NAMESPACE_OPTION_DEFAULTS
+    }.freeze
 
     attr_reader :options, :namespaces
 
@@ -53,7 +55,7 @@ module ResourceRegistry
     end
 
     def render_html
-      namespaces.collect{|namespace| to_ul(namespace)}.join('').html_safe
+      namespaces.collect{|namespace| to_ul(namespace)}.join.html_safe
     end
 
     private
@@ -67,10 +69,10 @@ module ResourceRegistry
     end
 
     def to_namespace(vertex)
-      namespace_dict = [vertex].inject({}) do |dict, vertex|
-        dict = vertex.to_h
+      namespace_dict = [vertex].inject({}) do |dict, record|
+        dict = record.to_h
         dict[:features] = dict[:feature_keys].collect{|key| @registry[key].feature.to_h.except(:settings)}
-        dict[:namespaces] = @graph.adjacent_vertices(vertex).collect{|adjacent_vertex| to_namespace(adjacent_vertex)}
+        dict[:namespaces] = @graph.adjacent_vertices(record).collect{|adjacent_vertex| to_namespace(adjacent_vertex)}
         attrs_to_skip = [:feature_keys]
         attrs_to_skip << :meta if dict[:meta].empty?
         dict.except(*attrs_to_skip)
@@ -102,7 +104,7 @@ module ResourceRegistry
       tag.div(class: 'collapse', id: "nav_#{element[:key]}", 'aria-expanded': 'false') do
         nav_features = element[:features].select{|feature| feature[:meta][:content_type] == :nav}
         (nav_features + element[:namespaces]).reduce('') do |list, child_ele|
-          list += to_ul(child_ele, true)
+          list + to_ul(child_ele, true)
         end.html_safe
       end
     end
@@ -117,8 +119,8 @@ module ResourceRegistry
     end
 
     def feature_nav_link(element)
-      feature_url = element[:item] if element[:item].to_s.match?(/^\/.*$/)
-      feature_url ||= ('/exchanges/configurations/' + element[:key].to_s + '/edit')
+      feature_url = element[:item] if element[:item].to_s.match?(%r{^/.*$})
+      feature_url ||= "/exchanges/configurations/#{element[:key]}/edit"
       tag.a(options[:tag_options][:a][:feature_link][:options].merge(href: feature_url)) do
         tag.span do
           link_title(element)

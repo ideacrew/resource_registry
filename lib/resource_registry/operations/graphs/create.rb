@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'dry/monads'
 require 'rgl/adjacency'
 require 'rgl/implicit'
@@ -28,7 +29,7 @@ module ResourceRegistry
             namespace_vertices = namespace_to_vertices(namespace)
             namespace_vertices.each_index do |index|
               if namespace_vertices[index + 1].present?
-                graph.add_edge(namespace_vertices[index], namespace_vertices[index+1])
+                graph.add_edge(namespace_vertices[index], namespace_vertices[index + 1])
               else
                 graph.add_vertex(namespace_vertices[index])
               end

@@ -31,9 +31,9 @@ RSpec.describe ResourceRegistry::Operations::Graphs::Create do
       graph = subject.success
       namespace_paths = matched_features.collect{|feature| feature.namespace_path.path}.uniq
 
-      namespace_paths.inject([]){|vertex_paths, path| vertex_paths += path_to_vertex_path(path)}.uniq.each do |vertex_path|
-        vertex = graph.vertices.detect{|vertex| vertex.path == vertex_path}
-        expect(vertex).to be_present
+      namespace_paths.inject([]){|vertex_paths, path| vertex_paths + path_to_vertex_path(path)}.uniq.each do |vertex_path|
+        matched_vertex = graph.vertices.detect{|vertex| vertex.path == vertex_path}
+        expect(matched_vertex).to be_present
       end
     end
   end

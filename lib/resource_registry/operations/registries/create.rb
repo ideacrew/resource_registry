@@ -12,7 +12,7 @@ module ResourceRegistry
           params          = yield deserialize(file_io)
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
-          registry        = yield persist(features, registry)
+          yield persist(features, registry)
 
           Success(features)
         end
@@ -50,13 +50,13 @@ module ResourceRegistry
         end
 
         def create(feature_hashes)
-          Try {
+          Try do
             feature_hashes.collect do |feature_hash|
               result = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
               return result if result.failure?
               result.value!
             end
-          }.to_result
+          end.to_result
         end
 
         def persist(features, registry)

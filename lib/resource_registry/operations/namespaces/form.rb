@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Namespaces
-
       # Create a Namespace
       class Form
         send(:include, Dry::Monads[:result, :do, :try])
@@ -22,7 +21,7 @@ module ResourceRegistry
         def find_features(namespace, registry)
           feature_keys = registry[:feature_graph].vertices.detect{|v| v.path == namespace}.feature_keys
           features = feature_keys.collect{|feature_key| find_feature(feature_key, registry)}
-          features_for_display = features.select{|feature| feature[:meta][:content_type] != :nav }
+          features_for_display = features.reject{|feature| feature[:meta][:content_type] == :nav }
 
           Success(features_for_display)
         end
