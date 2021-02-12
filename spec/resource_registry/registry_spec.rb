@@ -62,7 +62,7 @@ RSpec.describe ResourceRegistry::Registry do
     let(:key)               { :greeter_feature }
     let(:namespace)         { {path: [:level_1, :level_2, :level_3]} }
     let(:namespace_str)     { 'level_1.level_2.level_3'}
-    let(:namespace_key)     { namespace_str + '.' + key.to_s }
+    let(:namespace_key)     { "#{namespace_str}.#{key}" }
     let(:is_enabled)        { false }
     let(:item)              { Greeter.new }
 

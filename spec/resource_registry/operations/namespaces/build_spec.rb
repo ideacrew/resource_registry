@@ -9,12 +9,12 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
 
   let(:registry) { ResourceRegistry::Registry.new }
   let(:features) { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_template_path, registry: registry).success }
-  
+
   let(:namespace_content_type) { :legend }
 
-  let(:namespace_path) {
+  let(:namespace_path) do
     {
-      :path =>[:features, :enroll_app],
+      :path => [:features, :enroll_app],
       :meta => {
         :label => "SHOP",
         :content_type => namespace_content_type,
@@ -23,9 +23,9 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
         :is_visible => true
       }
     }
-  }
+  end
 
-  let(:feature_meta) {
+  let(:feature_meta) do
     {
       :label => "Enable ACA SHOP Market",
       :content_type => :boolean,
@@ -33,16 +33,16 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
       :is_required => false,
       :is_visible => true
     }
-  }
+  end
 
-  let(:feature) {
+  let(:feature) do
     ResourceRegistry::Feature.new({
-      :key => :employer_sic,
-      :namespace_path => namespace_path,
-      :is_enabled => false,
-      :meta => feature_meta
-    })
-  }
+                                    :key => :employer_sic,
+                                    :namespace_path => namespace_path,
+                                    :is_enabled => false,
+                                    :meta => feature_meta
+                                  })
+  end
 
   context 'When feature with missing meta passed' do
     let(:content_types) { nil }
@@ -56,12 +56,12 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
     end
   end
 
-  context 'When namespace content_types argument passed' do 
+  context 'When namespace content_types argument passed' do
     let(:content_types) { %w[feature_list nav] }
 
     context 'and feature namespace content_type mismatched' do
       let(:namespace_content_type) {:legend}
-      
+
       it 'should fail with error' do
         result = subject
 
@@ -78,8 +78,8 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
 
         expect(result).to be_a Dry::Monads::Result::Success
         output = result.success
-        expect(output[:path]).to eq(feature.namespace_path.path) 
-        expect(output[:feature_keys]).to include(feature.key)  
+        expect(output[:path]).to eq(feature.namespace_path.path)
+        expect(output[:feature_keys]).to include(feature.key)
       end
     end
   end
@@ -93,8 +93,8 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Build do
 
         expect(result).to be_a Dry::Monads::Result::Success
         output = result.success
-        expect(output[:path]).to eq(feature.namespace_path.path) 
-        expect(output[:feature_keys]).to include(feature.key) 
+        expect(output[:path]).to eq(feature.namespace_path.path)
+        expect(output[:feature_keys]).to include(feature.key)
       end
     end
   end

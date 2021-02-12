@@ -14,7 +14,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Success
-      expect(subject.value!).to include(a_kind_of ResourceRegistry::Feature)
+      expect(subject.value!).to include(a_kind_of(ResourceRegistry::Feature))
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe ResourceRegistry::Operations::Registries::Create do
     it "should return success with hash output" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Failure
-      expect(subject.failure.errors[:namespace_path]).to eq [{:text=>"invalid meta", :error=>{:path=>["must be an array"]}}]
+      expect(subject.failure.errors[:namespace_path]).to eq [{:text => "invalid meta", :error => {:path => ["must be an array"]}}]
     end
   end
 end

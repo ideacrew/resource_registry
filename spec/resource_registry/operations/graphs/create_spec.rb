@@ -11,7 +11,7 @@ RSpec.describe ResourceRegistry::Operations::Graphs::Create do
   let(:features) { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_group_template_path, registry: registry).success }
   let(:namespace_types) { %w[feature_list nav] }
   let(:namespaces) { ResourceRegistry::Serializers::Namespaces::Serialize.new.call(features: features, namespace_types: namespace_types).success }
-  let(:features_with_meta) { features.select{|f| f.meta.to_h.present?} }  
+  let(:features_with_meta) { features.select{|f| f.meta.to_h.present?} }
   let(:matched_features) { features_with_meta.select{|feature| namespace_types.include?(feature.namespace_path&.meta&.content_type&.to_s)} }
 
   context 'When a valid namespace passed' do
@@ -42,7 +42,7 @@ RSpec.describe ResourceRegistry::Operations::Graphs::Create do
     return if path.empty?
     paths = []
     vertex_paths = []
-    while true
+    loop do
       current = path.shift
       paths.push(current)
       vertex_paths << paths.dup
@@ -52,54 +52,54 @@ RSpec.describe ResourceRegistry::Operations::Graphs::Create do
   end
 
   context 'When invalid namespaces passed' do
-    let(:feature1) {
+    let(:feature1) do
       ResourceRegistry::Feature.new({
-        :key => :health_packages,
-        :namespace_path => {
-          :path => [:dchbx, :enroll_app, :aca_shop_market],
-          :meta => {
-            :label => "ACA Shop",
-            :content_type => :feature_list,
-            :is_required => true,
-            :is_visible => true
-          }
-        },
-        :is_enabled => true,
-        :item => :features_display,
-        :meta => {
-          :label => "Health Packages",
-          :content_type => :legend,
-          :is_required => true,
-          :is_visible => true
-        },
-      })
-    }
-    
-    let(:feature2) {
+                                      :key => :health_packages,
+                                      :namespace_path => {
+                                        :path => [:dchbx, :enroll_app, :aca_shop_market],
+                                        :meta => {
+                                          :label => "ACA Shop",
+                                          :content_type => :feature_list,
+                                          :is_required => true,
+                                          :is_visible => true
+                                        }
+                                      },
+                                      :is_enabled => true,
+                                      :item => :features_display,
+                                      :meta => {
+                                        :label => "Health Packages",
+                                        :content_type => :legend,
+                                        :is_required => true,
+                                        :is_visible => true
+                                      }
+                                    })
+    end
+
+    let(:feature2) do
       ResourceRegistry::Feature.new({
-        :key => :health_packages_two,
-        :namespace_path => {
-          :path => [:aca_shop_market, :dchbx, :enroll_app],
-          :meta => {
-            :label => "ACA Shop",
-            :content_type => :feature_list,
-            :is_required => true,
-            :is_visible => true
-          }
-        },
-        :is_enabled => true,
-        :item => :features_display,
-        :meta => {
-          :label => "Health Packages",
-          :content_type => :legend,
-          :is_required => true,
-          :is_visible => true
-        },
-      })
-    }
+                                      :key => :health_packages_two,
+                                      :namespace_path => {
+                                        :path => [:aca_shop_market, :dchbx, :enroll_app],
+                                        :meta => {
+                                          :label => "ACA Shop",
+                                          :content_type => :feature_list,
+                                          :is_required => true,
+                                          :is_visible => true
+                                        }
+                                      },
+                                      :is_enabled => true,
+                                      :item => :features_display,
+                                      :meta => {
+                                        :label => "Health Packages",
+                                        :content_type => :legend,
+                                        :is_required => true,
+                                        :is_visible => true
+                                      }
+                                    })
+    end
 
     let(:features) { [feature1, feature2] }
-    
+
     # Pending
     it 'should return with error' do
       subject

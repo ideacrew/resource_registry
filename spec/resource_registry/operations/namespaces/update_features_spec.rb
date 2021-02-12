@@ -22,18 +22,18 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::UpdateFeatures do
     let(:params) do
       {
         features: {
-            :"0"=>{key: 'health', is_enabled: 'true', namespace: 'shop.2021'},
-            :"1"=>{key: 'dental', is_enabled: 'true', namespace: 'shop.2021'},
-            :"2"=>{
-              key: 'benefit_market_catalog',
-              namespace: 'shop.2021',
-              is_enabled: 'true',
-              settings: {
-                :"0"=>{title: "DC Health Link SHOP Benefit Catalog"}, 
-                :"1"=>{description: "Test Description"}
-              }
+          :"0" => {key: 'health', is_enabled: 'true', namespace: 'shop.2021'},
+          :"1" => {key: 'dental', is_enabled: 'true', namespace: 'shop.2021'},
+          :"2" => {
+            key: 'benefit_market_catalog',
+            namespace: 'shop.2021',
+            is_enabled: 'true',
+            settings: {
+              :"0" => {title: "DC Health Link SHOP Benefit Catalog"},
+              :"1" => {description: "Test Description"}
             }
           }
+        }
       }
     end
 

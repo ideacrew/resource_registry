@@ -12,7 +12,7 @@ RSpec.describe ResourceRegistry::Operations::Features::Renew do
     let(:registry) { ResourceRegistry::Registry.new }
     let!(:register) { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_group_template_path, registry: registry) }
 
-    let(:params) {
+    let(:params) do
       {
         params: {
           target_feature: 'health_product_package_2021',
@@ -20,8 +20,8 @@ RSpec.describe ResourceRegistry::Operations::Features::Renew do
         },
         registry: registry
       }
-    }
-    
+    end
+
     it "should return success with hash output" do
       stub_const("EnrollRegistry", registry)
 

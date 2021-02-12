@@ -12,7 +12,7 @@ RSpec.describe ResourceRegistry::Serializers::Namespaces::Serialize do
     let(:registry) { ResourceRegistry::Registry.new }
     let(:features) { ResourceRegistry::Operations::Registries::Create.new.call(path: feature_group_template_path, registry: registry).success }
     let(:features_with_meta) { features.select{|f| f.meta.to_h.present?} }
-    
+
     context "when namespace_types ignored" do
       let(:namespace_types) { [] }
 

@@ -7,38 +7,38 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Create do
 
   subject { described_class.new.call(params) }
 
-  let(:feature) {
+  let(:feature) do
     ResourceRegistry::Feature.new({
-      :key => :health_packages,
-      :namespace_path => {
-        :path => [:dchbx, :enroll_app, :aca_shop_market],
-        :meta => {
-          :label => "ACA Shop",
-          :content_type => :feature_list,
-          :is_required => true,
-          :is_visible => true
-        }
-      },
-      :is_enabled => true,
-      :item => :features_display,
-      :meta => {
-        :label => "Health Packages",
-        :content_type => :legend,
-        :is_required => true,
-        :is_visible => true
-      },
-    })
-  }
+                                    :key => :health_packages,
+                                    :namespace_path => {
+                                      :path => [:dchbx, :enroll_app, :aca_shop_market],
+                                      :meta => {
+                                        :label => "ACA Shop",
+                                        :content_type => :feature_list,
+                                        :is_required => true,
+                                        :is_visible => true
+                                      }
+                                    },
+                                    :is_enabled => true,
+                                    :item => :features_display,
+                                    :meta => {
+                                      :label => "Health Packages",
+                                      :content_type => :legend,
+                                      :is_required => true,
+                                      :is_visible => true
+                                    }
+                                  })
+  end
 
   context 'When valid params passed' do
-    let(:params) {
+    let(:params) do
       {
         key: feature.namespace_path.path.map(&:to_s).join('_'),
         path: feature.namespace_path.path,
         feature_keys: [feature.key],
         meta: feature.namespace_path.meta.to_h
       }
-    }
+    end
 
     it "should return namespace entity" do
       subject
@@ -48,18 +48,18 @@ RSpec.describe ResourceRegistry::Operations::Namespaces::Create do
   end
 
   context 'When invalid params passed' do
-    let(:params) {
+    let(:params) do
       {
         key: feature.namespace_path.path.map(&:to_s).join('_'),
         feature_keys: [feature.key],
         meta: feature.namespace_path.meta.to_h
       }
-    }
+    end
 
     it "should return error" do
       subject
       expect(subject).to be_a Dry::Monads::Result::Failure
-      expect(subject.failure.errors.to_h).to eq({:path=>["is missing"]})
+      expect(subject.failure.errors.to_h).to eq({:path => ["is missing"]})
     end
   end
 end

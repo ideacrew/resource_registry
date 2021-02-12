@@ -139,7 +139,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
         let(:dsl_sans_meta)     { described_class.new(feature_sans_meta) }
 
         it "should return an empty hash" do
-          expect(dsl_sans_meta.meta).to eq Hash.new
+          expect(dsl_sans_meta.meta).to eq({})
         end
 
         context "and meta key is not present" do
