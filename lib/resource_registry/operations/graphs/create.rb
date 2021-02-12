@@ -7,12 +7,14 @@ require 'digest/md5'
 module ResourceRegistry
   module Operations
     module Graphs
+      # Creates Directed Acyclic Graph with the given namespaces
       class Create
         send(:include, Dry::Monads[:result, :do])
 
         def call(namespaces, registry)
           graph  = yield create(namespaces, registry)
           result = yield validate(graph)
+
           Success(result)
         end
 

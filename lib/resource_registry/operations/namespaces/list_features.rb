@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-# params: namespace
-# returns array of feature dsl objects
-
 module ResourceRegistry
   module Operations
     module Namespaces
+      # List features under a given namespace. Features are also sorted in the order requested in the params.
       class ListFeatures
         send(:include, Dry::Monads[:result, :do, :try])
 

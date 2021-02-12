@@ -38,7 +38,7 @@ module ResourceRegistry
         end
 
         def serialize_namespaces(features)
-          ResourceRegistry::Serializers::Namespaces::Serialize.new.call(features: features)
+          ResourceRegistry::Serializers::Namespaces::Serialize.new.call(features: features, namespace_types: %w[feature_list nav])
         end
 
         def register_graph(namespaces, registry)

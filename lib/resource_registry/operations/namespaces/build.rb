@@ -7,10 +7,8 @@ module ResourceRegistry
       class Build
         send(:include, Dry::Monads[:result, :do])
 
-        NAVIGATION_TYPES = %w[feature_list nav]
-
-        def call(feature)
-          feature = yield validate(feature)
+        def call(feature, content_types = [])
+          feature = yield validate(feature, content_types)
           values  = yield build(feature)
 
           Success(values)
@@ -18,11 +16,17 @@ module ResourceRegistry
 
         private
 
-        def validate(feature)
-          return Failure("feature meta can't be empty") if feature.meta.to_h.empty?
-          return Failure("feature namespace path can't be empty") if feature.namespace_path.to_h.empty?
-          return Failure("namesapce content type should be #{NAVIGATION_TYPES}") unless NAVIGATION_TYPES.include?(feature.namespace_path.meta&.content_type&.to_s)
-          Success(feature)
+        def validate(feature, content_types)
+          errors = []
+          errors << "feature meta can't be empty" if feature.meta.to_h.empty?
+          errors << "feature namespace path can't be empty" if feature.namespace_path.to_h.empty?
+          errors << "namesapce content type should be #{content_types}" if content_types.present? && content_types.exclude?(feature.namespace_path.meta&.content_type&.to_s)
+
+          if errors.empty?
+            Success(feature)
+          else
+            Failure(errors)
+          end
         end
 
         def build(feature)
@@ -35,20 +39,6 @@ module ResourceRegistry
             meta: namespace_path.meta.to_h
           })
         end
-
-        # def construct(namespaces, feature)
-        #   namespace_identifier = feature.namespace.map(&:to_s).join('.')
-        #   if namespaces[namespace_identifier]
-        #     namespaces[namespace_identifier][:features] << feature.key
-        #   else
-        #     namespaces[namespace_identifier] = {
-        #       key: feature.namespace[-1],
-        #       path: feature.namespace,
-        #       features: [feature.key]
-        #     }
-        #   end
-        #   Success(namespaces)
-        # end
       end
     end
   end

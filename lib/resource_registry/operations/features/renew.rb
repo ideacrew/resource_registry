@@ -3,7 +3,7 @@
 module ResourceRegistry
   module Operations
     module Features
-      # Create a Feature
+      # Renew the given feature along with all associated features
       class Renew
         send(:include, Dry::Monads[:result, :do, :try])
 
