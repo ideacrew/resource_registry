@@ -29,10 +29,10 @@ require 'resource_registry/registry'
 
 module ResourceRegistry
   def self.logger
-    @@logger ||= defined?(Rails) ? Rails.logger : Logger.new($stdout)
+    @logger ||= defined?(Rails) ? Rails.logger : Logger.new($stdout)
   end
 
   def self.logger=(logger)
-    @@logger = logger
+    @logger = logger
   end
 end

@@ -55,7 +55,7 @@ module ResourceRegistry
     end
 
     def render_html
-      namespaces.collect{|namespace| to_ul(namespace)}.join.html_safe
+      namespaces.collect{|namespace| to_ul(vertex: namespace)}.join.html_safe
     end
 
     private
@@ -70,7 +70,7 @@ module ResourceRegistry
 
     def to_namespace(vertex)
       namespace_dict = [vertex].inject({}) do |dict, record|
-        dict = record.to_h
+        dict.merge!(record.to_h)
         dict[:features] = dict[:feature_keys].collect{|key| @registry[key].feature.to_h.except(:settings)}
         dict[:namespaces] = @graph.adjacent_vertices(record).collect{|adjacent_vertex| to_namespace(adjacent_vertex)}
         attrs_to_skip = [:feature_keys]
@@ -82,7 +82,7 @@ module ResourceRegistry
       result.to_h
     end
 
-    def to_ul(vertex, nested = false)
+    def to_ul(vertex:, nested: false)
       dict = to_namespace(vertex) if vertex.is_a?(ResourceRegistry::Namespace)
 
       tag.ul(options[:tag_options][(nested ? :nested_ul : :ul)][:options]) do
@@ -104,7 +104,7 @@ module ResourceRegistry
       tag.div(class: 'collapse', id: "nav_#{element[:key]}", 'aria-expanded': 'false') do
         nav_features = element[:features].select{|feature| feature[:meta][:content_type] == :nav}
         (nav_features + element[:namespaces]).reduce('') do |list, child_ele|
-          list + to_ul(child_ele, true)
+          list + to_ul(vertex: child_ele, nested: true)
         end.html_safe
       end
     end

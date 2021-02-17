@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'input_controls'
+require_relative 'form_group_controls'
 # Helper methods to render interface from features/settings
 module RegistryViewControls
-  include ::InputControls
+  include ::FormGroupControls
 
   def render_settings(feature, form, registry, options)
     return render_model_settings(feature, form, registry, options) if feature.meta.content_type == :model_attributes
@@ -150,54 +150,61 @@ module RegistryViewControls
     features = features.select{|feature| feature.meta.present? && feature.meta.content_type.to_s != 'feature_action' }
 
     features.collect do |feature|
-      settings_with_meta = feature.settings.select{|s| s.meta.present?}
-
       tag.div(class: 'mt-3') do
-        tag.div(class: 'row') do
-          tag.div(class: 'col-md-6') do
-            tag.h4 do
-              feature.meta&.label || feature.key.to_s.titleize
-            end
-          end +
-            tag.div(class: 'col-md-6') do
-              action_setting = settings_with_meta.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
-              if action_setting
-                form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
-                  hidden_field_tag('feature[action]', 'renew') +
-                    hidden_field_tag('feature[key]', feature.key) +
-                    f.submit(action_setting.key.to_s.titleize, class: 'btn btn-link')
-                end.html_safe
-              end
-            end
-        end +
-          settings_with_meta.collect do |setting|
-            next if setting.meta.content_type.to_s == 'feature_action'
-            section_name = setting.meta&.label || setting.key.to_s.titleize
-            tag.div(class: 'mt-3') do
-              tag.div(class: 'row') do
-                tag.div(class: 'col-md-4') do
-                  tag.strong do
-                    section_name
-                  end
-                end +
-                  tag.div(class: 'col-md-4') do
-                    tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
-                      tag.span do
-                        "View #{section_name}"
-                      end
-                    end
-                  end +
-                  tag.div(class: 'col-md-6') do
-                    tag.ul(class: 'list-group list-group-flush ml-2') do
-                      feature_list = setting_value(setting)
-                      feature_list.collect{|f| tag.li(class: 'list-group-item'){ f.key.to_s.titleize }}.join.html_safe
-                    end
-                  end
-              end
-            end
-          end.compact.join.html_safe
+        render_feature_action(feature) + render_feature_list(feature)
       end
     end.join
+  end
+
+  def render_feature_action(feature)
+    settings_with_meta = feature.settings.select{|s| s.meta.present?}
+    tag.div(class: 'row') do
+      tag.div(class: 'col-md-6') do
+        tag.h4 do
+          feature.meta&.label || feature.key.to_s.titleize
+        end
+      end +
+        tag.div(class: 'col-md-6') do
+          action_setting = settings_with_meta.detect{|setting| setting.meta.content_type.to_s == 'feature_action'}
+          if action_setting
+            form_with(model: feature, url: action_setting.item, method: :get, remote: true, local: false) do |f|
+              hidden_field_tag('feature[action]', 'renew') +
+                hidden_field_tag('feature[key]', feature.key) +
+                f.submit(action_setting.key.to_s.titleize, class: 'btn btn-link')
+            end.html_safe
+          end
+        end
+    end
+  end
+
+  def render_feature_list(feature)
+    settings_with_meta = feature.settings.select{|s| s.meta.present?}
+    settings_with_meta.collect do |setting|
+      next if setting.meta.content_type.to_s == 'feature_action'
+      section_name = setting.meta&.label || setting.key.to_s.titleize
+      tag.div(class: 'mt-3') do
+        tag.div(class: 'row') do
+          tag.div(class: 'col-md-4') do
+            tag.strong do
+              section_name
+            end
+          end +
+            tag.div(class: 'col-md-4') do
+              tag.a(href: "/exchanges/configurations/#{feature.key}/edit", data: {remote: true}) do
+                tag.span do
+                  "View #{section_name}"
+                end
+              end
+            end +
+            tag.div(class: 'col-md-6') do
+              tag.ul(class: 'list-group list-group-flush ml-2') do
+                feature_list = setting_value(setting)
+                feature_list.collect{|f| tag.li(class: 'list-group-item'){ f.key.to_s.titleize }}.join.html_safe
+              end
+            end
+        end
+      end
+    end.compact.join.html_safe
   end
 
   def get_feature(feature_key, registry)
