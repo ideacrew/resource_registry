@@ -176,9 +176,7 @@ module ResourceRegistry
       return false unless feature.enabled?
 
       namespaces = feature.namespace.split('.')
-      namespaces.detect(-> {true}) do |ancestor_key|
-        feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
-      end
+      namespaces.all? {|ancestor_key| feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).enabled? : true }
     end
 
     private

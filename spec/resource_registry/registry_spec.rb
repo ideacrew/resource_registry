@@ -285,9 +285,8 @@ RSpec.describe ResourceRegistry::Registry do
           end
 
           it "the child feature should be disabled" do
-            expect(registry.feature_enabled?(:trawler)).to be_truthy
+            expect(registry.feature_enabled?(:trawler)).to be_falsey
           end
-
         end
       end
     end
