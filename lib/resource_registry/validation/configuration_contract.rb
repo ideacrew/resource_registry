@@ -39,12 +39,10 @@ module ResourceRegistry
       end
 
       # rubocop:disable Style/RescueModifier
-      
+
       # Verifies the Pathname exists
       rule(:root) do
-        if key? && value
-          value.realpath rescue key.failure("pathname not found: #{value}")
-        end
+        value.realpath rescue key.failure("pathname not found: #{value}") if key? && value
       end
       # rubocop:enable Style/RescueModifier
 

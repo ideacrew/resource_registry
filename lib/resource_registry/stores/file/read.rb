@@ -17,11 +17,9 @@ module ResourceRegistry
         private
 
         def load(params)
-          begin
-            Success(::File.read(params.to_s))
-          rescue Errno::ENOENT
-            Failure["No such file or directory", params: params]
-          end
+          Success(::File.read(params.to_s))
+        rescue Errno::ENOENT
+          Failure["No such file or directory", params: params]
         end
 
       end

@@ -19,8 +19,21 @@ module ResourceRegistry
         optional(:options).maybe(:hash)
         optional(:meta).maybe(:hash)
 
-        before(:value_coercer) do |result|
-          result.to_h.merge!(meta: result[:meta].symbolize_keys) if result[:meta].is_a? Hash
+        before(:value_coercer) do |setting|
+          item = if setting[:meta] && setting[:meta][:content_type] == :duration
+                   Types::Duration[setting[:item]]
+                 elsif setting[:item].is_a? String
+                   dates = setting[:item].scan(/(\d{4}-\d{2}-\d{2})\.\.(\d{4}-\d{2}-\d{2})/).flatten
+                   if dates.present?
+                     dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
+                     Range.new(*dates)
+                   end
+                 elsif setting[:item].is_a?(Hash) && setting[:item][:begin] && setting[:item][:end]
+                   dates = [setting[:item][:begin], setting[:item][:end]].collect{|str| Date.strptime(str, "%Y-%m-%d") }
+                   Range.new(*dates)
+                 end
+
+          setting.to_h.merge(item: item) if item
         end
       end
 
@@ -28,7 +41,7 @@ module ResourceRegistry
         if key? && value
           result = ResourceRegistry::Validation::MetaContract.new.call(value)
           # Use dry-validation metadata error form to pass error hash along with text to calling service
-          key.failure(text: "invalid meta", error: result.errors.to_h) if result && result.failure?
+          key.failure(text: "invalid meta", error: result.errors.to_h) if result&.failure?
         end
       end
     end

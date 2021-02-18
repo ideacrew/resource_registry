@@ -6,11 +6,10 @@ module ResourceRegistry
       class Configure
         send(:include, Dry::Monads[:result, :do])
 
-        def call(params)
+        def call(_params)
           yield configuration
         end
 
-        private
 
       end
     end

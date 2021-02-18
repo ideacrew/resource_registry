@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'dry/monads'
 
 module ResourceRegistry
@@ -6,33 +7,51 @@ module ResourceRegistry
     module Registries
       # Create a Feature
       class Load
-        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:result, :do, :try])
 
         def call(registry:)
-          paths    = yield list_paths(load_path_for(registry))
-          result   = yield load(paths, registry)
+          paths      = yield list_paths(registry)
+          features   = yield load_features(paths, registry)
+          namespaces = yield serialize_namespaces(features)
+          registry   = yield register_graph(namespaces, registry)
 
-          Success(result)
+          Success(registry)
         end
 
         private
 
-        def list_paths(load_path)
+        def list_paths(registry)
+          load_path = registry.resolve('configuration.load_path')
           paths = ResourceRegistry::Stores::File::ListPath.new.call(load_path)
 
           Success(paths)
         end
 
-        def load(paths, registry)
-          paths.value!.each do |path|
-            ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
+        def load_features(paths, registry)
+          Try do
+            paths = paths.value!
+            paths.reduce([]) do |features, path|
+              result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
+              features << result.success if result.success?
+              features
+            end.flatten
+          end.to_result
+        end
+
+        def serialize_namespaces(features)
+          ResourceRegistry::Serializers::Namespaces::Serialize.new.call(features: features, namespace_types: %w[feature_list nav])
+        end
+
+        def register_graph(namespaces, registry)
+          graph = ResourceRegistry::Operations::Graphs::Create.new.call(namespaces, registry)
+
+          if graph.success?
+            registry.register_graph(graph.value!)
+          else
+            ResourceRegistry.logger.error(graph.failure)
           end
 
           Success(registry)
-        end
-
-        def load_path_for(registry)
-          registry.resolve('configuration.load_path')
         end
       end
     end

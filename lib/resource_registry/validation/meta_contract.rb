@@ -20,10 +20,10 @@ module ResourceRegistry
       params do
         required(:label).value(:string)
         required(:content_type).value(:symbol)
-        required(:default).value(:any)
+        optional(:default).maybe(:any)
         optional(:value).maybe(:any)
         optional(:description).maybe(:string)
-        optional(:enum).maybe(:array)
+        optional(:enum).maybe(:any)
         optional(:is_required).maybe(:bool)
         optional(:is_visible).maybe(:bool)
       end

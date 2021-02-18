@@ -9,11 +9,12 @@ require 'rubygems/dependency_installer'
 installer = Gem::DependencyInstaller.new
 
 if gem_available?('mongoid')
-  # installer.install 'mongoid'
+  installer.install 'mongoid'
 
-  # require 'resource_registry/models/mongoid/feature'
-  # require 'resource_registry/models/mongoid/setting'
-  # require 'resource_registry/models/mongoid/meta'
+  require 'resource_registry/models/mongoid/namespace_path'
+  require 'resource_registry/models/mongoid/feature'
+  require 'resource_registry/models/mongoid/setting'
+  require 'resource_registry/models/mongoid/meta'
 else
   installer.install 'activerecord'
 
