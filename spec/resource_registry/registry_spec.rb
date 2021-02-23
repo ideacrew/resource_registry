@@ -52,9 +52,11 @@ RSpec.describe ResourceRegistry::Registry do
 
   describe 'DSL extensions' do
     before do
-      class ::Greeter
-        def call(params)
-          "Hello #{params}"
+      module ResourceRegistry
+        class Greeter
+          def call(params)
+            "Hello #{params}"
+          end
         end
       end
     end
@@ -64,7 +66,7 @@ RSpec.describe ResourceRegistry::Registry do
     let(:namespace_str)     { 'level_1.level_2.level_3'}
     let(:namespace_key)     { namespace_str + '.' + key.to_s }
     let(:is_enabled)        { false }
-    let(:item)              { Greeter.new }
+    let(:item)              { ResourceRegistry::Greeter.new }
 
     let(:label)       { "Name of this UI Feature" }
     let(:type)        { :integer }

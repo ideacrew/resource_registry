@@ -25,5 +25,4 @@ require 'resource_registry/configuration'
 require 'resource_registry/registry'
 
 module ResourceRegistry
-
 end

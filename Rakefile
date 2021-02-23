@@ -9,7 +9,7 @@ RSpec::Core::RakeTask.new(:spec)
 task :default => :spec
 
 YARD::Rake::YardocTask.new do |t|
-  OTHER_PATHS = %w()
+  OTHER_PATHS = %w[].freeze
   t.files = ['lib/**/*.rb', OTHER_PATHS]
-  t.options = %w(--readme --main=README.md)
+  t.options = %w[--readme --main=README.md]
 end

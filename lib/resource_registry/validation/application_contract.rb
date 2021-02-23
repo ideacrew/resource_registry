@@ -42,11 +42,10 @@ module ResourceRegistry
       #   Validates a nested array of $0 params
       #   @!method rule(settings)
       rule(:settings).each do
-        if key? && value
-          result = ResourceRegistry::Validation::SettingContract.new.call(value)
-          # Use dry-validation metadata error form to pass error hash along with text to calling service
-          key.failure(text: "invalid settings", error: result.errors.to_h) if result && result.failure?
-        end
+        next unless key? && value
+        result = ResourceRegistry::Validation::SettingContract.new.call(value)
+        # Use dry-validation metadata error form to pass error hash along with text to calling service
+        key.failure(text: "invalid settings", error: result.errors.to_h) if result && result.failure?
       end
 
       # @!macro [attach] rulemacro

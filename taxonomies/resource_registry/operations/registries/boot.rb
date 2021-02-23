@@ -29,9 +29,9 @@ module ResourceRegistry
         end
 
         def persist_container(container, const_name)
-          container = ResourceRegistry::Stores::Container::Persist.new(registry)
+          persisted_container = ResourceRegistry::Stores::Container::Persist.new(container, const_name)
 
-          Success(container)
+          Success(persisted_container)
         end
       end
     end

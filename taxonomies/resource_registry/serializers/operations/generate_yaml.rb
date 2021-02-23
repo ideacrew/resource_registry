@@ -6,7 +6,7 @@ module ResourceRegistry
       class GenerateYaml < Operation
 
         def call(input)
-          yaml = input.to_yaml
+          input.to_yaml
         end
 
       end

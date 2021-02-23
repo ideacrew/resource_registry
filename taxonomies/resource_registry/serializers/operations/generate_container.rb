@@ -16,7 +16,7 @@ module ResourceRegistry
         private
 
         def construct_container(entity, namespace = nil)
-          container = namespace || Dry::Container::new
+          container = namespace || Dry::Container.new
           attributes = entity.attributes
 
           if entity.is_a?(ResourceRegistry::Entities::Option::Setting)
@@ -30,6 +30,11 @@ module ResourceRegistry
             return
           end
 
+          construct_or_register(container, attributes)
+          container
+        end
+
+        def construct_or_register(container, attributes)
           container.namespace(attributes.delete(:key) || :enterprise) do |resolved_ns|
             attributes.each do |key, value|
 
@@ -40,8 +45,6 @@ module ResourceRegistry
               end
             end
           end
-
-          container
         end
 
         def is_an_entity?(element)

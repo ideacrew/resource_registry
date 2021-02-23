@@ -3,7 +3,6 @@
 module ResourceRegistry
   module Operations
     module Configurations
-
       # Create a Configuration
       class Create
         send(:include, Dry::Monads[:result, :do])

@@ -7,8 +7,8 @@ module ResourceRegistry
       def call(container, key)
         key   = key.to_s
         as_is = key.match(/^resource_registry/).present?
-        as_is = key.scan(/^#{root_key(container)}/).any? unless as_is
-        key   = [key_prefix(container), key].join('.') unless as_is
+        as_is ||= key.scan(/^#{root_key(container)}/).any?
+        key = [key_prefix(container), key].join('.') unless as_is
 
         super container, key
       end

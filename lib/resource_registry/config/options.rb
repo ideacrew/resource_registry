@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 module ResourceRegistry
@@ -37,7 +36,7 @@ module ResourceRegistry
           end
 
           define_method("#{name}?") do
-            !!send(name)
+            !send(name).nil?
           end
         end
       end
@@ -69,7 +68,8 @@ module ResourceRegistry
       #
       # @return [ Integer ] The log level.
       def log_level
-        return unless level = settings[:log_level]
+        level = settings[:log_level]
+        return unless level
         unless level.is_a?(Integer)
           level = level.upcase.to_s
           level = "Logger::#{level}".constantize

@@ -8,7 +8,7 @@ module ResourceRegistry
       belongs_to :editable, polymorphic: true
 
       def to_h
-      	attributes.merge({'content_type' => content_type&.to_sym})
+        attributes.merge({'content_type' => content_type&.to_sym})
       end
     end
   end

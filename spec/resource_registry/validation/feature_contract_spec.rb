@@ -94,7 +94,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
           expect(result.success?).to be_truthy
           expect(result[:key]).to eq key
-          expect(result[:settings][0][:item]).to eq Date.new(2020,1,1)..Date.new(2020,1,31)
+          expect(result[:settings][0][:item]).to eq Date.new(2020, 1, 1)..Date.new(2020, 1, 31)
         end
       end
     end

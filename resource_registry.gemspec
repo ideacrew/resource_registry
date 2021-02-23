@@ -11,11 +11,10 @@ Gem::Specification.new do |spec|
   spec.email         = ["dan@ideacrew.com"]
 
   spec.summary       = "Configure and organize system settings as Features}"
-  spec.description   = %q{Provides a Feature model to define, organize and retrieve application settings.
+  spec.description   = "Provides a Feature model to define, organize and retrieve application settings.
                             Features may be enabled/disabled, may include setting attributes of any
                             type and metadata settings designed to drive auto-display of confguration
-                            settings.
-                          }
+                            settings."
   spec.homepage      = "https://github.com/ideacrew/resource_registry"
   spec.license       = "MIT"
 

@@ -28,7 +28,7 @@ module RegistryDataSeed
   end
 
   def feature_template_path
-    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features','aca_shop_market', 'aca_shop_market.yml')
+    Pathname.pwd.join('spec', 'rails_app', 'system', 'config', 'templates', 'features', 'aca_shop_market', 'aca_shop_market.yml')
   end
 
   def option_files_dir

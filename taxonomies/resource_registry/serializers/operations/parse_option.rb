@@ -20,7 +20,7 @@ module ResourceRegistry
           input = input.to_h
 
           if entity_types.include?(input[:key])
-            hash[input[:key]] = input.fetch(:namespaces,[]).inject({}) do |data, ns|
+            hash[input[:key]] = input.fetch(:namespaces, []).inject({}) do |data, ns|
               data[ns[:key]] = ns[:namespaces].collect{|sub_ns| convert(sub_ns, ns[:key] == :options) } if ns[:namespaces]
               data
             end

@@ -10,7 +10,7 @@ module ResourceRegistry
       class Disable
         send(:include, Dry::Monads[:result, :do])
 
-        def call(name:, options: {})
+        def call(name:, _options: {})
           feature(name).disable(args)
         end
 

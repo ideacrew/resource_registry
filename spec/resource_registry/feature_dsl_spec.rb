@@ -5,9 +5,11 @@ require "spec_helper"
 RSpec.describe ResourceRegistry::FeatureDSL do
 
   before do
-    class ::Greeter
-      def call(params)
-        "Hello #{params[:name]}"
+    module ResourceRegistry
+      class Greeter
+        def call(params)
+          "Hello #{params[:name]}"
+        end
       end
     end
   end
@@ -15,7 +17,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:key)         { :greeter_feature }
   let(:namespace)   { [:level_1, :level_2, :level_3]}
   let(:is_enabled)  { false }
-  let(:item)        { Greeter.method(:new) }
+  let(:item)        { ResourceRegistry::Greeter.method(:new) }
   let(:options)     { { name: "Dolly" } }
 
   let(:default)     { 42 }

@@ -21,12 +21,11 @@ module ResourceRegistry
         def transform(params)
           # result = JSON.parse(ERB.new(JSON::dump(YAML.load(params))).result)
 
-          result = YAML.load(ERB.new(params).result)
+          result = YAML.safe_load(ERB.new(params).result, [Symbol])
           Success(result || {})
-
-          rescue Psych::SyntaxError => e
-            raise "YAML syntax error occurred while parsing #{params}. " \
-                  "Error: #{e.message}"
+        rescue Psych::SyntaxError => e
+          raise "YAML syntax error occurred while parsing #{params}. " \
+                "Error: #{e.message}"
         end
       end
     end

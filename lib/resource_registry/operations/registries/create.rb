@@ -52,16 +52,12 @@ module ResourceRegistry
         def create(feature_hashes)
           features = feature_hashes.collect do |feature_hash|
             feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
-
-            if feature.success?
-              feature.value!
-            else
-              raise "Failed to create feature with #{feature.failure.errors.inspect}"
-            end
+            raise "Failed to create feature with #{feature.failure.errors.inspect}" unless feature.success?
+            feature.value!
           end
 
           Success(features)
-        rescue Exception => e
+        rescue StandardError => e
           raise "Error occurred while creating features using #{feature_hashes}. " \
                   "Error: #{e.message}"
         end

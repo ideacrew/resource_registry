@@ -38,15 +38,15 @@ module ResourceRegistry
           Success(values)
         end
 
-        def validate(input)
-          result = super
+        # def validate(input)
+        #   result = super
 
-          if result.success?
-            Success(result)
-          else
-            Failure(result.errors)
-          end
-        end
+        #   if result.success?
+        #     Success(result)
+        #   else
+        #     Failure(result.errors)
+        #   end
+        # end
       end
     end
   end

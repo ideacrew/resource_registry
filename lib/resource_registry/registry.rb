@@ -24,7 +24,7 @@ module ResourceRegistry
     end
 
     # Set options for this Registry. See {ResourceRegistry::Configuration} for configurable attributes
-    def configure(&block)
+    def configure
       config = OpenStruct.new
       yield(config)
 
@@ -129,7 +129,10 @@ module ResourceRegistry
     # Produce an enumerated list of all features stored in a specific namespace
     # @return [Array<Symbol>] list of registered features in the referenced namespace
     def features_by_namespace(namespace)
-      keys.reduce([]) { |list, key| list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace); list }
+      keys.reduce([]) do |list, key|
+        list << strip_namespace(key).to_sym if key_in_namespace?(key, namespace)
+        list
+      end
     end
 
     # Produce an enumerated list of all visible features stored in a specific namespace

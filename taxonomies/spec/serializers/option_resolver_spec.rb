@@ -31,11 +31,11 @@ RSpec.describe ResourceRegistry::Serializers::OptionResolver do
     end
 
     it "should raise exception when wrong key passed" do
-      begin
-        Registry[wrong_site_key]
-      rescue Dry::Container::Error => e
-        expect(e.to_s).to include('Nothing registered with the key')
-      end
+
+      Registry[wrong_site_key]
+    rescue Dry::Container::Error => e
+      expect(e.to_s).to include('Nothing registered with the key')
+
     end
   end
 end

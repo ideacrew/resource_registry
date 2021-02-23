@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def gem_available?(gem_name, version = nil)
   version.nil? ? gem(gem_name) : gem(gem_name, version)
 rescue Gem::LoadError

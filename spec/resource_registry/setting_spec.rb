@@ -5,15 +5,17 @@ require 'spec_helper'
 RSpec.describe ResourceRegistry::Setting do
 
   before do
-    class ::Greeter
-      def call(params)
-        "Hello #{params[:name]}"
+    module ResourceRegistry
+      class Greeter
+        def call(params)
+          "Hello #{params[:name]}"
+        end
       end
     end
   end
 
   let(:key)     { :my_key }
-  let(:item)    { Greeter.new }
+  let(:item)    { ResourceRegistry::Greeter.new }
   let(:options) { { name: "Dolly" } }
   let(:meta)    { { label: "label", default: 42, content_type: :integer } }
 

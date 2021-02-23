@@ -86,7 +86,7 @@ module ResourceRegistry
         trans_gw_component: { key: :trans_gw_component,
                               title: "Transport Gateway Component",
                               description: "" }
-      }
+      }.freeze
 
       # has_many  :subscriptions,
       #   class_name: 'Subscriptions::Subscription'

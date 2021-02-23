@@ -28,8 +28,8 @@ module ResourceRegistry
 
         before(:value_coercer) do |result|
 
-          settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting|
-            setting.tap do |setting|
+          settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting_rec|
+            setting_rec.tap do |setting|
               if setting[:meta] && setting[:meta][:content_type] == :duration
                 setting[:item] = Types::Duration[setting[:item]]
               elsif setting[:item].is_a? String
@@ -43,11 +43,11 @@ module ResourceRegistry
           end
 
           result.to_h.merge(
-                             key: result[:key]&.to_sym,
-                             meta: result[:meta]&.symbolize_keys,
-                             settings: settings || [],
-                             namespace: (result[:namespace] || []).map(&:to_sym)
-                           )
+            key: result[:key]&.to_sym,
+            meta: result[:meta]&.symbolize_keys,
+            settings: settings || [],
+            namespace: (result[:namespace] || []).map(&:to_sym)
+          )
         end
       end
     end

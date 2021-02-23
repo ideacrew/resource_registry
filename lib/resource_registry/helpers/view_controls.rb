@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'input_controls'
+
 module RegistryViewControls
+  include ::InputControls
+
   def render_feature(feature, form = nil)
     feature = feature.feature if feature.is_a?(ResourceRegistry::FeatureDSL)
     tag.div(class: 'card') do
@@ -56,46 +60,6 @@ module RegistryViewControls
     end
   end
 
-  def select_control(setting, form)
-    id = setting[:key].to_s
-    selected_option = "Choose..."
-    meta = setting[:meta]
-
-    # aria_describedby = id
-
-    value = value_for(setting, form) || setting.item || meta&.default
-    option_list = tag.option(selected_option, selected: (value.blank? ? true : false))
-    meta.enum.each do |choice|
-      option_list += tag.option(choice.first[1], selected: (choice.first[0].to_s == value.to_s), value: choice.first[0])
-    end
-
-    tag.select(option_list, id: id, class: "form-control", name: input_name_for(setting, form))
-  end
-
-  def select_dropdown(input_id, list, show_default = false, selected = nil)
-    name = (input_id.to_s.scan(/supported_languages/).present? ? input_id : 'admin[' + input_id.to_s + ']')
-
-    return unless list.is_a? Array
-    content_tag(:select, class: "form-control", id: input_id, name: name, required: true) do
-      concat(content_tag(:option, "Select", value: "")) unless show_default
-      list.each do |item|
-        if item.is_a? Array
-          is_selected = false
-          is_selected = true if selected.present? && selected == item[1]
-          concat(content_tag(:option, item[0], value: item[1], selected: is_selected))
-        elsif item.is_a? Hash
-          concat(content_tag(:option, item.first[1], value: item.first[0]))
-        elsif input_id == 'state'
-          concat(content_tag(:option, item.to_s.titleize, value: item))
-        elsif show_default
-          concat(content_tag(:option, item, value: item))
-        else
-          concat(content_tag(:option, item.to_s.humanize, value: item))
-        end
-      end
-    end
-  end
-
   def input_import_control(setting, _form)
     id = setting[:key].to_s
     aria_describedby = id
@@ -138,8 +102,9 @@ module RegistryViewControls
     aria_label  = 'Checkbox button for following text input'
     meta.enum.collect do |choice|
       choice = send(choice) if choice.is_a?(String)
+      val = choice.first[0]
       input_group do
-        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: choice.first[0], checked: input_value.include?(choice.first[0].to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: val, checked: input_value.include?(val.to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
           tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
     end.join('').html_safe
@@ -209,7 +174,7 @@ module RegistryViewControls
     input_value = value_for(setting, form) || setting.item || meta&.default
     # aria_describedby = id
     is_required = meta&.is_required == false ? meta.is_required : true
-    placeholder = "Enter #{meta[:label]}".gsub('*','') if meta[:description].blank?
+    placeholder = "Enter #{meta[:label]}".gsub('*', '') if meta[:description].blank?
     # if meta[:attribute]
     #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
@@ -239,7 +204,7 @@ module RegistryViewControls
     input_value = value_for(setting, form) || meta.value || meta.default
     # input_value = setting[:value] || setting[:default]
     # aria_describedby = id
-    placeholder = "Enter #{meta[:label]}".gsub('*','')  if meta[:description].blank?
+    placeholder = "Enter #{meta[:label]}".gsub('*', '')  if meta[:description].blank?
 
     # if setting[:attribute]
     tag.input(nil, type: "number", step: "any", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: true, oninput: "check(this)")
@@ -256,7 +221,7 @@ module RegistryViewControls
     # aria_describedby = id
 
     # if setting[:attribute]
-    tag.input(nil, type: "email", step: "any", value: input_value, id: id, name: input_name_for(setting, form),class: "form-control", required: true, oninput: "check(this)")
+    tag.input(nil, type: "email", step: "any", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", required: true, oninput: "check(this)")
     # else
     #   tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
@@ -276,7 +241,7 @@ module RegistryViewControls
     meta = setting[:meta]
     color = meta.value || meta.default
 
-    tag.input(nil, type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]",class: "js-color-swatch form-control") +
+    tag.input(nil, type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]", class: "js-color-swatch form-control") +
       tag.div(tag.button(type: "button", id: id, class: "btn", value: "", style: "background-color: #{color}"), class: "input-group-append")
   end
 

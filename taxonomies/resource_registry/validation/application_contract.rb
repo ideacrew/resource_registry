@@ -42,17 +42,16 @@ module ResourceRegistry
       end
 
       rule(:settings).each do
-        if key? && value
-          result = ResourceRegistry::Validation::Settings::Setting.new.call(value)
+        next unless key? && value
+        result = ResourceRegistry::Validation::Settings::Setting.new.call(value)
 
-          # Use dry-validation error form to pass error hash along with text to calling service
-          key.failure(text: "invalid setting", error: result.errors.to_h) if result && result.failure?
-        end
+        # Use dry-validation error form to pass error hash along with text to calling service
+        key.failure(text: "invalid setting", error: result.errors.to_h) if result && result.failure?
       end
 
       rule(:tenants).each do
         error_hash = apply_contract_for(self)
-        key.failure(error_hash) if error_hash.size > 0
+        key.failure(error_hash) unless error_hash.empty?
 
         # if key? && value
         #   result = ResourceRegistry::Tenants::Validation::TenantContract.new.call(value)

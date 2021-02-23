@@ -97,8 +97,8 @@ setting :dchbx_tenant do
         setting(:open_enrollment_minimum_days,  type: :integer, default: 5, value: 5) { |value| Hash(metadata: value) }
         setting(:employer_attestation_required, type: :boolean, default: false, value: false) { |value| Hash(metadata: value) }
         setting(:application_period,    type: :date_range,
-                                        default: Date.new(2018,1,1)..Date.new(2018,12,31),
-                                        value: Date.new(2018,1,1)..Date.new(2018,12,31)) \
+                                        default: Date.new(2018, 1, 1)..Date.new(2018, 12, 31),
+                                        value: Date.new(2018, 1, 1)..Date.new(2018, 12, 31)) \
                                       { |vals| Hash(metadata: vals) }
 
 
@@ -203,8 +203,8 @@ setting :dchbx_tenant do
         setting(:open_enrollment_minimum_days,    type: :integer, default: 5, value: 5) { |value| Hash(metadata: value) }
         setting(:employer_attestation_required,   type: :boolean, default: false, value: false) { |value| Hash(metadata: value) }
         setting(:application_period,    type: :date_range,
-                                        default: Date.new(2019,1,1)..Date.new(2019,12,31),
-                                        value: Date.new(2019,1,1)..Date.new(2019,12,31)) \
+                                        default: Date.new(2019, 1, 1)..Date.new(2019, 12, 31),
+                                        value: Date.new(2019, 1, 1)..Date.new(2019, 12, 31)) \
                                       { |vals| Hash(metadata: vals) }
 
 

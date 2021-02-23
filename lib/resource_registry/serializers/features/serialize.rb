@@ -27,11 +27,11 @@ module ResourceRegistry
               ns_features_list << feature_hash
             end
 
-            features_list += namespace_features
+            features_list + namespace_features
           end
 
           Success(features)
-        rescue Exception => e
+        rescue StandardError => e
           raise "Error occurred while serializing #{params}. " \
                 "Error: #{e.message}"
         end

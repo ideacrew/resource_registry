@@ -11,6 +11,6 @@ namespace :resource_registry do
     end
 
     puts "::: Settings Delete Complete :::"
-    puts "*"*80 unless Rails.env.test?
+    puts "*" * 80 unless Rails.env.test?
   end
 end
