@@ -63,7 +63,9 @@ module ResourceRegistry
       raise ArgumentError, "#{id} must be a String or Symbol" if !id.is_a?(String) && !id.is_a?(Symbol)
 
       id = id.to_sym
-      @feature.settings.detect { |setting| setting.key == id }
+      setting = @feature.settings.detect { |setting| setting.key == id }
+      return ResourceRegistry::SettingDSL.new(setting) if setting
+      setting
     end
 
     def label
@@ -102,8 +104,21 @@ module ResourceRegistry
       @feature.meta.order
     end
 
+    # registry[:feature_key]
+    # registry.resolve(:feature_key)
     def item
-      elements = @feature.item.to_s.split(/\./)
+      value = @feature.item
+      value = process_procs(value)
+
+      if value.is_a?(Array)
+        elements = value.collect{|element| identify_feature(element) }.compact
+        return elements if elements.any?
+      end
+
+      feature_value = identify_feature(value)
+      return feature_value if feature_value
+
+      elements = value.to_s.split(/\./)
 
       if defined? Rails
         elements[0].constantize.send(elements[1])
@@ -112,6 +127,34 @@ module ResourceRegistry
       end
     rescue NameError
       @feature.item
+    end
+
+    def identify_feature(value)
+      if matched = value.to_s.match(/^registry\[(.*)\]$/) || matched = value.to_s.match(/^registry.resolve_feature\((.*)\)$/)
+        feature_key = matched[-1].gsub(':', '')
+        return registry[feature_key]
+      end
+      nil
+    end
+
+    def process_procs(value)
+      if value.is_a?(Array)
+        value.collect{|element| process_procs(element) }.compact
+      elsif value.is_a?(Hash)
+        value.inject({}) {|data, (k, v)| data[k] = process_procs(v); data}
+      elsif value.is_a?(String) && value.match?(/Proc.new/)
+        eval(value).call
+      else
+        value
+      end
+    end
+
+    def registry
+      return @registry if defined? @registry
+
+      if defined? Rails
+        @registry = "#{Rails.application.class.module_parent_name}Registry".constantize
+      end
     end
   end
 end

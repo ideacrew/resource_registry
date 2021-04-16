@@ -107,7 +107,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
           let(:first_setting_id)  { first_setting.key }
 
           it "correctly returns an individual setting for a feature" do
-            expect(dsl.setting(first_setting_id)).to eq first_setting
+            expect(dsl.setting(first_setting_id).setting).to eq first_setting
           end
 
           it "returns nil if named setting isn't found" do
