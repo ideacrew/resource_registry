@@ -160,7 +160,7 @@ my_registry[:greeter] {"Dolly"}              # => "Hello Dolly"
   my_registry.register_feature(my_species)
 ```
 
-Namespaced Features respect their anscesters with regard to code access.  For instance ```Feature#enabled?``` will check not only the referenced Feature, but traverse all ancestors in its namespace.  If any of the referenced Feature's anscestors is disabled, then the referenced Feature is considered disabled -- regardless of whether ```is_enabled``` is set to ```true``` or ```false```.
+Namespaced Features respect their ancestors with regard to code access.  For instance ```Feature#enabled?``` will check not only the referenced Feature, but traverse all ancestors in its namespace.  If any of the referenced Feature's ancestors is disabled, then the referenced Feature is considered disabled -- regardless of whether ```is_enabled``` is set to ```true``` or ```false```.
 
 For instance, extending the ```species``` Feature example above:
 
