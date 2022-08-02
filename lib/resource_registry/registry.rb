@@ -31,7 +31,12 @@ module ResourceRegistry
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
     end
 
+    def navigation(options = {})
+      ::ResourceRegistry::Navigation.new(self, options)
+    end
+
     def swap_feature(feature)
+      feature = dsl_for(feature)
       self._container.delete("feature_index.#{feature.key}")
       self._container.delete(namespaced(feature.key, feature.namespace))
       register_feature(feature)
@@ -46,7 +51,7 @@ module ResourceRegistry
     def register_feature(feature)
       raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL" if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
 
-      feature = dsl_for(feature)
+      feature = dsl_for(feature) unless feature.is_a?(ResourceRegistry::FeatureDSL)
 
       raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}" if feature?(feature.key)
       @features_stale = true
@@ -55,6 +60,11 @@ module ResourceRegistry
       register(namespaced(feature.key, feature.namespace), feature)
 
       self
+    end
+
+    def register_graph(graph)
+      self._container.delete('feature_graph') if key?('feature_graph')
+      register('feature_graph', graph)
     end
 
     # Look up a feature stored in the registry
@@ -104,8 +114,7 @@ module ResourceRegistry
     end
 
     def namespaces
-      return @namespaces if defined? @namespaces
-      @namespaces = features.collect{|feature_key| self[feature_key].feature.namespace}.uniq
+      @namespaces = features.collect{|feature_key| self[feature_key].namespace}.uniq
     end
 
     def namespace_features_hash
@@ -170,9 +179,7 @@ module ResourceRegistry
       return false unless feature.enabled?
 
       namespaces = feature.namespace.split('.')
-      namespaces.detect(-> {true}) do |ancestor_key|
-        feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).disabled? : false
-      end
+      namespaces.all? {|ancestor_key| feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).enabled? : true }
     end
 
     private

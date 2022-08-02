@@ -6,14 +6,14 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
   describe "Feature core parameters" do
     let(:key)         { :my_feature }
-    let(:namespace)   { [:level_1, :level_2, :level_3]}
+    let(:namespace)   { {path: [:level_1, :level_2, :level_3]} }
     let(:is_enabled)  { false }
     let(:item)        { ->(val){ val.to_sym } }
     let(:options)     { { name: "Dolly" } }
     let(:meta)        { { label: "label", default: 42, content_type: :integer } }
     let(:settings)    { [{ key: :service, item: "weather/forecast" }, { key: :retries, item: 4 }] }
 
-    let(:required_params)     { { key: key, namespace: namespace, is_enabled: is_enabled, item: item } }
+    let(:required_params)     { { key: key, namespace_path: namespace, is_enabled: is_enabled, item: item } }
     let(:optional_params)     { { options: options, meta: meta, settings: settings } }
     let(:all_params)          { required_params.merge(optional_params) }
 
@@ -30,7 +30,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
       context "and a non-boolean value is passed to :is_enabled" do
         let(:invalid_is_enabled)  { "blue" }
-        let(:invalid_params)      { { key: key, namespace: namespace, is_enabled: invalid_is_enabled } }
+        let(:invalid_params)      { { key: key, namespace_path: namespace, is_enabled: invalid_is_enabled } }
         let(:error_message)       { "must be boolean" }
 
         it "should should fail validation" do
@@ -40,10 +40,22 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
           expect(result.errors.first.text).to eq error_message
         end
       end
+
+      context 'namespace missing' do
+        let(:invalid_params) { required_params.merge(namespace_path: nil) }
+
+        it "should should fail validation" do
+          result = subject.call(invalid_params)
+
+          expect(result.success?).to be_falsey
+          expect(result.errors[:namespace_path]).to eq ["must be a hash"]
+        end
+      end
     end
 
     context "Given valid parameters" do
-      let(:required_attr_defaults)  { {meta: nil, settings: []} }
+      # let(:required_attr_defaults)  { {meta: nil, settings: []} }
+      let(:required_attr_defaults)  { {meta: nil} }
       let(:required_attr_out)     { required_params.merge(required_attr_defaults) }
 
       context "and required parameters only" do
@@ -63,7 +75,7 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
 
       context "and key is passed as string" do
         let(:key_string)  { "my_feature" }
-        let(:params)      { { key: key_string, namespace: namespace, is_enabled: is_enabled } }
+        let(:params)      { { key: key_string, namespace_path: namespace, is_enabled: is_enabled } }
 
         it "should coerce stringified key into symbol" do
           result = subject.call(params)
@@ -74,8 +86,8 @@ RSpec.describe ResourceRegistry::Validation::FeatureContract do
       end
 
       context "and passing namespace values in as strings" do
-        let(:namespace_strings)   { namespace.map(&:to_s) }
-        let(:params)              { { key: key, namespace: namespace_strings, is_enabled: is_enabled, item: item } }
+        let(:namespace_strings)   { {path: ['level_1', 'level_2', 'level_3']} }
+        let(:params)              { { key: key, namespace_path: namespace_strings, is_enabled: is_enabled, item: item } }
 
         it "should coerce stringified key into symbol" do
           result = subject.call(params)

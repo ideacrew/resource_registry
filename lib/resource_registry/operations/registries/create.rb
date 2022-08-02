@@ -5,16 +5,16 @@ module ResourceRegistry
     module Registries
       # Create a Feature
       class Create
-        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:result, :do, :try])
 
         def call(path:, registry:)
           file_io         = yield read(path)
           params          = yield deserialize(file_io)
           feature_hashes  = yield serialize(params)
           features        = yield create(feature_hashes)
-          container       = yield register(features, registry)
+          yield persist(features, registry)
 
-          Success(container)
+          Success(features)
         end
 
         private
@@ -50,31 +50,18 @@ module ResourceRegistry
         end
 
         def create(feature_hashes)
-          features = feature_hashes.collect do |feature_hash|
-            feature = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
-            raise "Failed to create feature with #{feature.failure.errors.inspect}" unless feature.success?
-            feature.value!
-          end
-
-          Success(features)
-        rescue StandardError => e
-          raise "Error occurred while creating features using #{feature_hashes}. " \
-                  "Error: #{e.message}"
+          Try do
+            feature_hashes.collect do |feature_hash|
+              result = ResourceRegistry::Operations::Features::Create.new.call(feature_hash)
+              return result if result.failure?
+              result.value!
+            end
+          end.to_result
         end
 
-        def register(features, registry)
+        def persist(features, registry)
           features.each do |feature|
-            if defined?(Rails) && registry.db_connection&.table_exists?(:resource_registry_features)
-              feature_record = ResourceRegistry::ActiveRecord::Feature.where(key: feature.key).first
-
-              if feature_record.blank?
-                ResourceRegistry::ActiveRecord::Feature.new(feature.to_h).save
-              else
-                result = ResourceRegistry::Operations::Features::Create.new.call(feature_record.to_h)
-                feature = result.success if result.success?
-              end
-            end
-
+            ResourceRegistry::Stores.persist(feature, registry) if defined? Rails
             registry.register_feature(feature)
           end
 

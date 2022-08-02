@@ -20,8 +20,7 @@ module ResourceRegistry
 
         private
 
-        def verify(params)
-        end
+        def verify(params); end
 
       end
     end

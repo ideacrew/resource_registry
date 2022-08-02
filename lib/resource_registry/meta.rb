@@ -36,7 +36,7 @@ module ResourceRegistry
     # @!attribute [r] enum
     # List of vaalid domain values when configuration values are constrained to an enumerated set
     # @return [Array<Any>]
-    attribute :enum,        Types::Array.of(Types::Any).optional.meta(omittable: true)
+    attribute :enum,        Types::Any.optional.meta(omittable: true)
 
     # @!attribute [r] is_required
     # Internal indicator whether the configuration setting value must be set in the UI
