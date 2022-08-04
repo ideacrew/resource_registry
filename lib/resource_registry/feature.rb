@@ -53,8 +53,5 @@ module ResourceRegistry
     # @return [Array<ResourceRegistry::Setting>]
     attribute :settings, Types::Array.of(ResourceRegistry::Setting).default([].freeze).meta(omittable: true)
 
-    # alias is_enabled? is_enabled
-    # alias enabled is_enabled
-    # alias enabled? is_enabled
   end
 end

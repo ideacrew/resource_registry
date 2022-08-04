@@ -54,13 +54,15 @@ module ResourceRegistry
       unless feature.is_a?(ResourceRegistry::Feature) || feature.is_a?(ResourceRegistry::FeatureDSL)
         raise ArgumentError, "#{feature}: expected ResourceRegistry::Feature or ResourceRegistry::FeatureDSL"
       end
+
       if feature?(feature.key)
         raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}"
       end
 
       feature_dsl = feature.is_a?(ResourceRegistry::FeatureDSL) ? feature : dsl_for(feature)
-      register_feature_dsl(feature_dsl)
       @features_stale = true
+      register_feature_dsl(feature_dsl)
+
       self
     end
 
@@ -70,13 +72,12 @@ module ResourceRegistry
       argument_error_message = "expected ResourceRegistry::FeatureDSL"
       raise ArgumentError, argument_error_message unless feature_dsl.is_a?(ResourceRegistry::FeatureDSL)
 
-      namespace = feature_dsl.feature.namespace_path[:path]
-
       register(
         namespaced(feature_dsl.key, FEATURE_INDEX_NAMESPACE),
-        proc { resolve(namespaced(feature_dsl.key, namespace)) }
+        proc { resolve(namespaced(feature_dsl.key, feature_dsl.namespace)) }
       )
-      register(namespaced(feature_dsl.key, namespace), feature_dsl.feature)
+
+      register(namespaced(feature_dsl.key, feature_dsl.namespace), feature_dsl)
     end
 
     def register_graph(graph)

@@ -46,6 +46,8 @@ module ResourceRegistry
       @feature.is_enabled == false
     end
 
+    def_delegator :@feature, :is_enabled
+
     # @!method item
     # The reference or code to be evaluated when feature is resolved
     def_delegator :@feature, :item
