@@ -1,32 +1,34 @@
 # frozen_string_literal: true
 
-require 'dry/validation'
-require 'dry/monads/result'
+require "dry/validation"
+require "dry/monads/result"
 
-require 'dry/monads'
-require 'dry/monads/do'
-require 'dry-struct'
+require "dry/monads"
+require "dry/monads/do"
+require "dry-struct"
 
-require 'resource_registry/version'
-require 'resource_registry/error'
+require "resource_registry/version"
+require "resource_registry/error"
 
-require 'resource_registry/types'
-require 'resource_registry/stores'
-require 'resource_registry/serializers'
-require 'resource_registry/validation/application_contract'
-require 'resource_registry/railtie' if defined? Rails
+require "resource_registry/types"
+require "resource_registry/stores"
+require "resource_registry/serializers"
+require "resource_registry/validation/application_contract"
+require "resource_registry/railtie" if defined?(Rails)
 
-require 'resource_registry/navigation'
-require 'resource_registry/rgl'
-require 'resource_registry/meta'
-require 'resource_registry/setting'
-require 'resource_registry/namespace_path'
-require 'resource_registry/feature'
-require 'resource_registry/namespace'
-require 'resource_registry/feature_dsl'
-require 'resource_registry/configuration'
-require 'resource_registry/registry'
+require "resource_registry/navigation"
+require "resource_registry/rgl"
+require "resource_registry/meta"
+require "resource_registry/setting"
+require "resource_registry/namespace_path"
+require "resource_registry/feature"
+require "resource_registry/namespace"
+require "resource_registry/feature_dsl"
+require "resource_registry/configuration"
+require "resource_registry/registry"
 
+# A container for managing configuration settings that supports
+# Inversion of Control (IoC) or 'dependency injection'
 module ResourceRegistry
   def self.logger
     @logger ||= defined?(Rails) ? Rails.logger : Logger.new($stdout)

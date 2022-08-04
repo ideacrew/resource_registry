@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'dry/container'
-require_relative 'operations/registries/load'
-require_relative 'operations/registries/configure'
-require_relative 'operations/registries/create'
+require "dry/container"
+require_relative "operations/registries/load"
+require_relative "operations/registries/configure"
+require_relative "operations/registries/create"
 
 module ResourceRegistry
   # Registries are containers for storing and accessing an application's {ResourceRegistry::Feature} and setting values
   class Registry < Dry::Container
-
-    FEATURE_INDEX_NAMESPACE = 'feature_index'
-    CONFIGURATION_NAMESPACE = 'configuration'
+    FEATURE_INDEX_NAMESPACE = "feature_index"
+    FEATURE_GRAPH_NAMESPACE = "feature_graph"
+    CONFIGURATION_NAMESPACE = "configuration"
 
     attr_accessor :db_connection
 
@@ -19,7 +19,7 @@ module ResourceRegistry
       super()
 
       @configurations = {}
-      @features       = []
+      @features = []
       @features_stale = true
     end
 
@@ -37,34 +37,51 @@ module ResourceRegistry
 
     def swap_feature(feature)
       feature = dsl_for(feature)
-      self._container.delete("feature_index.#{feature.key}")
-      self._container.delete(namespaced(feature.key, feature.namespace))
+      _container.delete("feature_index.#{feature.key}")
+      _container.delete(namespaced(feature.key, feature.namespace))
       register_feature(feature)
       @features_stale = false
     end
 
     # Store a feature in the registry
     # @param feature [ResourceRegistry::Feature] The subject feature to be stored
+    # @param feature_dsl [ResourceRegistry::FeatureDSL] The subject feature to be stored in FeatureDsl form
     # @raise [ArgumentError] if the feature parameter isn't an instance of {ResourceRegistry::Feature}
-    # @raise [ResourceRegistry::Error::DuplicateFeatureError] if this feature key is already registered under in the registry
+    # @raise [ResourceRegistry::Error::DuplicateFeatureError] if this feature key is already registered under
+    # in the registry
     # @return [ResourceRegistry::Registry]
     def register_feature(feature)
-      raise ArgumentError, "#{feature} must be a ResourceRegistry::Feature or ResourceRegistry::FeatureDSL" if !feature.is_a?(ResourceRegistry::Feature) && !feature.is_a?(ResourceRegistry::FeatureDSL)
+      unless feature.is_a?(ResourceRegistry::Feature) || feature.is_a?(ResourceRegistry::FeatureDSL)
+        raise ArgumentError, "#{feature}: expected ResourceRegistry::Feature or ResourceRegistry::FeatureDSL"
+      end
+      if feature?(feature.key)
+        raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}"
+      end
 
-      feature = dsl_for(feature) unless feature.is_a?(ResourceRegistry::FeatureDSL)
-
-      raise ResourceRegistry::Error::DuplicateFeatureError, "feature already registered #{feature.key.inspect}" if feature?(feature.key)
+      feature_dsl = feature.is_a?(ResourceRegistry::FeatureDSL) ? feature : dsl_for(feature)
+      register_feature_dsl(feature_dsl)
       @features_stale = true
-
-      register(namespaced(feature.key, FEATURE_INDEX_NAMESPACE), proc { resolve(namespaced(feature.key, feature.namespace)) })
-      register(namespaced(feature.key, feature.namespace), feature)
-
       self
     end
 
+    # @api private
+    # @param feature_dsl [ResourceRegistry::FeatureDSL] The subject feature to be stored in FeatureDsl form
+    def register_feature_dsl(feature_dsl)
+      argument_error_message = "expected ResourceRegistry::FeatureDSL"
+      raise ArgumentError, argument_error_message unless feature_dsl.is_a?(ResourceRegistry::FeatureDSL)
+
+      namespace = feature_dsl.feature.namespace_path[:path]
+
+      register(
+        namespaced(feature_dsl.key, FEATURE_INDEX_NAMESPACE),
+        proc { resolve(namespaced(feature_dsl.key, namespace)) }
+      )
+      register(namespaced(feature_dsl.key, namespace), feature_dsl.feature)
+    end
+
     def register_graph(graph)
-      self._container.delete('feature_graph') if key?('feature_graph')
-      register('feature_graph', graph)
+      _container.delete("feature_graph") if key?("feature_graph")
+      register("feature_graph", graph)
     end
 
     # Look up a feature stored in the registry
@@ -73,6 +90,7 @@ module ResourceRegistry
     # @return [mixed] the value stored in Feature's item attribute
     def resolve_feature(key, &block)
       raise ResourceRegistry::Error::FeatureNotFoundError, "nothing registered with key #{key}" unless feature?(key)
+
       feature = resolve(namespaced(key, FEATURE_INDEX_NAMESPACE), &block)
 
       if block_given?
@@ -84,7 +102,8 @@ module ResourceRegistry
 
     # (see #resolve_feature)
     # @note This is syntactic sugar for {resolve_feature}.  To maintain full container functionality, this method
-    #   will first attempt to lookup a Feature that matches the key and if unsuccessful will directly resolve the key value
+    #   will first attempt to lookup a Feature that matches the key and if unsuccessful will directly resolve the
+    #   key value
     # @raise [Dry::Container::Error] if neither a Feature nor other registry attribute matches the passed key
     def [](key, &block)
       resolve_feature(key, &block)
@@ -104,21 +123,22 @@ module ResourceRegistry
     # @return [Array<Symbol>] list of registered features
     def features
       if features_stale?
-        @features = self.keys.reduce([]) do |list, key|
-          list << strip_namespace(key).to_sym if is_indexed_feature?(key)
-          list
-        end
+        @features =
+          keys.reduce([]) do |list, key|
+            list << strip_namespace(key).to_sym if is_indexed_feature?(key)
+            list
+          end
         @features_stale = false
       end
       @features
     end
 
     def namespaces
-      @namespaces = features.collect{|feature_key| self[feature_key].namespace}.uniq
+      @namespaces = features.collect { |feature_key| self[feature_key].namespace }.uniq
     end
 
     def namespace_features_hash
-      dotted_namespaces = namespaces.collect{|ns| ns.map(&:to_s).join('.')}
+      dotted_namespaces = namespaces.collect { |ns| ns.map(&:to_s).join(".") }
 
       dotted_namespaces.inject({}) do |data, namespace|
         features = visible_features_by_namespace(namespace)
@@ -128,11 +148,12 @@ module ResourceRegistry
     end
 
     def nested_namespaces
-      return @nested_namespaces if defined? @nested_namespaces
+      return @nested_namespaces if defined?(@nested_namespaces)
 
-      @nested_namespaces = namespace_features_hash.reduce({}) do |data, (namespace, features)|
-        data.deep_merge(namespace_to_hash(namespace.split('.'), features))
-      end
+      @nested_namespaces =
+        namespace_features_hash.reduce({}) do |data, (namespace, features)|
+          data.deep_merge(namespace_to_hash(namespace.split("."), features))
+        end
     end
 
     # Produce an enumerated list of all features stored in a specific namespace
@@ -148,7 +169,7 @@ module ResourceRegistry
     # @return [Array<Symbol>] list of registered visible features in the referenced namespace
     def visible_features_by_namespace(namespace)
       feature_keys = features_by_namespace(namespace)
-      feature_keys.select{|feature_key| resolve_feature(feature_key)&.meta&.is_visible }
+      feature_keys.select { |feature_key| resolve_feature(feature_key)&.meta&.is_visible }
     end
 
     # Return the value for an individual configuration key
@@ -162,10 +183,11 @@ module ResourceRegistry
     # @return [Hash] map of configuration key/value pairs
     def configurations
       return @configurations unless @configurations.empty?
-      @configurations = keys.reduce({}) do |list, key|
-        list.merge!(strip_namespace(key).to_sym => resolve(key)) if key_in_namespace?(key, CONFIGURATION_NAMESPACE)
-        list
-      end
+      @configurations =
+        keys.reduce({}) do |list, key|
+          list.merge!(strip_namespace(key).to_sym => resolve(key)) if key_in_namespace?(key, CONFIGURATION_NAMESPACE)
+          list
+        end
     end
 
     # Indicates if a feature is enabled.  To be considered enabled the subject feature
@@ -176,10 +198,11 @@ module ResourceRegistry
     # @return [false] if feature or one of its ancestors isn't enabled
     def feature_enabled?(key)
       feature = resolve_feature(key)
-      return false unless feature.enabled?
 
-      namespaces = feature.namespace.split('.')
-      namespaces.all? {|ancestor_key| feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).enabled? : true }
+      return false unless feature.is_enabled
+
+      namespaces = feature.namespace.split(".")
+      namespaces.all? { |ancestor_key| feature?(ancestor_key) ? resolve_feature(ancestor_key.to_sym).enabled? : true }
     end
 
     private
@@ -197,31 +220,37 @@ module ResourceRegistry
     end
 
     def key_in_namespace?(key, namespace)
-      ((/\A#{Regexp.escape(namespace.to_s)}/ =~ key) == 0) && (key.delete_prefix(namespace + '.').count('.') == 0)
+      ((/\A#{Regexp.escape(namespace.to_s)}/ =~ key) == 0) && (key.delete_prefix(namespace + ".").count(".") == 0)
     end
 
     def parent_namespace(key)
-      parts = key.to_s.split('.')
-      parts[0..(parts.size - 2)].join('.')
+      parts = key.to_s.split(".")
+      parts[0..(parts.size - 2)].join(".")
     end
 
     def strip_namespace(key)
-      key.to_s.split('.').last
+      key.to_s.split(".").last
     end
 
     # Concatenate a namespace with a feature key
     # @param key [String] the feature key value to concat
     # @param namespace [String] the namespace value to concat in dot notation
     # @return [String] the namespace prepended to key
-    def namespaced(key, namespace = '')
-      namespace.present? ? [namespace, key.to_s].join('.') : key.to_s
+    def namespaced(key, namespace = "")
+      namespace.present? ? [namespace, key.to_s].join(".") : key.to_s
     end
 
     def namespace_to_hash(namespace_arr, features)
       namespace_hash = {}
 
       key = namespace_arr[0]
-      namespace_hash[key] = (!namespace_arr[1..-1].empty? ? {namespaces: namespace_to_hash(namespace_arr[1..-1], features)} : {features: features})
+      namespace_hash[key] = (
+        if !namespace_arr[1..-1].empty?
+          { namespaces: namespace_to_hash(namespace_arr[1..-1], features) }
+        else
+          { features: features }
+        end
+      )
       namespace_hash
     end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/monads'
+require "dry/monads"
 
 module ResourceRegistry
   module Operations
@@ -10,10 +10,10 @@ module ResourceRegistry
         send(:include, Dry::Monads[:result, :do, :try])
 
         def call(registry:)
-          paths      = yield list_paths(registry)
-          features   = yield load_features(paths, registry)
+          paths = yield list_paths(registry)
+          features = yield load_features(paths, registry)
           namespaces = yield serialize_namespaces(features)
-          registry   = yield register_graph(namespaces, registry)
+          # registry   = yield register_graph(namespaces, registry)
 
           Success(registry)
         end
@@ -21,7 +21,7 @@ module ResourceRegistry
         private
 
         def list_paths(registry)
-          load_path = registry.resolve('configuration.load_path')
+          load_path = registry.resolve("configuration.load_path")
           paths = ResourceRegistry::Stores::File::ListPath.new.call(load_path)
 
           Success(paths)
@@ -30,26 +30,27 @@ module ResourceRegistry
         def load_features(paths, registry)
           Try do
             paths = paths.value!
-            paths.reduce([]) do |features, path|
-              result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
-              features << result.success if result.success?
-              features
-            end.flatten
+            paths
+              .reduce([]) do |features, path|
+                result = ResourceRegistry::Operations::Registries::Create.new.call(path: path, registry: registry)
+                features << result.success if result.success?
+                features
+              end
+              .flatten
           end.to_result
         end
 
         def serialize_namespaces(features)
-          ResourceRegistry::Serializers::Namespaces::Serialize.new.call(features: features, namespace_types: %w[feature_list nav])
+          ResourceRegistry::Serializers::Namespaces::Serialize.new.call(
+            features: features,
+            namespace_types: %w[feature_list nav]
+          )
         end
 
         def register_graph(namespaces, registry)
           graph = ResourceRegistry::Operations::Graphs::Create.new.call(namespaces, registry)
 
-          if graph.success?
-            registry.register_graph(graph.value!)
-          else
-            ResourceRegistry.logger.error(graph.failure)
-          end
+          graph.success? ? registry.register_graph(graph.value!) : ResourceRegistry.logger.error(graph.failure)
 
           Success(registry)
         end
