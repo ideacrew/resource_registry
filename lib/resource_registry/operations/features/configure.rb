@@ -9,6 +9,8 @@ module ResourceRegistry
         def call(_params)
           yield configuration
         end
+
+
       end
     end
   end

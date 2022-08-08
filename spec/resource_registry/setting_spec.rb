@@ -61,7 +61,7 @@ RSpec.describe ResourceRegistry::Setting do
   end
 
   context "Given hash params include a class as the item value" do
-    let(:greet_message) { "Hello " + options[:name] }
+    let(:greet_message) { "Hello #{options[:name]}" }
 
     it "should invoke the class with the passed options parameters" do
       setting = described_class.new(all_params)

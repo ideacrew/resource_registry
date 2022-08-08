@@ -18,36 +18,33 @@ module ResourceRegistry
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
         required(:key).value(:symbol)
-        required(:namespace).maybe(:array)
+        required(:namespace_path).value(:hash)
         required(:is_enabled).value(:bool)
         optional(:item).value(:any)
         optional(:options).maybe(:hash)
-
         optional(:meta).maybe(:hash)
         optional(:settings).array(:hash)
 
-        before(:value_coercer) do |result|
+        before(:value_coercer) do |feature|
+          feature.to_h.merge(meta: nil) if feature[:meta].blank?
+        end
+      end
 
-          settings = result[:settings]&.map(&:deep_symbolize_keys)&.collect do |setting_rec|
-            setting_rec.tap do |setting|
-              if setting[:meta] && setting[:meta][:content_type] == :duration
-                setting[:item] = Types::Duration[setting[:item]]
-              elsif setting[:item].is_a? String
-                dates = setting[:item].scan(/(\d{4}\-\d{2}\-\d{2})\.\.(\d{4}\-\d{2}\-\d{2})/).flatten
-                if dates.present?
-                  dates = dates.collect{|str| Date.strptime(str, "%Y-%m-%d") }
-                  setting[:item] = Range.new(*dates)
-                end
-              end
-            end
+      # @!macro [attach] rulemacro
+      #   Validates a nested hash of $1 params
+      #   @!method $0($1)
+      #   @param [Symbol] $1 key
+      #   @return [Dry::Monads::Result::Success] if nested $1 params pass validation
+      #   @return [Dry::Monads::Result::Failure] if nested $1 params fail validation
+      rule(:namespace_path) do
+        if key? && value
+          result = ResourceRegistry::Validation::NamespacePathContract.new.call(value)
+          if result.failure?
+            # Use dry-validation error form to pass error hash along with text to calling service
+            key.failure(text: "invalid meta", error: result.errors.to_h)
+          else
+            values.merge!(namespace_path: result.to_h)
           end
-
-          result.to_h.merge(
-            key: result[:key]&.to_sym,
-            meta: result[:meta]&.symbolize_keys,
-            settings: settings || [],
-            namespace: (result[:namespace] || []).map(&:to_sym)
-          )
         end
       end
     end

@@ -26,7 +26,7 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
   let(:all_params)        { required_params.merge(optional_params) }
 
   context "Validation with invalid input" do
-    let(:required_params_error) { { :default => ["is missing"], :label => ["is missing"], :content_type => ["is missing"] } }
+    let(:required_params_error) { { :label => ["is missing"], :content_type => ["is missing"] } }
 
     context "Given hash params are empty" do
 

@@ -13,7 +13,6 @@ module ResourceRegistry
         def call(name:, _options: {})
           feature(name).enable(args)
         end
-
       end
     end
   end

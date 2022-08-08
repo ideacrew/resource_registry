@@ -1,115 +1,40 @@
-# This yaml describes our current checks.
-#   Any checks marked "# TODO: RWC" are "re-enable when corrected.RWC" are "re-enable when corrected.
 AllCops:
-  TargetRubyVersion: 2.5
+  NewCops: enable
+  Exclude:
+    - "bin/**"
+    - "vendor/bundle/**/*"
+  SuggestExtensions: false
 
-Layout/CommentIndentation:
-  Enabled: true
+Layout/LineLength:
+  Max: 120
 
-Layout/EmptyLines:
-  Enabled: false
-
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
-Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
-
-Layout/LeadingCommentSpace:
-  Enabled: false
-
-Layout/ExtraSpacing:
-  Enabled: false
-
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
-Layout/SpaceBeforeBlockBraces:
-  Enabled: false
-
-Layout/SpaceInsideHashLiteralBraces:
-  Enabled: false
-
-Layout/SpaceInsideBlockBraces:
-  Enabled: false
-
-Layout/IndentationWidth:
-  Enabled: true
-
-Layout/Tab:
-  Enabled: true
-
-Layout/TrailingWhitespace:
-  Enabled: true
-
-Metrics/AbcSize:
-  Max: 50
-
-Metrics/ClassLength:
-  Max: 300
-
-Metrics/ModuleLength:
-  Max: 300
-
-Metrics/CyclomaticComplexity:
-  Max: 11
-
-Metrics/BlockLength:
-  Enabled: false
-
-Metrics/LineLength:
-  Max: 250
-
-Metrics/MethodLength:
-  Max: 50
-
-Metrics/PerceivedComplexity:
-  Max: 15
-
-Naming/AccessorMethodName:
-  Enabled: false
-
-Naming/PredicateName:
-  Enabled: false
-
-Naming/VariableNumber:
-  Enabled: false
-
-Style/AndOr:
-  Enabled: true
-
-Style/BlockComments:
-  Enabled: false
+Layout/SpaceInsidePercentLiteralDelimiters:
+  Exclude:
+    - Gemfile
 
 Style/Documentation:
-  Enabled: false
-
-Style/BracesAroundHashParameters:
-  Enabled: false
-
-Style/EachWithObject:
-  Enabled: false
-
-Style/EmptyLiteral:
-  Enabled: false
-
-Style/EmptyMethod:
-  Enabled: false
+  Exclude:
+    - config/application.rb
 
 Style/ExpandPathArguments:
+  Enabled: false
+
+Style/GlobalStdStream:
   Enabled: false
 
 Style/HashSyntax:
   Enabled: false
 
-Style/NumericPredicate:
+Style/PercentLiteralDelimiters:
   Enabled: false
 
-Style/RedundantSelf:
-  Enabled: false
+Style/RedundantFetchBlock:
+  Exclude:
+    - config/puma.rb
 
-Style/SafeNavigation:
-  Enabled: false
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - config/environments/production.rb
 
 Style/StringLiterals:
   Enabled: false
@@ -117,14 +42,5 @@ Style/StringLiterals:
 Style/SymbolArray:
   Enabled: false
 
-Style/TernaryParentheses:
-  Enabled: false
-
-Style/WordArray:
-  Enabled: false
-
-Bundler/OrderedGems:
-  Enabled: false
-
-Gemspec/OrderedDependencies:
+Style/RedundantPercentQ:
   Enabled: false

@@ -25,7 +25,11 @@ module ResourceRegistry
 
     # @return [String] the namespace under which the feature is stored, in dot notation
     def namespace
-      @feature.namespace.map(&:to_s).join('.')
+      @feature.namespace_path.path.map(&:to_s).join('.')
+    end
+
+    def assigned_namespace
+      @feature.namespace.path.map(&:to_s).join('.')
     end
 
     # @!method enabled?
@@ -41,6 +45,8 @@ module ResourceRegistry
     def disabled?
       @feature.is_enabled == false
     end
+
+    def_delegator :@feature, :is_enabled
 
     # @!method item
     # The reference or code to be evaluated when feature is resolved

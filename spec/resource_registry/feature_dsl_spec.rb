@@ -15,7 +15,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   end
 
   let(:key)         { :greeter_feature }
-  let(:namespace)   { [:level_1, :level_2, :level_3]}
+  let(:namespace)   { {path: [:level_1, :level_2, :level_3]} }
   let(:is_enabled)  { false }
   let(:item)        { ResourceRegistry::Greeter.method(:new) }
   let(:options)     { { name: "Dolly" } }
@@ -31,7 +31,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:min_feature_hash) do
     {
       key: key,
-      namespace: namespace,
+      namespace_path: namespace,
       is_enabled: is_enabled,
       item: item
     }
@@ -40,7 +40,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
   let(:feature_hash) do
     {
       key: key,
-      namespace: namespace,
+      namespace_path: namespace,
       is_enabled: is_enabled,
       item: item,
       options: options,
@@ -141,7 +141,7 @@ RSpec.describe ResourceRegistry::FeatureDSL do
         let(:dsl_sans_meta)     { described_class.new(feature_sans_meta) }
 
         it "should return an empty hash" do
-          expect(dsl_sans_meta.meta).to eq Hash.new
+          expect(dsl_sans_meta.meta).to eq({})
         end
 
         context "and meta key is not present" do

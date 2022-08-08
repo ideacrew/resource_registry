@@ -1,0 +1,14 @@
+---
+registry:
+  - features:
+    - key: :employer_sic_invalid
+      is_enabled: false
+      settings:
+      - key: :effective_period
+        item: {hours: -15}
+        meta:
+          label: Effective Period
+          is_required: false
+          is_visible: true
+          content_type: :duration
+          default: {hours: 5}
