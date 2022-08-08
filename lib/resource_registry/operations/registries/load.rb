@@ -13,7 +13,7 @@ module ResourceRegistry
           paths = yield list_paths(registry)
           features = yield load_features(paths, registry)
           namespaces = yield serialize_namespaces(features)
-          # registry   = yield register_graph(namespaces, registry)
+          registry   = yield register_graph(namespaces, registry)
 
           Success(registry)
         end
@@ -49,7 +49,6 @@ module ResourceRegistry
 
         def register_graph(namespaces, registry)
           graph = ResourceRegistry::Operations::Graphs::Create.new.call(namespaces, registry)
-
           graph.success? ? registry.register_graph(graph.value!) : ResourceRegistry.logger.error(graph.failure)
 
           Success(registry)
