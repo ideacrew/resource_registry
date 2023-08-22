@@ -31,18 +31,18 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.5.1'
 
-  spec.add_dependency 'dry-validation',           '~> 1.2'
+  spec.add_dependency 'dry-validation',           '~> 1.8'
   spec.add_dependency 'dry-struct',               '~> 1.0'
   spec.add_dependency 'dry-types',                '~> 1.0'
   spec.add_dependency 'dry-configurable',         '~> 0.12'
 
-  spec.add_dependency 'dry-container',            '~> 0.7'
+  spec.add_dependency 'dry-container',            '~> 0.9'
   spec.add_dependency 'deep_merge',               '>= 1.0.0'
 
   # Dependency gems added for security purposes
   spec.add_dependency 'nokogiri',                 ">= 1.9.1"
   spec.add_dependency "rack",                     ">= 1.6.13"
-  spec.add_dependency 'dry-monads',               '~> 1.2'
+  spec.add_dependency 'dry-monads',               '~> 1.5'
   spec.add_dependency 'dry-matcher',              '~> 0.7'
 
   spec.add_dependency "loofah",                   ">= 2.3.1"
