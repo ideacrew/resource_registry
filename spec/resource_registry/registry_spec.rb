@@ -378,6 +378,144 @@ RSpec.describe ResourceRegistry::Registry do
 
       end
     end
-  end
+    describe "#feature_enabled?" do
+      context "Given features registered in different namespaces" do
+        let(:sail_ns) { %i[vessel boat sail] }
+        let(:sail_ns_str) { sail_ns.map(&:to_s).join(".") }
+        let(:boat_ns) { %i[vessel boat] }
+        let(:boat_ns_str) { boat_ns.map(&:to_s).join(".") }
 
+        let(:vessel) do
+          ResourceRegistry::Feature.new(
+            key: :vessel,
+            namespace: [],
+            is_enabled: vessel_enabled
+          )
+        end
+
+        let(:boat) do
+          ResourceRegistry::Feature.new(
+            key: :boat,
+            namespace: [:vessel],
+            is_enabled: boat_enabled
+          )
+        end
+
+        let(:sail) do
+          ResourceRegistry::Feature.new(
+            key: :sail,
+            namespace: [:vessel],
+            is_enabled: sail_enabled
+          )
+        end
+
+        let(:ski) do
+          ResourceRegistry::Feature.new(
+            key: :ski,
+            namespace: boat_ns,
+            is_enabled: true
+          )
+        end
+        let(:trawler) do
+          ResourceRegistry::Feature.new(
+            key: :trawler,
+            namespace: boat_ns,
+            is_enabled: true
+          )
+        end
+        let(:sloop) do
+          ResourceRegistry::Feature.new(
+            key: :sloop,
+            namespace: sail_ns,
+            is_enabled: true
+          )
+        end
+        let(:ketch) do
+          ResourceRegistry::Feature.new(
+            key: :ketch,
+            namespace: sail_ns,
+            is_enabled: true
+          )
+        end
+        let(:yawl) do
+          ResourceRegistry::Feature.new(
+            key: :yawl,
+            namespace: sail_ns,
+            is_enabled: true
+          )
+        end
+
+        let(:sail_features) { %i[sloop ketch yawl] }
+        let(:boat_features) { %i[ski trawler] }
+
+        before do
+          registry.register_feature(vessel)
+          registry.register_feature(boat)
+          registry.register_feature(sail)
+          registry.register_feature(ski)
+          registry.register_feature(trawler)
+          registry.register_feature(sloop)
+          registry.register_feature(ketch)
+          registry.register_feature(yawl)
+        end
+
+        context 'when the boat disabled and sail enabled' do
+          let(:vessel_enabled) { true }
+          let(:sail_enabled) { true }
+          let(:boat_enabled) { false }
+
+          it 'should return false for all features under vessel namespace' do
+            expect(registry.feature_enabled?(:vessel)).to be_truthy
+            expect(registry.feature_enabled?(:boat)).to be_falsey
+            boat_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_falsey
+            end
+
+            expect(registry.feature_enabled?(:sail)).to be_truthy
+            sail_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_truthy
+            end
+          end 
+        end
+
+        context 'when the sail enabled and boat disabled' do
+          let(:vessel_enabled) { true }
+          let(:boat_enabled) { true }
+          let(:sail_enabled) { false }
+
+          it 'should return false for all features under boat namespace' do
+            expect(registry.feature_enabled?(:vessel)).to be_truthy
+            expect(registry.feature_enabled?(:sail)).to be_falsey
+            sail_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_falsey
+            end
+
+            expect(registry.feature_enabled?(:boat)).to be_truthy
+            boat_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_truthy
+            end
+          end 
+        end
+
+        context 'when the vessel disabled' do
+          let(:vessel_enabled) { false }
+          let(:boat_enabled) { true }
+          let(:sail_enabled) { true }
+
+          it 'should return false for all features' do
+            expect(registry.feature_enabled?(:vessel)).to be_truthy
+            expect(registry.feature_enabled?(:sail)).to be_falsey
+            sail_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_falsey
+            end
+
+            expect(registry.feature_enabled?(:boat)).to be_falsey
+            boat_features.each do |feature|
+              expect(registry.feature_enabled?(feature.key)).to be_falsey
+            end
+          end 
+        end
+      end
+    end
+  end
 end
