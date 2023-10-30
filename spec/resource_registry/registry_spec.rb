@@ -475,7 +475,7 @@ RSpec.describe ResourceRegistry::Registry do
             sail_features.each do |feature|
               expect(registry.feature_enabled?(feature.key)).to be_truthy
             end
-          end 
+          end
         end
 
         context 'when the sail enabled and boat disabled' do
@@ -494,7 +494,7 @@ RSpec.describe ResourceRegistry::Registry do
             boat_features.each do |feature|
               expect(registry.feature_enabled?(feature.key)).to be_truthy
             end
-          end 
+          end
         end
 
         context 'when the vessel disabled' do
@@ -513,7 +513,7 @@ RSpec.describe ResourceRegistry::Registry do
             boat_features.each do |feature|
               expect(registry.feature_enabled?(feature.key)).to be_falsey
             end
-          end 
+          end
         end
       end
     end
