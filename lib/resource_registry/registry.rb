@@ -112,7 +112,7 @@ module ResourceRegistry
       dotted_namespaces = namespaces.collect{|ns| ns.map(&:to_s).join('.')}
 
       dotted_namespaces.inject({}) do |data, namespace|
-        features = visible_features_by_namespace(namespace)
+        features = features_by_namespace(namespace)
         data[namespace] = features if features.present?
         data
       end
