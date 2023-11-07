@@ -17,6 +17,9 @@ coverage
 # byebug history
 /.byebug_history
 
+# VIM and other editors
+*.swp
+
 # Make sure no PII is accidently commited
 # add w/ git add --force if actually docs
 *.csv
