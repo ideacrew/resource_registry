@@ -2,7 +2,6 @@
 
 require "bundler/setup"
 require 'resource_registry'
-require 'pry'
 
 # Custom matcher for dry-validation schema specs
 require "support/matchers/match_schema"
