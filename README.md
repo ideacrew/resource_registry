@@ -53,7 +53,7 @@
 
 ## Feature
 
-  ResourceRegistry uses a Feature to group related system functions and settings. Featurse are composed of the following high level attributes:
+  ResourceRegistry uses a Feature to group related system functions and settings. Features are composed of the following high level attributes:
 
   * key [Symbol] 'key' of the Feature's key/value pair.  This is the Feature's identifier and must be unique
   * item [Any] 'value' of the Feature's key/value pair.   May be a static value, proc, class instance and may include an options hash
