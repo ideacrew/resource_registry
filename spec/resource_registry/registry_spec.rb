@@ -373,7 +373,10 @@ RSpec.describe ResourceRegistry::Registry do
         end
 
         it "should raise an error for an invalid registry configuration attribute key" do
-          expect{config_registry.configuration(invalid_attribute)}.to raise_error Dry::Container::Error
+          expect{config_registry.configuration(invalid_attribute)}.to raise_error do |error|
+            is_expected_error = error.is_a?(Dry::Container::Error) || error.is_a?(Dry::Container::KeyError)
+            expect(is_expected_error).to be_truthy
+          end
         end
 
       end
