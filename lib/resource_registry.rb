@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
+require 'resource_registry/version'
+require 'resource_registry/ruby_compatibility'
 require 'dry/validation'
 
 require 'dry/monads'
 require 'dry/monads/do'
 require 'dry-struct'
 
-
-require 'resource_registry/version'
 require 'resource_registry/error'
 
 require 'resource_registry/types'
