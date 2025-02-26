@@ -3,17 +3,31 @@
 # @title README.md
 # @author Dan Thomas
 -->
-  # ResourceRegistry
-  [![Build Status](https://travis-ci.com/ideacrew/resource_registry.svg?branch=master)](https://travis-ci.com/ideacrew/resource_registry)
+# ResourceRegistry
 
-  ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration for a single codebase, supporting use cases such as: 
+ResourceRegistry is a library for system configuration, feature flipping and eventing. It offers an approach to custom configuration for a single codebase, supporting use cases such as: 
 
   * Customer-level preference profiles
   * Multitenancy
   * Access control based on privilidges and subscriptions
 
-  ResourceRegistry is intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes.  It offers an
-  alternative to code obfuscation issues that often pops up when using Rails Concerns.
+ResourceRegistry is intended to address 'logic sprawl' that can occur with minimally- or un-structured key/value system settings schemes.  It offers an alternative to code obfuscation issues that often pops up when using Rails Concerns.
+
+**Table of Contents**
+1. [Gem Features](#gem-features)
+2. [Compatibility](#compatibility)
+3. [Installing on Rails](#installing-on-rails)
+4. [Feature](#feature)
+   1. [Registering Features](#registering-features)
+   2. [Detailed Example](#detailed-example)
+   3. [Namepace](#namepace)
+5. [Rails Integration](#rails-integration)
+6. [Configuration](#configuration)
+7. [Development](#development)
+   1. [Contributing](#contributing)
+   2. [Future Features](#future-features)
+8. [License](#license)
+9. [Credits](#credits)
 
 ## Gem Features
 
@@ -29,31 +43,36 @@
   * Ruby 2.6
   * Rails 5.2.4
 
-### Installing on Rails
+## Installing on Rails
 
-  Add this line to your project's Gemfile:
-
+Add this line to your project's Gemfile:
+```
       gem 'resource_registry'
+```
 
-  And then execute:
-
+And then execute:
+```
       $ bundle
+```
 
-  Or install it yourself as:
-
+Or install it yourself as:
+```
       $ gem install resource_registry
+```
 
-  In your project build the directory tree to house configuration files:
-
+In your project build the directory tree to house configuration files:
+```
       $ mkdir -p ./system/boot && mkdir -p ./system/config
+```
 
-  Then, create Resource Registry's initializer file:
-
+Then, create Resource Registry's initializer file:
+```
       $ touch ./config/initializers/resource_registry.rb
+```
 
 ## Feature
 
-  ResourceRegistry uses a Feature to group related system functions and settings. Featurse are composed of the following high level attributes:
+ResourceRegistry uses a Feature to group related system functions and settings. Features are composed of the following high level attributes:
 
   * key [Symbol] 'key' of the Feature's key/value pair.  This is the Feature's identifier and must be unique
   * item [Any] 'value' of the Feature's key/value pair.   May be a static value, proc, class instance and may include an options hash
@@ -62,7 +81,7 @@
   * settings [Array<Hash>] a list of key/item pairs associated with the Feature
   * meta [Hash] a set of attributes to store configuration values and drive their presentation in User Interface
 
-  Here is an example Feature definition in YAML format.  Note the settings ```effective_period``` value is an expression:
+Here is an example Feature definition in YAML format.  Note the settings ```effective_period``` value is an expression:
 
 ``` ruby
   - namespace:
@@ -90,9 +109,9 @@
             item: :initial_sponsor_jan_default
 ```
 
-  ### Registering Features 
+### Registering Features 
 
-  Features are most useful when they're loaded into a registry for runtime access.  For example:
+Features are most useful when they're loaded into a registry for runtime access.  For example:
 
 ``` ruby
 require 'resource_registry'
@@ -150,9 +169,9 @@ my_registry[:greeter] {"Dolly"}              # => "Hello Dolly"
 
 ### Namepace
 
-  Use the optional Feature#namespace attribute to organize Features.  Namespaces support enable you to define a structure to group Features into a logical structure or taxonomy that can help with code clarity.  For example:
+Use the optional Feature#namespace attribute to organize Features.  Namespaces support enable you to define a structure to group Features into a logical structure or taxonomy that can help with code clarity.  For example:
 
-``` ruby
+```ruby
   my_species = ResourceRegistry::Feature.new( key:      :species, 
                                               item:     :Operations::Species::Create.new,
                                               is_enabled: true,
@@ -164,7 +183,7 @@ Namespaced Features respect their anscesters with regard to code access.  For in
 
 For instance, extending the ```species``` Feature example above:
 
-``` ruby
+```ruby
   my_phylum = ResourceRegistry::Feature.new(key:      :phylum, 
                                             item:     :Operations::Phylum::Create.new,
                                             is_enabled: false,
@@ -178,43 +197,35 @@ Namespaces serve another purpose: enabling auto-generation of Admin UI configura
 
 ## Rails Integration
 
-  A registry is configured and loaded when your application starts.  
+A registry is configured and loaded when your application starts.  
 
 ## Configuration
 
-  The initializer and configuration files manage the setup and loading process. 
+The initializer and configuration files manage the setup and loading process. 
 
-  Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.  
+Configuration files are located in your project's ```system/config``` directory.  All Yaml files in and below this directory are autoloaded during the boot process.  Configuration settings may be organized into directories and files in any manner.  Values will properly load into the container hierarchy provided the file begins with a reference to an identifiable parent key.
 
-  An example of a simple configuration file:
-  ```ruby
-# ./system/config/enterprise.yml
+## Development
 
-  ```
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-  ## Defining Configuration Settings 
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-  ### UI-ready configuration settings
+### Contributing
 
-## Credits
-  Based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/)  ```
+Bug reports and pull requests are welcome on GitHub at https://github.com/ideacrew/resource_registry.
 
-## Future Features
+### Future Features
 
   * Taxonomy: support namespace structures and validations
   * Subscription
   * Bootable infrastructure components
 
-## Development
-
-  After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-  To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-  Bug reports and pull requests are welcome on GitHub at https://github.com/ideacrew/resource_registry.
-
 ## License
 
-  The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+
+## Credits
+
+Based on [dry-system](https://dry-rb.org/gems/dry-system/) and [dry-validation](https://dry-rb.org/gems/dry-validation/1.0/)
