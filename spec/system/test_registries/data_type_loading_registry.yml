@@ -1,0 +1,33 @@
+# This set of keys exists to test YAML of specialized types.
+# There is significant differences in what is considered 'safe' to load from
+#   YAML from Ruby version to ruby version - this makes sure we can load
+#   settings which cover all the bases.
+---
+registry:
+  - namespace:
+    - :resource_registry
+    features:
+      - key: rr_loads_date_type_items
+        item: <%= Date.new(2020,11,1) %>
+        is_enabled: true
+        settings:
+          - key: :rr_loads_date_type_settings
+            item: <%= Date.new(2020,11,1) %>
+      - key: rr_loads_date_range_type_items
+        item: <%= Date.new(2020,11,1)..Date.new(2021,10,31) %>
+        is_enabled: true
+        settings:
+          - key: :rr_loads_date_range_type_settings
+            item: <%= Date.new(2020,11,1)..Date.new(2021,10,31) %>
+      - key: rr_loads_time_type_items
+        item: <%= Time.now %>
+        is_enabled: true
+        settings:
+          - key: :rr_loads_time_type_settings
+            item: <%= Time.now %>
+      - key: rr_loads_symbol_type_items
+        item: :the_item
+        is_enabled: true
+        settings:
+          - key: :rr_loads_symbol_type_settings
+            item: :the_setting
