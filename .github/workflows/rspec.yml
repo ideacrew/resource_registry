@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['2.6.3', '2.7.6', '3.0.5', '3.1.4', '3.2.2', '3.3.7', '3.4.1']
+        ruby_version: ['2.7.6', '3.0.5', '3.1.4', '3.2.2', '3.3.7', '3.4.1']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +17,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby_version }}
       - name: Cache Gems
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{matrix.ruby_version}}-resource_registry-gems-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/Gemfile' ) }}
