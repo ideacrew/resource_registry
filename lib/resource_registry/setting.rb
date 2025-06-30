@@ -28,7 +28,7 @@ module ResourceRegistry
 
     # Override accessor to normalize date range strings
     def item
-      @normalized_item ||= convert_range_strings(super)
+      @normalized_item ||= convert_range_strings(self[:item])
     end
 
     private
