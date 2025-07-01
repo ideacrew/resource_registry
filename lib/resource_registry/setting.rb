@@ -25,6 +25,5 @@ module ResourceRegistry
     # their values in the User Interface
     # @return [ResourceRegistry::Meta]
     attribute :meta,    ResourceRegistry::Meta.optional.meta(omittable: true)
-
   end
 end
