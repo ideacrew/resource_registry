@@ -26,29 +26,5 @@ module ResourceRegistry
     # @return [ResourceRegistry::Meta]
     attribute :meta,    ResourceRegistry::Meta.optional.meta(omittable: true)
 
-    # Override accessor to normalize date range strings
-    def item
-      @normalized_item ||= convert_range_strings(self[:item])
-    end
-
-    private
-
-    def convert_range_strings(value)
-      return value if value.is_a?(Range)
-
-      if value.is_a?(String) && value.include?("..")
-        begin_str, end_str = value.split("..")
-        begin_date = parse_date(begin_str.strip)
-        end_date = parse_date(end_str.strip)
-
-        return Range.new(begin_date, end_date) if begin_date && end_date
-      end
-
-      value
-    end
-
-    def parse_date(str)
-      Date.strptime(str, "%m/%d/%Y") rescue Date.parse(str) rescue nil
-    end
   end
 end
