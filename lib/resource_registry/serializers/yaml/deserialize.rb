@@ -30,7 +30,7 @@ module ResourceRegistry
           if ResourceRegistry.stdgem_ruby_version?
             YAML.load(
               ERB.new(params).result,
-              permitted_classes: [Date, Time, Symbol]
+              permitted_classes: [Date, Time, Symbol, Range]
             )
           else
             YAML.load(
