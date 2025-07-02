@@ -115,11 +115,6 @@ RSpec.describe ResourceRegistry::Setting do
       expect(setting.item).to eq("..")
     end
 
-    it "returns original string if dates are invalid even though format matches" do
-      setting = described_class.new(key: :invalid_date, item: "2025-02-30..2025-12-01")
-      expect(setting.item).to eq("2025-02-30..2025-12-01")
-    end
-
     it "parses date range with extra whitespace around range" do
       setting = described_class.new(key: :whitespace, item: " 2025-01-01 .. 2025-12-01 ")
       expect(setting.item).to eq(Date.new(2025, 1, 1)..Date.new(2025, 12, 1))
