@@ -28,7 +28,7 @@ module ResourceRegistry
 
     # Override accessor to normalize date range strings
     def item
-      @normalized_item ||= convert_range_strings(self[:item])
+      convert_range_strings(self[:item])
     end
 
     private
@@ -37,12 +37,12 @@ module ResourceRegistry
       return value if value.is_a?(Range)
 
       if value.is_a?(String) && value.include?("..")
-        begin_str, end_str = value.split("..").map(&:strip)
+        begin_str, end_str = value.split("..", 2).map(&:strip)
 
         # Only try to parse if both ends look like dates
         if looks_like_date?(begin_str) && looks_like_date?(end_str)
           begin_date = parse_date(begin_str)
-          end_date = parse_date(end_str)
+          end_date   = parse_date(end_str)
           return (begin_date..end_date) if begin_date && end_date
           return nil
         end
