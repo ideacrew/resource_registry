@@ -37,18 +37,31 @@ module ResourceRegistry
       return value if value.is_a?(Range)
 
       if value.is_a?(String) && value.include?("..")
-        begin_str, end_str = value.split("..")
-        begin_date = parse_date(begin_str.strip)
-        end_date = parse_date(end_str.strip)
-
-        return Range.new(begin_date, end_date) if begin_date && end_date
+        begin_str, end_str = value.split("..").map(&:strip)
+        begin_date = parse_date(begin_str)
+        end_date = parse_date(end_str)
+        return (begin_date..end_date) if begin_date && end_date
+        return nil
       end
 
       value
     end
 
     def parse_date(str)
-      Date.strptime(str, "%m/%d/%Y") rescue Date.parse(str) rescue nil
+      # Accepts: YYYY-MM-DD, YYYY/MM/DD, MM/DD/YYYY
+      date_formats = [
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+        "%m/%d/%Y"
+      ]
+      date_formats.each do |fmt|
+        begin
+          return Date.strptime(str, fmt)
+        rescue ArgumentError
+          next
+        end
+      end
+      nil
     end
   end
 end

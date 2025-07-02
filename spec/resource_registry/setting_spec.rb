@@ -23,7 +23,6 @@ RSpec.describe ResourceRegistry::Setting do
   let(:optional_params) { { meta: meta, options: options } }
   let(:all_params)      { required_params.merge(optional_params) }
 
-
   context "Validation with invalid input" do
     context "Given hash params are nissing required attributes" do
       let(:error_hash)  { {} }
@@ -66,6 +65,39 @@ RSpec.describe ResourceRegistry::Setting do
     it "should invoke the class with the passed options parameters" do
       setting = described_class.new(all_params)
       expect(setting[:item].call(setting[:options])).to eq greet_message
+    end
+  end
+
+  context "#item date range normalization" do
+    it "parses YYYY-MM-DD..YYYY-MM-DD as a date range" do
+      setting = described_class.new(key: :period, item: "2025-1-1..2025-12-1")
+      expect(setting.item).to eq(Date.new(2025, 1, 1)..Date.new(2025, 12, 1))
+    end
+
+    it "parses YYYY/MM/DD..YYYY/MM/DD as a date range" do
+      setting = described_class.new(key: :period, item: "2025/01/01..2025/12/1")
+      expect(setting.item).to eq(Date.new(2025, 1, 1)..Date.new(2025, 12, 1))
+    end
+
+    it "parses MM/DD/YYYY..MM/DD/YYYY as a date range" do
+      setting = described_class.new(key: :period, item: "01/01/2025..12/01/2025")
+      expect(setting.item).to eq(Date.new(2025, 1, 1)..Date.new(2025, 12, 1))
+    end
+
+    it "returns nil for non-date ranges" do
+      setting = described_class.new(key: :period, item: "1..10")
+      expect(setting.item).to be_nil
+    end
+
+    it "returns a Range<Date> as-is" do
+      range = Date.new(2025, 1, 1)..Date.new(2025, 12, 1)
+      setting = described_class.new(key: :period, item: range)
+      expect(setting.item).to eq(range)
+    end
+
+    it "returns non-range, non-date string as-is" do
+      setting = described_class.new(key: :period, item: "not a range")
+      expect(setting.item).to eq("not a range")
     end
   end
 end
