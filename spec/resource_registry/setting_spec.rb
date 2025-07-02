@@ -104,5 +104,40 @@ RSpec.describe ResourceRegistry::Setting do
       setting = described_class.new(key: :bad_range, item: "2025-01-01..2025-12-01..oops")
       expect(setting.item).to eq("2025-01-01..2025-12-01..oops")
     end
+
+    it "returns original string if one side of the range is missing" do
+      setting = described_class.new(key: :partial_range, item: "2025-01-01..")
+      expect(setting.item).to eq("2025-01-01..")
+    end
+
+    it "returns original string if both sides are empty" do
+      setting = described_class.new(key: :empty_range, item: "..")
+      expect(setting.item).to eq("..")
+    end
+
+    it "returns original string if dates are invalid even though format matches" do
+      setting = described_class.new(key: :invalid_date, item: "2025-02-30..2025-12-01")
+      expect(setting.item).to eq("2025-02-30..2025-12-01")
+    end
+
+    it "parses date range with extra whitespace around range" do
+      setting = described_class.new(key: :whitespace, item: " 2025-01-01 .. 2025-12-01 ")
+      expect(setting.item).to eq(Date.new(2025, 1, 1)..Date.new(2025, 12, 1))
+    end
+
+    it "returns nil as-is when item is nil" do
+      setting = described_class.new(key: :period, item: nil)
+      expect(setting.item).to be_nil
+    end
+
+    it "returns non-string value that does not respond to include? as-is" do
+      setting = described_class.new(key: :period, item: 12345)
+      expect(setting.item).to eq(12345)
+    end
+
+    it "returns original string if range has more than two parts" do
+      setting = described_class.new(key: :bad_range, item: "2025-01-01..2025-12-01..2025-12-31")
+      expect(setting.item).to eq("2025-01-01..2025-12-01..2025-12-31")
+    end
   end
 end

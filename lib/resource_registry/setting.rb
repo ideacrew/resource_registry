@@ -34,29 +34,35 @@ module ResourceRegistry
     private
 
     def convert_range_strings(value)
-      return value if value.is_a?(Range)
+      return value unless value.is_a?(String)
+      return value unless value.include?('..')
 
-      if value.is_a?(String) && value.include?("..")
-        begin_str, end_str = value.split("..", 2).map(&:strip)
-
-        # Only try to parse if both ends look like dates
-        if looks_like_date?(begin_str) && looks_like_date?(end_str)
-          begin_date = parse_date(begin_str)
-          end_date   = parse_date(end_str)
-          return (begin_date..end_date) if begin_date && end_date
-          return nil
-        end
-        return value
-      end
-      value
+      range, success = attempt_to_convert_to_date_range(value)
+      success ? range : value
     end
 
+    def attempt_to_convert_to_date_range(value)
+      split_result = value.split('..', 2).map(&:strip)
+      return [value, false] if split_result.size != 2
+
+      begin_str, end_str = split_result
+      return [value, false] unless looks_like_date?(begin_str) && looks_like_date?(end_str)
+
+      begin_date = parse_date(begin_str)
+      end_date   = parse_date(end_str)
+      return [value, false] unless begin_date && end_date
+
+      [(begin_date..end_date), true]
+    end
+
+    DATE_PATTERNS = [
+      /^\d{4}-\d{1,2}-\d{1,2}$/,
+      /^\d{4}\/\d{1,2}\/\d{1,2}$/,
+      /^\d{1,2}\/\d{1,2}\/\d{4}$/
+    ].freeze
+
     def looks_like_date?(str)
-      [
-        /^\d{4}-\d{1,2}-\d{1,2}$/,
-        /^\d{4}\/\d{1,2}\/\d{1,2}$/,
-        /^\d{1,2}\/\d{1,2}\/\d{4}$/
-      ].any? { |re| str.match?(re) }
+      DATE_PATTERNS.any? { |re| str.match?(re) }
     end
 
     def parse_date(str)
