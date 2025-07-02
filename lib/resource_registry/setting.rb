@@ -76,6 +76,8 @@ module ResourceRegistry
       else
         nil
       end
+    rescue Date::Error, ArgumentError
+      nil
     end
   end
 end
