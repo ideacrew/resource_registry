@@ -48,20 +48,16 @@ module ResourceRegistry
     end
 
     def parse_date(str)
-      # Accepts: YYYY-MM-DD, YYYY/MM/DD, MM/DD/YYYY
-      date_formats = [
-        "%Y-%m-%d",
-        "%Y/%m/%d",
-        "%m/%d/%Y"
-      ]
-      date_formats.each do |fmt|
-        begin
-          return Date.strptime(str, fmt)
-        rescue ArgumentError
-          next
-        end
+      case str
+      when /^\d{4}-\d{1,2}-\d{1,2}$/ # 2025-01-01
+        Date.strptime(str, "%Y-%m-%d")
+      when /^\d{4}\/\d{1,2}\/\d{1,2}$/ # 2025/01/01
+        Date.strptime(str, "%Y/%m/%d")
+      when /^\d{1,2}\/\d{1,2}\/\d{4}$/ # 01/01/2025
+        Date.strptime(str, "%m/%d/%Y")
+      else
+        nil
       end
-      nil
     end
   end
 end
