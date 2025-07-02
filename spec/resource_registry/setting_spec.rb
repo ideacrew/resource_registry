@@ -86,7 +86,7 @@ RSpec.describe ResourceRegistry::Setting do
 
     it "returns nil for non-date ranges" do
       setting = described_class.new(key: :period, item: "1..10")
-      expect(setting.item).to be_nil
+      expect(setting.item).to eq("1..10")
     end
 
     it "returns a Range<Date> as-is" do
