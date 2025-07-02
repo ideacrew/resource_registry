@@ -99,5 +99,10 @@ RSpec.describe ResourceRegistry::Setting do
       setting = described_class.new(key: :period, item: "not a range")
       expect(setting.item).to eq("not a range")
     end
+
+    it "handles strings with multiple '..' safely" do
+      setting = described_class.new(key: :bad_range, item: "2025-01-01..2025-12-01..oops")
+      expect(setting.item).to eq("2025-01-01..2025-12-01..oops")
+    end
   end
 end
