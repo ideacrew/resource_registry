@@ -69,7 +69,7 @@ module RegistryViewControls
       tag.span('Upload', class: "input-group-text", id: id)
     end +
       tag.div(class: "custom-file") do
-        tag.input(nil, type: "file", id: id, name: id + "[value]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
+        tag.input(type: "file", id: id, name: id + "[value]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
           tag.label('Choose File', for: id, value: label, class: "custom-file-label")
       end
   end
@@ -90,8 +90,8 @@ module RegistryViewControls
     meta.enum.collect do |choice|
       choice = send(choice) if choice.is_a?(String)
       input_group do
-        tag.div(tag.div(tag.input(nil, type: "radio", name: element_name, value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
-          tag.input(nil, type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
+        tag.div(tag.div(tag.input(type: "radio", name: element_name, value: choice.first[0], checked: input_value.to_s == choice.first[0].to_s, required: true), class: "input-group-text"), class: "input-group-prepend") +
+          tag.input(type: "text", placeholder: choice.first[1], class: "form-control", aria: {label: aria_label })
       end
     end.join('').html_safe
   end
@@ -104,8 +104,8 @@ module RegistryViewControls
       choice = send(choice) if choice.is_a?(String)
       val = choice.first[0]
       input_group do
-        tag.div(tag.div(tag.input(nil, type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: val, checked: input_value.include?(val.to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
-          tag.input(nil, type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
+        tag.div(tag.div(tag.input(type: 'checkbox', name: "#{input_name_for(setting, form)}[]", value: val, checked: input_value.include?(val.to_s), required: false), class: 'input-group-text'), class: 'input-group-prepend') +
+          tag.input(type: 'text', placeholder: choice.first[1], class: 'form-control', aria: {label: aria_label })
       end
     end.join('').html_safe
   end
@@ -128,7 +128,7 @@ module RegistryViewControls
         tag.span('Upload', class: "input-group-text", id: id)
       end +
       tag.div(class: "custom-file") do
-        tag.input(nil, type: "file", id: id, name: form&.object_name.to_s + "[#{setting.key}]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
+        tag.input(type: "file", id: id, name: form&.object_name.to_s + "[#{setting.key}]", class: "custom-file-input", aria: { describedby: aria_describedby }) +
           tag.label('Choose File', for: id, value: label, class: "custom-file-label")
       end
 
@@ -176,9 +176,9 @@ module RegistryViewControls
     is_required = meta&.is_required == false ? meta.is_required : true
     placeholder = "Enter #{meta[:label]}".gsub('*', '') if meta[:description].blank?
     # if meta[:attribute]
-    #   tag.input(nil, type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
+    #   tag.input(type: "text", value: input_value, id: id, name: form&.object_name.to_s + "[#{id}]",class: "form-control", required: true)
     # else
-    tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: is_required)
+    tag.input(type: "text", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: is_required)
     # end
   end
 
@@ -187,7 +187,7 @@ module RegistryViewControls
 
     date_value = value_for(setting, form)
     date_value = date_value.to_date if date_value.is_a?(Time)
-    date_value = date_value.to_s(:db) if date_value.is_a?(Date)
+    date_value = date_value.to_fs(:db) if date_value.is_a?(Date)
 
     meta = setting[:meta]
     input_value = date_value || setting.item || meta&.default
@@ -195,7 +195,7 @@ module RegistryViewControls
 
     is_required = meta&.is_required == false ? meta.is_required : true
 
-    tag.input(nil, type: "date", value: input_value, id: id, name: input_name_for(setting, form), placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
+    tag.input(type: "date", value: input_value, id: id, name: input_name_for(setting, form), placeholder: "mm/dd/yyyy", class: "form-control", required: is_required)
   end
 
   def input_number_control(setting, form)
@@ -207,9 +207,9 @@ module RegistryViewControls
     placeholder = "Enter #{meta[:label]}".gsub('*', '')  if meta[:description].blank?
 
     # if setting[:attribute]
-    tag.input(nil, type: "number", step: "any", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: true, oninput: "check(this)")
+    tag.input(type: "number", step: "any", value: input_value, id: id, name: input_name_for(setting, form), placeholder: placeholder, class: "form-control", required: true, oninput: "check(this)")
     # else
-    #   tag.input(nil, type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
+    #   tag.input(type: "number", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
   end
 
@@ -221,9 +221,9 @@ module RegistryViewControls
     # aria_describedby = id
 
     # if setting[:attribute]
-    tag.input(nil, type: "email", step: "any", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", required: true, oninput: "check(this)")
+    tag.input(type: "email", step: "any", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", required: true, oninput: "check(this)")
     # else
-    #   tag.input(nil, type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
+    #   tag.input(type: "email", step:"any", value: input_value, id: id, name: form&.object_name.to_s + "[value]",class: "form-control", required: true, oninput: "check(this)")
     # end
   end
 
@@ -231,7 +231,7 @@ module RegistryViewControls
     id = setting[:key].to_s
     input_value = setting[:value] || setting[:default]
 
-    tag.input(nil, type: "color", value: input_value, id: id)
+    tag.input(type: "color", value: input_value, id: id)
   end
 
   def input_swatch_control(setting, form)
@@ -241,7 +241,7 @@ module RegistryViewControls
     meta = setting[:meta]
     color = meta.value || meta.default
 
-    tag.input(nil, type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]", class: "js-color-swatch form-control") +
+    tag.input(type: "text", value: color, id: id, name: form&.object_name.to_s + "[value]", class: "js-color-swatch form-control") +
       tag.div(tag.button(type: "button", id: id, class: "btn", value: "", style: "background-color: #{color}"), class: "input-group-append")
   end
 
@@ -255,7 +255,7 @@ module RegistryViewControls
     aria_map = { label: "Amount (to the nearest dollar)"}
 
     tag.div(tag.span('$', class: "input-group-text"), class: "input-group-prepend") +
-      tag.input(nil, type: "text", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", aria: { map: aria_map }) +
+      tag.input(type: "text", value: input_value, id: id, name: input_name_for(setting, form), class: "form-control", aria: { map: aria_map }) +
       tag.div(tag.span('.00', class: "input-group-text"), class: "input-group-append")
   end
 
