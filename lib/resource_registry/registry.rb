@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/container'
+require 'ostruct'
 require_relative 'operations/registries/load'
 require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
