@@ -25,7 +25,7 @@ module ResourceRegistry
 
     # Set options for this Registry. See {ResourceRegistry::Configuration} for configurable attributes
     def configure
-      config = OpenStruct.new
+      config = ::OpenStruct.new
       yield(config)
 
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
