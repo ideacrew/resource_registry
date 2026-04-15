@@ -123,7 +123,7 @@ module ResourceRegistry
       return @nested_namespaces if defined? @nested_namespaces
 
       @nested_namespaces = namespace_features_hash.reduce({}) do |data, (namespace, features)|
-        data.deeper_merge(namespace_to_hash(namespace.split('.'), features))
+        ResourceRegistry::DeepMergeHelper.deep_merge_to_hash(data, namespace_to_hash(namespace.split('.'), features))
       end
     end
 

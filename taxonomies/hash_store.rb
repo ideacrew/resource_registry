@@ -10,9 +10,9 @@ module ResourceRegistry
 
         def call(input)
           if defined? ResourceRegistry::AppSettings
-            DeepMerge.deeper_merge!(
-              input.to_h,
+            ResourceRegistry::DeepMergeHelper.deep_merge_to_hash(
               ResourceRegistry::AppSettings,
+              input.to_h,
               merge_hash_arrays: true,
               merge_nil_values: true
             )
