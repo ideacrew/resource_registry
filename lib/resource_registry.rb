@@ -22,6 +22,7 @@ require 'resource_registry/feature'
 require 'resource_registry/feature_dsl'
 require 'resource_registry/configuration'
 require 'resource_registry/registry'
+require 'resource_registry/deep_merge_helper'
 
 module ResourceRegistry
 end

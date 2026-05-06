@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/container'
+require 'ostruct'
 require_relative 'operations/registries/load'
 require_relative 'operations/registries/configure'
 require_relative 'operations/registries/create'
@@ -25,7 +26,7 @@ module ResourceRegistry
 
     # Set options for this Registry. See {ResourceRegistry::Configuration} for configurable attributes
     def configure
-      config = OpenStruct.new
+      config = ::OpenStruct.new
       yield(config)
 
       ResourceRegistry::Operations::Registries::Configure.new.call(self, config.to_h)
@@ -122,7 +123,7 @@ module ResourceRegistry
       return @nested_namespaces if defined? @nested_namespaces
 
       @nested_namespaces = namespace_features_hash.reduce({}) do |data, (namespace, features)|
-        data.deep_merge(namespace_to_hash(namespace.split('.'), features))
+        ResourceRegistry::DeepMergeHelper.deep_merge_to_hash(data, namespace_to_hash(namespace.split('.'), features))
       end
     end
 
