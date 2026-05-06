@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ResourceRegistry
-  VERSION = "0.10.1"
+  VERSION = "0.10.2"
 
   def self.stdgem_ruby_version?
     Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
