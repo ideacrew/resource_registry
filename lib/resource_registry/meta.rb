@@ -42,9 +42,9 @@ module ResourceRegistry
     #                    behaviour is enabled for all clients, the old code path is dead and the
     #                    flag should be removed. This is the most common type.
     #
-    #   :configuration - A permanent toggle that supports genuinely different behaviours for
-    #                    different clients (e.g. state-specific rules). Both the enabled and
-    #                    disabled code paths are always needed. Do not clean up.
+    #   :configuration - A permanent toggle that supports different business rules or policies
+    #                    across clients. Both the enabled and disabled code paths are always
+    #                    needed for different clients. Do not clean up.
     #
     # Example (in registry YML):
     #   meta:
