@@ -27,14 +27,7 @@ module ResourceRegistry
         optional(:enum).maybe(:array)
         optional(:is_required).maybe(:bool)
         optional(:is_visible).maybe(:bool)
-        optional(:flag_type).maybe(:symbol)
-      end
-
-      rule(:flag_type) do
-        next unless value
-        unless %i[release configuration].include?(value)
-          key.failure("must be :release or :configuration")
-        end
+        optional(:flag_type).maybe(:symbol, included_in?: %i[release configuration])
       end
 
     end

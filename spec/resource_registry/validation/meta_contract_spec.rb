@@ -75,7 +75,7 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
       it "fails validation" do
         result = subject.call(required_params.merge(flag_type: :temporary))
         expect(result.failure?).to be_truthy
-        expect(result.errors.to_h[:flag_type]).to include("must be :release or :configuration")
+        expect(result.errors.to_h[:flag_type]).to include("must be one of: release, configuration")
       end
     end
 
