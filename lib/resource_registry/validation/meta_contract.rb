@@ -15,6 +15,7 @@ module ResourceRegistry
       # @option opts [Array<Any>] :enum optional
       # @option opts [Bool] :is_required optional
       # @option opts [Bool] :is_visible optional
+      # @option opts [Symbol] :flag_type optional - :release or :configuration
       # @return [Dry::Monads::Result::Success] if params pass validation
       # @return [Dry::Monads::Result::Failure] if params fail validation
       params do
@@ -26,6 +27,14 @@ module ResourceRegistry
         optional(:enum).maybe(:array)
         optional(:is_required).maybe(:bool)
         optional(:is_visible).maybe(:bool)
+        optional(:flag_type).maybe(:symbol)
+      end
+
+      rule(:flag_type) do
+        next unless value
+        unless %i[release configuration].include?(value)
+          key.failure("must be :release or :configuration")
+        end
       end
 
     end

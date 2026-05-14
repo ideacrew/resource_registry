@@ -33,6 +33,30 @@ module ResourceRegistry
     # @return [String]
     attribute :description, Types::String.optional.meta(omittable: true)
 
+    # @!attribute [r] flag_type
+    # Indicates the intended lifecycle of this feature flag. Set this when the flag is created so
+    # that future engineers know whether dead-code cleanup is expected.
+    #
+    # Accepted values:
+    #   :release       - A temporary gate used to safely roll out new behaviour. Once the new
+    #                    behaviour is enabled for all clients, the old code path is dead and the
+    #                    flag should be removed. This is the most common type.
+    #
+    #   :configuration - A permanent toggle that supports genuinely different behaviours for
+    #                    different clients (e.g. state-specific rules). Both the enabled and
+    #                    disabled code paths are always needed. Do not clean up.
+    #
+    # Example (in registry YML):
+    #   meta:
+    #     label: "Enable New Enrollment Flow"
+    #     content_type: :boolean
+    #     default: false
+    #     flag_type: :release
+    #     description: "Switches enrollment to the redesigned multi-step flow."
+    #
+    # @return [Symbol] :release or :configuration
+    attribute :flag_type, Types::Symbol.optional.meta(omittable: true)
+
     # @!attribute [r] enum
     # List of vaalid domain values when configuration values are constrained to an enumerated set
     # @return [Array<Any>]

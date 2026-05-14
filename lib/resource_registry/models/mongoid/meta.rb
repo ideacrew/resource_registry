@@ -14,6 +14,9 @@ module ResourceRegistry
       field :enum,          type: Array
       field :is_required,   type: Boolean
       field :is_visible,    type: Boolean
+      # :release — temporary rollout gate; clean up once enabled for all clients.
+      # :configuration — permanent per-client toggle; both paths always needed.
+      field :flag_type,     type: Symbol
 
     end
   end
