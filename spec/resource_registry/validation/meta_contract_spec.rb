@@ -13,7 +13,7 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
   let(:is_required) { false }
   let(:is_visible)  { false }
 
-  let(:required_params)   { { label: label, content_type: type, default: default} }
+  let(:required_params) { { label: label, content_type: type, default: default } }
   let(:optional_params) do
     {
       value: value,
@@ -23,7 +23,7 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
       is_visible: is_visible
     }
   end
-  let(:all_params)        { required_params.merge(optional_params) }
+  let(:all_params) { required_params.merge(optional_params) }
 
   context "Validation with invalid input" do
     let(:required_params_error) { { :default => ["is missing"], :label => ["is missing"], :content_type => ["is missing"] } }
@@ -48,10 +48,40 @@ RSpec.describe ResourceRegistry::Validation::MetaContract do
       end
     end
 
-    context "Given hash params include all required nd optional attributes" do
+    context "Given hash params include all required and optional attributes" do
       it "should pass validation" do
         expect(subject.call(all_params).success?).to be_truthy
         expect(subject.call(all_params).to_h).to eq all_params
+      end
+    end
+  end
+
+  describe "flag_type validation" do
+    context "when flag_type is :release" do
+      it "passes validation" do
+        result = subject.call(required_params.merge(flag_type: :release))
+        expect(result.success?).to be_truthy
+      end
+    end
+
+    context "when flag_type is :configuration" do
+      it "passes validation" do
+        result = subject.call(required_params.merge(flag_type: :configuration))
+        expect(result.success?).to be_truthy
+      end
+    end
+
+    context "when flag_type is an unrecognised value" do
+      it "fails validation" do
+        result = subject.call(required_params.merge(flag_type: :temporary))
+        expect(result.failure?).to be_truthy
+        expect(result.errors.to_h[:flag_type]).to include("must be one of: release, configuration")
+      end
+    end
+
+    context "when flag_type is absent" do
+      it "passes validation" do
+        expect(subject.call(required_params).success?).to be_truthy
       end
     end
   end

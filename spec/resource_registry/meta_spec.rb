@@ -23,7 +23,7 @@ RSpec.describe ResourceRegistry::Meta do
       is_visible: is_visible
     }
   end
-  let(:all_params)        { required_params.merge(optional_params) }
+  let(:all_params) { required_params.merge(optional_params) }
 
   context "Validation with valid input" do
     context "Given hash params include only required attributes" do
@@ -37,6 +37,29 @@ RSpec.describe ResourceRegistry::Meta do
       it "should pass validation" do
         expect(described_class.new(all_params)).to be_a ResourceRegistry::Meta
         expect(described_class.new(all_params).to_h).to eq all_params
+      end
+    end
+  end
+
+  describe "#flag_type" do
+    context "when flag_type is :release" do
+      it "accepts the value" do
+        meta = described_class.new(required_params.merge(flag_type: :release))
+        expect(meta.flag_type).to eq :release
+      end
+    end
+
+    context "when flag_type is :configuration" do
+      it "accepts the value" do
+        meta = described_class.new(required_params.merge(flag_type: :configuration))
+        expect(meta.flag_type).to eq :configuration
+      end
+    end
+
+    context "when flag_type is absent" do
+      it "defaults to nil" do
+        meta = described_class.new(required_params)
+        expect(meta.flag_type).to be_nil
       end
     end
   end
