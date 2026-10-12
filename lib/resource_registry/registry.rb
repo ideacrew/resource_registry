@@ -36,7 +36,6 @@ module ResourceRegistry
       self._container.delete("feature_index.#{feature.key}")
       self._container.delete(namespaced(feature.key, feature.namespace))
       register_feature(feature)
-      @features_stale = false
     end
 
     # Store a feature in the registry
