@@ -211,6 +211,23 @@ RSpec.describe ResourceRegistry::Registry do
         expect(list.size).to eq key_names.size
         expect(list).to match_array key_names
       end
+
+      context "when a feature is swapped before the list has been read" do
+        it "still returns all registered features" do
+          registry.swap_feature(ResourceRegistry::Feature.new(feature_hash.merge(key: key_names.first, is_enabled: false)))
+
+          expect(registry.features).to match_array key_names
+        end
+      end
+
+      context "when a feature is swapped after the list has been read" do
+        it "still returns all registered features" do
+          registry.features
+          registry.swap_feature(ResourceRegistry::Feature.new(feature_hash.merge(key: key_names.first, is_enabled: false)))
+
+          expect(registry.features).to match_array key_names
+        end
+      end
     end
 
     describe '#enabled?' do

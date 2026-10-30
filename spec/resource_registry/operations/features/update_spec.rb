@@ -38,5 +38,10 @@ RSpec.describe ResourceRegistry::Operations::Features::Update do
       subject
       expect(registry.feature_enabled?(feature.key)).to be_truthy
     end
+
+    it "should keep the feature listed in the registry" do
+      subject
+      expect(registry.features).to eq [feature.key.to_sym]
+    end
   end
 end
